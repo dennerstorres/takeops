@@ -72,7 +72,7 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ## BOOT-003 — Prisma e PostgreSQL
 
-**Status:** READY  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** BOOT-001
 
@@ -86,9 +86,9 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ### Critérios
 
-- [ ] migration executa;
-- [ ] conexão validada;
-- [ ] comandos documentados.
+- [x] migration executa;
+- [x] conexão validada;
+- [x] comandos documentados.
 
 ---
 

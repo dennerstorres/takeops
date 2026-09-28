@@ -7,6 +7,13 @@ npm install
 npm run dev
 ```
 
+Banco local: copie `.env.example` para `.env` e aponte `DATABASE_URL` para o PostgreSQL. `npx prisma dev --name takeops` sobe um Postgres local e imprime a URL.
+
+```bash
+npm run db:migrate
+npm run db:check
+```
+
 A ideia é que qualquer agente — Codex, Claude Code ou outro assistente — consiga entrar no repositório, entender o produto, descobrir o estado atual da implementação e executar uma tarefa sem depender do histórico de conversas externas.
 
 ## Ordem de leitura

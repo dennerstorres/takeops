@@ -227,6 +227,29 @@ Componentes novos devem entrar por `npx shadcn add`, não por cópia de exemplos
 
 ---
 
+# ADR-013 — Prisma 7.10 com adapter PostgreSQL
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A tag `latest` do Prisma apontava para `8.0.0-rc.17`. O gerador `prisma-client-js` está deprecado no Prisma 7.
+
+## Decisão
+
+Fixar Prisma e `@prisma/client` em `7.10.0`.
+
+O client é gerado em `src/generated/prisma`, fica fora do Git e nasce no `postinstall`. A conexão usa `@prisma/adapter-pg`. A URL fica em `prisma.config.ts`, lida de `DATABASE_URL`.
+
+A migration inicial não cria tabelas de domínio. Cada módulo cria as suas.
+
+## Consequências
+
+`npm run db:migrate`, `npm run db:deploy` e `npm run db:check` são os comandos oficiais.
+
+---
+
 # Template para novas decisões
 
 ```md

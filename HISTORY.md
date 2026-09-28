@@ -214,3 +214,71 @@ No browser headless: sidebar no desktop; em 375, 390 e 430 o menu vira drawer, s
 
 BOOT-003 pode começar. O shell não depende do banco.
 
+---
+
+## 2026-09-28 — BOOT-003 — Prisma e PostgreSQL
+
+**Status:** DONE
+**Agente:** Grok
+
+### Resumo
+
+Prisma 7.10 ligado a PostgreSQL, com migration inicial vazia de domínio e client único para o servidor.
+
+### Implementação
+
+- `prisma/schema.prisma` sem modelos. As tabelas entram na tarefa de cada módulo.
+- Migration `20260928143000_init`.
+- `src/server/db.ts` reutiliza o client em desenvolvimento.
+- `.env.example` e comandos `db:migrate`, `db:deploy`, `db:check`.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma.config.ts`
+- `prisma/migrations/20260928143000_init/migration.sql`
+- `src/server/db.ts`
+- `.env.example`
+
+### Decisões tomadas
+
+- ADR-013. A tag `latest` era release candidate, então a versão ficou em 7.10.0.
+- O client gerado não entra no Git.
+
+### Banco / migrations
+
+- `20260928143000_init`
+- Aplicada com `prisma migrate deploy` num Postgres local.
+- `npm run db:check` executou `SELECT 1`.
+
+### Testes executados
+
+```text
+npm run lint
+npm run typecheck
+npm run build
+npm run db:check
+npx prisma migrate deploy
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+### Critérios de aceite
+
+- [x] migration executa
+- [x] conexão validada
+- [x] comandos documentados
+
+### Pendências conhecidas
+
+- Docker Desktop não subiu nesta máquina. A validação usou `npx prisma dev --name takeops`.
+- `npm test` e `npm run test:e2e` continuam sem stack.
+
+### Observações para próxima tarefa
+
+BOOT-004 pode começar. Zod e o padrão de services não dependem de tabelas novas.
+

@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-BOOT-002 — UI base e design system
+BOOT-003 — Prisma e PostgreSQL
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-BOOT-003 — Prisma e PostgreSQL
+BOOT-004 — Infraestrutura de validação e serviços
 ```
 
 ## Estado dos módulos
@@ -77,6 +77,8 @@ UI: Tailwind CSS + shadcn/ui
 
 ## Observações
 
-BOOT-002 concluído: shell com sidebar no desktop e drawer no mobile, shadcn/ui, Lucide, toast, confirmação e estados vazio, carregando e erro.
+BOOT-003 concluído: Prisma 7.10, migration inicial sem tabelas de domínio e client em `src/server/db.ts`.
 
-As rotas além do Dashboard ficam na APP-001. `npm test` e `npm run test:e2e` ainda não existem. Git ainda não foi inicializado.
+Cada tarefa concluída deve virar um commit isolado. Próxima: BOOT-004.
+
+As rotas além do Dashboard ficam na APP-001. `npm test` e `npm run test:e2e` ainda não existem.
