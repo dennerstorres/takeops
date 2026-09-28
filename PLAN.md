@@ -740,9 +740,15 @@ Cada cena deve mostrar seus planos sem exigir navegação excessiva.
 
 ## EQUIP-001 — Catálogo de equipamentos
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** WORKSPACE-001
+
+### Critérios
+
+- [x] o catálogo é do workspace, com nome, categoria da spec e notas;
+- [x] item novo entra ativo; desativar tira de uso sem apagar;
+- [x] leitor só vê; item de outro workspace não muda.
 
 ---
 

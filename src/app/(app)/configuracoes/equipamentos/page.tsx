@@ -1,0 +1,86 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { EquipmentForm } from "@/components/equipment/equipment-form";
+import { EmptyState } from "@/components/feedback/empty-state";
+import { openWorkspace } from "@/server/access";
+import { auth } from "@/server/auth";
+import { listEquipment } from "@/server/equipment";
+import { equipmentCategoryLabel } from "@/server/equipment-labels";
+import { prismaEquipmentRepository } from "@/server/equipment-prisma";
+import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
+
+export default async function EquipmentPage() {
+  const session = await auth();
+  if (!session?.user?.id) redirect("/login");
+  const access = await openWorkspace(session.user.id);
+  if (access.kind === "setup") redirect("/comecar");
+  const canEdit = access.workspace.membership.role !== "VIEWER";
+  const items = await listEquipment(
+    session.user.id,
+    access.workspace.workspace.id,
+    prismaWorkspaceRepository,
+    prismaEquipmentRepository,
+  );
+
+  return (
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      <Link
+        href="/configuracoes"
+        className="inline-flex min-h-11 items-center text-sm text-muted-foreground"
+      >
+        Voltar às configurações
+      </Link>
+      <header className="space-y-1">
+        <h1 className="text-2xl font-medium tracking-tight">Equipamentos</h1>
+        <p className="text-sm text-muted-foreground">
+          O que a equipe tem para usar nas gravações.
+        </p>
+      </header>
+      {items.length === 0 ? (
+        <EmptyState
+          title="Nenhum equipamento"
+          description="Câmeras, microfones e o resto do kit aparecem aqui."
+        />
+      ) : (
+        <ul className="flex flex-col gap-3">
+          {items.map((item) => (
+            <li key={item.id} className="rounded-xl border p-3">
+              <p className="text-sm font-medium">{item.name}</p>
+              <p className="text-sm text-muted-foreground">
+                {equipmentCategoryLabel(item.category)}
+                {item.active ? null : " · Fora de uso"}
+                {item.notes ? ` · ${item.notes}` : null}
+              </p>
+              {canEdit ? (
+                <details className="mt-2">
+                  <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm">
+                    Editar
+                  </summary>
+                  <div className="pt-3">
+                    <EquipmentForm
+                      values={{
+                        itemId: item.id,
+                        name: item.name,
+                        category: item.category,
+                        notes: item.notes ?? "",
+                        active: item.active,
+                      }}
+                    />
+                  </div>
+                </details>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      )}
+      {canEdit ? (
+        <section className="space-y-3">
+          <h2 className="text-base font-medium">Novo equipamento</h2>
+          <EquipmentForm
+            values={{ name: "", category: "CAMERA", notes: "", active: true }}
+          />
+        </section>
+      ) : null}
+    </div>
+  );
+}

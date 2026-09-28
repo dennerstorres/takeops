@@ -44,6 +44,7 @@ model Workspace {
   invites   WorkspaceInvite[]
   ideas     Idea[]
   projects  VideoProject[]
+  equipment EquipmentItem[]
 }
 
 enum InviteStatus {
@@ -379,4 +380,30 @@ model Shoot {
 
   @@index([videoProjectId, scheduledAt])
   @@index([videoProjectId, status])
+}
+
+enum EquipmentCategory {
+  CAMERA
+  SMARTPHONE
+  MICROPHONE
+  TRIPOD
+  LIGHTING
+  POWER
+  LAPTOP
+  OTHER
+}
+
+model EquipmentItem {
+  id          String            @id @default(uuid())
+  workspaceId String
+  name        String
+  category    EquipmentCategory
+  notes       String?
+  active      Boolean           @default(true)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  workspace   Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, active])
+  @@index([workspaceId, category])
 }

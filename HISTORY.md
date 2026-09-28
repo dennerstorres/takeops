@@ -1315,6 +1315,54 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — EQUIP-001 — Catálogo de equipamentos
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O workspace tem um catálogo de equipamentos em Configurações → Equipamentos.
+
+### Implementação
+
+- Tabela `EquipmentItem` com `workspaceId`, categoria em enum e `active`.
+- `createEquipment` sempre grava ativo. `updateEquipment` troca nome, categoria, notas e o ativo (checkbox).
+- Não há exclusão: item fora de uso fica desativado para não quebrar gravações que já o usam (EQUIP-002).
+- Consultas sempre com `workspaceId` da membership.
+- Configurações ganhou o link para a página.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928280000_equipment/migration.sql`
+- `src/server/equipment.ts`, `equipment-labels.ts`, `equipment-repository.ts`, `equipment-prisma.ts`, `equipment-actions.ts`
+- `src/server/equipment.test.ts`, `equipment.integration.test.ts`
+- `src/components/equipment/equipment-form.tsx`
+- `src/app/(app)/configuracoes/equipamentos/page.tsx`
+- `src/app/(app)/configuracoes/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Quem escreve (dono, admin, membro) mantém o catálogo.
+
+### Banco / migrations
+
+- `20260928280000_equipment`: cria `EquipmentCategory` e `EquipmentItem`, FK em cascata para `Workspace`. Rollback conceitual: dropar tabela e enum.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — SHOOT-002 — CRUD e agendamento
 
 **Status:** DONE  
