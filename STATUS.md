@@ -22,20 +22,20 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-BOOT-003 — Prisma e PostgreSQL
+BOOT-004 — Infraestrutura de validação e serviços
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-BOOT-004 — Infraestrutura de validação e serviços
+AUTH-001 — Auth.js + Google OAuth
 ```
 
 ## Estado dos módulos
 
 | Módulo | Status |
 |---|---|
-| Bootstrap | IN_PROGRESS |
+| Bootstrap | DONE |
 | Auth | NOT_STARTED |
 | Workspace | NOT_STARTED |
 | Equipe | NOT_STARTED |
@@ -77,8 +77,6 @@ UI: Tailwind CSS + shadcn/ui
 
 ## Observações
 
-BOOT-003 concluído: Prisma 7.10, migration inicial sem tabelas de domínio e client em `src/server/db.ts`.
+Fase 0 fechada. Validação com Zod e services em `src/server`. Testes unitários: `npm test`.
 
-Cada tarefa concluída deve virar um commit isolado. Próxima: BOOT-004.
-
-As rotas além do Dashboard ficam na APP-001. `npm test` e `npm run test:e2e` ainda não existem.
+`npm run test:e2e` ainda não existe. Próxima: AUTH-001. As rotas além do Dashboard ficam na APP-001.

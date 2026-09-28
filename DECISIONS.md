@@ -250,6 +250,31 @@ A migration inicial não cria tabelas de domínio. Cada módulo cria as suas.
 
 ---
 
+# ADR-014 — Resultado de action e erro de domínio
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+Server Actions não devem lançar erro cru para a interface. Route Handlers precisam do mesmo critério, com status HTTP.
+
+## Decisão
+
+Erros previstos são `DomainError`: validação, não encontrado e acesso negado.
+
+`runAction` devolve `{ ok: true, data }` ou `{ ok: false, message, fields? }`.
+
+`runHandler` devolve JSON com a mesma mensagem e o status do erro. Falha inesperada vira mensagem genérica e status 500. O detalhe fica no log, com `userId`, `workspaceId`, `entity`, `operation` e `stack`.
+
+Entrada de serviço passa por `parseInput` com Zod.
+
+## Consequências
+
+Actions e route handlers novos usam esses helpers. A regra de negócio continua no service, não no componente.
+
+---
+
 # Template para novas decisões
 
 ```md

@@ -94,7 +94,7 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ## BOOT-004 — Infraestrutura de validação e serviços
 
-**Status:** READY  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** BOOT-001
 
@@ -111,7 +111,7 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ## AUTH-001 — Auth.js + Google OAuth
 
-**Status:** TODO  
+**Status:** READY  
 **Prioridade:** P0  
 **Dependências:** BOOT-003
 

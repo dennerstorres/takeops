@@ -282,3 +282,67 @@ PASS
 
 BOOT-004 pode começar. Zod e o padrão de services não dependem de tabelas novas.
 
+---
+
+## 2026-09-28 — BOOT-004 — Infraestrutura de validação e serviços
+
+**Status:** DONE
+**Agente:** Grok
+
+### Resumo
+
+Zod, erros de domínio e helpers para service, Server Action e Route Handler.
+
+### Implementação
+
+- `parseInput` traduz falha do Zod em `ValidationError`.
+- `DomainError`, `NotFoundError` e `ForbiddenError`.
+- `runService` registra o erro. `runAction` e `runHandler` escondem falha inesperada.
+- `npm test` usa o test runner do Node, só para esses helpers. E2E continua sem stack.
+
+### Arquivos principais
+
+- `src/server/errors.ts`
+- `src/server/validation.ts`
+- `src/server/service.ts`
+- `src/server/service.test.ts`
+
+### Decisões tomadas
+
+- ADR-014.
+- Imports relativos dentro de `src/server` levam extensão `.ts` para o runner do Node executar o teste sem compilador extra. `allowImportingTsExtensions` ficou ligado.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+### Critérios de aceite
+
+- [x] Zod disponível
+- [x] padrão de service
+- [x] erros de domínio
+- [x] helpers de action e handler
+
+### Pendências conhecidas
+
+- `npm run test:e2e` ainda não existe.
+
+### Observações para próxima tarefa
+
+AUTH-001 pode começar. O login deve usar `runAction` ou `runHandler` e não devolver token na resposta nem no log.
+
