@@ -21,18 +21,6 @@ export function ShellNav() {
       {shellNavItems.map((item) => {
         const Icon = item.icon;
 
-        if (!item.href) {
-          return (
-            <span
-              key={item.label}
-              className={cn(itemClass, "text-muted-foreground")}
-            >
-              <Icon aria-hidden="true" />
-              {item.label}
-            </span>
-          );
-        }
-
         const current = isCurrent(pathname, item.href);
 
         return (

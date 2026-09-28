@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 1 — Autenticação, Workspace e Equipe
+Fase 2 — Shell e Dashboard
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TEAM-003 — Gerenciamento de papéis
+APP-001 — Navegação principal
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-APP-001 — Navegação principal
+IDEA-001 — Modelo e CRUD
 ```
 
 ## Estado dos módulos
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-Quem não tem membership cai em `/comecar` ou entra por convite pendente do próprio e-mail. Em `/equipe`, dono e admin mudam os papéis permitidos. A propriedade não se transfere. `npm run test:e2e` ainda não existe. As outras rotas do menu ficam na APP-001.
+O menu abre Dashboard, Ideias, Produções, Calendário, Templates, Equipe e Configurações. Essas páginas ainda não têm o módulo. DASH-001 espera PROJECT-001. `npm run test:e2e` ainda não existe.

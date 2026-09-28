@@ -241,7 +241,7 @@ Não é obrigatório enviar e-mail automaticamente no primeiro corte. Pode ser u
 
 ## APP-001 — Navegação principal
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** BOOT-002, WORKSPACE-001
 
@@ -254,6 +254,12 @@ Não é obrigatório enviar e-mail automaticamente no primeiro corte. Pode ser u
 - Templates;
 - Equipe;
 - Configurações.
+
+### Critérios
+
+- [x] cada item do menu abre a própria página;
+- [x] sem sessão, essas páginas vão para o login;
+- [x] o item da página atual fica marcado.
 
 ---
 

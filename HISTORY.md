@@ -761,3 +761,73 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 APP-001 liga o restante do menu. Equipe já aponta para `/equipe`.
 
+---
+
+## 2026-09-28 — APP-001 — Navegação principal
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Os sete itens do menu abrem uma página própria. O item da página atual fica marcado. Sem sessão, o login guarda o caminho.
+
+### Implementação
+
+- Rotas `/ideias`, `/producoes`, `/calendario`, `/templates` e `/configuracoes`, dentro do layout autenticado.
+- Cada uma mostra só o título e uma frase. O conteúdo fica nas tarefas dos módulos.
+- Dashboard continua em `/`. Equipe continua em `/equipe`.
+
+### Arquivos principais
+
+- `src/components/shell/navigation.ts`
+- `src/components/shell/shell-nav.tsx`
+- `src/components/shell/section-page.tsx`
+- `src/app/(app)/ideias/page.tsx`
+- `src/app/(app)/producoes/page.tsx`
+- `src/app/(app)/calendario/page.tsx`
+- `src/app/(app)/templates/page.tsx`
+- `src/app/(app)/configuracoes/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. As páginas novas não ganham regra de negócio.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+Sem cookie, cada rota vai para `/login`. Com sessão e workspace, cada página responde 200, mostra o título e marca o item correspondente.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] cada item do menu abre a própria página
+- [x] sem sessão, essas páginas vão para o login
+- [x] o item da página atual fica marcado
+
+### Pendências conhecidas
+
+- DASH-001 depende de PROJECT-001.
+- O conteúdo de ideias, produções, calendário, templates e configurações fica nas tarefas seguintes.
+
+### Observações para próxima tarefa
+
+IDEA-001 pode usar `/ideias`. A página hoje só reserva o lugar.
+
