@@ -3,6 +3,7 @@ import { productionTabs } from "@/server/project-overview";
 
 const links: Record<string, (projectId: string) => string> = {
   "Visão Geral": (projectId) => `/producoes/${projectId}`,
+  Roteiro: (projectId) => `/producoes/${projectId}/roteiro`,
   Cenas: (projectId) => `/producoes/${projectId}/cenas`,
 };
 
@@ -11,7 +12,7 @@ export function ProductionTabs({
   active = "Visão Geral",
 }: {
   projectId: string;
-  active?: "Visão Geral" | "Cenas";
+  active?: "Visão Geral" | "Roteiro" | "Cenas";
 }) {
   return (
     <nav aria-label="Seções da produção" className="flex gap-1 overflow-x-auto">

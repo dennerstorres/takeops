@@ -1,8 +1,11 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState } from "react";
+import {
+  AutosaveStatusText,
+  useFormAutosave,
+} from "@/components/feedback/form-autosave";
 import { Button } from "@/components/ui/button";
-import { createAutosave, type AutosaveStatus } from "@/lib/autosave";
 import {
   autosaveSceneAction,
   createSceneAction,
@@ -20,56 +23,6 @@ import {
 
 const fieldClass =
   "w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
-
-const autosaveLabel: Record<AutosaveStatus, string> = {
-  idle: "",
-  saving: "Salvando...",
-  saved: "Salvo",
-  error: "Erro ao salvar",
-};
-
-function useSceneAutosave(enabled: boolean) {
-  const [status, setStatus] = useState<AutosaveStatus>("idle");
-  const [message, setMessage] = useState<string>();
-  const autosave = useRef<ReturnType<typeof createAutosave<FormData>>>(null);
-
-  useEffect(() => {
-    if (!enabled) return;
-    const current = createAutosave<FormData>({
-      save: async (formData) => {
-        const result = await autosaveSceneAction(formData);
-        if (result.ok) return { ok: true };
-        const field = result.fields
-          ? Object.values(result.fields)[0]
-          : undefined;
-        return { ok: false, message: field ?? result.message };
-      },
-      onChange: (next, text) => {
-        setStatus(next);
-        setMessage(text);
-      },
-    });
-    autosave.current = current;
-    // Sair com edição que não chegou ao servidor pede confirmação.
-    const guard = (event: BeforeUnloadEvent) => {
-      if (current.hasUnsaved()) event.preventDefault();
-    };
-    window.addEventListener("beforeunload", guard);
-    return () => {
-      window.removeEventListener("beforeunload", guard);
-      current.cancel();
-      autosave.current = null;
-    };
-  }, [enabled]);
-
-  return {
-    status,
-    message,
-    schedule: (form: HTMLFormElement) =>
-      autosave.current?.schedule(new FormData(form)),
-    cancel: () => autosave.current?.cancel(),
-  };
-}
 
 export type SceneFormValues = {
   projectId: string;
@@ -100,7 +53,7 @@ export function SceneForm({
     editing ? updateSceneAction : createSceneAction,
     null as SceneFormState,
   );
-  const autosave = useSceneAutosave(editing);
+  const autosave = useFormAutosave(editing, autosaveSceneAction);
 
   return (
     <form
@@ -245,19 +198,10 @@ export function SceneForm({
           {editing ? "Salvar cena" : "Adicionar cena"}
         </Button>
         {editing ? (
-          <p
-            aria-live="polite"
-            className={
-              autosave.status === "error"
-                ? "text-sm text-destructive"
-                : "text-sm text-muted-foreground"
-            }
-          >
-            {autosaveLabel[autosave.status]}
-            {autosave.status === "error" && autosave.message
-              ? `. ${autosave.message}`
-              : null}
-          </p>
+          <AutosaveStatusText
+            status={autosave.status}
+            message={autosave.message}
+          />
         ) : null}
       </div>
     </form>

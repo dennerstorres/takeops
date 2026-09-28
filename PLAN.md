@@ -629,11 +629,18 @@ Estados:
 
 ## SCRIPT-002 — Tela de roteiro
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SCRIPT-001, SCENE-003
 
 Deve privilegiar leitura rápida do fluxo narrativo.
+
+### Critérios
+
+- [x] a aba Roteiro abre gancho, mensagem, chamada e notas com autosave;
+- [x] as cenas aparecem na ordem com quem fala, fala, ação e duração;
+- [x] o total estimado soma as cenas e avisa as que estão sem duração;
+- [x] leitor só lê.
 
 ---
 

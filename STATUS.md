@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 6 — Roteiro e Cenas
+Fase 7 — Shots
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SCENE-005 — Autosave
+SCRIPT-002 — Tela de roteiro
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SCRIPT-002 — Tela de roteiro
+SHOT-001 — Modelo Shot
 ```
 
 ## Estado dos módulos
@@ -42,7 +42,7 @@ SCRIPT-002 — Tela de roteiro
 | Ideias | DONE |
 | Projetos | DONE |
 | Kanban | DONE |
-| Roteiro | IN_PROGRESS |
+| Roteiro | DONE |
 | Shots | NOT_STARTED |
 | Gravações | NOT_STARTED |
 | Checklist | NOT_STARTED |

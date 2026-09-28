@@ -2,6 +2,11 @@ export type AutosaveStatus = "idle" | "saving" | "saved" | "error";
 
 export type AutosaveResult = { ok: true } | { ok: false; message: string };
 
+// Resposta das server actions de autosave.
+export type AutosaveActionResult =
+  | { ok: true }
+  | { ok: false; message: string; fields?: Record<string, string> };
+
 type Timers = {
   set: (fn: () => void, ms: number) => unknown;
   clear: (handle: unknown) => void;

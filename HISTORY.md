@@ -1315,6 +1315,57 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SCRIPT-002 — Tela de roteiro
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+A aba Roteiro da produção mostra os campos do roteiro e, abaixo, as cenas em ordem para ler o fluxo da história.
+
+### Implementação
+
+- `/producoes/[id]/roteiro`: gancho, mensagem principal, chamada e notas com autosave. Leitor vê o texto sem formulário.
+- `buildScriptView` ordena as cenas, troca o id de quem fala pelo nome e soma a duração estimada. Cena sem duração é contada à parte.
+- O autosave da SCENE-005 virou `useFormAutosave` em `src/components/feedback/form-autosave.tsx`, usado pela cena e pelo roteiro.
+- O botão Salvar roteiro só adianta o autosave; a página não navega.
+- A aba Roteiro virou link nas abas da produção.
+
+### Arquivos principais
+
+- `src/app/(app)/producoes/[id]/roteiro/page.tsx`
+- `src/components/script/script-form.tsx`
+- `src/components/feedback/form-autosave.tsx`
+- `src/server/script-actions.ts`
+- `src/server/script-view.ts`
+- `src/server/script-view.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. As cenas são editadas na aba Cenas; o roteiro só lê.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+### Observações para próxima tarefa
+
+Rodar `prettier --write` só nos arquivos alterados. Na pasta inteira ele reformata arquivos de outras tarefas.
+
+---
+
 ## 2026-09-28 — SCENE-005 — Autosave
 
 **Status:** DONE  
