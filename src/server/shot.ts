@@ -3,7 +3,7 @@ import { NotFoundError } from "./errors.ts";
 import type { ProjectRepository } from "./project-repository.ts";
 import { getScene } from "./scene.ts";
 import type { SceneRepository } from "./scene-repository.ts";
-import { shotTypes, type ShotStatus } from "./shot-labels.ts";
+import { shotStatuses, shotTypes, type ShotStatus } from "./shot-labels.ts";
 import type {
   ShotRepository,
   ShotScope,
@@ -140,4 +140,70 @@ export async function createShot(
     throw new NotFoundError();
   }
   return created;
+}
+
+const statusSchema = z.object({
+  status: z.preprocess(
+    (value) => (typeof value === "string" && value ? value : undefined),
+    z.enum(shotStatuses, { error: "Escolha um status." }).optional(),
+  ),
+});
+
+export async function updateShot(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  sceneId: string,
+  shotId: string,
+  input: unknown,
+  deps: ShotDeps,
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const current = await getShot(
+    userId,
+    workspaceId,
+    projectId,
+    sceneId,
+    shotId,
+    deps,
+  );
+  const scope = await sceneScope(userId, workspaceId, projectId, sceneId, deps);
+  const status = parseInput(statusSchema, input).status ?? current.status;
+  const updated = await deps.shots.update(
+    scope,
+    current.id,
+    toShotWrite(input, status),
+  );
+  if (
+    !updated ||
+    updated.id !== current.id ||
+    updated.sceneId !== current.sceneId ||
+    updated.order !== current.order
+  ) {
+    throw new NotFoundError();
+  }
+  return updated;
+}
+
+export async function deleteShot(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  sceneId: string,
+  shotId: string,
+  deps: ShotDeps,
+  deletedAt = new Date(),
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const current = await getShot(
+    userId,
+    workspaceId,
+    projectId,
+    sceneId,
+    shotId,
+    deps,
+  );
+  const scope = await sceneScope(userId, workspaceId, projectId, sceneId, deps);
+  const removed = await deps.shots.softDelete(scope, current.id, deletedAt);
+  if (!removed) throw new NotFoundError();
 }

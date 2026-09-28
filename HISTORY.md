@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SHOT-002 — CRUD de Shots
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O shot pode ser editado, ter o status trocado e ser excluído. A exclusão é lógica.
+
+### Implementação
+
+- `updateShot` valida os mesmos campos da criação. Sem status no envio, fica o atual. Ordem e cena não mudam.
+- `deleteShot` grava `deletedAt`. A lista e a leitura ignoram o shot excluído.
+- As duas passam por `getShot`, que só acha o shot na cena visível do workspace.
+- As server actions e a tela entram na SHOT-004, junto da cena.
+
+### Arquivos principais
+
+- `src/server/shot.ts`
+- `src/server/shot-repository.ts`
+- `src/server/shot-prisma.ts`
+- `src/server/shot.test.ts`
+- `src/server/shot.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Segue ADR-027.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — SHOT-001 — Modelo Shot
 
 **Status:** DONE  

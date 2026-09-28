@@ -36,4 +36,14 @@ export type ShotRepository = {
   list(scope: ShotScope): Promise<ShotRecord[]>;
   find(scope: ShotScope, shotId: string): Promise<ShotRecord | null>;
   create(scope: ShotScope, input: ShotWrite): Promise<ShotRecord | null>;
+  update(
+    scope: ShotScope,
+    shotId: string,
+    input: ShotWrite,
+  ): Promise<ShotRecord | null>;
+  softDelete(
+    scope: ShotScope,
+    shotId: string,
+    deletedAt: Date,
+  ): Promise<boolean>;
 };

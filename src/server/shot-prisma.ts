@@ -73,4 +73,36 @@ export const prismaShotRepository: ShotRepository = {
     });
     return created ? mapShot(created) : null;
   },
+
+  async update(scope, shotId, input) {
+    const updated = await prisma.$transaction(async (tx) => {
+      const scene = await tx.scene.findFirst({
+        where: visibleScene(scope),
+        select: { id: true },
+      });
+      if (!scene) return null;
+      const result = await tx.shot.updateMany({
+        where: { id: shotId, sceneId: scene.id, deletedAt: null },
+        data: input,
+      });
+      if (result.count !== 1) return null;
+      return tx.shot.findFirst({
+        where: { id: shotId, sceneId: scene.id, deletedAt: null },
+      });
+    });
+    return updated ? mapShot(updated) : null;
+  },
+
+  async softDelete(scope, shotId, deletedAt) {
+    const scene = await prisma.scene.findFirst({
+      where: visibleScene(scope),
+      select: { id: true },
+    });
+    if (!scene) return false;
+    const result = await prisma.shot.updateMany({
+      where: { id: shotId, sceneId: scene.id, deletedAt: null },
+      data: { deletedAt },
+    });
+    return result.count === 1;
+  },
 };

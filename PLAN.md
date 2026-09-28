@@ -662,9 +662,16 @@ Deve privilegiar leitura rápida do fluxo narrativo.
 
 ## SHOT-002 — CRUD de Shots
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SHOT-001
+
+### Critérios
+
+- [x] quem escreve edita os campos e o status do shot;
+- [x] editar não muda a ordem nem a cena;
+- [x] excluir esconde o shot e mantém a linha no banco;
+- [x] leitor não edita nem exclui; outra cena não alcança o shot.
 
 ---
 

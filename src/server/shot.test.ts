@@ -3,7 +3,14 @@ import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import type { ProjectRepository } from "./project-repository.ts";
 import type { SceneRecord, SceneRepository } from "./scene-repository.ts";
-import { createShot, getShot, listShots, type ShotDeps } from "./shot.ts";
+import {
+  createShot,
+  deleteShot,
+  getShot,
+  listShots,
+  updateShot,
+  type ShotDeps,
+} from "./shot.ts";
 import type { ShotRecord, ShotRepository } from "./shot-repository.ts";
 import type {
   MembershipRecord,
@@ -116,6 +123,18 @@ function shotHarness() {
       };
       shots.push(created);
       return created;
+    },
+    async update(scope, shotId, input) {
+      const current = await this.find(scope, shotId);
+      if (!current) return null;
+      Object.assign(current, input);
+      return current;
+    },
+    async softDelete(scope, shotId) {
+      const current = await this.find(scope, shotId);
+      if (!current) return false;
+      shots.splice(shots.indexOf(current), 1);
+      return true;
     },
   };
 
@@ -237,6 +256,89 @@ describe("shot", () => {
     const own = await createShot("owner", "ws-a", "p-a", "s-a", {}, deps);
     await assert.rejects(
       getShot("owner", "ws-a", "p-a", "s-a2", own.id, deps),
+      NotFoundError,
+    );
+  });
+
+  it("edita os campos e o status sem mexer na ordem e esconde ao excluir", async () => {
+    const { deps, join } = shotHarness();
+    join("owner", "ws-a", "OWNER");
+    join("viewer", "ws-a", "VIEWER");
+    const first = await createShot("owner", "ws-a", "p-a", "s-a", {}, deps);
+    const second = await createShot("owner", "ws-a", "p-a", "s-a", {}, deps);
+
+    const edited = await updateShot(
+      "owner",
+      "ws-a",
+      "p-a",
+      "s-a",
+      second.id,
+      {
+        name: "Close lateral",
+        framing: "Close",
+        requiredTakes: 2,
+        status: "NEEDS_RETAKE",
+        order: 1,
+        sceneId: "s-a2",
+      },
+      deps,
+    );
+    assert.equal(edited.name, "Close lateral");
+    assert.equal(edited.status, "NEEDS_RETAKE");
+    assert.equal(edited.requiredTakes, 2);
+    assert.equal(edited.order, 2);
+    assert.equal(edited.sceneId, "s-a");
+
+    // Sem status no envio, o status atual continua.
+    const kept = await updateShot(
+      "owner",
+      "ws-a",
+      "p-a",
+      "s-a",
+      second.id,
+      { name: "Close" },
+      deps,
+    );
+    assert.equal(kept.status, "NEEDS_RETAKE");
+    await assert.rejects(
+      updateShot(
+        "owner",
+        "ws-a",
+        "p-a",
+        "s-a",
+        second.id,
+        { status: "DONE" },
+        deps,
+      ),
+      ValidationError,
+    );
+
+    await assert.rejects(
+      updateShot("viewer", "ws-a", "p-a", "s-a", first.id, {}, deps),
+      ForbiddenError,
+    );
+    await assert.rejects(
+      deleteShot("viewer", "ws-a", "p-a", "s-a", first.id, deps),
+      ForbiddenError,
+    );
+    // O shot não é alcançado por outra cena.
+    await assert.rejects(
+      updateShot("owner", "ws-a", "p-a", "s-a2", first.id, {}, deps),
+      NotFoundError,
+    );
+    await assert.rejects(
+      deleteShot("owner", "ws-a", "p-a", "s-a2", first.id, deps),
+      NotFoundError,
+    );
+
+    await deleteShot("owner", "ws-a", "p-a", "s-a", first.id, deps);
+    const listed = await listShots("owner", "ws-a", "p-a", "s-a", deps);
+    assert.deepEqual(
+      listed.map((item) => item.id),
+      [second.id],
+    );
+    await assert.rejects(
+      getShot("owner", "ws-a", "p-a", "s-a", first.id, deps),
       NotFoundError,
     );
   });

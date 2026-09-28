@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SHOT-001 — Modelo Shot
+SHOT-002 — CRUD de Shots
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SHOT-002 — CRUD de Shots
+SHOT-003 — Reordenação
 ```
 
 ## Estado dos módulos

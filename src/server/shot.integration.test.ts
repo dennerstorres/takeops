@@ -4,7 +4,14 @@ import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError } from "./errors.ts";
 import { createProject } from "./project.ts";
 import { createScene, deleteScene } from "./scene.ts";
-import { createShot, getShot, listShots, type ShotDeps } from "./shot.ts";
+import {
+  createShot,
+  deleteShot,
+  getShot,
+  listShots,
+  updateShot,
+  type ShotDeps,
+} from "./shot.ts";
 import { createWorkspace } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
@@ -165,6 +172,54 @@ describe(
           ),
           NotFoundError,
         );
+
+        const edited = await updateShot(
+          author.id,
+          workspaceId,
+          project.id,
+          sceneA.id,
+          second.id,
+          { name: "Tela", shotType: "SCREEN_CAPTURE", status: "RECORDED" },
+          deps,
+        );
+        assert.equal(edited.status, "RECORDED");
+        assert.equal(edited.order, 2);
+        await assert.rejects(
+          updateShot(
+            author.id,
+            workspaceId,
+            project.id,
+            sceneB.id,
+            second.id,
+            {},
+            deps,
+          ),
+          NotFoundError,
+        );
+        await deleteShot(
+          author.id,
+          workspaceId,
+          project.id,
+          sceneA.id,
+          second.id,
+          deps,
+        );
+        const afterDelete = await listShots(
+          author.id,
+          workspaceId,
+          project.id,
+          sceneA.id,
+          deps,
+        );
+        assert.deepEqual(
+          afterDelete.map((item) => item.id),
+          [first.id],
+        );
+        // Exclusão é lógica: a linha fica no banco.
+        const stored = await prisma.shot.findUnique({
+          where: { id: second.id },
+        });
+        assert.ok(stored?.deletedAt);
 
         // Cena excluída esconde os shots dela.
         await deleteScene(
