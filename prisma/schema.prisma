@@ -169,6 +169,7 @@ model VideoProject {
   owner                     User?              @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   sourceIdea                Idea?              @relation(fields: [sourceIdeaId], references: [id], onDelete: SetNull)
   members                   ProjectMember[]
+  script                    Script?
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -185,6 +186,18 @@ enum ProjectRole {
   REVIEWER
   APPROVER
   OTHER
+}
+
+model Script {
+  id             String       @id @default(uuid())
+  videoProjectId String       @unique
+  hook           String?
+  mainMessage    String?
+  cta            String?
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
 }
 
 model ProjectMember {

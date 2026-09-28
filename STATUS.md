@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-KANBAN-004 — Alertas de incompletude
+SCRIPT-001 — Modelo Script
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SCRIPT-001 — Modelo Script
+SCENE-001 — Modelo Scene
 ```
 
 ## Estado dos módulos
@@ -42,7 +42,7 @@ SCRIPT-001 — Modelo Script
 | Ideias | DONE |
 | Projetos | DONE |
 | Kanban | DONE |
-| Roteiro | NOT_STARTED |
+| Roteiro | IN_PROGRESS |
 | Shots | NOT_STARTED |
 | Gravações | NOT_STARTED |
 | Checklist | NOT_STARTED |

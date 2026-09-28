@@ -536,9 +536,15 @@ mover para READY_TO_RECORD sem cenas prontas gera aviso, mas não precisa bloque
 
 ## SCRIPT-001 — Modelo Script
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PROJECT-002
+
+### Critérios
+
+- [x] cada produção tem no máximo um roteiro, com gancho, mensagem, chamada e notas;
+- [x] quem escreve grava; leitor só lê;
+- [x] roteiro de outra produção ou outro workspace não entra.
 
 ---
 

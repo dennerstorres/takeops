@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SCRIPT-001 — Modelo Script
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+A produção ganhou um roteiro próprio: gancho, mensagem principal, chamada e notas. Não é um texto único e ainda não tem tela.
+
+### Implementação
+
+- A tabela `Script` aponta para uma produção, com índice único.
+- `saveScript` cria ou atualiza esse registro. Quem é leitor só lê.
+- A consulta filtra pela produção do workspace da sessão.
+- Campo que não veio no corpo fica como está. String vazia limpa o campo.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928230000_script/migration.sql`
+- `src/server/script.ts`
+- `src/server/script-prisma.ts`
+- `src/server/script.test.ts`
+- `src/server/script.integration.test.ts`
+
+### Decisões tomadas
+
+- ADR-025.
+
+### Banco / migrations
+
+- `20260928230000_script`
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — KANBAN-004 — Alertas de incompletude
 
 **Status:** DONE  

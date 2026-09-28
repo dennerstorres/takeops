@@ -491,6 +491,27 @@ Uma produção arquivada continua visível. O filtro da lista vale para o quadro
 
 ---
 
+# ADR-025 — Um roteiro por produção
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A spec descreve `Script` ligado a `videoProjectId`, com gancho, mensagem, chamada e notas. As cenas são outra entidade. A tela do roteiro é a SCRIPT-002.
+
+## Decisão
+
+Cada produção tem no máximo um roteiro. Gravar de novo atualiza o mesmo registro. Campo omitido permanece. Campo vazio apaga. O workspace vem da sessão e da produção, não do corpo.
+
+Gancho, mensagem e chamada aceitam até 2000 caracteres. Notas, até 4000.
+
+## Consequências
+
+A leitura some com a produção apagada em lógica, porque a consulta passa pela produção visível. A tela entra na SCRIPT-002.
+
+---
+
 # Template para novas decisões
 
 ```md
