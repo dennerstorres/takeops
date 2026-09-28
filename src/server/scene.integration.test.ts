@@ -3,7 +3,14 @@ import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { createProject } from "./project.ts";
-import { createScene, deleteScene, getScene, listScenes, updateScene } from "./scene.ts";
+import {
+  createScene,
+  deleteScene,
+  getScene,
+  listScenes,
+  reorderScenes,
+  updateScene,
+} from "./scene.ts";
 import { createWorkspace } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
@@ -169,6 +176,23 @@ describe(
         assert.equal(edited.title, "Abertura nova");
         assert.equal(edited.status, "READY");
         assert.equal(edited.order, 1);
+        const reordered = await reorderScenes(
+          author.id,
+          workspaceId,
+          project.id,
+          { sceneIds: [second.id, first.id] },
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+          prismaSceneRepository,
+        );
+        assert.deepEqual(
+          reordered.map((item) => item.id),
+          [second.id, first.id],
+        );
+        assert.deepEqual(
+          reordered.map((item) => item.order),
+          [1, 2],
+        );
         await deleteScene(
           author.id,
           workspaceId,

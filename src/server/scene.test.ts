@@ -2,7 +2,14 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import type { ProjectRecord, ProjectRepository } from "./project-repository.ts";
-import { createScene, deleteScene, getScene, listScenes, updateScene } from "./scene.ts";
+import {
+  createScene,
+  deleteScene,
+  getScene,
+  listScenes,
+  reorderScenes,
+  updateScene,
+} from "./scene.ts";
 import type { SceneRecord, SceneRepository } from "./scene-repository.ts";
 import type {
   MembershipRecord,
@@ -151,6 +158,31 @@ function harness() {
       if (!project || index < 0) return false;
       scenes.splice(index, 1);
       return true;
+    },
+    async reorder(workspaceId, projectId, orderedIds) {
+      const project = projects.find(
+        (item) => item.id === projectId && item.workspaceId === workspaceId,
+      );
+      if (!project) return null;
+      const visible = scenes
+        .filter((item) => item.videoProjectId === project.id)
+        .sort((left, right) => left.order - right.order);
+      const unique = new Set(orderedIds);
+      if (
+        orderedIds.length !== visible.length ||
+        unique.size !== orderedIds.length ||
+        orderedIds.some((id) => !visible.some((item) => item.id === id))
+      ) {
+        return null;
+      }
+      for (let index = 0; index < orderedIds.length; index += 1) {
+        const scene = visible.find((item) => item.id === orderedIds[index]);
+        if (!scene) return null;
+        scene.order = index + 1;
+      }
+      return orderedIds.map(
+        (id) => visible.find((item) => item.id === id) as SceneRecord,
+      );
     },
   };
 
@@ -340,6 +372,72 @@ describe("cena", () => {
           sceneRepo,
         ),
       NotFoundError,
+    );
+  });
+
+  it("reordena todas as cenas visíveis e recusa lista incompleta", async () => {
+    const { workspaces, projectRepo, sceneRepo, join } = harness();
+    join("owner", "ws-a", "OWNER");
+    join("viewer", "ws-a", "VIEWER");
+    const first = await createScene(
+      "owner",
+      "ws-a",
+      "p-a",
+      { title: "Um", type: "HOOK" },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    const second = await createScene(
+      "owner",
+      "ws-a",
+      "p-a",
+      { title: "Dois", type: "PRODUCT" },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    const moved = await reorderScenes(
+      "owner",
+      "ws-a",
+      "p-a",
+      { sceneIds: [second.id, first.id] },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    assert.deepEqual(
+      moved.map((item) => [item.id, item.order]),
+      [
+        [second.id, 1],
+        [first.id, 2],
+      ],
+    );
+    await assert.rejects(
+      () =>
+        reorderScenes(
+          "viewer",
+          "ws-a",
+          "p-a",
+          { sceneIds: [first.id, second.id] },
+          workspaces,
+          projectRepo,
+          sceneRepo,
+        ),
+      ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        reorderScenes(
+          "owner",
+          "ws-a",
+          "p-a",
+          { sceneIds: [first.id] },
+          workspaces,
+          projectRepo,
+          sceneRepo,
+        ),
+      ValidationError,
     );
   });
 });

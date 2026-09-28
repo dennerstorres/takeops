@@ -108,4 +108,55 @@ export const prismaSceneRepository: SceneRepository = {
     });
     return result.count === 1;
   },
+
+  async reorder(workspaceId, projectId, orderedIds) {
+    const rows = await prisma.$transaction(async (tx) => {
+      const project = await tx.videoProject.findFirst({
+        where: visibleProject(workspaceId, projectId),
+        select: { id: true },
+      });
+      if (!project) return null;
+      const existing = await tx.scene.findMany({
+        where: { videoProjectId: project.id },
+        orderBy: { order: "asc" },
+      });
+      const visible = existing.filter((row) => row.deletedAt == null);
+      const visibleIds = new Set(visible.map((row) => row.id));
+      const unique = new Set(orderedIds);
+      if (
+        orderedIds.length !== visible.length ||
+        unique.size !== orderedIds.length ||
+        orderedIds.some((id) => !visibleIds.has(id))
+      ) {
+        return null;
+      }
+      const deleted = existing
+        .filter((row) => row.deletedAt != null)
+        .sort((left, right) => left.order - right.order);
+      const parked = [...orderedIds, ...deleted.map((row) => row.id)];
+      for (let index = 0; index < parked.length; index += 1) {
+        await tx.scene.update({
+          where: { id: parked[index] },
+          data: { order: -(index + 1) },
+        });
+      }
+      for (let index = 0; index < orderedIds.length; index += 1) {
+        await tx.scene.update({
+          where: { id: orderedIds[index] },
+          data: { order: index + 1 },
+        });
+      }
+      for (let index = 0; index < deleted.length; index += 1) {
+        await tx.scene.update({
+          where: { id: deleted[index].id },
+          data: { order: orderedIds.length + index + 1 },
+        });
+      }
+      return tx.scene.findMany({
+        where: { videoProjectId: project.id, deletedAt: null },
+        orderBy: { order: "asc" },
+      });
+    });
+    return rows ? rows.map(mapScene) : null;
+  },
 };

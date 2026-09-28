@@ -9,6 +9,7 @@ import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
+import { moveSceneAction } from "@/server/scene-actions";
 import { listScenes } from "@/server/scene";
 import { sceneStatusLabel, sceneTypeLabel } from "@/server/scene-labels";
 import { prismaSceneRepository } from "@/server/scene-prisma";
@@ -79,7 +80,7 @@ export default async function ScenesPage({
         />
       ) : (
         <ul className="flex flex-col gap-3">
-          {scenes.map((scene) => (
+          {scenes.map((scene, index) => (
             <li key={scene.id} className="rounded-xl border p-3">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 space-y-1">
@@ -91,7 +92,29 @@ export default async function ScenesPage({
                   </p>
                 </div>
                 {canEdit ? (
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
+                    <form action={moveSceneAction} className="flex gap-2">
+                      <input type="hidden" name="projectId" value={project.id} />
+                      <input type="hidden" name="sceneId" value={scene.id} />
+                      <button
+                        type="submit"
+                        name="direction"
+                        value="up"
+                        disabled={index === 0}
+                        className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm disabled:opacity-40"
+                      >
+                        Subir
+                      </button>
+                      <button
+                        type="submit"
+                        name="direction"
+                        value="down"
+                        disabled={index === scenes.length - 1}
+                        className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm disabled:opacity-40"
+                      >
+                        Descer
+                      </button>
+                    </form>
                     <Link
                       href={`/producoes/${project.id}/cenas/${scene.id}`}
                       className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"

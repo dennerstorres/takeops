@@ -223,3 +223,45 @@ export async function deleteScene(
   );
   if (!removed) throw new NotFoundError();
 }
+
+const orderSchema = z.object({
+  sceneIds: z.array(z.string().trim().min(1)).max(500),
+});
+
+export async function reorderScenes(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  input: unknown,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  scenes: SceneRepository,
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const project = await getProject(
+    userId,
+    workspaceId,
+    projectId,
+    workspaces,
+    projects,
+  );
+  const ids = parseInput(orderSchema, input).sceneIds;
+  const rows = await scenes.reorder(project.workspaceId, project.id, ids);
+  if (!rows) {
+    throw new ValidationError({
+      order: "A lista de cenas mudou. Atualize a página.",
+    });
+  }
+  if (
+    rows.length !== ids.length ||
+    rows.some(
+      (row, index) =>
+        row.id !== ids[index] ||
+        row.order !== index + 1 ||
+        row.videoProjectId !== project.id,
+    )
+  ) {
+    throw new NotFoundError();
+  }
+  return rows;
+}

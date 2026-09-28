@@ -48,4 +48,9 @@ export type SceneRepository = {
     sceneId: string,
     deletedAt: Date,
   ): Promise<boolean>;
+  reorder(
+    workspaceId: string,
+    projectId: string,
+    orderedIds: readonly string[],
+  ): Promise<SceneRecord[] | null>;
 };

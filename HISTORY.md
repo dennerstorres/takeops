@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SCENE-003 — Reordenação
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Subir e descer a cena grava a ordem inteira numa transação. A lista visível passa a ser 1, 2, 3.
+
+### Implementação
+
+- `reorderScenes` exige todas as cenas visíveis, sem repetir e sem cena de fora.
+- A transação tira a ordem do caminho, inclusive das excluídas, e regrava sem colisão.
+- Leitor não vê os botões e o servidor recusa a troca.
+- Duplicar continua na SCENE-004.
+
+### Arquivos principais
+
+- `src/server/scene.ts`
+- `src/server/scene-prisma.ts`
+- `src/server/scene-actions.ts`
+- `src/app/(app)/producoes/[id]/cenas/page.tsx`
+- `src/server/scene.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. A ordem sequencial já era a regra do MVP.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — SCENE-002 — CRUD de cenas
 
 **Status:** DONE  

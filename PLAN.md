@@ -578,9 +578,15 @@ mover para READY_TO_RECORD sem cenas prontas gera aviso, mas não precisa bloque
 
 ## SCENE-003 — Reordenação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SCENE-002
+
+### Critérios
+
+- [x] a nova ordem é gravada numa transação e fica 1, 2, 3;
+- [x] a lista precisa conter todas as cenas visíveis;
+- [x] leitor não reordena.
 
 Reordenação transacional.
 

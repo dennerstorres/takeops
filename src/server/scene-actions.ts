@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { prismaProjectRepository } from "@/server/project-prisma";
-import { createScene, deleteScene, updateScene } from "@/server/scene";
+import { createScene, deleteScene, listScenes, reorderScenes, updateScene } from "@/server/scene";
+import { ValidationError } from "@/server/errors";
 import { prismaSceneRepository } from "@/server/scene-prisma";
 import { runAction, type ActionFailure } from "@/server/service";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
@@ -87,6 +88,48 @@ export async function updateSceneAction(
       ),
   );
   if (!result.ok) return { message: result.message, fields: result.fields };
+  revalidatePath(`/producoes/${projectId}/cenas`);
+  redirect(`/producoes/${projectId}/cenas`);
+}
+
+export async function moveSceneAction(formData: FormData) {
+  const current = await currentWorkspace();
+  const projectId = String(formData.get("projectId") ?? "");
+  const sceneId = String(formData.get("sceneId") ?? "");
+  const direction = String(formData.get("direction") ?? "");
+  await runAction(
+    { userId: current.userId, workspaceId: current.workspaceId },
+    { operation: "reorder", entity: "Scene" },
+    async () => {
+      const rows = await listScenes(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        prismaWorkspaceRepository,
+        prismaProjectRepository,
+        prismaSceneRepository,
+      );
+      const index = rows.findIndex((row) => row.id === sceneId);
+      const target = direction === "up" ? index - 1 : index + 1;
+      if (index < 0 || target < 0 || target >= rows.length) {
+        throw new ValidationError({
+          order: "A cena já está nessa ponta.",
+        });
+      }
+      const ids = rows.map((row) => row.id);
+      const [item] = ids.splice(index, 1);
+      ids.splice(target, 0, item);
+      return reorderScenes(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        { sceneIds: ids },
+        prismaWorkspaceRepository,
+        prismaProjectRepository,
+        prismaSceneRepository,
+      );
+    },
+  );
   revalidatePath(`/producoes/${projectId}/cenas`);
   redirect(`/producoes/${projectId}/cenas`);
 }
