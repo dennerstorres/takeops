@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SCENE-001 — Modelo Scene
+SCENE-002 — CRUD de cenas
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SCENE-002 — CRUD de cenas
+SCENE-003 — Reordenação
 ```
 
 ## Estado dos módulos

@@ -31,7 +31,10 @@ const visibleProject = (workspaceId: string, projectId: string) => ({
 export const prismaSceneRepository: SceneRepository = {
   async list(workspaceId, projectId) {
     const rows = await prisma.scene.findMany({
-      where: { videoProject: visibleProject(workspaceId, projectId) },
+      where: {
+        deletedAt: null,
+        videoProject: visibleProject(workspaceId, projectId),
+      },
       orderBy: { order: "asc" },
     });
     return rows.map(mapScene);
@@ -41,6 +44,7 @@ export const prismaSceneRepository: SceneRepository = {
     const row = await prisma.scene.findFirst({
       where: {
         id: sceneId,
+        deletedAt: null,
         videoProject: visibleProject(workspaceId, projectId),
       },
     });
@@ -67,5 +71,41 @@ export const prismaSceneRepository: SceneRepository = {
       });
     });
     return created ? mapScene(created) : null;
+  },
+
+  async update(workspaceId, projectId, sceneId, input) {
+    const updated = await prisma.$transaction(async (tx) => {
+      const project = await tx.videoProject.findFirst({
+        where: visibleProject(workspaceId, projectId),
+        select: { id: true },
+      });
+      if (!project) return null;
+      const result = await tx.scene.updateMany({
+        where: {
+          id: sceneId,
+          videoProjectId: project.id,
+          deletedAt: null,
+        },
+        data: input,
+      });
+      if (result.count !== 1) return null;
+      return tx.scene.findFirst({
+        where: { id: sceneId, videoProjectId: project.id, deletedAt: null },
+      });
+    });
+    return updated ? mapScene(updated) : null;
+  },
+
+  async softDelete(workspaceId, projectId, sceneId, deletedAt) {
+    const project = await prisma.videoProject.findFirst({
+      where: visibleProject(workspaceId, projectId),
+      select: { id: true },
+    });
+    if (!project) return false;
+    const result = await prisma.scene.updateMany({
+      where: { id: sceneId, videoProjectId: project.id, deletedAt: null },
+      data: { deletedAt },
+    });
+    return result.count === 1;
   },
 };

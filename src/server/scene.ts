@@ -2,7 +2,7 @@ import { z } from "zod";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
-import { sceneTypes } from "./scene-labels.ts";
+import { sceneStatuses, sceneTypes, type SceneStatus } from "./scene-labels.ts";
 import type { SceneRepository, SceneWrite } from "./scene-repository.ts";
 import { parseInput } from "./validation.ts";
 import { requireRole } from "./workspace.ts";
@@ -49,6 +49,7 @@ async function toWrite(
   input: unknown,
   workspaceId: string,
   workspaces: WorkspaceRepository,
+  status: SceneStatus,
 ): Promise<SceneWrite> {
   const data = parseInput(sceneSchema, input);
   const speakerId = blank(data.speakerId);
@@ -71,9 +72,16 @@ async function toWrite(
     cameraInstructions: blank(data.cameraInstructions),
     editingInstructions: blank(data.editingInstructions),
     continuityNotes: blank(data.continuityNotes),
-    status: "PLANNED",
+    status,
   };
 }
+
+const statusSchema = z.object({
+  status: z.preprocess(
+    (value) => (typeof value === "string" && value ? value : undefined),
+    z.enum(sceneStatuses, { error: "Escolha um status." }).optional(),
+  ),
+});
 
 export async function listScenes(
   userId: string,
@@ -137,7 +145,7 @@ export async function createScene(
   const created = await scenes.create(
     project.workspaceId,
     project.id,
-    await toWrite(input, project.workspaceId, workspaces),
+    await toWrite(input, project.workspaceId, workspaces, "PLANNED"),
   );
   if (
     !created ||
@@ -147,4 +155,71 @@ export async function createScene(
     throw new NotFoundError();
   }
   return created;
+}
+
+export async function updateScene(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  sceneId: string,
+  input: unknown,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  scenes: SceneRepository,
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const current = await getScene(
+    userId,
+    workspaceId,
+    projectId,
+    sceneId,
+    workspaces,
+    projects,
+    scenes,
+  );
+  const status = parseInput(statusSchema, input).status ?? current.status;
+  const updated = await scenes.update(
+    workspaceId,
+    projectId,
+    current.id,
+    await toWrite(input, workspaceId, workspaces, status),
+  );
+  if (
+    !updated ||
+    updated.id !== current.id ||
+    updated.videoProjectId !== current.videoProjectId ||
+    updated.order !== current.order
+  ) {
+    throw new NotFoundError();
+  }
+  return updated;
+}
+
+export async function deleteScene(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  sceneId: string,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  scenes: SceneRepository,
+  deletedAt = new Date(),
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const current = await getScene(
+    userId,
+    workspaceId,
+    projectId,
+    sceneId,
+    workspaces,
+    projects,
+    scenes,
+  );
+  const removed = await scenes.softDelete(
+    workspaceId,
+    projectId,
+    current.id,
+    deletedAt,
+  );
+  if (!removed) throw new NotFoundError();
 }

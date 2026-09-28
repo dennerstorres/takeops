@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { createProject } from "./project.ts";
-import { createScene, listScenes } from "./scene.ts";
+import { createScene, deleteScene, getScene, listScenes, updateScene } from "./scene.ts";
 import { createWorkspace } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
@@ -155,6 +155,55 @@ describe(
         assert.equal(
           await prisma.scene.count({ where: { videoProjectId: other.id } }),
           0,
+        );
+        const edited = await updateScene(
+          author.id,
+          workspaceId,
+          project.id,
+          first.id,
+          { title: "Abertura nova", type: "DIALOGUE", status: "READY", order: 9 },
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+          prismaSceneRepository,
+        );
+        assert.equal(edited.title, "Abertura nova");
+        assert.equal(edited.status, "READY");
+        assert.equal(edited.order, 1);
+        await deleteScene(
+          author.id,
+          workspaceId,
+          project.id,
+          second.id,
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+          prismaSceneRepository,
+        );
+        const afterDelete = await listScenes(
+          author.id,
+          workspaceId,
+          project.id,
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+          prismaSceneRepository,
+        );
+        assert.deepEqual(
+          afterDelete.map((item) => item.id),
+          [first.id],
+        );
+        const hidden = await prisma.scene.findFirst({ where: { id: second.id } });
+        assert.ok(hidden?.deletedAt);
+        await assert.rejects(
+          () =>
+            getScene(
+              author.id,
+              workspaceId,
+              project.id,
+              second.id,
+              prismaWorkspaceRepository,
+              prismaProjectRepository,
+              prismaSceneRepository,
+            ),
+          NotFoundError,
         );
       } finally {
         if (workspaceId) {

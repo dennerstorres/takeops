@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SCENE-002 — CRUD de cenas
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Dá para editar e excluir a cena em `/producoes/[id]/cenas`. A ordem não muda. Excluir esconde a cena e guarda o registro.
+
+### Implementação
+
+- `updateScene` troca título, tipo, status e os textos. A ordem fica.
+- `deleteScene` preenche `deletedAt`. A lista e a leitura ignoram esse registro.
+- Leitor vê a lista e não abre a edição.
+- A aba Cenas passa a abrir. Reordenar continua na SCENE-003.
+
+### Arquivos principais
+
+- `src/server/scene.ts`
+- `src/server/scene-actions.ts`
+- `src/app/(app)/producoes/[id]/cenas/page.tsx`
+- `src/app/(app)/producoes/[id]/cenas/[sceneId]/page.tsx`
+- `prisma/migrations/20260928250000_scene_soft_delete/migration.sql`
+
+### Decisões tomadas
+
+- Sem ADR novo. Vale a ADR-026. Excluir segue o soft delete da spec.
+
+### Banco / migrations
+
+- `20260928250000_scene_soft_delete`
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — SCENE-001 — Modelo Scene
 
 **Status:** DONE  

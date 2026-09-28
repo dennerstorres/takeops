@@ -238,6 +238,7 @@ model Scene {
   editingInstructions       String?
   continuityNotes           String?
   status                    SceneStatus @default(PLANNED)
+  deletedAt                 DateTime?
   createdAt                 DateTime    @default(now())
   updatedAt                 DateTime    @updatedAt
   videoProject              VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)

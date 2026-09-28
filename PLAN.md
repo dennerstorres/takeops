@@ -564,9 +564,15 @@ mover para READY_TO_RECORD sem cenas prontas gera aviso, mas não precisa bloque
 
 ## SCENE-002 — CRUD de cenas
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SCENE-001
+
+### Critérios
+
+- [x] quem escreve edita e tira a cena da lista;
+- [x] a ordem não muda neste cadastro;
+- [x] leitor só vê; a cena excluída permanece no banco.
 
 ---
 

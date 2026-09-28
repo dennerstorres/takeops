@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import type { ProjectRecord, ProjectRepository } from "./project-repository.ts";
-import { createScene, getScene, listScenes } from "./scene.ts";
+import { createScene, deleteScene, getScene, listScenes, updateScene } from "./scene.ts";
 import type { SceneRecord, SceneRepository } from "./scene-repository.ts";
 import type {
   MembershipRecord,
@@ -135,6 +135,23 @@ function harness() {
       scenes.push(created);
       return created;
     },
+    async update(workspaceId, projectId, sceneId, input) {
+      const current = await this.find(workspaceId, projectId, sceneId);
+      if (!current) return null;
+      Object.assign(current, input);
+      return current;
+    },
+    async softDelete(workspaceId, projectId, sceneId) {
+      const index = scenes.findIndex(
+        (item) => item.id === sceneId && item.videoProjectId === projectId,
+      );
+      const project = projects.find(
+        (item) => item.id === projectId && item.workspaceId === workspaceId,
+      );
+      if (!project || index < 0) return false;
+      scenes.splice(index, 1);
+      return true;
+    },
   };
 
   function join(userId: string, workspaceId: string, role: WorkspaceRole) {
@@ -249,6 +266,75 @@ describe("cena", () => {
           "ws-a",
           "p-b",
           first.id,
+          workspaces,
+          projectRepo,
+          sceneRepo,
+        ),
+      NotFoundError,
+    );
+  });
+
+  it("edita os campos, troca o status e esconde a exclusão sem mudar a ordem", async () => {
+    const { workspaces, projectRepo, sceneRepo, join } = harness();
+    join("owner", "ws-a", "OWNER");
+    join("viewer", "ws-a", "VIEWER");
+    const created = await createScene(
+      "owner",
+      "ws-a",
+      "p-a",
+      { title: "Abertura", type: "HOOK", dialogue: "Olá" },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    const updated = await updateScene(
+      "owner",
+      "ws-a",
+      "p-a",
+      created.id,
+      { title: "Abertura nova", type: "DIALOGUE", status: "READY", order: 4 },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    assert.equal(updated.title, "Abertura nova");
+    assert.equal(updated.status, "READY");
+    assert.equal(updated.order, 1);
+    assert.equal(updated.dialogue, null);
+    await assert.rejects(
+      () =>
+        updateScene(
+          "viewer",
+          "ws-a",
+          "p-a",
+          created.id,
+          { title: "Não", type: "OTHER" },
+          workspaces,
+          projectRepo,
+          sceneRepo,
+        ),
+      ForbiddenError,
+    );
+    await deleteScene(
+      "owner",
+      "ws-a",
+      "p-a",
+      created.id,
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    assert.deepEqual(
+      await listScenes("owner", "ws-a", "p-a", workspaces, projectRepo, sceneRepo),
+      [],
+    );
+    await assert.rejects(
+      () =>
+        getScene(
+          "owner",
+          "ws-a",
+          "p-a",
+          created.id,
           workspaces,
           projectRepo,
           sceneRepo,

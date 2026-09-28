@@ -36,4 +36,16 @@ export type SceneRepository = {
     projectId: string,
     input: SceneWrite,
   ): Promise<SceneRecord | null>;
+  update(
+    workspaceId: string,
+    projectId: string,
+    sceneId: string,
+    input: SceneWrite,
+  ): Promise<SceneRecord | null>;
+  softDelete(
+    workspaceId: string,
+    projectId: string,
+    sceneId: string,
+    deletedAt: Date,
+  ): Promise<boolean>;
 };
