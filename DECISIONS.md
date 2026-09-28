@@ -409,6 +409,27 @@ A troca de status fica na IDEA-002. Converter em produção continua numa tarefa
 
 ---
 
+# ADR-021 — Produção nasce como ideia em 9:16
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+PROJECT-001 grava o modelo de `VideoProject`. O formato de conteúdo do produto começa em Reels, TikTok e Shorts. A troca de etapa do pipeline é outra tarefa.
+
+## Decisão
+
+O formato reusa os valores da ideia. A proporção padrão é `9:16`. A prioridade padrão é `NORMAL`. O status gravado na criação é sempre `IDEA`. O cliente não escolhe a etapa.
+
+A data sem horário vira meia-noite UTC. `deletedAt` já existe na tabela. Apagar e editar a tela ficam na PROJECT-002. Mudar a etapa fica no kanban.
+
+## Consequências
+
+Uma ideia ligada à produção precisa ser do mesmo workspace. A conversão que marca a ideia como convertida continua fora desta tarefa.
+
+---
+
 # Template para novas decisões
 
 ```md

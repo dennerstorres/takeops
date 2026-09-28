@@ -19,6 +19,8 @@ model User {
   invitesSent     WorkspaceInvite[] @relation("InviteInviter")
   invitesAccepted WorkspaceInvite[] @relation("InviteAccepter")
   ideas           Idea[]
+  projectsCreated VideoProject[] @relation("ProjectCreator")
+  projectsOwned   VideoProject[] @relation("ProjectOwner")
 }
 
 enum WorkspaceRole {
@@ -39,6 +41,7 @@ model Workspace {
   members   WorkspaceMember[]
   invites   WorkspaceInvite[]
   ideas     Idea[]
+  projects  VideoProject[]
 }
 
 enum InviteStatus {
@@ -104,7 +107,69 @@ model Idea {
   updatedAt    DateTime    @updatedAt
   workspace    Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   author       User        @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  projects     VideoProject[]
 
+  @@index([workspaceId, createdAt])
+}
+
+enum VideoProjectStatus {
+  IDEA
+  PRE_PRODUCTION
+  SCRIPTING
+  READY_TO_RECORD
+  RECORDING
+  EDITING
+  REVIEW
+  APPROVED
+  SCHEDULED
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ProjectPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum AspectRatio {
+  NINE_SIXTEEN
+  SIXTEEN_NINE
+  ONE_ONE
+  FOUR_FIVE
+}
+
+model VideoProject {
+  id                        String             @id @default(uuid())
+  workspaceId               String
+  title                     String
+  slug                      String?
+  description               String?
+  objective                 String?
+  audience                  String?
+  product                   String?
+  format                    IdeaFormat
+  aspectRatio               AspectRatio        @default(NINE_SIXTEEN)
+  estimatedDurationSeconds  Int?
+  status                    VideoProjectStatus @default(IDEA)
+  priority                  ProjectPriority    @default(NORMAL)
+  thumbnailUrl              String?
+  ownerId                   String?
+  plannedShootDate          DateTime?
+  plannedPublishDate        DateTime?
+  sourceIdeaId              String?
+  createdById               String
+  deletedAt                 DateTime?
+  createdAt                 DateTime           @default(now())
+  updatedAt                 DateTime           @updatedAt
+  workspace                 Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdBy                 User               @relation("ProjectCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  owner                     User?              @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  sourceIdea                Idea?              @relation(fields: [sourceIdeaId], references: [id], onDelete: SetNull)
+
+  @@unique([workspaceId, slug])
+  @@index([workspaceId, status])
   @@index([workspaceId, createdAt])
 }
 

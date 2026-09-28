@@ -351,11 +351,18 @@ Objetivo: registrar uma ideia com o mínimo de atrito.
 
 ## PROJECT-001 — Modelo de VideoProject
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** WORKSPACE-001
 
 Implementar campos descritos no SPEC.
+
+### Critérios
+
+- [x] a produção guarda os campos da spec no workspace;
+- [x] nasce em IDEA, prioridade normal e proporção 9:16;
+- [x] o cliente não escolhe a etapa;
+- [x] ideia de outro workspace não entra.
 
 ---
 

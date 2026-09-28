@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 3 — Ideias
+Fase 4 — Video Projects
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-IDEA-003 — UX de captura rápida
+PROJECT-001 — Modelo de VideoProject
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PROJECT-001 — Modelo de VideoProject
+PROJECT-002 — CRUD de produções
 ```
 
 ## Estado dos módulos
@@ -40,7 +40,7 @@ PROJECT-001 — Modelo de VideoProject
 | Workspace | IN_PROGRESS |
 | Equipe | DONE |
 | Ideias | DONE |
-| Projetos | NOT_STARTED |
+| Projetos | IN_PROGRESS |
 | Kanban | NOT_STARTED |
 | Roteiro | NOT_STARTED |
 | Shots | NOT_STARTED |
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-Em `/ideias`, quem escreve anota só o título. O formulário completo continua em `/ideias/nova`. O status muda entre Nova, Em análise, Aprovada e Descartada. DASH-001 espera PROJECT-001. `npm run test:e2e` ainda não existe.
+O modelo de produção existe no banco. Ela nasce como ideia, prioridade normal e proporção 9:16. A tela fica na PROJECT-002. `npm run test:e2e` ainda não existe.

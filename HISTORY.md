@@ -1037,3 +1037,73 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 PROJECT-001 cria o projeto de vídeo. A conversão da ideia fica depois que esse modelo existir.
 
+---
+
+## 2026-09-28 — PROJECT-001 — Modelo de VideoProject
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+A produção existe no banco com os campos da spec. Quem escreve cria. Quem participa lê. A etapa inicial é sempre IDEA.
+
+### Implementação
+
+- Modelo `VideoProject`, status do pipeline, prioridade e proporção. Migration `20260928210000_video_project`.
+- Formato reusa os valores da ideia. Proporção padrão `9:16`. Prioridade padrão `NORMAL`.
+- `createdById` vem da sessão. Ideia de origem e responsável precisam ser do mesmo workspace.
+- Data sem horário vira meia-noite UTC. `deletedAt` já está na tabela.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928210000_video_project/migration.sql`
+- `src/server/project.ts`
+- `src/server/project-prisma.ts`
+- `src/server/project-repository.ts`
+- `src/server/project.test.ts`
+- `src/server/project.integration.test.ts`
+
+### Decisões tomadas
+
+- ADR-021. A troca de etapa fica no kanban. A tela de cadastro fica na PROJECT-002.
+
+### Banco / migrations
+
+- `20260928210000_video_project`, aplicada no Postgres local.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+O teste de banco criou a produção ligada a uma ideia do mesmo workspace e recusou a ideia do outro. Não há tela nova.
+
+### Critérios de aceite
+
+- [x] a produção guarda os campos da spec no workspace
+- [x] nasce em IDEA, prioridade normal e proporção 9:16
+- [x] o cliente não escolhe a etapa
+- [x] ideia de outro workspace não entra
+
+### Pendências conhecidas
+
+- CRUD da tela fica na PROJECT-002.
+- Mudar a etapa fica no kanban.
+- Converter a ideia em produção ainda não marca `CONVERTED`.
+
+### Observações para próxima tarefa
+
+PROJECT-002 usa `createProject`, `getProject` e `listProjects`. Não deixe o cliente enviar o status.
+
