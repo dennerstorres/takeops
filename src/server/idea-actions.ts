@@ -4,7 +4,12 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
-import { createIdea, deleteIdea, updateIdea } from "@/server/idea";
+import {
+  changeIdeaStatus,
+  createIdea,
+  deleteIdea,
+  updateIdea,
+} from "@/server/idea";
 import { prismaIdeaRepository } from "@/server/idea-prisma";
 import { runAction, type ActionFailure } from "@/server/service";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
@@ -79,6 +84,26 @@ export async function updateIdeaAction(
   revalidatePath(`/ideias/${ideaId}`);
   revalidatePath("/ideias");
   return { message: "Ideia salva." };
+}
+
+export async function changeIdeaStatusAction(formData: FormData) {
+  const current = await currentWorkspace();
+  const ideaId = String(formData.get("ideaId") ?? "");
+  await runAction(
+    { userId: current.userId, workspaceId: current.workspaceId },
+    { operation: "change-status", entity: "Idea" },
+    () =>
+      changeIdeaStatus(
+        current.userId,
+        current.workspaceId,
+        ideaId,
+        { status: formData.get("status") },
+        prismaWorkspaceRepository,
+        prismaIdeaRepository,
+      ),
+  );
+  revalidatePath(`/ideias/${ideaId}`);
+  revalidatePath("/ideias");
 }
 
 export async function deleteIdeaAction(formData: FormData) {

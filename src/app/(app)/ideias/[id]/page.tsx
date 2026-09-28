@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { DeleteIdeaButton } from "@/components/ideas/delete-idea-button";
 import { IdeaForm } from "@/components/ideas/idea-form";
+import { IdeaStatusForm } from "@/components/ideas/idea-status-form";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { NotFoundError } from "@/server/errors";
@@ -62,6 +63,9 @@ export default async function IdeaPage({
           <p className="text-sm text-muted-foreground">
             {statusLabel(idea.status)} · {idea.authorName ?? "Sem nome"}
           </p>
+          {canEdit && idea.status !== "CONVERTED" ? (
+            <IdeaStatusForm ideaId={idea.id} status={idea.status} />
+          ) : null}
         </div>
         {canEdit ? <DeleteIdeaButton ideaId={idea.id} /> : null}
       </header>

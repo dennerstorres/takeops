@@ -75,6 +75,15 @@ export const prismaIdeaRepository: IdeaRepository = {
     return this.find(workspaceId, ideaId);
   },
 
+  async setStatus(workspaceId, ideaId, status) {
+    const updated = await prisma.idea.updateMany({
+      where: { id: ideaId, workspaceId, deletedAt: null },
+      data: { status },
+    });
+    if (updated.count !== 1) return null;
+    return this.find(workspaceId, ideaId);
+  },
+
   async softDelete(workspaceId, ideaId, deletedAt) {
     const updated = await prisma.idea.updateMany({
       where: { id: ideaId, workspaceId, deletedAt: null },

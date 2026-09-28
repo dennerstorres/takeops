@@ -1,5 +1,14 @@
 import type { IdeaFormat, IdeaStatus } from "./idea-labels.ts";
 
+export const editableIdeaStatuses = [
+  "NEW",
+  "UNDER_REVIEW",
+  "APPROVED",
+  "DISCARDED",
+] as const;
+
+export type EditableIdeaStatus = (typeof editableIdeaStatuses)[number];
+
 export type IdeaRecord = {
   id: string;
   workspaceId: string;
@@ -47,4 +56,9 @@ export type IdeaRepository = {
     ideaId: string,
     deletedAt: Date,
   ): Promise<boolean>;
+  setStatus(
+    workspaceId: string,
+    ideaId: string,
+    status: IdeaStatus,
+  ): Promise<IdeaRecord | null>;
 };

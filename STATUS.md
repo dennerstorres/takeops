@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-IDEA-001 — Modelo e CRUD
+IDEA-002 — Status de ideia
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-IDEA-002 — Status de ideia
+IDEA-003 — UX de captura rápida
 ```
 
 ## Estado dos módulos
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-`/ideias` lista, cria, edita e faz exclusão lógica. O status nasce como Nova e ainda não muda. Leitor só vê. DASH-001 espera PROJECT-001. `npm run test:e2e` ainda não existe.
+`/ideias` lista, cria, edita e faz exclusão lógica. Quem escreve muda o status entre Nova, Em análise, Aprovada e Descartada. Convertida fica para a conversão em produção. DASH-001 espera PROJECT-001. `npm run test:e2e` ainda não existe.

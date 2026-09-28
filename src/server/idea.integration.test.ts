@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
-import { ForbiddenError, NotFoundError } from "./errors.ts";
+import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import {
+  changeIdeaStatus,
   createIdea,
   deleteIdea,
   getIdea,
@@ -99,6 +100,52 @@ describe(
           prismaIdeaRepository,
         );
         assert.equal(updated.status, "NEW");
+
+        await assert.rejects(
+          () =>
+            changeIdeaStatus(
+              viewer.id,
+              workspaceId,
+              created.id,
+              { status: "APPROVED" },
+              prismaWorkspaceRepository,
+              prismaIdeaRepository,
+            ),
+          (error: unknown) => error instanceof ForbiddenError,
+        );
+        await assert.rejects(
+          () =>
+            changeIdeaStatus(
+              outsider.id,
+              workspaceId,
+              created.id,
+              { status: "DISCARDED" },
+              prismaWorkspaceRepository,
+              prismaIdeaRepository,
+            ),
+          (error: unknown) => error instanceof ForbiddenError,
+        );
+        await assert.rejects(
+          () =>
+            changeIdeaStatus(
+              author.id,
+              workspaceId,
+              created.id,
+              { status: "CONVERTED" },
+              prismaWorkspaceRepository,
+              prismaIdeaRepository,
+            ),
+          (error: unknown) => error instanceof ValidationError,
+        );
+        const reviewed = await changeIdeaStatus(
+          author.id,
+          workspaceId,
+          created.id,
+          { status: "UNDER_REVIEW" },
+          prismaWorkspaceRepository,
+          prismaIdeaRepository,
+        );
+        assert.equal(reviewed.status, "UNDER_REVIEW");
 
         await deleteIdea(
           author.id,

@@ -903,3 +903,72 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 IDEA-002 muda o status por serviço, sem o cliente escolher um estado solto. `CONVERTED` continua reservado para a conversão.
 
+---
+
+## 2026-09-28 — IDEA-002 — Status de ideia
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Quem escreve muda a ideia entre Nova, Em análise, Aprovada e Descartada. Leitor e quem está fora do workspace não mudam. Convertida não entra nessa escolha.
+
+### Implementação
+
+- `changeIdeaStatus` aceita só `NEW`, `UNDER_REVIEW`, `APPROVED` e `DISCARDED`.
+- `CONVERTED` e qualquer outro nome são recusados. Uma ideia já convertida também não volta.
+- A tela da ideia mostra o seletor para dono, admin e membro. O workspace vem da sessão.
+
+### Arquivos principais
+
+- `src/server/idea.ts`
+- `src/server/idea-repository.ts`
+- `src/server/idea-prisma.ts`
+- `src/server/idea-actions.ts`
+- `src/components/ideas/idea-status-form.tsx`
+- `src/app/(app)/ideias/[id]/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR novo. ADR-020 já reserva `CONVERTED` para a conversão em produção.
+
+### Banco / migrations
+
+- Nenhuma. O status já existia em `Idea.status`.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+No HTTP, o autor mudou a ideia para Aprovada. O leitor não viu o controle e o envio dele não alterou o status.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] quem escreve muda entre Nova, Em análise, Aprovada e Descartada
+- [x] leitor não muda
+- [x] outro workspace não muda
+- [x] Convertida e um status desconhecido são recusados
+
+### Pendências conhecidas
+
+- Captura rápida fica na IDEA-003.
+- Converter em produção continua sem tarefa de projeto.
+
+### Observações para próxima tarefa
+
+IDEA-003 reduz o atrito para registrar uma ideia. O cadastro completo em `/ideias/nova` permanece.
+

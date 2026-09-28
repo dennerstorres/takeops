@@ -310,7 +310,7 @@ Pode ser implementado parcialmente e enriquecido após módulos correspondentes.
 
 ## IDEA-002 — Status de ideia
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** IDEA-001
 
@@ -321,6 +321,13 @@ Estados:
 - APPROVED;
 - DISCARDED;
 - CONVERTED.
+
+### Critérios
+
+- [x] quem escreve muda entre Nova, Em análise, Aprovada e Descartada;
+- [x] leitor não muda;
+- [x] outro workspace não muda;
+- [x] Convertida e um status desconhecido são recusados.
 
 ---
 

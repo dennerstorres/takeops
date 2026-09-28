@@ -7,6 +7,7 @@ import type {
   IdeaWrite,
 } from "./idea-repository.ts";
 import {
+  changeIdeaStatus,
   createIdea,
   deleteIdea,
   getIdea,
@@ -85,6 +86,14 @@ function harness() {
       );
       if (!idea) return null;
       Object.assign(idea, input, { updatedAt: new Date() });
+      return idea;
+    },
+    async setStatus(workspaceId, ideaId, status) {
+      const idea = ideas.find(
+        (item) => item.id === ideaId && item.workspaceId === workspaceId,
+      );
+      if (!idea) return null;
+      idea.status = status;
       return idea;
     },
     async softDelete(workspaceId, ideaId) {
@@ -187,5 +196,105 @@ describe("ideias", () => {
       () => getIdea("member", "ws-a", created.id, workspaces, ideaRepo),
       (error: unknown) => error instanceof NotFoundError,
     );
+  });
+});
+
+describe("status da ideia", () => {
+  it("só move entre os quatro status livres", async () => {
+    const { workspaces, ideaRepo, ideas, join } = harness();
+    join("member", "ws-a", "MEMBER", "Membro");
+    join("viewer", "ws-a", "VIEWER", "Leitor");
+    join("outsider", "ws-b", "OWNER", "Fora");
+    const created = await createIdea(
+      "member",
+      "ws-a",
+      { title: "Status" },
+      workspaces,
+      ideaRepo,
+    );
+
+    for (const status of [
+      "UNDER_REVIEW",
+      "APPROVED",
+      "DISCARDED",
+      "NEW",
+    ] as const) {
+      const changed = await changeIdeaStatus(
+        "member",
+        "ws-a",
+        created.id,
+        { status },
+        workspaces,
+        ideaRepo,
+      );
+      assert.equal(changed.status, status);
+    }
+
+    await assert.rejects(
+      () =>
+        changeIdeaStatus(
+          "viewer",
+          "ws-a",
+          created.id,
+          { status: "APPROVED" },
+          workspaces,
+          ideaRepo,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        changeIdeaStatus(
+          "outsider",
+          "ws-a",
+          created.id,
+          { status: "DISCARDED" },
+          workspaces,
+          ideaRepo,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        changeIdeaStatus(
+          "member",
+          "ws-a",
+          created.id,
+          { status: "CONVERTED" },
+          workspaces,
+          ideaRepo,
+        ),
+      (error: unknown) => error instanceof ValidationError,
+    );
+    await assert.rejects(
+      () =>
+        changeIdeaStatus(
+          "member",
+          "ws-a",
+          created.id,
+          { status: "PUBLICADO" },
+          workspaces,
+          ideaRepo,
+        ),
+      (error: unknown) => error instanceof ValidationError,
+    );
+    assert.equal(ideas.find((idea) => idea.id === created.id)?.status, "NEW");
+
+    const stored = ideas.find((idea) => idea.id === created.id);
+    if (!stored) throw new Error("ideia sumiu");
+    stored.status = "CONVERTED";
+    await assert.rejects(
+      () =>
+        changeIdeaStatus(
+          "member",
+          "ws-a",
+          created.id,
+          { status: "NEW" },
+          workspaces,
+          ideaRepo,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    assert.equal(stored.status, "CONVERTED");
   });
 });

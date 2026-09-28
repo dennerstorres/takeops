@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { ideaFormats, type IdeaFormat } from "./idea-labels.ts";
-import type { IdeaRepository, IdeaWrite } from "./idea-repository.ts";
+import {
+  editableIdeaStatuses,
+  type IdeaRepository,
+  type IdeaWrite,
+} from "./idea-repository.ts";
 import { parseInput } from "./validation.ts";
 import { requireMembership, requireRole } from "./workspace.ts";
 import type { WorkspaceRepository } from "./workspace-repository.ts";
@@ -141,6 +145,38 @@ export async function updateIdea(
     updated.authorId !== current.authorId
   ) {
     throw new ForbiddenError();
+  }
+  return updated;
+}
+
+const statusSchema = z.object({
+  status: z.enum(editableIdeaStatuses, { error: "Escolha um status." }),
+});
+
+export async function changeIdeaStatus(
+  userId: string,
+  workspaceId: string,
+  ideaId: string,
+  input: unknown,
+  workspaces: WorkspaceRepository,
+  ideas: IdeaRepository,
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const data = parseInput(statusSchema, input);
+  const current = await visible(userId, workspaceId, ideaId, workspaces, ideas);
+  if (current.status === "CONVERTED") {
+    throw new ForbiddenError("Esta ideia já foi convertida.");
+  }
+  if (current.status === data.status) return current;
+
+  const updated = await ideas.setStatus(workspaceId, ideaId, data.status);
+  if (
+    !updated ||
+    updated.id !== ideaId ||
+    updated.workspaceId !== workspaceId ||
+    updated.status !== data.status
+  ) {
+    throw new NotFoundError();
   }
   return updated;
 }
