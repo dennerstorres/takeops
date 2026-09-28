@@ -869,11 +869,19 @@ Número sequencial por Shot.
 
 ## TAKE-003 — Take preferido
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** TAKE-002
 
 Permitir um ou mais Takes OK e destacar preferido.
+
+### Critérios
+
+- [x] vários takes podem ficar OK no mesmo shot;
+- [x] só um take OK é o preferido do shot; marcar outro troca na mesma transação;
+- [x] take que deixa de ser OK perde o preferido;
+- [x] na cena, o preferido aparece em destaque e tem botão para marcar e tirar;
+- [x] leitor não marca; outro shot não alcança o take.
 
 ---
 

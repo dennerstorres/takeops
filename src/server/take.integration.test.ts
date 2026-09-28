@@ -9,6 +9,7 @@ import {
   getTake,
   listTakes,
   registerTake,
+  setFavoriteTake,
   updateTake,
   type TakeDeps,
 } from "./take.ts";
@@ -260,6 +261,83 @@ describe(
             updateTake(ctx.owner.id, workspaceId, targetB, first.id, {}, deps),
             NotFoundError,
           );
+        } finally {
+          await ctx.cleanup();
+        }
+      });
+      it("marca um preferido por shot, só entre os OK", async () => {
+        const ctx = await setup();
+        try {
+          const { deps, targetA, targetB, workspaceId } = ctx;
+          const register = (status: string) =>
+            registerTake(ctx.member.id, workspaceId, targetA, { status }, deps);
+          const one = await register("OK");
+          const two = await register("OK");
+          const retake = await register("RETAKE");
+
+          let rows = await setFavoriteTake(
+            ctx.member.id,
+            workspaceId,
+            targetA,
+            one.id,
+            deps,
+          );
+          assert.deepEqual(
+            rows.filter((take) => take.favorite).map((take) => take.id),
+            [one.id],
+          );
+          rows = await setFavoriteTake(
+            ctx.member.id,
+            workspaceId,
+            targetA,
+            two.id,
+            deps,
+          );
+          assert.deepEqual(
+            rows.filter((take) => take.favorite).map((take) => take.id),
+            [two.id],
+          );
+          // Mais de um OK convive; o preferido é um só.
+          assert.equal(rows.filter((take) => take.status === "OK").length, 2);
+
+          await assert.rejects(
+            setFavoriteTake(
+              ctx.member.id,
+              workspaceId,
+              targetA,
+              retake.id,
+              deps,
+            ),
+            ValidationError,
+          );
+          await assert.rejects(
+            setFavoriteTake(ctx.viewer.id, workspaceId, targetA, one.id, deps),
+            ForbiddenError,
+          );
+          await assert.rejects(
+            setFavoriteTake(ctx.owner.id, workspaceId, targetB, one.id, deps),
+            NotFoundError,
+          );
+
+          // Descartar o preferido tira a marca.
+          const dropped = await updateTake(
+            ctx.member.id,
+            workspaceId,
+            targetA,
+            two.id,
+            { status: "DISCARDED" },
+            deps,
+          );
+          assert.equal(dropped.favorite, false);
+
+          rows = await setFavoriteTake(
+            ctx.member.id,
+            workspaceId,
+            targetA,
+            null,
+            deps,
+          );
+          assert.equal(rows.filter((take) => take.favorite).length, 0);
         } finally {
           await ctx.cleanup();
         }

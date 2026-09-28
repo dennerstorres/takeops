@@ -93,4 +93,36 @@ export const prismaTakeRepository: TakeRepository = {
     if (result.count !== 1) return null;
     return this.find(scope, takeId);
   },
+
+  async setFavorite(scope, takeId) {
+    const rows = await prisma.$transaction(async (tx) => {
+      const shot = await tx.shot.findFirst({
+        where: visibleShot(scope),
+        select: { id: true },
+      });
+      if (!shot) return null;
+      if (takeId) {
+        const target = await tx.take.findFirst({
+          where: { id: takeId, shotId: shot.id, status: "OK" },
+          select: { id: true },
+        });
+        if (!target) return null;
+      }
+      await tx.take.updateMany({
+        where: { shotId: shot.id, favorite: true },
+        data: { favorite: false },
+      });
+      if (takeId) {
+        await tx.take.update({
+          where: { id: takeId },
+          data: { favorite: true },
+        });
+      }
+      return tx.take.findMany({
+        where: { shotId: shot.id },
+        orderBy: { number: "asc" },
+      });
+    });
+    return rows ? rows.map(mapTake) : null;
+  },
 };

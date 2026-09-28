@@ -1,4 +1,8 @@
-import { registerTakeAction, updateTakeAction } from "@/server/take-actions";
+import {
+  favoriteTakeAction,
+  registerTakeAction,
+  updateTakeAction,
+} from "@/server/take-actions";
 import type { TakeRecord, TakeStatus } from "@/server/take-repository";
 
 const buttonClass =
@@ -68,21 +72,44 @@ export function TakeList({
                 <span className="font-medium">Take {take.number}</span>
                 {" · "}
                 {takeStatusLabel[take.status]}
-                {take.favorite ? " · Preferido" : ""}
+                {take.favorite ? " · ★ Preferido" : ""}
                 {take.notes ? (
                   <span className="text-muted-foreground"> · {take.notes}</span>
                 ) : null}
               </span>
-              {canEdit && take.status !== "DISCARDED" ? (
-                <form action={updateTakeAction}>
-                  <Hidden {...ids} />
-                  <input type="hidden" name="takeId" value={take.id} />
-                  <input type="hidden" name="notes" value={take.notes ?? ""} />
-                  <input type="hidden" name="status" value="DISCARDED" />
-                  <button type="submit" className={buttonClass}>
-                    Descartar
-                  </button>
-                </form>
+              {canEdit ? (
+                <div className="flex flex-wrap gap-2">
+                  {take.status === "OK" ? (
+                    <form action={favoriteTakeAction}>
+                      <Hidden {...ids} />
+                      {take.favorite ? null : (
+                        <input type="hidden" name="takeId" value={take.id} />
+                      )}
+                      <button
+                        type="submit"
+                        aria-pressed={take.favorite}
+                        className={buttonClass}
+                      >
+                        {take.favorite ? "Tirar preferido" : "Preferido"}
+                      </button>
+                    </form>
+                  ) : null}
+                  {take.status !== "DISCARDED" ? (
+                    <form action={updateTakeAction}>
+                      <Hidden {...ids} />
+                      <input type="hidden" name="takeId" value={take.id} />
+                      <input
+                        type="hidden"
+                        name="notes"
+                        value={take.notes ?? ""}
+                      />
+                      <input type="hidden" name="status" value="DISCARDED" />
+                      <button type="submit" className={buttonClass}>
+                        Descartar
+                      </button>
+                    </form>
+                  ) : null}
+                </div>
               ) : null}
             </li>
           ))}

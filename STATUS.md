@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TAKE-002 — Registrar take
+TAKE-003 — Take preferido
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TAKE-003 — Take preferido
+RECORD-001 — Layout do Modo Gravação
 ```
 
 ## Estado dos módulos
@@ -47,7 +47,7 @@ TAKE-003 — Take preferido
 | Gravações | DONE |
 | Checklist | DONE |
 | Modo Gravação | NOT_STARTED |
-| Takes | IN_PROGRESS |
+| Takes | DONE |
 | Assets | NOT_STARTED |
 | Edição | NOT_STARTED |
 | Revisão | NOT_STARTED |

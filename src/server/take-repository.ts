@@ -39,4 +39,10 @@ export type TakeRepository = {
     takeId: string,
     input: { status: TakeStatus; notes: string | null },
   ): Promise<TakeRecord | null>;
+  // Um preferido por shot: marcar um tira a marca dos outros na mesma
+  // transação. null tira a marca de todos.
+  setFavorite(
+    scope: TakeScope,
+    takeId: string | null,
+  ): Promise<TakeRecord[] | null>;
 };

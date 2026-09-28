@@ -8,7 +8,12 @@ import { prismaProjectRepository } from "@/server/project-prisma";
 import { prismaSceneRepository } from "@/server/scene-prisma";
 import { runAction } from "@/server/service";
 import { prismaShotRepository } from "@/server/shot-prisma";
-import { registerTake, updateTake, type TakeDeps } from "@/server/take";
+import {
+  registerTake,
+  setFavoriteTake,
+  updateTake,
+  type TakeDeps,
+} from "@/server/take";
 import { prismaTakeRepository } from "@/server/take-prisma";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
@@ -72,6 +77,22 @@ export async function updateTakeAction(formData: FormData) {
       where,
       String(formData.get("takeId") ?? ""),
       { status: formData.get("status"), notes: formData.get("notes") },
+      deps,
+    ),
+  );
+  back(formData, `/producoes/${where.projectId}/cenas/${where.sceneId}#shots`);
+}
+
+export async function favoriteTakeAction(formData: FormData) {
+  const current = await currentWorkspace();
+  const where = target(formData);
+  const takeId = String(formData.get("takeId") ?? "");
+  await runAction(current, { operation: "favorite", entity: "Take" }, () =>
+    setFavoriteTake(
+      current.userId,
+      current.workspaceId,
+      where,
+      takeId ? takeId : null,
       deps,
     ),
   );

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { NotFoundError } from "./errors.ts";
+import { NotFoundError, ValidationError } from "./errors.ts";
 import { getShot, type ShotDeps } from "./shot.ts";
 import {
   takeStatuses,
@@ -128,4 +128,24 @@ export async function updateTake(
     throw new NotFoundError();
   }
   return updated;
+}
+
+// Pode haver vários takes OK; só um é o preferido do shot.
+export async function setFavoriteTake(
+  userId: string,
+  workspaceId: string,
+  target: TakeTarget,
+  takeId: string | null,
+  deps: TakeDeps,
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const scope = await takeScope(userId, workspaceId, target, deps);
+  if (takeId) await getTake(userId, workspaceId, target, takeId, deps);
+  const rows = await deps.takes.setFavorite(scope, takeId);
+  if (!rows) {
+    throw new ValidationError({
+      favorite: "Só um take OK pode ser o preferido.",
+    });
+  }
+  return rows.filter((take) => take.shotId === scope.shotId);
 }

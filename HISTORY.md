@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — TAKE-003 — Take preferido
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Cada shot pode ter um take preferido entre os OK.
+
+### Implementação
+
+- `setFavoriteTake` recebe o take ou `null`. O repositório confere que o take é OK e do shot, tira a marca dos outros e marca este numa transação.
+- Take RETAKE ou DISCARDED não vira preferido (erro de campo). Descartar o preferido tira a marca (TAKE-002).
+- `TakeList`: "★ Preferido" no take marcado, botões "Preferido" e "Tirar preferido" nos OK.
+
+### Arquivos principais
+
+- `src/server/take.ts`, `take-repository.ts`, `take-prisma.ts`, `take-actions.ts`
+- `src/server/take.integration.test.ts`
+- `src/components/takes/take-list.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. A spec diz "destacar preferido" no singular; ficou um por shot.
+
+### Banco / migrations
+
+- Nenhuma. A regra de um preferido por shot é do serviço, não há índice parcial.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — TAKE-002 — Registrar take
 
 **Status:** DONE  
