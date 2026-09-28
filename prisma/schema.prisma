@@ -45,6 +45,7 @@ model Workspace {
   ideas     Idea[]
   projects  VideoProject[]
   equipment EquipmentItem[]
+  checklistTemplates ChecklistTemplate[]
 }
 
 enum InviteStatus {
@@ -109,7 +110,7 @@ model Idea {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   workspace    Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  author       User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author       User        @relation(fields: [authorId], references: [id], onDelete: Restrict)
   projects     VideoProject[]
 
   @@index([workspaceId, createdAt])
@@ -167,7 +168,7 @@ model VideoProject {
   createdAt                 DateTime           @default(now())
   updatedAt                 DateTime           @updatedAt
   workspace                 Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdBy                 User               @relation("ProjectCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  createdBy                 User               @relation("ProjectCreator", fields: [createdById], references: [id], onDelete: Restrict)
   owner                     User?              @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   sourceIdea                Idea?              @relation(fields: [sourceIdeaId], references: [id], onDelete: SetNull)
   members                   ProjectMember[]
@@ -424,4 +425,34 @@ model ShootEquipment {
 
   @@unique([shootId, equipmentItemId])
   @@index([equipmentItemId])
+}
+
+enum ChecklistType {
+  SHOOT
+  OTHER
+}
+
+model ChecklistTemplate {
+  id          String                  @id @default(uuid())
+  workspaceId String
+  name        String
+  type        ChecklistType           @default(SHOOT)
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+  workspace   Workspace               @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  items       ChecklistTemplateItem[]
+
+  @@index([workspaceId, type])
+}
+
+model ChecklistTemplateItem {
+  id                  String            @id @default(uuid())
+  checklistTemplateId String
+  order               Int
+  text                String
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  checklistTemplate   ChecklistTemplate @relation(fields: [checklistTemplateId], references: [id], onDelete: Cascade)
+
+  @@unique([checklistTemplateId, order])
 }

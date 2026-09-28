@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-EQUIP-002 — Equipamentos por Shoot
+CHECK-001 — Templates de checklist
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-CHECK-001 — Templates de checklist
+CHECK-002 — Checklist padrão de gravação
 ```
 
 ## Estado dos módulos
@@ -45,7 +45,7 @@ CHECK-001 — Templates de checklist
 | Roteiro | DONE |
 | Shots | DONE |
 | Gravações | DONE |
-| Checklist | NOT_STARTED |
+| Checklist | IN_PROGRESS |
 | Modo Gravação | NOT_STARTED |
 | Takes | NOT_STARTED |
 | Assets | NOT_STARTED |

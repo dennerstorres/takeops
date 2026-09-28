@@ -8,12 +8,20 @@ export default function SettingsPage() {
         title="Configurações"
         description="Os dados do workspace aparecem aqui."
       />
-      <Link
-        href="/configuracoes/equipamentos"
-        className="inline-flex min-h-11 w-fit items-center rounded-lg border px-3 text-sm"
-      >
-        Equipamentos
-      </Link>
+      <nav className="flex flex-wrap gap-2">
+        <Link
+          href="/configuracoes/equipamentos"
+          className="inline-flex min-h-11 w-fit items-center rounded-lg border px-3 text-sm"
+        >
+          Equipamentos
+        </Link>
+        <Link
+          href="/configuracoes/checklists"
+          className="inline-flex min-h-11 w-fit items-center rounded-lg border px-3 text-sm"
+        >
+          Checklists
+        </Link>
+      </nav>
     </div>
   );
 }

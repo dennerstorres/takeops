@@ -1315,6 +1315,57 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — CHECK-001 — Templates de checklist
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Configurações → Checklists guarda os modelos de checklist do workspace. Cada modelo tem itens em ordem.
+
+### Implementação
+
+- Tabelas `ChecklistTemplate` (`workspaceId`, `name`, `type`) e `ChecklistTemplateItem` (`order`, `text`), com ordem única por modelo.
+- `ChecklistType` é `SHOOT` ou `OTHER`; a spec não lista valores.
+- Reordenar e tirar item regravam a ordem 1..n numa transação, passando por ordem negativa.
+- Só dono e admin mexem (spec: dono configura, admin cria templates). Membro e leitor veem.
+- Excluir o modelo apaga modelo e itens. Checklist já copiado para gravação é outra tabela (CHECK-003).
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928300000_checklist_template/migration.sql`
+- `src/server/checklist.ts`, `checklist-repository.ts`, `checklist-prisma.ts`, `checklist-actions.ts`
+- `src/server/checklist.integration.test.ts`
+- `src/components/checklists/checklist-forms.tsx`, `delete-template-button.tsx`
+- `src/app/(app)/configuracoes/checklists/page.tsx`, `[templateId]/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Permissão segue a seção de papéis da spec.
+
+### Banco / migrations
+
+- `20260928300000_checklist_template`: cria `ChecklistType`, `ChecklistTemplate` e `ChecklistTemplateItem`, com cascata a partir do workspace. Rollback conceitual: dropar as tabelas e o enum.
+
+### Correção de schema
+
+- Na EQUIP-002 um `sed` trocou todos os `onDelete: Restrict` do `schema.prisma` por `Cascade`, inclusive `Idea.author` e `VideoProject.createdBy`. Nenhuma migration daquela tarefa levou isso, mas o diff desta pegou. O schema voltou para `Restrict` nas duas relações e a migration desta tarefa ficou só com o checklist. No banco local as duas FKs foram restauradas à mão. `prisma migrate diff` entre migrations e schema dá vazio.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — EQUIP-001 — Correção: catálogo só para dono e admin
 
 **Status:** DONE  

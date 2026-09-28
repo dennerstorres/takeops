@@ -771,9 +771,16 @@ Cada cena deve mostrar seus planos sem exigir navegação excessiva.
 
 ## CHECK-001 — Templates de checklist
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** WORKSPACE-001
+
+### Critérios
+
+- [x] o workspace guarda modelos de checklist com nome, tipo e itens em ordem;
+- [x] dono e admin criam, renomeiam, excluem, adicionam, editam, reordenam e tiram itens;
+- [x] a ordem fica 1, 2, 3 depois de reordenar ou tirar item;
+- [x] membro e leitor só veem; outro workspace não acha o modelo.
 
 ---
 
