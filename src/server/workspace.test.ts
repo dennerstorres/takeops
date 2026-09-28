@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import { ForbiddenError, ValidationError } from "./errors.ts";
 import {
   createWorkspace,
+  decideFirstAccess,
   getWorkspace,
   listWorkspaces,
   requireRole,
@@ -170,5 +171,30 @@ describe("membership", () => {
       (error: unknown) =>
         error instanceof ValidationError && error.fields.logoUrl !== undefined,
     );
+  });
+});
+
+describe("primeiro acesso", () => {
+  it("pede criação quando não há membership e abre a mais antiga", async () => {
+    const repository = memoryRepository();
+    assert.deepEqual(decideFirstAccess("user-a", []), { kind: "setup" });
+
+    const older = await createWorkspace(
+      "user-a",
+      { name: "Antigo" },
+      repository,
+    );
+    const newer = await createWorkspace("user-a", { name: "Novo" }, repository);
+    const listed = await listWorkspaces("user-a", repository);
+    const access = decideFirstAccess("user-a", listed);
+
+    assert.equal(access.kind, "enter");
+    if (access.kind === "enter") {
+      assert.equal(access.workspace.workspace.id, older.workspace.id);
+      assert.notEqual(access.workspace.workspace.id, newer.workspace.id);
+    }
+
+    const foreign = decideFirstAccess("user-b", listed);
+    assert.deepEqual(foreign, { kind: "setup" });
   });
 });

@@ -478,3 +478,74 @@ O teste de integração criou dois usuários e confirmou que um não lê o works
 
 WORKSPACE-002 deve chamar `createWorkspace` e `listWorkspaces` com o `User.id` da sessão. Não duplicar a regra de membership na UI.
 
+---
+
+## 2026-09-28 — WORKSPACE-002 — Primeiro acesso
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Quem entra sem membership vai para `/comecar` e pode criar um workspace ou esperar convite. Quem já participa cai no workspace da membership mais antiga.
+
+### Implementação
+
+- `decideFirstAccess` usa a lista do próprio usuário. Sem linha, o estado é `setup`.
+- O layout autenticado redireciona para `/comecar`. A página de criação volta para `/` quando já existe membership.
+- A action lê o `User.id` da sessão e chama `createWorkspace`. O cliente não envia workspace nem papel.
+- O shell mostra o nome do workspace aberto.
+
+### Arquivos principais
+
+- `src/server/workspace.ts`
+- `src/server/workspace-actions.ts`
+- `src/app/comecar/page.tsx`
+- `src/app/(app)/layout.tsx`
+- `src/components/workspace/create-workspace-form.tsx`
+- `src/components/shell/app-shell.tsx`
+
+### Decisões tomadas
+
+- ADR-017. Sem seletor, abre a membership mais antiga.
+- Convite pendente não foi modelado aqui. O aceite continua em TEAM-002. A tela só avisa para aguardar.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+Sem cookie, `/comecar` vai para `/login`. Com sessão e sem membership, a tela de criação aparece e o dashboard manda para `/comecar`. O envio do formulário criou o workspace com o autor OWNER e redirecionou para `/`. Com membership, `/comecar` volta para `/` e o shell mostra o nome.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] sem membership, a pessoa cria um workspace ou aguarda convite
+- [x] com membership, entra no workspace existente
+- [x] a criação usa o usuário da sessão e não aceita workspace escolhido pelo cliente
+
+### Pendências conhecidas
+
+- Aceite de convite fica na TEAM-002.
+- Troca de workspace fica para quando existir mais de um caminho de entrada.
+- Activity log da criação espera o módulo de auditoria.
+
+### Observações para próxima tarefa
+
+TEAM-001 lista a equipe do workspace aberto. A membership usada é a mais antiga do usuário da sessão.
+

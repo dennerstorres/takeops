@@ -173,3 +173,21 @@ export async function listWorkspaces(
       row.workspace.id === row.membership.workspaceId,
   );
 }
+
+export type FirstAccess =
+  { kind: "enter"; workspace: WorkspaceWithMembership } | { kind: "setup" };
+
+export function decideFirstAccess(
+  userId: string,
+  memberships: readonly WorkspaceWithMembership[],
+): FirstAccess {
+  // Sem seletor, a membership mais antiga define o workspace aberto.
+  // A ordem recebida precisa ser estável (criação crescente).
+  const existing = memberships.find(
+    (row) =>
+      row.membership.userId === userId &&
+      row.workspace.id === row.membership.workspaceId,
+  );
+  if (!existing) return { kind: "setup" };
+  return { kind: "enter", workspace: existing };
+}

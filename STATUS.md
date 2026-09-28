@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-WORKSPACE-001 — Modelo de Workspace e Membership
+WORKSPACE-002 — Primeiro acesso
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-WORKSPACE-002 — Primeiro acesso
+TEAM-001 — Listagem de equipe
 ```
 
 ## Estado dos módulos
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-Modelo de Workspace e membership pronto. O primeiro acesso fica na WORKSPACE-002. `npm run test:e2e` ainda não existe. As rotas além do Dashboard ficam na APP-001.
+Quem não tem membership cai em `/comecar`. Quem tem entra no workspace da membership mais antiga. Convite fica na TEAM-002. `npm run test:e2e` ainda não existe. As rotas além do Dashboard ficam na APP-001.

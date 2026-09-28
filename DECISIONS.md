@@ -319,6 +319,29 @@ Convite, troca de papel e a tela de primeiro acesso ficam nas tarefas seguintes.
 
 ---
 
+# ADR-017 — Primeiro acesso abre a membership mais antiga
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+WORKSPACE-002 precisa decidir para onde vai quem acabou de entrar. Convite ainda não existe. Também não há seletor quando a pessoa participa de mais de um workspace.
+
+## Decisão
+
+`decideFirstAccess` olha só as memberships daquele `User.id`. Sem nenhuma, a rota autenticada manda para `/comecar`, onde a pessoa cria um workspace ou espera convite. Com uma ou mais, abre a membership mais antiga.
+
+A tela de criação chama `createWorkspace` com o id da sessão. O cliente não escolhe o workspace nem o papel.
+
+O aceite de convite continua em TEAM-002.
+
+## Consequências
+
+Trocar de workspace fica para uma tarefa futura. Até lá, quem tem mais de um membership sempre vê o mais antigo.
+
+---
+
 # Template para novas decisões
 
 ```md

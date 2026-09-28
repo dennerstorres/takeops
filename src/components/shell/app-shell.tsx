@@ -15,9 +15,11 @@ import {
 export function AppShell({
   children,
   userLabel,
+  workspaceName,
 }: {
   children: React.ReactNode;
   userLabel: string;
+  workspaceName: string;
 }) {
   return (
     <div className="flex min-h-dvh bg-background">
@@ -31,6 +33,9 @@ export function AppShell({
         <div className="px-5 pt-5 pb-2">
           <p className="text-sm leading-tight font-medium">
             Video Production Manager
+          </p>
+          <p className="truncate text-sm text-muted-foreground">
+            {workspaceName}
           </p>
         </div>
         <ShellNav />
@@ -64,9 +69,12 @@ export function AppShell({
               <ShellNav />
             </SheetContent>
           </Sheet>
-          <p className="min-w-0 flex-1 truncate text-sm font-medium">
-            {userLabel}
-          </p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium">{workspaceName}</p>
+            <p className="truncate text-xs text-muted-foreground">
+              {userLabel}
+            </p>
+          </div>
           <LogoutButton />
         </header>
         <main id="conteudo" className="flex-1 px-4 py-6 md:px-8">

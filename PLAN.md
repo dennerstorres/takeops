@@ -153,7 +153,7 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ## WORKSPACE-002 — Primeiro acesso
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** WORKSPACE-001
 
@@ -168,6 +168,12 @@ ou
 ou
 → criar Workspace
 ```
+
+### Critérios
+
+- [x] sem membership, a pessoa cria um workspace ou aguarda convite;
+- [x] com membership, entra no workspace existente;
+- [x] a criação usa o usuário da sessão e não aceita workspace escolhido pelo cliente.
 
 ---
 
