@@ -1315,6 +1315,54 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — CHECK-003 — Instanciar checklist em Shoot
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Cada gravação pode usar um modelo de checklist. Os itens são copiados para a gravação e daí em diante vivem nela.
+
+### Implementação
+
+- Tabela `ShootChecklistItem` (`text`, `order`, `completed`, `completedById`, `completedAt`), ordem única por gravação.
+- `instantiateShootChecklist` copia o texto dos itens numa transação, no fim da lista. Não guarda ligação com o modelo.
+- `setShootChecklistItem` marca com o usuário da sessão e a hora do servidor; desmarcar limpa os dois. A tela de marcar é da CHECK-004.
+- Membro instancia e marca (participa da gravação). Leitor só vê.
+- Aba Gravação: resumo "x de y feitos" e escolha do modelo para usar.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928310000_shoot_checklist/migration.sql`
+- `src/server/shoot-checklist.ts`, `shoot-checklist-repository.ts`, `shoot-checklist-prisma.ts`
+- `src/server/shoot-checklist.integration.test.ts`
+- `src/server/shoot-actions.ts`
+- `src/components/shoots/instantiate-checklist-form.tsx`
+- `src/app/(app)/producoes/[id]/gravacao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. A cópia por texto é o que a tarefa pede.
+
+### Banco / migrations
+
+- `20260928310000_shoot_checklist`: cria `ShootChecklistItem`, cascata a partir de `Shoot`, `SET NULL` em quem marcou. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — CHECK-002 — Checklist padrão de gravação
 
 **Status:** DONE  

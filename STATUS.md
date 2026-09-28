@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-CHECK-002 — Checklist padrão de gravação
+CHECK-003 — Instanciar checklist em Shoot
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-CHECK-003 — Instanciar checklist em Shoot
+CHECK-004 — UI mobile de checklist
 ```
 
 ## Estado dos módulos

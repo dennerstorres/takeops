@@ -2,11 +2,14 @@ import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
 import { DeleteShootButton } from "@/components/shoots/delete-shoot-button";
+import { InstantiateChecklistForm } from "@/components/shoots/instantiate-checklist-form";
 import { ShootEquipment } from "@/components/shoots/shoot-equipment";
 import { ShootForm } from "@/components/shoots/shoot-form";
 import { utcToZonedLocal } from "@/lib/zoned-time";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
+import { listChecklistTemplates } from "@/server/checklist";
+import { prismaChecklistRepository } from "@/server/checklist-prisma";
 import { listEquipment } from "@/server/equipment";
 import { equipmentCategoryLabel } from "@/server/equipment-labels";
 import { prismaEquipmentRepository } from "@/server/equipment-prisma";
@@ -14,6 +17,8 @@ import { ForbiddenError, NotFoundError } from "@/server/errors";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { listShoots } from "@/server/shoot";
+import { listShootChecklist } from "@/server/shoot-checklist";
+import { prismaShootChecklistRepository } from "@/server/shoot-checklist-prisma";
 import { listShootEquipment } from "@/server/shoot-equipment";
 import { prismaShootEquipmentRepository } from "@/server/shoot-equipment-prisma";
 import { shootStatusLabel } from "@/server/shoot-labels";
@@ -38,6 +43,8 @@ export default async function ShootsPage({
   let shoots;
   let kits;
   let catalog;
+  let checklists;
+  let templates;
   try {
     project = await getProject(
       session.user.id,
@@ -51,11 +58,12 @@ export default async function ShootsPage({
       projects: prismaProjectRepository,
       shoots: prismaShootRepository,
       shootEquipment: prismaShootEquipmentRepository,
+      shootChecklist: prismaShootChecklistRepository,
     };
     shoots = await listShoots(session.user.id, workspaceId, project.id, deps);
     const userId = session.user.id;
     const projectId = project.id;
-    [kits, catalog] = await Promise.all([
+    [kits, catalog, checklists, templates] = await Promise.all([
       Promise.all(
         shoots.map((shoot) =>
           listShootEquipment(userId, workspaceId, projectId, shoot.id, deps),
@@ -66,6 +74,17 @@ export default async function ShootsPage({
         workspaceId,
         prismaWorkspaceRepository,
         prismaEquipmentRepository,
+      ),
+      Promise.all(
+        shoots.map((shoot) =>
+          listShootChecklist(userId, workspaceId, projectId, shoot.id, deps),
+        ),
+      ),
+      listChecklistTemplates(
+        userId,
+        workspaceId,
+        prismaWorkspaceRepository,
+        prismaChecklistRepository,
       ),
     ]);
   } catch (error) {
@@ -79,6 +98,13 @@ export default async function ShootsPage({
     .map((item) => ({
       id: item.id,
       label: `${item.name} · ${equipmentCategoryLabel(item.category)}`,
+    }));
+
+  const templateOptions = templates
+    .filter((template) => template.items.length > 0)
+    .map((template) => ({
+      id: template.id,
+      label: `${template.name} · ${template.items.length} itens`,
     }));
 
   const dateTime = new Intl.DateTimeFormat("pt-BR", {
@@ -145,6 +171,34 @@ export default async function ShootsPage({
                   canEdit={canEdit}
                 />
               </div>
+              <section className="mt-3 space-y-2 border-t pt-3">
+                <h3 className="text-sm font-medium">
+                  Checklist
+                  {checklists[index].length > 0 ? (
+                    <span className="font-normal text-muted-foreground">
+                      {" "}
+                      ·{" "}
+                      {
+                        checklists[index].filter((item) => item.completed)
+                          .length
+                      }{" "}
+                      de {checklists[index].length} feitos
+                    </span>
+                  ) : null}
+                </h3>
+                {checklists[index].length === 0 ? (
+                  <p className="text-sm text-muted-foreground">
+                    Nenhum checklist nesta gravação.
+                  </p>
+                ) : null}
+                {canEdit && templateOptions.length > 0 ? (
+                  <InstantiateChecklistForm
+                    projectId={project.id}
+                    shootId={shoot.id}
+                    templates={templateOptions}
+                  />
+                ) : null}
+              </section>
               {canEdit ? (
                 <div className="mt-3 space-y-3">
                   <DeleteShootButton

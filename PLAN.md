@@ -802,11 +802,19 @@ Seedar checklist recomendado pelo SPEC.
 
 ## CHECK-003 — Instanciar checklist em Shoot
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** CHECK-002, SHOOT-002
 
 A alteração futura do template não deve retroativamente alterar checklist já instanciado.
+
+### Critérios
+
+- [x] a gravação recebe uma cópia dos itens do modelo, no fim da lista dela;
+- [x] mudar ou apagar o modelo depois não altera a cópia;
+- [x] só entra modelo do mesmo workspace;
+- [x] marcar grava quem e quando pela sessão e pelo servidor; desmarcar limpa os dois;
+- [x] leitor só vê; outra gravação não alcança o item.
 
 ---
 

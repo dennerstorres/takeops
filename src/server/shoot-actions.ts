@@ -14,6 +14,11 @@ import {
   type ShootDeps,
 } from "@/server/shoot";
 import {
+  instantiateShootChecklist,
+  type ShootChecklistDeps,
+} from "@/server/shoot-checklist";
+import { prismaShootChecklistRepository } from "@/server/shoot-checklist-prisma";
+import {
   addShootEquipment,
   removeShootEquipment,
   updateShootEquipment,
@@ -34,6 +39,11 @@ const deps: ShootDeps = {
 const kitDeps: ShootEquipmentDeps = {
   ...deps,
   shootEquipment: prismaShootEquipmentRepository,
+};
+
+const checklistDeps: ShootChecklistDeps = {
+  ...deps,
+  shootChecklist: prismaShootChecklistRepository,
 };
 
 async function currentWorkspace() {
@@ -204,5 +214,28 @@ export async function removeShootEquipmentAction(formData: FormData) {
         kitDeps,
       ),
   );
+  backToShoots(projectId);
+}
+
+export async function instantiateShootChecklistAction(
+  _state: ShootFormState,
+  formData: FormData,
+): Promise<ShootFormState> {
+  const current = await currentWorkspace();
+  const { projectId, shootId } = kitIds(formData);
+  const result = await runAction(
+    current,
+    { operation: "instantiate", entity: "ShootChecklistItem" },
+    () =>
+      instantiateShootChecklist(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        shootId,
+        { templateId: formData.get("templateId") },
+        checklistDeps,
+      ),
+  );
+  if (!result.ok) return { message: result.message, fields: result.fields };
   backToShoots(projectId);
 }

@@ -23,6 +23,7 @@ model User {
   projectsOwned   VideoProject[] @relation("ProjectOwner")
   projectRoles    ProjectMember[]
   scenesSpoken    Scene[]           @relation("SceneSpeaker")
+  completedChecklistItems ShootChecklistItem[]
 }
 
 enum WorkspaceRole {
@@ -379,6 +380,7 @@ model Shoot {
   updatedAt      DateTime     @updatedAt
   videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
   equipment      ShootEquipment[]
+  checklist      ShootChecklistItem[]
 
   @@index([videoProjectId, scheduledAt])
   @@index([videoProjectId, status])
@@ -455,4 +457,20 @@ model ChecklistTemplateItem {
   checklistTemplate   ChecklistTemplate @relation(fields: [checklistTemplateId], references: [id], onDelete: Cascade)
 
   @@unique([checklistTemplateId, order])
+}
+
+model ShootChecklistItem {
+  id            String    @id @default(uuid())
+  shootId       String
+  text          String
+  order         Int
+  completed     Boolean   @default(false)
+  completedById String?
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  shoot         Shoot     @relation(fields: [shootId], references: [id], onDelete: Cascade)
+  completedBy   User?     @relation(fields: [completedById], references: [id], onDelete: SetNull)
+
+  @@unique([shootId, order])
 }
