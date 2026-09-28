@@ -383,7 +383,7 @@ Implementar campos descritos no SPEC.
 
 ## PROJECT-003 — Converter Idea em VideoProject
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** IDEA-002, PROJECT-002
 
@@ -400,6 +400,13 @@ Idea.status = CONVERTED
 ```
 
 Tudo deve ocorrer atomicamente.
+
+### Critérios
+
+- [x] a conversão cria a produção e marca a ideia como convertida na mesma transação;
+- [x] título, descrição, formato, objetivo, público e produto são copiados;
+- [x] uma segunda conversão não cria outra produção;
+- [x] leitor não converte.
 
 ---
 

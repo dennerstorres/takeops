@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import type { IdeaRecord, IdeaRepository } from "./idea-repository.ts";
+import { projectDraftFromIdea } from "./project-draft.ts";
 import {
+  convertIdeaToProject,
   createProject,
   deleteProject,
   getProject,
@@ -110,6 +112,25 @@ function harness() {
       Object.assign(project, input, { updatedAt: new Date() });
       return project;
     },
+    async findBySourceIdea(workspaceId, ideaId) {
+      return (
+        projects.find(
+          (item) =>
+            item.workspaceId === workspaceId && item.sourceIdeaId === ideaId,
+        ) ?? null
+      );
+    },
+    async convert(workspaceId, userId, ideaId) {
+      const idea = ideas.find(
+        (item) => item.id === ideaId && item.workspaceId === workspaceId,
+      );
+      if (!idea) throw new NotFoundError();
+      if (idea.status === "CONVERTED") {
+        throw new ValidationError({ idea: "Esta ideia já foi convertida." });
+      }
+      idea.status = "CONVERTED";
+      return this.create(workspaceId, userId, projectDraftFromIdea(idea));
+    },
     async softDelete(workspaceId, projectId) {
       const index = projects.findIndex(
         (item) => item.id === projectId && item.workspaceId === workspaceId,
@@ -152,6 +173,30 @@ function harness() {
 
   return { workspaces, ideaRepo, projectRepo, join, idea };
 }
+
+describe("rascunho da conversão", () => {
+  it("copia os campos da ideia e não escolhe a etapa", () => {
+    const draft = projectDraftFromIdea({
+      id: "idea-1",
+      title: "Título",
+      description: "Texto",
+      format: null,
+      objective: "Ensinar",
+      audience: "Time",
+      product: "App",
+    });
+    assert.equal(draft.title, "Título");
+    assert.equal(draft.description, "Texto");
+    assert.equal(draft.format, "OTHER");
+    assert.equal(draft.objective, "Ensinar");
+    assert.equal(draft.audience, "Time");
+    assert.equal(draft.product, "App");
+    assert.equal(draft.sourceIdeaId, "idea-1");
+    assert.equal(draft.status, "IDEA");
+    assert.equal(draft.aspectRatio, "NINE_SIXTEEN");
+    assert.equal(draft.priority, "NORMAL");
+  });
+});
 
 describe("produção", () => {
   it("nasce no início do pipeline e ignora status enviado pelo cliente", async () => {
@@ -282,10 +327,60 @@ describe("produção", () => {
       (error: unknown) => error instanceof ForbiddenError,
     );
 
+    const converted = await convertIdeaToProject(
+      "member",
+      "ws-a",
+      "idea-a",
+      workspaces,
+      projectRepo,
+    );
+    assert.equal(converted.sourceIdeaId, "idea-a");
+    assert.equal(converted.status, "IDEA");
+    assert.equal(converted.title, "idea-a");
+    await assert.rejects(
+      () =>
+        convertIdeaToProject(
+          "viewer",
+          "ws-a",
+          "idea-a",
+          workspaces,
+          projectRepo,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        convertIdeaToProject(
+          "member",
+          "ws-a",
+          "idea-a",
+          workspaces,
+          projectRepo,
+        ),
+      (error: unknown) => error instanceof ValidationError,
+    );
+    await assert.rejects(
+      () =>
+        convertIdeaToProject(
+          "outsider",
+          "ws-a",
+          "idea-a",
+          workspaces,
+          projectRepo,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+
     await deleteProject("member", "ws-a", created.id, workspaces, projectRepo);
-    assert.equal(
-      (await listProjects("member", "ws-a", workspaces, projectRepo)).length,
-      0,
+    const remaining = await listProjects(
+      "member",
+      "ws-a",
+      workspaces,
+      projectRepo,
+    );
+    assert.deepEqual(
+      remaining.map((item) => item.id),
+      [converted.id],
     );
   });
 });

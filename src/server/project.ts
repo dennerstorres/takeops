@@ -240,6 +240,39 @@ export async function updateProject(
   return updated;
 }
 
+export async function convertIdeaToProject(
+  userId: string,
+  workspaceId: string,
+  ideaId: string,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const project = await projects.convert(workspaceId, userId, ideaId);
+  if (
+    project.createdById !== userId ||
+    project.workspaceId !== workspaceId ||
+    project.sourceIdeaId !== ideaId ||
+    project.status !== "IDEA"
+  ) {
+    throw new ForbiddenError();
+  }
+  return project;
+}
+
+export async function projectFromIdea(
+  userId: string,
+  workspaceId: string,
+  ideaId: string,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+) {
+  await requireMembership(userId, workspaceId, workspaces);
+  const project = await projects.findBySourceIdea(workspaceId, ideaId);
+  if (!project || project.workspaceId !== workspaceId) return null;
+  return project;
+}
+
 export async function deleteProject(
   userId: string,
   workspaceId: string,

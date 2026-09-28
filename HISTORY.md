@@ -1176,3 +1176,72 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 PROJECT-003 cria a produção a partir da ideia e marca a ideia como `CONVERTED`. Reuse `createProject` e não aceite status do cliente.
 
+---
+
+## 2026-09-28 — PROJECT-003 — Converter Idea em VideoProject
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Converter em vídeo cria a produção e marca a ideia como convertida na mesma transação. A produção nasce na etapa Ideia. Uma segunda conversão não cria outra.
+
+### Implementação
+
+- Copia título, descrição, formato, objetivo, público e produto. Sem formato, usa Outro.
+- A produção guarda `sourceIdeaId`. A etapa não vem do cliente.
+- O botão fica na ideia para quem escreve. Depois, a ideia aponta para a produção.
+- Leitor não converte.
+
+### Arquivos principais
+
+- `src/server/project-draft.ts`
+- `src/server/project.ts`
+- `src/server/project-prisma.ts`
+- `src/server/project-actions.ts`
+- `src/components/ideas/convert-idea-button.tsx`
+- `src/app/(app)/ideias/[id]/page.tsx`
+
+### Decisões tomadas
+
+- Sem formato na ideia, a produção usa `OTHER`. A transação atualiza a ideia antes de criar a produção e desfaz as duas se uma falhar.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+No HTTP, o autor converteu a ideia, a produção copiou os campos e ficou na etapa Ideia, e a ideia ficou convertida. O leitor não criou outra produção.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] a conversão cria a produção e marca a ideia como convertida na mesma transação
+- [x] título, descrição, formato, objetivo, público e produto são copiados
+- [x] uma segunda conversão não cria outra produção
+- [x] leitor não converte
+
+### Pendências conhecidas
+
+- Notas e URL de referência da ideia não têm campo correspondente na produção.
+
+### Observações para próxima tarefa
+
+PROJECT-004 adiciona participantes e funções na produção já criada.
+

@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import { createIdea } from "./idea.ts";
 import {
+  convertIdeaToProject,
   createProject,
   deleteProject,
   getProject,
@@ -150,6 +151,31 @@ describe(
           where: { id: created.id },
         });
         assert.ok(kept?.deletedAt);
+
+        const converted = await convertIdeaToProject(
+          author.id,
+          workspaceId,
+          idea.id,
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+        );
+        assert.equal(converted.sourceIdeaId, idea.id);
+        assert.equal(converted.status, "IDEA");
+        assert.equal(converted.title, idea.title);
+        const ideaRow = await prisma.idea.findFirst({ where: { id: idea.id } });
+        assert.equal(ideaRow?.status, "CONVERTED");
+        await assert.rejects(
+          () =>
+            convertIdeaToProject(
+              author.id,
+              workspaceId,
+              idea.id,
+              prismaWorkspaceRepository,
+              prismaProjectRepository,
+            ),
+          (error: unknown) =>
+            error instanceof ValidationError && error.fields.idea !== undefined,
+        );
       } finally {
         if (workspaceId) {
           await prisma.workspace.deleteMany({ where: { id: workspaceId } });

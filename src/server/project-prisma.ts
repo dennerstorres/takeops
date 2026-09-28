@@ -1,5 +1,7 @@
 import { prisma } from "./db.ts";
+import { NotFoundError, ValidationError } from "./errors.ts";
 import type { IdeaFormat } from "./idea-labels.ts";
+import { projectDraftFromIdea } from "./project-draft.ts";
 import type {
   AspectRatio,
   ProjectPriority,
@@ -92,6 +94,50 @@ export const prismaProjectRepository: ProjectRepository = {
     });
     if (updated.count !== 1) return null;
     return this.find(workspaceId, projectId);
+  },
+
+  async findBySourceIdea(workspaceId, ideaId) {
+    const project = await prisma.videoProject.findFirst({
+      where: { workspaceId, sourceIdeaId: ideaId, deletedAt: null },
+      orderBy: { createdAt: "asc" },
+    });
+    return project ? mapProject(project) : null;
+  },
+
+  async convert(workspaceId, userId, ideaId) {
+    const project = await prisma.$transaction(async (tx) => {
+      const idea = await tx.idea.findFirst({
+        where: { id: ideaId, workspaceId, deletedAt: null },
+      });
+      if (!idea) throw new NotFoundError();
+      if (idea.status === "CONVERTED") {
+        throw new ValidationError({
+          idea: "Esta ideia já foi convertida.",
+        });
+      }
+      const claimed = await tx.idea.updateMany({
+        where: {
+          id: idea.id,
+          workspaceId,
+          deletedAt: null,
+          status: { not: "CONVERTED" },
+        },
+        data: { status: "CONVERTED" },
+      });
+      if (claimed.count !== 1) {
+        throw new ValidationError({
+          idea: "Esta ideia já foi convertida.",
+        });
+      }
+      return tx.videoProject.create({
+        data: {
+          ...projectDraftFromIdea(idea),
+          workspaceId,
+          createdById: userId,
+        },
+      });
+    });
+    return mapProject(project);
   },
 
   async softDelete(workspaceId, projectId, deletedAt) {

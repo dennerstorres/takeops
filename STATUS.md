@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PROJECT-002 — CRUD de produções
+PROJECT-003 — Converter Idea em VideoProject
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PROJECT-003 — Converter Idea em VideoProject
+PROJECT-004 — Participantes e funções
 ```
 
 ## Estado dos módulos
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-`/producoes` lista, cria, edita e esconde a produção. A etapa continua a que já estava. Converter ideia fica na PROJECT-003. `npm run test:e2e` ainda não existe.
+Converter em vídeo cria a produção e marca a ideia como convertida na mesma transação. Uma segunda vez não cria outra. `npm run test:e2e` ainda não existe.

@@ -53,4 +53,13 @@ export type ProjectRepository = {
     projectId: string,
     deletedAt: Date,
   ): Promise<boolean>;
+  findBySourceIdea(
+    workspaceId: string,
+    ideaId: string,
+  ): Promise<ProjectRecord | null>;
+  convert(
+    workspaceId: string,
+    userId: string,
+    ideaId: string,
+  ): Promise<ProjectRecord>;
 };

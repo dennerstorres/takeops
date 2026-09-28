@@ -5,7 +5,12 @@ import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { prismaIdeaRepository } from "@/server/idea-prisma";
-import { createProject, deleteProject, updateProject } from "@/server/project";
+import {
+  convertIdeaToProject,
+  createProject,
+  deleteProject,
+  updateProject,
+} from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { runAction, type ActionFailure } from "@/server/service";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
@@ -89,6 +94,25 @@ export async function updateProjectAction(
   revalidatePath(`/producoes/${projectId}`);
   revalidatePath("/producoes");
   return { message: "Produção salva." };
+}
+
+export async function convertIdeaAction(formData: FormData) {
+  const current = await currentWorkspace();
+  const ideaId = String(formData.get("ideaId") ?? "");
+  const result = await runAction(
+    { userId: current.userId, workspaceId: current.workspaceId },
+    { operation: "convert", entity: "VideoProject" },
+    () =>
+      convertIdeaToProject(
+        current.userId,
+        current.workspaceId,
+        ideaId,
+        prismaWorkspaceRepository,
+        prismaProjectRepository,
+      ),
+  );
+  if (!result.ok) redirect(`/ideias/${ideaId}`);
+  redirect(`/producoes/${result.data.id}`);
 }
 
 export async function deleteProjectAction(formData: FormData) {

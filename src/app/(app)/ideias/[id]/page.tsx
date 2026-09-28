@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ConvertIdeaButton } from "@/components/ideas/convert-idea-button";
 import { DeleteIdeaButton } from "@/components/ideas/delete-idea-button";
 import { IdeaForm } from "@/components/ideas/idea-form";
 import { IdeaStatusForm } from "@/components/ideas/idea-status-form";
@@ -7,6 +8,8 @@ import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { NotFoundError } from "@/server/errors";
 import { getIdea } from "@/server/idea";
+import { projectFromIdea } from "@/server/project";
+import { prismaProjectRepository } from "@/server/project-prisma";
 import { prismaIdeaRepository } from "@/server/idea-prisma";
 import { statusLabel } from "@/server/idea-labels";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
@@ -54,6 +57,17 @@ export default async function IdeaPage({
   }
 
   const canEdit = access.workspace.membership.role !== "VIEWER";
+  const workspaceId = access.workspace.workspace.id;
+  const production =
+    idea.status === "CONVERTED"
+      ? await projectFromIdea(
+          session.user.id,
+          workspaceId,
+          idea.id,
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+        )
+      : null;
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
@@ -65,6 +79,17 @@ export default async function IdeaPage({
           </p>
           {canEdit && idea.status !== "CONVERTED" ? (
             <IdeaStatusForm ideaId={idea.id} status={idea.status} />
+          ) : null}
+          {canEdit && idea.status !== "CONVERTED" ? (
+            <ConvertIdeaButton ideaId={idea.id} />
+          ) : null}
+          {production ? (
+            <Link
+              href={`/producoes/${production.id}`}
+              className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
+            >
+              Ver produção
+            </Link>
           ) : null}
         </div>
         {canEdit ? <DeleteIdeaButton ideaId={idea.id} /> : null}
