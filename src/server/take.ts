@@ -1,6 +1,27 @@
+import { z } from "zod";
 import { NotFoundError } from "./errors.ts";
 import { getShot, type ShotDeps } from "./shot.ts";
-import type { TakeRepository, TakeScope } from "./take-repository.ts";
+import {
+  takeStatuses,
+  type TakeRepository,
+  type TakeScope,
+} from "./take-repository.ts";
+import { parseInput } from "./validation.ts";
+import { requireRole } from "./workspace.ts";
+
+// Membro registra takes: é participar da gravação.
+const writers = ["OWNER", "ADMIN", "MEMBER"] as const;
+
+const takeSchema = z.object({
+  status: z.preprocess(
+    (value) => (typeof value === "string" && value ? value : "OK"),
+    z.enum(takeStatuses, { error: "Escolha um status." }),
+  ),
+  notes: z.preprocess(
+    (value) => (typeof value === "string" ? value : ""),
+    z.string().trim().max(1000, "As notas passaram de 1000 caracteres."),
+  ),
+});
 
 export type TakeDeps = ShotDeps & { takes: TakeRepository };
 
@@ -58,4 +79,53 @@ export async function getTake(
     throw new NotFoundError();
   }
   return take;
+}
+
+// Número, quem gravou e quando vêm do servidor. O cliente manda só status e
+// notas.
+export async function registerTake(
+  userId: string,
+  workspaceId: string,
+  target: TakeTarget,
+  input: unknown,
+  deps: TakeDeps,
+  now = new Date(),
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const scope = await takeScope(userId, workspaceId, target, deps);
+  const data = parseInput(takeSchema, input);
+  const created = await deps.takes.create(scope, {
+    status: data.status,
+    notes: data.notes ? data.notes : null,
+    recordedById: userId,
+    recordedAt: now,
+  });
+  if (!created || created.shotId !== scope.shotId) throw new NotFoundError();
+  return created;
+}
+
+export async function updateTake(
+  userId: string,
+  workspaceId: string,
+  target: TakeTarget,
+  takeId: string,
+  input: unknown,
+  deps: TakeDeps,
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const current = await getTake(userId, workspaceId, target, takeId, deps);
+  const scope = await takeScope(userId, workspaceId, target, deps);
+  const data = parseInput(takeSchema, input);
+  const updated = await deps.takes.update(scope, current.id, {
+    status: data.status,
+    notes: data.notes ? data.notes : null,
+  });
+  if (
+    !updated ||
+    updated.id !== current.id ||
+    updated.number !== current.number
+  ) {
+    throw new NotFoundError();
+  }
+  return updated;
 }

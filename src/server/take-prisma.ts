@@ -47,4 +47,50 @@ export const prismaTakeRepository: TakeRepository = {
     });
     return row ? mapTake(row) : null;
   },
+
+  async create(scope, input) {
+    // Duas pessoas registrando ao mesmo tempo podem pegar o mesmo número.
+    // O índice único recusa a segunda; ela tenta de novo com o próximo.
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      try {
+        const created = await prisma.$transaction(async (tx) => {
+          const shot = await tx.shot.findFirst({
+            where: visibleShot(scope),
+            select: { id: true },
+          });
+          if (!shot) return null;
+          const last = await tx.take.aggregate({
+            where: { shotId: shot.id },
+            _max: { number: true },
+          });
+          return tx.take.create({
+            data: {
+              ...input,
+              shotId: shot.id,
+              number: (last._max.number ?? 0) + 1,
+            },
+          });
+        });
+        return created ? mapTake(created) : null;
+      } catch (error) {
+        const duplicate =
+          typeof error === "object" &&
+          error !== null &&
+          "code" in error &&
+          error.code === "P2002";
+        if (!duplicate || attempt === 2) throw error;
+      }
+    }
+    return null;
+  },
+
+  async update(scope, takeId, input) {
+    const result = await prisma.take.updateMany({
+      where: { id: takeId, shot: visibleShot(scope) },
+      // Take que deixa de ser OK não pode continuar preferido.
+      data: input.status === "OK" ? input : { ...input, favorite: false },
+    });
+    if (result.count !== 1) return null;
+    return this.find(scope, takeId);
+  },
 };

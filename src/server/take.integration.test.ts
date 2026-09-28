@@ -1,11 +1,17 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
-import { ForbiddenError, NotFoundError } from "./errors.ts";
+import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { createProject } from "./project.ts";
 import { createScene } from "./scene.ts";
 import { createShot } from "./shot.ts";
-import { getTake, listTakes, type TakeDeps } from "./take.ts";
+import {
+  getTake,
+  listTakes,
+  registerTake,
+  updateTake,
+  type TakeDeps,
+} from "./take.ts";
 import { createWorkspace } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
@@ -180,6 +186,84 @@ describe(
       } finally {
         await ctx.cleanup();
       }
+      it("numera por shot no servidor, mesmo em registros simultâneos", async () => {
+        const ctx = await setup();
+        try {
+          const { deps, targetA, targetB, workspaceId } = ctx;
+          const now = new Date("2026-10-06T14:00:00.000Z");
+          const first = await registerTake(
+            ctx.member.id,
+            workspaceId,
+            targetA,
+            {
+              status: "RETAKE",
+              notes: " Tremeu ",
+              number: 9,
+              recordedById: ctx.owner.id,
+              favorite: true,
+            },
+            deps,
+            now,
+          );
+          assert.equal(first.number, 1);
+          assert.equal(first.status, "RETAKE");
+          assert.equal(first.notes, "Tremeu");
+          assert.equal(first.favorite, false);
+          assert.equal(first.recordedById, ctx.member.id);
+          assert.equal(first.recordedAt.toISOString(), now.toISOString());
+
+          const together = await Promise.all(
+            [0, 1, 2].map(() =>
+              registerTake(ctx.owner.id, workspaceId, targetA, {}, deps),
+            ),
+          );
+          assert.deepEqual(
+            together.map((take) => take.number).sort(),
+            [2, 3, 4],
+          );
+          assert.ok(together.every((take) => take.status === "OK"));
+          const other = await registerTake(
+            ctx.owner.id,
+            workspaceId,
+            targetB,
+            {},
+            deps,
+          );
+          assert.equal(other.number, 1);
+
+          const edited = await updateTake(
+            ctx.member.id,
+            workspaceId,
+            targetA,
+            first.id,
+            { status: "DISCARDED", notes: "Foco", number: 7 },
+            deps,
+          );
+          assert.equal(edited.status, "DISCARDED");
+          assert.equal(edited.number, 1);
+
+          await assert.rejects(
+            registerTake(
+              ctx.owner.id,
+              workspaceId,
+              targetA,
+              { status: "BOM" },
+              deps,
+            ),
+            ValidationError,
+          );
+          await assert.rejects(
+            registerTake(ctx.viewer.id, workspaceId, targetA, {}, deps),
+            ForbiddenError,
+          );
+          await assert.rejects(
+            updateTake(ctx.owner.id, workspaceId, targetB, first.id, {}, deps),
+            NotFoundError,
+          );
+        } finally {
+          await ctx.cleanup();
+        }
+      });
     });
   },
 );

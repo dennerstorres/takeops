@@ -11,6 +11,8 @@ import { getScene } from "@/server/scene";
 import { prismaSceneRepository } from "@/server/scene-prisma";
 import { listShots } from "@/server/shot";
 import { prismaShotRepository } from "@/server/shot-prisma";
+import { listTakes } from "@/server/take";
+import { prismaTakeRepository } from "@/server/take-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
@@ -38,6 +40,7 @@ export default async function EditScenePage({
   let scene;
   let team;
   let shots;
+  let takes;
   try {
     project = await getProject(
       session.user.id,
@@ -58,17 +61,41 @@ export default async function EditScenePage({
       ),
       listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
     ]);
+    const deps = {
+      workspaces: prismaWorkspaceRepository,
+      projects: prismaProjectRepository,
+      scenes: prismaSceneRepository,
+      shots: prismaShotRepository,
+      takes: prismaTakeRepository,
+    };
     shots = await listShots(
       session.user.id,
       workspaceId,
       project.id,
       scene.id,
-      {
-        workspaces: prismaWorkspaceRepository,
-        projects: prismaProjectRepository,
-        scenes: prismaSceneRepository,
-        shots: prismaShotRepository,
-      },
+      deps,
+    );
+    const where = { userId: session.user.id, projectId: project.id };
+    const foundSceneId = scene.id;
+    takes = new Map(
+      await Promise.all(
+        shots.map(
+          async (shot) =>
+            [
+              shot.id,
+              await listTakes(
+                where.userId,
+                workspaceId,
+                {
+                  projectId: where.projectId,
+                  sceneId: foundSceneId,
+                  shotId: shot.id,
+                },
+                deps,
+              ),
+            ] as const,
+        ),
+      ),
     );
   } catch (error) {
     if (error instanceof NotFoundError) redirect(`/producoes/${id}/cenas`);
@@ -117,6 +144,7 @@ export default async function EditScenePage({
         projectId={project.id}
         sceneId={scene.id}
         shots={shots}
+        takes={takes}
         canEdit
       />
     </div>

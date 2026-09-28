@@ -1315,6 +1315,52 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — TAKE-002 — Registrar take
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Takes podem ser registrados e editados. Na página da cena, cada shot mostra os takes e tem "Take OK" e "Take para refazer".
+
+### Implementação
+
+- `registerTake` aceita só status e notas. Número (máximo + 1 por shot), `recordedById` e `recordedAt` são do servidor.
+- Registro simultâneo: o índice único `(shotId, number)` recusa o repetido e o repositório tenta de novo, até 3 vezes. Teste com 3 registros em paralelo.
+- `updateTake` troca status e notas; o número fica. Status diferente de OK zera o preferido.
+- `take-actions.ts` aceita `returnTo` só dentro de `/producoes/`, para o Modo Gravação reaproveitar.
+- `TakeList` mostra "x OK de y pedidos" (`requiredTakes`) e Descartar.
+
+### Arquivos principais
+
+- `src/server/take.ts`, `take-repository.ts`, `take-prisma.ts`, `take-actions.ts`
+- `src/server/take.integration.test.ts`
+- `src/components/takes/take-list.tsx`
+- `src/components/shots/shot-section.tsx`
+- `src/app/(app)/producoes/[id]/cenas/[sceneId]/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — TAKE-001 — Modelo Take
 
 **Status:** DONE  

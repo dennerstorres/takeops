@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TAKE-001 — Modelo Take
+TAKE-002 — Registrar take
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TAKE-002 — Registrar take
+TAKE-003 — Take preferido
 ```
 
 ## Estado dos módulos

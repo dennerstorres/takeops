@@ -851,11 +851,19 @@ A alteração futura do template não deve retroativamente alterar checklist já
 
 ## TAKE-002 — Registrar take
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** TAKE-001
 
 Número sequencial por Shot.
+
+### Critérios
+
+- [x] o número do take é sequencial por shot e vem do servidor, mesmo em registros simultâneos;
+- [x] quem gravou e quando vêm da sessão e do servidor;
+- [x] editar troca status e notas sem mudar o número; take fora de OK deixa de ser preferido;
+- [x] na cena, cada shot mostra os takes e registra OK ou refazer com um toque;
+- [x] leitor não registra; outro shot não alcança o take.
 
 ---
 

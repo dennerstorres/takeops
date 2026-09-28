@@ -25,4 +25,18 @@ export type TakeScope = {
 export type TakeRepository = {
   list(scope: TakeScope): Promise<TakeRecord[]>;
   find(scope: TakeScope, takeId: string): Promise<TakeRecord | null>;
+  create(
+    scope: TakeScope,
+    input: {
+      status: TakeStatus;
+      notes: string | null;
+      recordedById: string;
+      recordedAt: Date;
+    },
+  ): Promise<TakeRecord | null>;
+  update(
+    scope: TakeScope,
+    takeId: string,
+    input: { status: TakeStatus; notes: string | null },
+  ): Promise<TakeRecord | null>;
 };

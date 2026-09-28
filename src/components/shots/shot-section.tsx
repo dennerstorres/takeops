@@ -1,5 +1,6 @@
 import { DeleteShotButton } from "@/components/shots/delete-shot-button";
 import { ShotForm } from "@/components/shots/shot-form";
+import { TakeList } from "@/components/takes/take-list";
 import { moveShotAction } from "@/server/shot-actions";
 import {
   shotDisplayName,
@@ -7,6 +8,7 @@ import {
   shotSummary,
 } from "@/server/shot-labels";
 import type { ShotRecord } from "@/server/shot-repository";
+import type { TakeRecord } from "@/server/take-repository";
 
 const buttonClass =
   "inline-flex min-h-11 items-center rounded-lg border px-3 text-sm disabled:opacity-40";
@@ -15,11 +17,13 @@ export function ShotSection({
   projectId,
   sceneId,
   shots,
+  takes,
   canEdit,
 }: {
   projectId: string;
   sceneId: string;
   shots: ShotRecord[];
+  takes: Map<string, TakeRecord[]>;
   canEdit: boolean;
 }) {
   return (
@@ -43,6 +47,17 @@ export function ShotSection({
                     {shot.description}
                   </p>
                 ) : null}
+              </div>
+              <div className="mt-3 border-t pt-3">
+                <TakeList
+                  projectId={projectId}
+                  sceneId={sceneId}
+                  shotId={shot.id}
+                  takes={takes.get(shot.id) ?? []}
+                  requiredTakes={shot.requiredTakes}
+                  canEdit={canEdit}
+                  returnTo={`/producoes/${projectId}/cenas/${sceneId}#shots`}
+                />
               </div>
               {canEdit ? (
                 <div className="mt-3 space-y-3">
