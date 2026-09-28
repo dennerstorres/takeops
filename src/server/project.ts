@@ -303,6 +303,23 @@ export async function changeVideoProjectStatus(
   return updated;
 }
 
+export async function submitBoardMove(
+  userId: string,
+  workspaceId: string,
+  input: { projectId?: unknown; status?: unknown; workspaceId?: unknown },
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+) {
+  return changeVideoProjectStatus(
+    userId,
+    workspaceId,
+    typeof input.projectId === "string" ? input.projectId : "",
+    { status: input.status },
+    workspaces,
+    projects,
+  );
+}
+
 export async function convertIdeaToProject(
   userId: string,
   workspaceId: string,

@@ -500,9 +500,15 @@ Colunas segundo SPEC.
 
 ## KANBAN-003 — Drag & Drop
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** KANBAN-002
+
+### Critérios
+
+- [x] soltar o card numa coluna grava essa etapa;
+- [x] o workspace continua o da sessão;
+- [x] leitor não arrasta e o servidor não aceita a troca.
 
 Arrastar card altera status.
 

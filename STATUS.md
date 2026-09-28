@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-KANBAN-002 — Board
+KANBAN-003 — Drag & Drop
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-KANBAN-003 — Drag & Drop
+KANBAN-004 — Alertas de incompletude
 ```
 
 ## Estado dos módulos

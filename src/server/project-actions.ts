@@ -9,6 +9,7 @@ import {
   convertIdeaToProject,
   createProject,
   deleteProject,
+  submitBoardMove,
   updateProject,
 } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
@@ -94,6 +95,34 @@ export async function updateProjectAction(
   revalidatePath(`/producoes/${projectId}`);
   revalidatePath("/producoes");
   return { message: "Produção salva." };
+}
+
+export async function moveProjectStatusAction(
+  _state: ProjectFormState,
+  formData: FormData,
+): Promise<ProjectFormState> {
+  const current = await currentWorkspace();
+  const projectId = String(formData.get("projectId") ?? "");
+  const result = await runAction(
+    { userId: current.userId, workspaceId: current.workspaceId },
+    { operation: "status", entity: "VideoProject" },
+    () =>
+      submitBoardMove(
+        current.userId,
+        current.workspaceId,
+        {
+          projectId,
+          status: formData.get("status"),
+          workspaceId: formData.get("workspaceId"),
+        },
+        prismaWorkspaceRepository,
+        prismaProjectRepository,
+      ),
+  );
+  if (!result.ok) return { message: result.message, fields: result.fields };
+  revalidatePath("/producoes");
+  revalidatePath(`/producoes/${projectId}`);
+  return null;
 }
 
 export async function convertIdeaAction(formData: FormData) {

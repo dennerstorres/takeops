@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — KANBAN-003 — Drag & Drop
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Soltar o card numa coluna grava essa etapa. O quadro chama `submitBoardMove`, que usa o serviço de status e o workspace da sessão.
+
+### Implementação
+
+- Dono, admin e membro arrastam. Leitor vê o quadro sem alça de arraste.
+- Um `workspaceId` enviado no formulário é ignorado.
+- A mesma etapa não regrava. Erro de permissão volta para o quadro.
+- Alerta de etapa incompleta continua na KANBAN-004.
+
+### Arquivos principais
+
+- `src/components/projects/production-board.tsx`
+- `src/server/project-actions.ts`
+- `src/server/project.ts`
+- `src/app/(app)/producoes/page.tsx`
+- `src/server/project-status.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR novo. Vale a ADR-023.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — KANBAN-002 — Board
 
 **Status:** DONE  

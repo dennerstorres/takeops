@@ -10,6 +10,7 @@ import {
   getProject,
   listProjects,
   changeVideoProjectStatus,
+  submitBoardMove,
   updateProject,
 } from "./project.ts";
 import { createWorkspace } from "./workspace.ts";
@@ -151,6 +152,19 @@ describe(
           where: { id: created.id },
         });
         assert.equal(keptStatus?.status, "RECORDING");
+        const dragged = await submitBoardMove(
+          author.id,
+          workspaceId,
+          {
+            projectId: created.id,
+            status: "REVIEW",
+            workspaceId: foreignId,
+          },
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+        );
+        assert.equal(dragged.status, "REVIEW");
+        assert.equal(dragged.workspaceId, workspaceId);
         assert.equal(stored.title, `Vídeo ${suffix}`);
         await assert.rejects(
           () =>

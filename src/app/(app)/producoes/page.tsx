@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { ProductionBoard } from "@/components/projects/production-board";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError } from "@/server/errors";
@@ -228,54 +229,7 @@ export default async function ProductionsPage({
           }
         />
       ) : null}
-      <div className="flex gap-3 overflow-x-auto pb-2">
-        {board.map((column) => (
-          <section
-            key={column.status}
-            aria-label={column.title}
-            className="flex w-64 shrink-0 flex-col gap-2"
-          >
-            <h2 className="text-sm font-medium">
-              {column.title}
-              <span className="ml-2 text-muted-foreground">
-                {column.cards.length}
-              </span>
-            </h2>
-            <ul className="flex flex-col gap-2">
-              {column.cards.map((card) => (
-                <li key={card.id}>
-                  <Link
-                    href={`/producoes/${card.id}`}
-                    className="flex min-h-11 flex-col gap-2 rounded-xl border p-3 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-                  >
-                    {card.thumbnailUrl ? (
-                      // URL externa da produção; o app não define remotePatterns.
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={card.thumbnailUrl}
-                        alt=""
-                        className="h-24 w-full rounded-lg object-cover"
-                      />
-                    ) : null}
-                    <span className="truncate text-sm font-medium">
-                      {card.title}
-                    </span>
-                    {card.people.length > 0 ? (
-                      <span className="truncate text-sm text-muted-foreground">
-                        {card.people.join(", ")}
-                      </span>
-                    ) : null}
-                    <span className="text-sm text-muted-foreground">
-                      {card.priority}
-                      {card.shootDate ? ` · ${card.shootDate}` : ""}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))}
-      </div>
+      <ProductionBoard columns={board} canEdit={canEdit} />
     </div>
   );
 }

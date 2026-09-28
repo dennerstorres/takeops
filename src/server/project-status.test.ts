@@ -5,6 +5,7 @@ import type { IdeaRepository } from "./idea-repository.ts";
 import {
   changeVideoProjectStatus,
   createProject,
+  submitBoardMove,
   updateProject,
 } from "./project.ts";
 import type { ProjectRecord, ProjectRepository } from "./project-repository.ts";
@@ -236,6 +237,45 @@ describe("etapa da produção", () => {
       NotFoundError,
     );
     assert.equal(archived.status, "ARCHIVED");
+  });
+
+  it("o arraste usa o workspace da sessão e ignora o id enviado no card", async () => {
+    const { workspaces, ideas, projectRepo, join } = harness();
+    join("owner", "ws-a", "OWNER");
+    join("owner", "ws-b", "OWNER");
+    join("viewer", "ws-a", "VIEWER");
+    const created = await createProject(
+      "owner",
+      "ws-a",
+      { title: "Peça", format: "DEMO" },
+      workspaces,
+      ideas,
+      projectRepo,
+    );
+    const moved = await submitBoardMove(
+      "owner",
+      "ws-a",
+      { projectId: created.id, status: "EDITING", workspaceId: "ws-b" },
+      workspaces,
+      projectRepo,
+    );
+    assert.equal(moved.workspaceId, "ws-a");
+    assert.equal(moved.status, "EDITING");
+    await assert.rejects(
+      () =>
+        submitBoardMove(
+          "viewer",
+          "ws-a",
+          { projectId: created.id, status: "PUBLISHED", workspaceId: "ws-a" },
+          workspaces,
+          projectRepo,
+        ),
+      ForbiddenError,
+    );
+    assert.equal(
+      (await projectRepo.find("ws-a", created.id))?.status,
+      "EDITING",
+    );
   });
 
   it("recusa gravação que troca o workspace", async () => {
