@@ -45,6 +45,20 @@ export const prismaShotRepository: ShotRepository = {
     return rows.map(mapShot);
   },
 
+  async listForProject(workspaceId, projectId) {
+    const rows = await prisma.shot.findMany({
+      where: {
+        deletedAt: null,
+        scene: {
+          deletedAt: null,
+          videoProject: { id: projectId, workspaceId, deletedAt: null },
+        },
+      },
+      orderBy: [{ sceneId: "asc" }, { order: "asc" }],
+    });
+    return rows.map(mapShot);
+  },
+
   async find(scope, shotId) {
     const row = await prisma.shot.findFirst({
       where: { id: shotId, deletedAt: null, scene: visibleScene(scope) },

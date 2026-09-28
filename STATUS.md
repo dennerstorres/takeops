@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 7 — Shots
+Fase 8 — Gravações
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SHOT-003 — Reordenação
+SHOT-004 — UI integrada à Scene
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SHOT-004 — UI integrada à Scene
+SHOOT-001 — Modelo Shoot
 ```
 
 ## Estado dos módulos
@@ -43,7 +43,7 @@ SHOT-004 — UI integrada à Scene
 | Projetos | DONE |
 | Kanban | DONE |
 | Roteiro | DONE |
-| Shots | IN_PROGRESS |
+| Shots | DONE |
 | Gravações | NOT_STARTED |
 | Checklist | NOT_STARTED |
 | Modo Gravação | NOT_STARTED |

@@ -53,3 +53,26 @@ export function shotTypeLabel(value: ShotType) {
 export function shotStatusLabel(value: ShotStatus) {
   return statusLabels[value];
 }
+
+// Linha curta para ler o plano sem abrir o formulário.
+export function shotSummary(shot: {
+  shotType: ShotType;
+  framing: string | null;
+  cameraLabel: string | null;
+  requiredTakes: number;
+}) {
+  return [
+    shotTypeLabel(shot.shotType),
+    shot.framing,
+    shot.cameraLabel,
+    shot.requiredTakes === 1 ? "1 take" : `${shot.requiredTakes} takes`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+// Shot sem nome aparece como A, B, C na ordem da cena, como na spec.
+export function shotDisplayName(name: string | null, index: number) {
+  if (name) return name;
+  return `Shot ${index < 26 ? String.fromCharCode(65 + index) : index + 1}`;
+}

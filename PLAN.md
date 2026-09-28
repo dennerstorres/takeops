@@ -691,11 +691,18 @@ Deve privilegiar leitura rápida do fluxo narrativo.
 
 ## SHOT-004 — UI integrada à Scene
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SHOT-002
 
 Cada cena deve mostrar seus planos sem exigir navegação excessiva.
+
+### Critérios
+
+- [x] a lista de cenas mostra os shots de cada cena numa linha curta;
+- [x] na cena, quem escreve cria, edita, sobe, desce e exclui shots sem sair da página;
+- [x] enquadramento sugere os valores da spec e aceita texto livre;
+- [x] leitor vê os shots na lista e não vê os botões.
 
 ---
 

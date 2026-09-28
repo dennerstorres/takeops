@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SceneForm } from "@/components/scenes/scene-form";
+import { ShotSection } from "@/components/shots/shot-section";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
@@ -8,6 +9,8 @@ import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { getScene } from "@/server/scene";
 import { prismaSceneRepository } from "@/server/scene-prisma";
+import { listShots } from "@/server/shot";
+import { prismaShotRepository } from "@/server/shot-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
@@ -34,6 +37,7 @@ export default async function EditScenePage({
   let project;
   let scene;
   let team;
+  let shots;
   try {
     project = await getProject(
       session.user.id,
@@ -54,6 +58,18 @@ export default async function EditScenePage({
       ),
       listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
     ]);
+    shots = await listShots(
+      session.user.id,
+      workspaceId,
+      project.id,
+      scene.id,
+      {
+        workspaces: prismaWorkspaceRepository,
+        projects: prismaProjectRepository,
+        scenes: prismaSceneRepository,
+        shots: prismaShotRepository,
+      },
+    );
   } catch (error) {
     if (error instanceof NotFoundError) redirect(`/producoes/${id}/cenas`);
     if (error instanceof ForbiddenError) redirect("/comecar");
@@ -96,6 +112,12 @@ export default async function EditScenePage({
           continuityNotes: scene.continuityNotes ?? "",
           status: scene.status,
         }}
+      />
+      <ShotSection
+        projectId={project.id}
+        sceneId={scene.id}
+        shots={shots}
+        canEdit
       />
     </div>
   );

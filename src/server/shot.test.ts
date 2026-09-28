@@ -8,10 +8,12 @@ import {
   deleteShot,
   getShot,
   listShots,
+  listShotsByScene,
   reorderShots,
   updateShot,
   type ShotDeps,
 } from "./shot.ts";
+import { shotSummary } from "./shot-labels.ts";
 import type { ShotRecord, ShotRepository } from "./shot-repository.ts";
 import type {
   MembershipRecord,
@@ -77,6 +79,10 @@ function shotHarness() {
   } as unknown as ProjectRepository;
 
   const sceneRepo = {
+    async list(workspaceId: string, projectId: string) {
+      if (!findProject(workspaceId, projectId)) return [];
+      return scenes.filter((item) => item.videoProjectId === projectId);
+    },
     async find(workspaceId: string, projectId: string, sceneId: string) {
       if (!findProject(workspaceId, projectId)) return null;
       return (
@@ -98,6 +104,13 @@ function shotHarness() {
       return shots
         .filter((item) => item.sceneId === found.id)
         .sort((left, right) => left.order - right.order);
+    },
+    async listForProject(workspaceId, projectId) {
+      if (!findProject(workspaceId, projectId)) return [];
+      const sceneIds = scenes
+        .filter((item) => item.videoProjectId === projectId)
+        .map((item) => item.id);
+      return shots.filter((item) => sceneIds.includes(item.sceneId));
     },
     async find(scope, shotId) {
       const rows = await this.list(scope);
@@ -412,6 +425,58 @@ describe("shot", () => {
         deps,
       ),
       ForbiddenError,
+    );
+  });
+
+  it("agrupa os shots da produção por cena, na ordem", async () => {
+    const { deps, join } = shotHarness();
+    join("owner", "ws-a", "OWNER");
+    join("stranger", "ws-b", "OWNER");
+    const a1 = await createShot("owner", "ws-a", "p-a", "s-a", {}, deps);
+    const a2 = await createShot("owner", "ws-a", "p-a", "s-a", {}, deps);
+    const b1 = await createShot("owner", "ws-a", "p-a", "s-a2", {}, deps);
+    await reorderShots(
+      "owner",
+      "ws-a",
+      "p-a",
+      "s-a",
+      { shotIds: [a2.id, a1.id] },
+      deps,
+    );
+
+    const grouped = await listShotsByScene("owner", "ws-a", "p-a", deps);
+    assert.deepEqual(
+      grouped.get("s-a")?.map((item) => item.id),
+      [a2.id, a1.id],
+    );
+    assert.deepEqual(
+      grouped.get("s-a2")?.map((item) => item.id),
+      [b1.id],
+    );
+    await assert.rejects(
+      listShotsByScene("stranger", "ws-a", "p-a", deps),
+      ForbiddenError,
+    );
+  });
+
+  it("resume o plano em uma linha", () => {
+    assert.equal(
+      shotSummary({
+        shotType: "CAMERA",
+        framing: "Close",
+        cameraLabel: "Lateral",
+        requiredTakes: 3,
+      }),
+      "Câmera · Close · Lateral · 3 takes",
+    );
+    assert.equal(
+      shotSummary({
+        shotType: "SCREEN_CAPTURE",
+        framing: null,
+        cameraLabel: null,
+        requiredTakes: 1,
+      }),
+      "Captura de tela · 1 take",
     );
   });
 });

@@ -1315,6 +1315,55 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SHOT-004 — UI integrada à Scene
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Os shots aparecem dentro da cena. A lista de cenas mostra cada plano numa linha; a página da cena gerencia os planos.
+
+### Implementação
+
+- Lista de cenas: embaixo de cada cena, nome do shot (ou Shot A, B, C) e resumo com tipo, enquadramento, câmera e takes.
+- `listShotsByScene` faz uma consulta para a produção inteira e agrupa por cena, em vez de uma por cena.
+- Página da cena: seção `#shots` com Subir, Descer, Excluir (com confirmação) e Editar shot num `<details>`. Novo shot fica no fim da seção.
+- As actions voltam para `/producoes/[id]/cenas/[sceneId]#shots`.
+- Enquadramento usa `<datalist>` com as sugestões da spec e aceita texto livre.
+- Botões com altura mínima de 44px e sem depender de hover.
+
+### Arquivos principais
+
+- `src/server/shot-actions.ts`
+- `src/components/shots/shot-form.tsx`
+- `src/components/shots/shot-section.tsx`
+- `src/components/shots/delete-shot-button.tsx`
+- `src/app/(app)/producoes/[id]/cenas/page.tsx`
+- `src/app/(app)/producoes/[id]/cenas/[sceneId]/page.tsx`
+- `src/server/shot.ts`, `src/server/shot-labels.ts`
+
+### Decisões tomadas
+
+- Sem ADR. O link da lista virou "Editar e shots".
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — SHOT-003 — Reordenação
 
 **Status:** DONE  

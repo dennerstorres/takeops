@@ -34,6 +34,8 @@ export type ShotScope = {
 
 export type ShotRepository = {
   list(scope: ShotScope): Promise<ShotRecord[]>;
+  // Shots visíveis de todas as cenas visíveis da produção, para a lista de cenas.
+  listForProject(workspaceId: string, projectId: string): Promise<ShotRecord[]>;
   find(scope: ShotScope, shotId: string): Promise<ShotRecord | null>;
   create(scope: ShotScope, input: ShotWrite): Promise<ShotRecord | null>;
   update(

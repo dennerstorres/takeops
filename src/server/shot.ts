@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import type { ProjectRepository } from "./project-repository.ts";
-import { getScene } from "./scene.ts";
+import { getScene, listScenes } from "./scene.ts";
 import type { SceneRepository } from "./scene-repository.ts";
 import { shotStatuses, shotTypes, type ShotStatus } from "./shot-labels.ts";
 import type {
@@ -103,6 +103,34 @@ export async function listShots(
   const scope = await sceneScope(userId, workspaceId, projectId, sceneId, deps);
   const rows = await deps.shots.list(scope);
   return rows.filter((shot) => shot.sceneId === scope.sceneId);
+}
+
+// Agrupa por cena para a lista de cenas mostrar os planos sem abrir cada uma.
+export async function listShotsByScene(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  deps: ShotDeps,
+) {
+  const scenes = await listScenes(
+    userId,
+    workspaceId,
+    projectId,
+    deps.workspaces,
+    deps.projects,
+    deps.scenes,
+  );
+  const sceneIds = new Set(scenes.map((scene) => scene.id));
+  const rows = await deps.shots.listForProject(workspaceId, projectId);
+  const grouped = new Map<string, typeof rows>();
+  for (const row of rows) {
+    if (!sceneIds.has(row.sceneId)) continue;
+    grouped.set(row.sceneId, [...(grouped.get(row.sceneId) ?? []), row]);
+  }
+  for (const list of grouped.values()) {
+    list.sort((left, right) => left.order - right.order);
+  }
+  return grouped;
 }
 
 export async function getShot(

@@ -13,6 +13,9 @@ import { duplicateSceneAction, moveSceneAction } from "@/server/scene-actions";
 import { listScenes } from "@/server/scene";
 import { sceneStatusLabel, sceneTypeLabel } from "@/server/scene-labels";
 import { prismaSceneRepository } from "@/server/scene-prisma";
+import { listShotsByScene } from "@/server/shot";
+import { shotDisplayName, shotSummary } from "@/server/shot-labels";
+import { prismaShotRepository } from "@/server/shot-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
@@ -36,6 +39,7 @@ export default async function ScenesPage({
   let project;
   let scenes;
   let team;
+  let shotsByScene;
   try {
     project = await getProject(
       session.user.id,
@@ -44,7 +48,7 @@ export default async function ScenesPage({
       prismaWorkspaceRepository,
       prismaProjectRepository,
     );
-    [scenes, team] = await Promise.all([
+    [scenes, team, shotsByScene] = await Promise.all([
       listScenes(
         session.user.id,
         workspaceId,
@@ -54,6 +58,12 @@ export default async function ScenesPage({
         prismaSceneRepository,
       ),
       listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
+      listShotsByScene(session.user.id, workspaceId, project.id, {
+        workspaces: prismaWorkspaceRepository,
+        projects: prismaProjectRepository,
+        scenes: prismaSceneRepository,
+        shots: prismaShotRepository,
+      }),
     ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect("/producoes");
@@ -88,13 +98,18 @@ export default async function ScenesPage({
                     {scene.order}. {scene.title}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {sceneTypeLabel(scene.type)} · {sceneStatusLabel(scene.status)}
+                    {sceneTypeLabel(scene.type)} ·{" "}
+                    {sceneStatusLabel(scene.status)}
                   </p>
                 </div>
                 {canEdit ? (
                   <div className="flex flex-wrap gap-2">
                     <form action={moveSceneAction} className="flex gap-2">
-                      <input type="hidden" name="projectId" value={project.id} />
+                      <input
+                        type="hidden"
+                        name="projectId"
+                        value={project.id}
+                      />
                       <input type="hidden" name="sceneId" value={scene.id} />
                       <button
                         type="submit"
@@ -116,7 +131,11 @@ export default async function ScenesPage({
                       </button>
                     </form>
                     <form action={duplicateSceneAction}>
-                      <input type="hidden" name="projectId" value={project.id} />
+                      <input
+                        type="hidden"
+                        name="projectId"
+                        value={project.id}
+                      />
                       <input type="hidden" name="sceneId" value={scene.id} />
                       <button
                         type="submit"
@@ -129,12 +148,29 @@ export default async function ScenesPage({
                       href={`/producoes/${project.id}/cenas/${scene.id}`}
                       className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
                     >
-                      Editar
+                      Editar e shots
                     </Link>
-                    <DeleteSceneButton projectId={project.id} sceneId={scene.id} />
+                    <DeleteSceneButton
+                      projectId={project.id}
+                      sceneId={scene.id}
+                    />
                   </div>
                 ) : null}
               </div>
+              {shotsByScene.get(scene.id)?.length ? (
+                <ol className="mt-3 flex flex-col gap-1 border-t pt-3">
+                  {shotsByScene.get(scene.id)?.map((shot, shotIndex) => (
+                    <li key={shot.id} className="text-sm">
+                      <span className="font-medium">
+                        {shotDisplayName(shot.name, shotIndex)}
+                      </span>{" "}
+                      <span className="text-muted-foreground">
+                        {shotSummary(shot)}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              ) : null}
             </li>
           ))}
         </ul>
