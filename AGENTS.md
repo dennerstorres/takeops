@@ -110,7 +110,8 @@ Depois:
 11. mudar `IN_PROGRESS` → `DONE`;
 12. adicionar entrada em `HISTORY.md`;
 13. atualizar `STATUS.md`;
-14. registrar decisão em `DECISIONS.md` se houver decisão durável.
+14. registrar decisão em `DECISIONS.md` se houver decisão durável;
+15. criar um commit só com essa tarefa. Não misturar outra tarefa no mesmo commit.
 
 Se não conseguir terminar:
 
@@ -138,7 +139,8 @@ Uma tarefa só pode ser considerada `DONE` quando:
 - [ ] `PLAN.md` foi atualizado;
 - [ ] `STATUS.md` foi atualizado;
 - [ ] `HISTORY.md` recebeu uma entrada;
-- [ ] decisões duráveis foram documentadas.
+- [ ] decisões duráveis foram documentadas;
+- [ ] commit da tarefa foi criado, sem incluir outra tarefa.
 
 ---
 
