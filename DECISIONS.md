@@ -531,6 +531,25 @@ Editar, apagar e reordenar ficam na SCENE-002 e na SCENE-003. A tela entra depoi
 
 ---
 
+# ADR-027 — Shot pertence à cena e tem quatro status
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A spec lista `status` no Shot, mas não diz os valores. O Shot não tem `workspaceId`.
+
+## Decisão
+
+`ShotStatus` é `PLANNED`, `RECORDED`, `NEEDS_RETAKE` e `DISCARDED`. O shot nasce `PLANNED`, na próxima ordem da cena. `requiredTakes` vai de 1 a 99, padrão 1. Enquadramento é texto livre com sugestões da spec. Toda consulta chega ao shot pela cena visível e pela produção do workspace aberto. Cena excluída esconde os shots dela.
+
+## Consequências
+
+Editar e apagar ficam na SHOT-002, reordenar na SHOT-003 e a tela na SHOT-004. O Modo Gravação pode mudar o status depois.
+
+---
+
 # Template para novas decisões
 
 ```md

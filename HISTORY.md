@@ -1315,6 +1315,56 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SHOT-001 — Modelo Shot
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O shot é gravado dentro da cena. Nasce planejado, na próxima ordem da cena.
+
+### Implementação
+
+- Tabela `Shot` com os campos da spec, `deletedAt` e ordem única por cena.
+- `ShotType` e `ShotStatus` como enum. Status sem valores na spec: ver ADR-027.
+- `createShot`, `listShots` e `getShot` passam antes por `getScene`, que já checa workspace e produção.
+- O repositório recebe `ShotScope` (workspace, produção, cena) e filtra pela cena visível.
+- `requiredTakes` de 1 a 99, padrão 1. Enquadramento aceita texto livre; as sugestões estão em `framingPresets`.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928260000_shot/migration.sql`
+- `src/server/shot.ts`
+- `src/server/shot-labels.ts`
+- `src/server/shot-repository.ts`
+- `src/server/shot-prisma.ts`
+- `src/server/shot.test.ts`
+- `src/server/shot.integration.test.ts`
+
+### Decisões tomadas
+
+- ADR-027.
+
+### Banco / migrations
+
+- `20260928260000_shot`: cria `ShotType`, `ShotStatus` e `Shot`, com FK em cascata para `Scene`. Rollback conceitual: dropar a tabela e os dois enums.
+- As migrations anteriores usam carimbo à frente do relógio. A nova foi renomeada para ficar depois de `scene_soft_delete`.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — SCRIPT-002 — Tela de roteiro
 
 **Status:** DONE  

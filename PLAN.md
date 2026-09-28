@@ -648,9 +648,15 @@ Deve privilegiar leitura rápida do fluxo narrativo.
 
 ## SHOT-001 — Modelo Shot
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SCENE-001
+
+### Critérios
+
+- [x] o shot nasce planejado na próxima ordem da cena;
+- [x] tipo, enquadramento livre e takes necessários são validados no servidor;
+- [x] leitor só vê; cena de outro workspace não abre.
 
 ---
 

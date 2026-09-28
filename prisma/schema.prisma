@@ -243,6 +243,7 @@ model Scene {
   updatedAt                 DateTime    @updatedAt
   videoProject              VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
   speaker                   User?        @relation("SceneSpeaker", fields: [speakerId], references: [id], onDelete: SetNull)
+  shots                     Shot[]
 
   @@unique([videoProjectId, order])
   @@index([videoProjectId, status])
@@ -311,4 +312,44 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+enum ShotType {
+  CAMERA
+  SCREEN_CAPTURE
+  BROLL
+  INSERT
+  VOICE_ONLY
+  OTHER
+}
+
+enum ShotStatus {
+  PLANNED
+  RECORDED
+  NEEDS_RETAKE
+  DISCARDED
+}
+
+model Shot {
+  id            String     @id @default(uuid())
+  sceneId       String
+  order         Int
+  name          String?
+  cameraLabel   String?
+  shotType      ShotType   @default(CAMERA)
+  framing       String?
+  angle         String?
+  subject       String?
+  movement      String?
+  description   String?
+  requiredTakes Int        @default(1)
+  notes         String?
+  status        ShotStatus @default(PLANNED)
+  deletedAt     DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  scene         Scene      @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  @@unique([sceneId, order])
+  @@index([sceneId, status])
 }

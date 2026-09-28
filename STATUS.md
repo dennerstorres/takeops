@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SCRIPT-002 — Tela de roteiro
+SHOT-001 — Modelo Shot
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SHOT-001 — Modelo Shot
+SHOT-002 — CRUD de Shots
 ```
 
 ## Estado dos módulos
@@ -43,7 +43,7 @@ SHOT-001 — Modelo Shot
 | Projetos | DONE |
 | Kanban | DONE |
 | Roteiro | DONE |
-| Shots | NOT_STARTED |
+| Shots | IN_PROGRESS |
 | Gravações | NOT_STARTED |
 | Checklist | NOT_STARTED |
 | Modo Gravação | NOT_STARTED |
