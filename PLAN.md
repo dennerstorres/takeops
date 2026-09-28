@@ -786,11 +786,17 @@ Cada cena deve mostrar seus planos sem exigir navegação excessiva.
 
 ## CHECK-002 — Checklist padrão de gravação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** CHECK-001
 
 Seedar checklist recomendado pelo SPEC.
+
+### Critérios
+
+- [x] o checklist recomendado da spec vira um modelo "Checklist de gravação" com os 22 itens na ordem;
+- [x] criar de novo devolve o mesmo modelo, sem duplicar;
+- [x] a oferta aparece para dono e admin enquanto o workspace não tem checklist de gravação.
 
 ---
 

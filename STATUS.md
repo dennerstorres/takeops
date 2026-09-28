@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-CHECK-001 — Templates de checklist
+CHECK-002 — Checklist padrão de gravação
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-CHECK-002 — Checklist padrão de gravação
+CHECK-003 — Instanciar checklist em Shoot
 ```
 
 ## Estado dos módulos

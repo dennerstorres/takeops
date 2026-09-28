@@ -7,6 +7,7 @@ import { auth } from "@/server/auth";
 import {
   addChecklistItem,
   createChecklistTemplate,
+  createRecommendedChecklist,
   deleteChecklistTemplate,
   getChecklistTemplate,
   removeChecklistItem,
@@ -212,4 +213,15 @@ export async function moveChecklistItemAction(formData: FormData) {
     },
   );
   backTo(templateId);
+}
+
+export async function createRecommendedChecklistAction() {
+  const current = await currentWorkspace();
+  const result = await runAction(
+    current,
+    { operation: "create-recommended", entity: "ChecklistTemplate" },
+    () =>
+      createRecommendedChecklist(current.userId, current.workspaceId, ws, repo),
+  );
+  backTo(result.ok ? result.data.id : undefined);
 }

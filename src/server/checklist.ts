@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { recommendedShootChecklist } from "./checklist-defaults.ts";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import {
   checklistTypes,
@@ -247,4 +248,38 @@ export async function reorderChecklistItems(
     });
   }
   return reordered;
+}
+
+// Cria o checklist da spec uma vez. Se já existe um com o mesmo nome e tipo,
+// devolve o existente em vez de duplicar.
+export async function createRecommendedChecklist(
+  userId: string,
+  workspaceId: string,
+  workspaces: WorkspaceRepository,
+  checklists: ChecklistRepository,
+) {
+  const membership = await requireRole(
+    userId,
+    workspaceId,
+    managers,
+    workspaces,
+  );
+  const existing = (await checklists.list(membership.workspaceId)).find(
+    (row) =>
+      row.workspaceId === membership.workspaceId &&
+      row.type === recommendedShootChecklist.type &&
+      row.name === recommendedShootChecklist.name,
+  );
+  if (existing) return existing;
+  return createChecklistTemplate(
+    userId,
+    workspaceId,
+    {
+      name: recommendedShootChecklist.name,
+      type: recommendedShootChecklist.type,
+    },
+    workspaces,
+    checklists,
+    recommendedShootChecklist.items,
+  );
 }

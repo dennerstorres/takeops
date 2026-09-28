@@ -1,0 +1,30 @@
+// Checklist recomendado na seção 24 da spec. Equipamentos primeiro, depois
+// a preparação, na ordem em que a equipe costuma conferir.
+export const recommendedShootChecklist = {
+  name: "Checklist de gravação",
+  type: "SHOOT" as const,
+  items: [
+    "Câmera A",
+    "Câmera B",
+    "Tripé",
+    "Microfone",
+    "Iluminação",
+    "Extensão",
+    "Carregadores",
+    "Baterias",
+    "Notebook",
+    "Cabos necessários",
+    "Limpar lentes",
+    "Testar microfone",
+    "Conferir enquadramento",
+    "Conferir exposição",
+    "Conferir foco",
+    "Preparar cenário",
+    "Silenciar celulares",
+    "Fechar notificações do computador",
+    "Preparar software/demo",
+    "Conferir dados demonstrados",
+    "Conferir roteiro",
+    "Conferir espaço de armazenamento",
+  ],
+};

@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — CHECK-002 — Checklist padrão de gravação
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O checklist recomendado da spec pode ser criado com um botão em Configurações → Checklists.
+
+### Implementação
+
+- `recommendedShootChecklist` (`src/server/checklist-defaults.ts`) guarda nome, tipo e os 22 itens da seção 24, equipamentos antes da preparação.
+- `createRecommendedChecklist` usa a mesma criação de modelo. Se já existe modelo com o mesmo nome e tipo, devolve ele.
+- O botão aparece para dono e admin enquanto não há checklist de gravação.
+- Não cria nada sozinho no cadastro do workspace. Ver ADR-029.
+
+### Arquivos principais
+
+- `src/server/checklist-defaults.ts`
+- `src/server/checklist.ts`, `checklist-actions.ts`
+- `src/server/checklist.integration.test.ts`
+- `src/app/(app)/configuracoes/checklists/page.tsx`
+
+### Decisões tomadas
+
+- ADR-029.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — CHECK-001 — Templates de checklist
 
 **Status:** DONE  

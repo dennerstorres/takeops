@@ -5,6 +5,7 @@ import { EmptyState } from "@/components/feedback/empty-state";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { listChecklistTemplates } from "@/server/checklist";
+import { createRecommendedChecklistAction } from "@/server/checklist-actions";
 import { prismaChecklistRepository } from "@/server/checklist-prisma";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
@@ -59,6 +60,23 @@ export default async function ChecklistsPage() {
           ))}
         </ul>
       )}
+      {canEdit && !templates.some((template) => template.type === "SHOOT") ? (
+        <form
+          action={createRecommendedChecklistAction}
+          className="space-y-2 rounded-xl border p-3"
+        >
+          <p className="text-sm">
+            Comece pelo checklist recomendado: equipamentos e preparação, 22
+            itens.
+          </p>
+          <button
+            type="submit"
+            className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
+          >
+            Criar checklist recomendado
+          </button>
+        </form>
+      ) : null}
       {canEdit ? (
         <section className="space-y-3">
           <h2 className="text-base font-medium">Novo checklist</h2>

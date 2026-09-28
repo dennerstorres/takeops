@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import {
   addChecklistItem,
   createChecklistTemplate,
+  createRecommendedChecklist,
   deleteChecklistTemplate,
   getChecklistTemplate,
   listChecklistTemplates,
@@ -12,6 +13,7 @@ import {
   updateChecklistItem,
   updateChecklistTemplate,
 } from "./checklist.ts";
+import { recommendedShootChecklist } from "./checklist-defaults.ts";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { createWorkspace } from "./workspace.ts";
 
@@ -246,6 +248,72 @@ describe(
         }
         await prisma.user.deleteMany({
           where: { id: { in: [owner.id, member.id, outsider.id] } },
+        });
+      }
+    });
+
+    it("cria o checklist recomendado uma vez só", async () => {
+      const { prisma } = await import("./db.ts");
+      const { prismaChecklistRepository: repo } =
+        await import("./checklist-prisma.ts");
+      const { prismaWorkspaceRepository: ws } =
+        await import("./workspace-prisma.ts");
+      const suffix = randomUUID();
+      const owner = await prisma.user.create({
+        data: { email: `padrao-${suffix}@example.com`, name: "Dono" },
+      });
+      const member = await prisma.user.create({
+        data: { email: `padrao-membro-${suffix}@example.com`, name: "M" },
+      });
+      let workspaceId = "";
+      try {
+        workspaceId = (
+          await createWorkspace(
+            owner.id,
+            { name: `Padrão ${suffix}`, slug: `padrao-${suffix}` },
+            ws,
+          )
+        ).workspace.id;
+        await prisma.workspaceMember.create({
+          data: { workspaceId, userId: member.id, role: "MEMBER" },
+        });
+
+        const first = await createRecommendedChecklist(
+          owner.id,
+          workspaceId,
+          ws,
+          repo,
+        );
+        assert.equal(first.name, "Checklist de gravação");
+        assert.equal(first.type, "SHOOT");
+        assert.deepEqual(
+          first.items.map((item) => item.text),
+          recommendedShootChecklist.items,
+        );
+        assert.equal(first.items.at(-1)?.order, 22);
+
+        const again = await createRecommendedChecklist(
+          owner.id,
+          workspaceId,
+          ws,
+          repo,
+        );
+        assert.equal(again.id, first.id);
+        assert.equal(
+          (await listChecklistTemplates(owner.id, workspaceId, ws, repo))
+            .length,
+          1,
+        );
+        await assert.rejects(
+          createRecommendedChecklist(member.id, workspaceId, ws, repo),
+          ForbiddenError,
+        );
+      } finally {
+        if (workspaceId) {
+          await prisma.workspace.deleteMany({ where: { id: workspaceId } });
+        }
+        await prisma.user.deleteMany({
+          where: { id: { in: [owner.id, member.id] } },
         });
       }
     });

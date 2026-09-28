@@ -569,6 +569,25 @@ Nenhuma dependência de data nova. Toda tela futura com data e hora (publicaçã
 
 ---
 
+# ADR-029 — Checklist recomendado é criado sob pedido
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A CHECK-002 pede para "seedar" o checklist da spec. Criar sozinho no cadastro do workspace mexe na criação do workspace e gera modelo que a equipe pode não querer.
+
+## Decisão
+
+O checklist da spec fica numa constante (`checklist-defaults.ts`). Dono ou admin cria com um botão em Configurações → Checklists. A criação é idempotente por nome e tipo. O seed de demonstração (SEED-001/002) reaproveita a mesma função.
+
+## Consequências
+
+Workspace novo começa sem checklist. A oferta some quando já há um checklist de gravação.
+
+---
+
 # Template para novas decisões
 
 ```md
