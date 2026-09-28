@@ -3,7 +3,13 @@ import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import { createIdea } from "./idea.ts";
-import { createProject, getProject } from "./project.ts";
+import {
+  createProject,
+  deleteProject,
+  getProject,
+  listProjects,
+  updateProject,
+} from "./project.ts";
 import { createWorkspace } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
@@ -95,6 +101,21 @@ describe(
           prismaWorkspaceRepository,
           prismaProjectRepository,
         );
+        const updated = await updateProject(
+          author.id,
+          workspaceId,
+          created.id,
+          {
+            title: `Vídeo editado ${suffix}`,
+            format: "DEMO",
+            status: "PUBLISHED",
+          },
+          prismaWorkspaceRepository,
+          prismaIdeaRepository,
+          prismaProjectRepository,
+        );
+        assert.equal(updated.status, "IDEA");
+        assert.equal(updated.createdById, author.id);
         assert.equal(stored.title, `Vídeo ${suffix}`);
         await assert.rejects(
           () =>
@@ -107,6 +128,28 @@ describe(
             ),
           (error: unknown) => error instanceof NotFoundError,
         );
+
+        await deleteProject(
+          author.id,
+          workspaceId,
+          created.id,
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+        );
+        const listed = await listProjects(
+          author.id,
+          workspaceId,
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+        );
+        assert.equal(
+          listed.some((item) => item.id === created.id),
+          false,
+        );
+        const kept = await prisma.videoProject.findFirst({
+          where: { id: created.id },
+        });
+        assert.ok(kept?.deletedAt);
       } finally {
         if (workspaceId) {
           await prisma.workspace.deleteMany({ where: { id: workspaceId } });

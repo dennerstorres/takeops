@@ -94,6 +94,7 @@ async function toWrite(
   workspaces: WorkspaceRepository,
   ideas: IdeaRepository,
   projects: ProjectRepository,
+  exceptId?: string,
 ): Promise<ProjectWrite> {
   const data = parseInput(projectSchema, input);
   const slug = blank(data.slug);
@@ -102,8 +103,11 @@ async function toWrite(
       slug: "Use letras minúsculas, números e hífen.",
     });
   }
-  if (slug && (await projects.findBySlug(workspaceId, slug))) {
-    throw new ValidationError({ slug: "Este identificador já está em uso." });
+  if (slug) {
+    const taken = await projects.findBySlug(workspaceId, slug);
+    if (taken && taken.id !== exceptId) {
+      throw new ValidationError({ slug: "Este identificador já está em uso." });
+    }
   }
 
   const ownerId = blank(data.ownerId);
@@ -190,4 +194,62 @@ export async function createProject(
   }
   if (created.status !== "IDEA") throw new ForbiddenError();
   return created;
+}
+
+export async function updateProject(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  input: unknown,
+  workspaces: WorkspaceRepository,
+  ideas: IdeaRepository,
+  projects: ProjectRepository,
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const current = await getProject(
+    userId,
+    workspaceId,
+    projectId,
+    workspaces,
+    projects,
+  );
+  const write = await toWrite(
+    userId,
+    workspaceId,
+    input,
+    workspaces,
+    ideas,
+    projects,
+    current.id,
+  );
+  write.status = current.status;
+  const updated = await projects.update(workspaceId, projectId, write);
+  if (
+    !updated ||
+    updated.id !== projectId ||
+    updated.workspaceId !== workspaceId
+  ) {
+    throw new NotFoundError();
+  }
+  if (
+    updated.status !== current.status ||
+    updated.createdById !== current.createdById
+  ) {
+    throw new ForbiddenError();
+  }
+  return updated;
+}
+
+export async function deleteProject(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  deletedAt = new Date(),
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  await getProject(userId, workspaceId, projectId, workspaces, projects);
+  const removed = await projects.softDelete(workspaceId, projectId, deletedAt);
+  if (!removed) throw new NotFoundError();
 }

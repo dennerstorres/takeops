@@ -84,4 +84,21 @@ export const prismaProjectRepository: ProjectRepository = {
     });
     return mapProject(project);
   },
+
+  async update(workspaceId, projectId, input) {
+    const updated = await prisma.videoProject.updateMany({
+      where: { id: projectId, workspaceId, deletedAt: null },
+      data: input,
+    });
+    if (updated.count !== 1) return null;
+    return this.find(workspaceId, projectId);
+  },
+
+  async softDelete(workspaceId, projectId, deletedAt) {
+    const updated = await prisma.videoProject.updateMany({
+      where: { id: projectId, workspaceId, deletedAt: null },
+      data: { deletedAt },
+    });
+    return updated.count === 1;
+  },
 };

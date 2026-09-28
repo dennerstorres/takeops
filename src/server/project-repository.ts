@@ -43,4 +43,14 @@ export type ProjectRepository = {
     createdById: string,
     input: ProjectWrite,
   ): Promise<ProjectRecord>;
+  update(
+    workspaceId: string,
+    projectId: string,
+    input: ProjectWrite,
+  ): Promise<ProjectRecord | null>;
+  softDelete(
+    workspaceId: string,
+    projectId: string,
+    deletedAt: Date,
+  ): Promise<boolean>;
 };

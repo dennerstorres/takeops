@@ -368,9 +368,16 @@ Implementar campos descritos no SPEC.
 
 ## PROJECT-002 — CRUD de produções
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PROJECT-001
+
+### Critérios
+
+- [x] quem escreve cria, edita e tira a produção da lista;
+- [x] leitor só vê;
+- [x] a etapa não muda neste cadastro;
+- [x] a exclusão não apaga o registro.
 
 ---
 

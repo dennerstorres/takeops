@@ -2,7 +2,13 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import type { IdeaRecord, IdeaRepository } from "./idea-repository.ts";
-import { createProject, getProject, listProjects } from "./project.ts";
+import {
+  createProject,
+  deleteProject,
+  getProject,
+  listProjects,
+  updateProject,
+} from "./project.ts";
 import type { ProjectRecord, ProjectRepository } from "./project-repository.ts";
 import type {
   MembershipRecord,
@@ -95,6 +101,22 @@ function harness() {
       };
       projects.push(project);
       return project;
+    },
+    async update(workspaceId, projectId, input) {
+      const project = projects.find(
+        (item) => item.id === projectId && item.workspaceId === workspaceId,
+      );
+      if (!project) return null;
+      Object.assign(project, input, { updatedAt: new Date() });
+      return project;
+    },
+    async softDelete(workspaceId, projectId) {
+      const index = projects.findIndex(
+        (item) => item.id === projectId && item.workspaceId === workspaceId,
+      );
+      if (index < 0) return false;
+      projects.splice(index, 1);
+      return true;
     },
   };
 
@@ -231,6 +253,39 @@ describe("produção", () => {
     assert.equal(
       listed.some((item) => item.id === created.id),
       true,
+    );
+
+    const updated = await updateProject(
+      "member",
+      "ws-a",
+      created.id,
+      { title: "Reels 2", format: "DEMO", status: "PUBLISHED", slug: "reels" },
+      workspaces,
+      ideaRepo,
+      projectRepo,
+    );
+    assert.equal(updated.title, "Reels 2");
+    assert.equal(updated.status, "IDEA");
+    assert.equal(updated.createdById, "member");
+
+    await assert.rejects(
+      () =>
+        updateProject(
+          "viewer",
+          "ws-a",
+          created.id,
+          { title: "Não", format: "DEMO" },
+          workspaces,
+          ideaRepo,
+          projectRepo,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+
+    await deleteProject("member", "ws-a", created.id, workspaces, projectRepo);
+    assert.equal(
+      (await listProjects("member", "ws-a", workspaces, projectRepo)).length,
+      0,
     );
   });
 });

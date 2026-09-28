@@ -1107,3 +1107,72 @@ O teste de banco criou a produção ligada a uma ideia do mesmo workspace e recu
 
 PROJECT-002 usa `createProject`, `getProject` e `listProjects`. Não deixe o cliente enviar o status.
 
+---
+
+## 2026-09-28 — PROJECT-002 — CRUD de produções
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+`/producoes` cria, lista, edita e esconde produções. A etapa não muda neste cadastro. A exclusão só preenche `deletedAt`.
+
+### Implementação
+
+- `updateProject` preserva status e autor. `deleteProject` faz exclusão lógica.
+- A tela traz os campos da spec. Responsável e ideia de origem vêm de quem está no workspace.
+- Leitor vê e não edita. Dono, admin e membro editam.
+
+### Arquivos principais
+
+- `src/server/project.ts`
+- `src/server/project-actions.ts`
+- `src/app/(app)/producoes/page.tsx`
+- `src/app/(app)/producoes/nova/page.tsx`
+- `src/app/(app)/producoes/[id]/page.tsx`
+- `src/components/projects/project-form.tsx`
+
+### Decisões tomadas
+
+- Sem ADR novo. ADR-021 continua valendo: a etapa não vem do cliente.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+No HTTP, a produção foi criada na etapa Ideia, editada sem sair dessa etapa e sumiu da lista com `deletedAt` preenchido. O leitor não viu o botão de criar.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] quem escreve cria, edita e tira a produção da lista
+- [x] leitor só vê
+- [x] a etapa não muda neste cadastro
+- [x] a exclusão não apaga o registro
+
+### Pendências conhecidas
+
+- Mudar a etapa fica no kanban.
+- Converter a ideia fica na PROJECT-003.
+
+### Observações para próxima tarefa
+
+PROJECT-003 cria a produção a partir da ideia e marca a ideia como `CONVERTED`. Reuse `createProject` e não aceite status do cliente.
+

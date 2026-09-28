@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PROJECT-001 — Modelo de VideoProject
+PROJECT-002 — CRUD de produções
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PROJECT-002 — CRUD de produções
+PROJECT-003 — Converter Idea em VideoProject
 ```
 
 ## Estado dos módulos
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-O modelo de produção existe no banco. Ela nasce como ideia, prioridade normal e proporção 9:16. A tela fica na PROJECT-002. `npm run test:e2e` ainda não existe.
+`/producoes` lista, cria, edita e esconde a produção. A etapa continua a que já estava. Converter ideia fica na PROJECT-003. `npm run test:e2e` ainda não existe.
