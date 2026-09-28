@@ -48,7 +48,7 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ## BOOT-002 — UI base e design system
 
-**Status:** READY  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** BOOT-001
 
@@ -64,9 +64,9 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ### Critérios
 
-- [ ] desktop shell funcional;
-- [ ] mobile shell funcional;
-- [ ] componentes essenciais disponíveis.
+- [x] desktop shell funcional;
+- [x] mobile shell funcional;
+- [x] componentes essenciais disponíveis.
 
 ---
 

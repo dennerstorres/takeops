@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-BOOT-001 — Criar projeto Next.js e configuração base
+BOOT-002 — UI base e design system
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-BOOT-002 — UI base e design system
+BOOT-003 — Prisma e PostgreSQL
 ```
 
 ## Estado dos módulos
@@ -77,8 +77,6 @@ UI: Tailwind CSS + shadcn/ui
 
 ## Observações
 
-BOOT-001 concluído: Next.js 16.3.6, React 19, TypeScript strict, Tailwind 4, ESLint, Prettier, alias `@/*`.
+BOOT-002 concluído: shell com sidebar no desktop e drawer no mobile, shadcn/ui, Lucide, toast, confirmação e estados vazio, carregando e erro.
 
-App Router em `src/`. Pastas iniciais: `components`, `modules`, `lib`, `server`, `types`.
-
-`npm test` e `npm run test:e2e` ainda não existem. Git ainda não foi inicializado.
+As rotas além do Dashboard ficam na APP-001. `npm test` e `npm run test:e2e` ainda não existem. Git ainda não foi inicializado.

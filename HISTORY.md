@@ -146,3 +146,71 @@ Dev server em `http://127.0.0.1:3000` respondeu 200 com o título Video Producti
 
 BOOT-002 pode começar. shadcn/ui e o shell ficam nela.
 
+---
+
+## 2026-09-28 — BOOT-002 — UI base e design system
+
+**Status:** DONE
+**Agente:** Grok
+
+### Resumo
+
+Shell da aplicação, tokens do shadcn e os estados de interface pedidos na tarefa.
+
+### Implementação
+
+- shadcn/ui `base-nova`, Lucide e Sonner.
+- Sidebar a partir de `md`. No mobile, header com drawer.
+- Itens da navegação do `SPEC.md`. Só o Dashboard aponta para uma rota.
+- `EmptyState`, `LoadingState`, `ErrorState`, `ConfirmDialog` e toast.
+- Tema do sistema, sem seletor manual.
+
+### Arquivos principais
+
+- `src/app/layout.tsx`
+- `src/app/page.tsx`
+- `src/app/globals.css`
+- `src/components/shell/app-shell.tsx`
+- `src/components/feedback/confirm-dialog.tsx`
+- `components.json`
+
+### Decisões tomadas
+
+- ADR-012: preset `base-nova`.
+- `allowedDevOrigins` inclui `127.0.0.1` porque o dev server bloqueava o HMR nessa origem.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+No browser headless: sidebar no desktop; em 375, 390 e 430 o menu vira drawer, sem scroll horizontal. Drawer, toast e modal de confirmação abriram e o modal fechou.
+
+### Critérios de aceite
+
+- [x] desktop shell funcional
+- [x] mobile shell funcional
+- [x] componentes essenciais disponíveis
+
+### Pendências conhecidas
+
+- Rotas de Ideias, Produções, Calendário, Templates, Equipe e Configurações continuam na APP-001.
+- Git ainda não inicializado.
+
+### Observações para próxima tarefa
+
+BOOT-003 pode começar. O shell não depende do banco.
+

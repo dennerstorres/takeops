@@ -206,6 +206,27 @@ Scripts oficiais: `dev`, `build`, `start`, `lint`, `typecheck`, `format`, `forma
 
 ---
 
+# ADR-012 — shadcn/ui com Base UI
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+O CLI atual do shadcn inicializa o preset `base-nova`, sobre Base UI, no lugar do conjunto antigo com Radix.
+
+## Decisão
+
+Usar shadcn/ui `base-nova` e Lucide no MVP.
+
+Tema claro e escuro segue a preferência do sistema, via `next-themes`. Não há seletor manual nesta tarefa. O `SPEC.md` trata dark mode como opcional.
+
+## Consequências
+
+Componentes novos devem entrar por `npx shadcn add`, não por cópia de exemplos Radix.
+
+---
+
 # Template para novas decisões
 
 ```md
