@@ -443,9 +443,15 @@ Suportar múltiplas funções por usuário.
 
 ## PROJECT-006 — Busca e filtros
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** PROJECT-002
+
+### Critérios
+
+- [x] a lista filtra por status, responsável, participante, produto, prioridade e datas;
+- [x] a busca por título combina com os filtros;
+- [x] o workspace continua vindo da sessão.
 
 Filtros:
 

@@ -3,6 +3,11 @@ import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { ideaFormats } from "./idea-labels.ts";
 import type { IdeaRepository } from "./idea-repository.ts";
 import { aspectRatios, projectPriorities } from "./project-labels.ts";
+import type { ParticipantRepository } from "./participant-repository.ts";
+import {
+  filterProjects,
+  type ProjectSearch,
+} from "./project-search.ts";
 import type { ProjectRepository, ProjectWrite } from "./project-repository.ts";
 import { parseInput } from "./validation.ts";
 import { requireMembership, requireRole } from "./workspace.ts";
@@ -159,6 +164,21 @@ export async function listProjects(
   await requireMembership(userId, workspaceId, workspaces);
   const rows = await projects.list(workspaceId);
   return rows.filter((project) => project.workspaceId === workspaceId);
+}
+
+export async function searchProjects(
+  userId: string,
+  workspaceId: string,
+  query: ProjectSearch,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  participants: ParticipantRepository,
+) {
+  const rows = await listProjects(userId, workspaceId, workspaces, projects);
+  const memberships = await participants.listByProjectIds(rows.map((row) => row.id));
+  return filterProjects(rows, memberships, query).filter(
+    (project) => project.workspaceId === workspaceId,
+  );
 }
 
 export async function getProject(

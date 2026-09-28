@@ -83,6 +83,9 @@ function harness() {
     async list(projectId) {
       return rows.filter((row) => row.videoProjectId === projectId);
     },
+    async listByProjectIds(projectIds) {
+      return rows.filter((row) => projectIds.includes(row.videoProjectId));
+    },
     async add(projectId, userId, role) {
       const row: ParticipantRecord = {
         id: `${projectId}-${userId}-${role}`,

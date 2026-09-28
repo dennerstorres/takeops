@@ -430,6 +430,27 @@ Uma ideia ligada à produção precisa ser do mesmo workspace. A conversão que 
 
 ---
 
+# ADR-022 — Filtros da lista de produções
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A lista de produções precisa cruzar status, responsável, participante, produto, prioridade, datas e o título. O kanban vai precisar da mesma regra.
+
+## Decisão
+
+Os filtros se combinam todos. Um valor de status ou prioridade que não existe no enum não encontra nada. A data é o dia UTC, inclusive nos dois limites. Produção sem a data do filtro fica de fora quando esse intervalo está preenchido.
+
+O workspace continua o da sessão. O cliente não envia `workspaceId`.
+
+## Consequências
+
+O kanban reusa `filterProjects`. A busca desta tarefa olha só o título. Produto tem o campo próprio.
+
+---
+
 # Template para novas decisões
 
 ```md

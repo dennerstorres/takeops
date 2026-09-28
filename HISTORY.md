@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — PROJECT-006 — Busca e filtros
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+A lista de produções filtra no servidor por título, status, responsável, participante, produto, prioridade e datas de gravação e publicação.
+
+### Implementação
+
+- `searchProjects` parte da lista do workspace da sessão e aplica `filterProjects`.
+- Status ou prioridade fora do enum não devolve linha.
+- O intervalo de data é o dia UTC, inclusive. Sem a data, a produção sai do resultado.
+- O formulário em `/producoes` é GET. Limpar volta para a lista inteira.
+
+### Arquivos principais
+
+- `src/server/project-search.ts`
+- `src/server/project-search.test.ts`
+- `src/server/project.ts`
+- `src/app/(app)/producoes/page.tsx`
+- `src/server/participant-repository.ts`
+- `src/server/participant-prisma.ts`
+
+### Decisões tomadas
+
+- ADR-022.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — PROJECT-005 — Página Visão Geral
 
 **Status:** DONE  

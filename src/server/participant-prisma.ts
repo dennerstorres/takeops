@@ -25,6 +25,16 @@ function mapRow(row: {
 }
 
 export const prismaParticipantRepository: ParticipantRepository = {
+  async listByProjectIds(projectIds) {
+    if (projectIds.length === 0) return [];
+    const rows = await prisma.projectMember.findMany({
+      where: { videoProjectId: { in: projectIds } },
+      include: { user: { select: { name: true, email: true } } },
+      orderBy: [{ createdAt: "asc" }, { role: "asc" }],
+    });
+    return rows.map(mapRow);
+  },
+
   async list(projectId) {
     const rows = await prisma.projectMember.findMany({
       where: { videoProjectId: projectId },

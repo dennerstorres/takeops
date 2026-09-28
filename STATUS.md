@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 4 — Video Projects
+Fase 5 — Pipeline e Kanban
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PROJECT-005 — Página Visão Geral
+PROJECT-006 — Busca e filtros
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PROJECT-006 — Busca e filtros
+KANBAN-001 — Pipeline de status
 ```
 
 ## Estado dos módulos
@@ -40,7 +40,7 @@ PROJECT-006 — Busca e filtros
 | Workspace | IN_PROGRESS |
 | Equipe | DONE |
 | Ideias | DONE |
-| Projetos | IN_PROGRESS |
+| Projetos | DONE |
 | Kanban | NOT_STARTED |
 | Roteiro | NOT_STARTED |
 | Shots | NOT_STARTED |

@@ -12,6 +12,7 @@ export type ParticipantRecord = {
 
 export type ParticipantRepository = {
   list(projectId: string): Promise<ParticipantRecord[]>;
+  listByProjectIds(projectIds: string[]): Promise<ParticipantRecord[]>;
   add(
     projectId: string,
     userId: string,
