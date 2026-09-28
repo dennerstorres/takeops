@@ -5,6 +5,7 @@ import type { ProjectRecord, ProjectRepository } from "./project-repository.ts";
 import {
   createScene,
   deleteScene,
+  duplicateScene,
   getScene,
   listScenes,
   reorderScenes,
@@ -438,6 +439,68 @@ describe("cena", () => {
           sceneRepo,
         ),
       ValidationError,
+    );
+  });
+
+  it("copia a cena para o fim e nasce planejada", async () => {
+    const { workspaces, projectRepo, sceneRepo, join } = harness();
+    join("owner", "ws-a", "OWNER");
+    join("ana", "ws-a", "MEMBER");
+    join("viewer", "ws-a", "VIEWER");
+    const original = await createScene(
+      "owner",
+      "ws-a",
+      "p-a",
+      { title: "Abertura", type: "HOOK", speakerId: "ana", dialogue: "Olá" },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    await updateScene(
+      "owner",
+      "ws-a",
+      "p-a",
+      original.id,
+      {
+        title: "Abertura",
+        type: "HOOK",
+        speakerId: "ana",
+        dialogue: "Olá",
+        status: "RECORDED",
+      },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    const copy = await duplicateScene(
+      "owner",
+      "ws-a",
+      "p-a",
+      original.id,
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    assert.notEqual(copy.id, original.id);
+    assert.equal(copy.title, "Abertura");
+    assert.equal(copy.type, "HOOK");
+    assert.equal(copy.dialogue, "Olá");
+    assert.equal(copy.speakerId, "ana");
+    assert.equal(copy.status, "PLANNED");
+    assert.equal(copy.order, 2);
+    assert.equal(copy.videoProjectId, "p-a");
+    await assert.rejects(
+      () =>
+        duplicateScene(
+          "viewer",
+          "ws-a",
+          "p-a",
+          original.id,
+          workspaces,
+          projectRepo,
+          sceneRepo,
+        ),
+      ForbiddenError,
     );
   });
 });

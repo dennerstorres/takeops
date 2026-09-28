@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SCENE-004 — Duplicação
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Duplicar a cena cria outra, com o mesmo conteúdo, no fim da lista. A cópia nasce planejada.
+
+### Implementação
+
+- `duplicateScene` lê a cena visível e grava uma nova pela mesma regra de criação.
+- O status gravado volta para Planejada. A ordem é a próxima.
+- Leitor não vê o botão e o servidor recusa.
+- Autosave continua na SCENE-005.
+
+### Arquivos principais
+
+- `src/server/scene.ts`
+- `src/server/scene-actions.ts`
+- `src/app/(app)/producoes/[id]/cenas/page.tsx`
+- `src/server/scene.test.ts`
+- `src/server/scene.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. A cópia não herda o status de gravada.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — SCENE-003 — Reordenação
 
 **Status:** DONE  

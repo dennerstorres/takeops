@@ -9,7 +9,7 @@ import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
-import { moveSceneAction } from "@/server/scene-actions";
+import { duplicateSceneAction, moveSceneAction } from "@/server/scene-actions";
 import { listScenes } from "@/server/scene";
 import { sceneStatusLabel, sceneTypeLabel } from "@/server/scene-labels";
 import { prismaSceneRepository } from "@/server/scene-prisma";
@@ -113,6 +113,16 @@ export default async function ScenesPage({
                         className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm disabled:opacity-40"
                       >
                         Descer
+                      </button>
+                    </form>
+                    <form action={duplicateSceneAction}>
+                      <input type="hidden" name="projectId" value={project.id} />
+                      <input type="hidden" name="sceneId" value={scene.id} />
+                      <button
+                        type="submit"
+                        className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
+                      >
+                        Duplicar
                       </button>
                     </form>
                     <Link

@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SCENE-003 — Reordenação
+SCENE-004 — Duplicação
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SCENE-004 — Duplicação
+SCENE-005 — Autosave
 ```
 
 ## Estado dos módulos

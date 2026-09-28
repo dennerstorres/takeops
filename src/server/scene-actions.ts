@@ -5,7 +5,14 @@ import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { prismaProjectRepository } from "@/server/project-prisma";
-import { createScene, deleteScene, listScenes, reorderScenes, updateScene } from "@/server/scene";
+import {
+  createScene,
+  deleteScene,
+  duplicateScene,
+  listScenes,
+  reorderScenes,
+  updateScene,
+} from "@/server/scene";
 import { ValidationError } from "@/server/errors";
 import { prismaSceneRepository } from "@/server/scene-prisma";
 import { runAction, type ActionFailure } from "@/server/service";
@@ -88,6 +95,28 @@ export async function updateSceneAction(
       ),
   );
   if (!result.ok) return { message: result.message, fields: result.fields };
+  revalidatePath(`/producoes/${projectId}/cenas`);
+  redirect(`/producoes/${projectId}/cenas`);
+}
+
+export async function duplicateSceneAction(formData: FormData) {
+  const current = await currentWorkspace();
+  const projectId = String(formData.get("projectId") ?? "");
+  const sceneId = String(formData.get("sceneId") ?? "");
+  await runAction(
+    { userId: current.userId, workspaceId: current.workspaceId },
+    { operation: "duplicate", entity: "Scene" },
+    () =>
+      duplicateScene(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        sceneId,
+        prismaWorkspaceRepository,
+        prismaProjectRepository,
+        prismaSceneRepository,
+      ),
+  );
   revalidatePath(`/producoes/${projectId}/cenas`);
   redirect(`/producoes/${projectId}/cenas`);
 }

@@ -594,9 +594,15 @@ Reordenação transacional.
 
 ## SCENE-004 — Duplicação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** SCENE-002
+
+### Critérios
+
+- [x] duplicar cria outra cena com o mesmo conteúdo;
+- [x] a cópia nasce planejada no fim da lista;
+- [x] leitor não duplica.
 
 ---
 

@@ -157,6 +157,58 @@ export async function createScene(
   return created;
 }
 
+export async function duplicateScene(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  sceneId: string,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  scenes: SceneRepository,
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const current = await getScene(
+    userId,
+    workspaceId,
+    projectId,
+    sceneId,
+    workspaces,
+    projects,
+    scenes,
+  );
+  const created = await scenes.create(
+    workspaceId,
+    projectId,
+    await toWrite(
+      {
+        title: current.title,
+        description: current.description ?? "",
+        type: current.type,
+        speakerId: current.speakerId ?? "",
+        dialogue: current.dialogue ?? "",
+        action: current.action ?? "",
+        estimatedDurationSeconds: current.estimatedDurationSeconds ?? "",
+        cameraInstructions: current.cameraInstructions ?? "",
+        editingInstructions: current.editingInstructions ?? "",
+        continuityNotes: current.continuityNotes ?? "",
+      },
+      workspaceId,
+      workspaces,
+      "PLANNED",
+    ),
+  );
+  if (
+    !created ||
+    created.id === current.id ||
+    created.videoProjectId !== current.videoProjectId ||
+    created.status !== "PLANNED" ||
+    created.order <= current.order
+  ) {
+    throw new NotFoundError();
+  }
+  return created;
+}
+
 export async function updateScene(
   userId: string,
   workspaceId: string,

@@ -6,6 +6,7 @@ import { createProject } from "./project.ts";
 import {
   createScene,
   deleteScene,
+  duplicateScene,
   getScene,
   listScenes,
   reorderScenes,
@@ -216,6 +217,20 @@ describe(
         );
         const hidden = await prisma.scene.findFirst({ where: { id: second.id } });
         assert.ok(hidden?.deletedAt);
+        const copy = await duplicateScene(
+          author.id,
+          workspaceId,
+          project.id,
+          first.id,
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+          prismaSceneRepository,
+        );
+        assert.notEqual(copy.id, first.id);
+        assert.equal(copy.status, "PLANNED");
+        assert.equal(copy.title, "Abertura nova");
+        assert.equal(copy.videoProjectId, project.id);
+        assert.ok(copy.order > first.order);
         await assert.rejects(
           () =>
             getScene(
