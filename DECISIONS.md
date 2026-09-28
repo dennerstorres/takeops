@@ -342,6 +342,29 @@ Trocar de workspace fica para uma tarefa futura. Até lá, quem tem mais de um m
 
 ---
 
+# ADR-018 — Convite é um link com papel gravado no servidor
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+TEAM-002 precisa convidar por e-mail sem obrigar envio automático. O aceite acontece depois do login Google. O papel não pode vir do cliente na hora de entrar.
+
+## Decisão
+
+O dono convida como admin, membro ou leitor. O admin convida só membro ou leitor. Membro e leitor não convidam.
+
+O token fica só como hash. O link aparece uma vez, vale 7 dias e não é enviado por e-mail. O aceite compara o e-mail da conta com o e-mail do convite e grava o papel que já estava no convite. Se a pessoa já participa, o papel não muda.
+
+Quem ainda não tem workspace entra pelos convites pendentes daquele e-mail. Quem já tem workspace só entra em outro pelo link.
+
+## Consequências
+
+O workspace aberto continua sendo a membership mais antiga. Entrar num segundo workspace pelo link não troca a tela atual.
+
+---
+
 # Template para novas decisões
 
 ```md

@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TEAM-001 — Listagem de equipe
+TEAM-002 — Convites
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TEAM-002 — Convites
+TEAM-003 — Gerenciamento de papéis
 ```
 
 ## Estado dos módulos
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-Quem não tem membership cai em `/comecar`. Quem tem entra no workspace da membership mais antiga. `/equipe` lista essa equipe. Convite fica na TEAM-002. `npm run test:e2e` ainda não existe. As outras rotas do menu ficam na APP-001.
+Quem não tem membership cai em `/comecar` ou entra por convite pendente do próprio e-mail. `/equipe` lista a equipe. Dono e admin geram o link em `/convite`. O e-mail não é enviado. `npm run test:e2e` ainda não existe. As outras rotas do menu ficam na APP-001.

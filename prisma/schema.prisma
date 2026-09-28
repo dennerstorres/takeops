@@ -8,14 +8,16 @@ datasource db {
 }
 
 model User {
-  id            String            @id @default(uuid())
-  name          String?
-  email         String?           @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  memberships   WorkspaceMember[]
+  id              String            @id @default(uuid())
+  name            String?
+  email           String?           @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  sessions        Session[]
+  memberships     WorkspaceMember[]
+  invitesSent     WorkspaceInvite[] @relation("InviteInviter")
+  invitesAccepted WorkspaceInvite[] @relation("InviteAccepter")
 }
 
 enum WorkspaceRole {
@@ -34,6 +36,33 @@ model Workspace {
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
   members   WorkspaceMember[]
+  invites   WorkspaceInvite[]
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+}
+
+model WorkspaceInvite {
+  id           String       @id @default(uuid())
+  workspaceId  String
+  email        String
+  role         WorkspaceRole
+  tokenHash    String       @unique
+  status       InviteStatus @default(PENDING)
+  invitedById  String
+  acceptedById String?
+  expiresAt    DateTime
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  invitedBy    User         @relation("InviteInviter", fields: [invitedById], references: [id], onDelete: Cascade)
+  acceptedBy   User?        @relation("InviteAccepter", fields: [acceptedById], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, status])
+  @@index([email, status])
 }
 
 model WorkspaceMember {

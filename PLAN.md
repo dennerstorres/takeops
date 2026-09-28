@@ -200,7 +200,7 @@ ou
 
 ## TEAM-002 — Convites
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** TEAM-001
 
@@ -212,6 +212,13 @@ ou
 - aceite após Google login.
 
 Não é obrigatório enviar e-mail automaticamente no primeiro corte. Pode ser usado link de convite, desde que documentado.
+
+### Critérios
+
+- [x] dono ou admin gera um link para um e-mail, com papel definido no servidor;
+- [x] o aceite entra na equipe só se o Google for desse e-mail;
+- [x] membro e leitor não convidam;
+- [x] outro workspace não aceita nem lista o convite.
 
 ---
 

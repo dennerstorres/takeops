@@ -1,8 +1,12 @@
 import { redirect } from "next/navigation";
+import { InviteForm } from "@/components/team/invite-form";
+import { RevokeInviteButton } from "@/components/team/revoke-invite-button";
+import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError } from "@/server/errors";
+import { invitableRoles, listInvites } from "@/server/invite";
+import { prismaInviteRepository } from "@/server/invite-prisma";
 import { listTeam, roleLabel } from "@/server/team";
-import { decideFirstAccess, listWorkspaces } from "@/server/workspace";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
 function displayName(name: string | null, email: string | null) {
@@ -26,23 +30,37 @@ export default async function TeamPage() {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
-  const access = decideFirstAccess(
-    session.user.id,
-    await listWorkspaces(session.user.id, prismaWorkspaceRepository),
-  );
+  const access = await openWorkspace(session.user.id);
   if (access.kind === "setup") redirect("/comecar");
 
+  const workspaceId = access.workspace.workspace.id;
+  const roles = invitableRoles(access.workspace.membership.role);
   let members;
+  let invites: Awaited<ReturnType<typeof listInvites>> = [];
   try {
     members = await listTeam(
       session.user.id,
-      access.workspace.workspace.id,
+      workspaceId,
       prismaWorkspaceRepository,
     );
+    if (roles.length > 0) {
+      invites = await listInvites(
+        session.user.id,
+        workspaceId,
+        prismaWorkspaceRepository,
+        prismaInviteRepository,
+      );
+    }
   } catch (error) {
     if (error instanceof ForbiddenError) redirect("/comecar");
     throw error;
   }
+
+  const timezone = access.workspace.workspace.timezone;
+  const expires = new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "short",
+    timeZone: timezone,
+  });
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
@@ -87,6 +105,40 @@ export default async function TeamPage() {
           );
         })}
       </ul>
+      {roles.length > 0 ? (
+        <section className="flex flex-col gap-4">
+          <header className="space-y-1">
+            <h2 className="text-base font-medium">Convidar</h2>
+            <p className="text-sm text-muted-foreground">
+              O link não é enviado por e-mail. Ele vale 7 dias e só entra quem
+              fizer login com o Google desse endereço.
+            </p>
+          </header>
+          <InviteForm roles={roles} />
+          {invites.length > 0 ? (
+            <ul className="flex flex-col gap-3">
+              {invites.map((invite) => (
+                <li
+                  key={invite.id}
+                  className="flex flex-wrap items-center gap-3 rounded-xl border p-3"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">
+                      {invite.email}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {roleLabel(invite.role)} ·{" "}
+                      {invite.status === "EXPIRED" ? "Expirado" : "Pendente"} ·
+                      até {expires.format(invite.expiresAt)}
+                    </p>
+                  </div>
+                  <RevokeInviteButton inviteId={invite.id} />
+                </li>
+              ))}
+            </ul>
+          ) : null}
+        </section>
+      ) : null}
     </div>
   );
 }

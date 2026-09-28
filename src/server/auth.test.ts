@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { redactForLog } from "./auth-log.ts";
-import { hasSessionCookie, isPublicPath } from "./auth-routes.ts";
+import { hasSessionCookie, isPublicPath, safeNextPath } from "./auth-routes.ts";
 
 describe("rotas públicas", () => {
   it("libera só login e o callback do Auth.js", () => {
@@ -9,6 +9,16 @@ describe("rotas públicas", () => {
     assert.equal(isPublicPath("/api/auth/callback/google"), true);
     assert.equal(isPublicPath("/"), false);
     assert.equal(isPublicPath("/api/auth-extra"), false);
+    assert.equal(isPublicPath("/convite/abc"), false);
+  });
+});
+
+describe("callback de login", () => {
+  it("só aceita caminho interno", () => {
+    assert.equal(safeNextPath("/convite/abc"), "/convite/abc");
+    assert.equal(safeNextPath("https://evil.test"), null);
+    assert.equal(safeNextPath("//evil.test"), null);
+    assert.equal(safeNextPath("/convite/%2fadmin"), null);
   });
 });
 

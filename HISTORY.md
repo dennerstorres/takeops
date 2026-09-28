@@ -618,3 +618,77 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 TEAM-002 cria o convite. O aceite deve chamar a membership existente, sem gravar papel vindo do cliente.
 
+---
+
+## 2026-09-28 — TEAM-002 — Convites
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Dono e admin geram um link de convite. A pessoa entra depois do login Google se o e-mail for o mesmo. O papel sai do convite, não do aceite.
+
+### Implementação
+
+- `WorkspaceInvite` guarda e-mail, papel, status e o hash do token. O link vale 7 dias e não é enviado por e-mail.
+- Dono convida admin, membro ou leitor. Admin convida membro ou leitor. Membro e leitor não veem o formulário.
+- `/convite/[token]` aceita. Login sem sessão volta para esse caminho. E-mail diferente não entra. Quem já participa não muda de papel.
+- Sem membership, os convites pendentes daquele e-mail entram sozinhos. Com membership, só o link adiciona outro workspace.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928190000_workspace_invite/migration.sql`
+- `src/server/invite.ts`
+- `src/server/invite-prisma.ts`
+- `src/server/access.ts`
+- `src/app/(app)/equipe/page.tsx`
+- `src/app/convite/[token]/page.tsx`
+- `src/proxy.ts`
+
+### Decisões tomadas
+
+- ADR-018.
+
+### Banco / migrations
+
+- `20260928190000_workspace_invite`, aplicada no Postgres local.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+`npm test` roda os arquivos em série. Em paralelo, o Postgres local do Prisma misturava prepared statements.
+
+Sem cookie, `/convite/...` vai para o login e guarda o caminho. O dono cria o link na equipe. O membro não vê o formulário. O convidado aceita e entra como membro. Outro e-mail vê que o convite não é dele.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] dono ou admin gera um link para um e-mail, com papel definido no servidor
+- [x] o aceite entra na equipe só se o Google for desse e-mail
+- [x] membro e leitor não convidam
+- [x] outro workspace não aceita nem lista o convite
+
+### Pendências conhecidas
+
+- Troca de papel fica na TEAM-003.
+- O workspace aberto continua sendo a membership mais antiga.
+
+### Observações para próxima tarefa
+
+TEAM-003 altera papel de quem já participa. Não reaproveitar o aceite do convite para isso. Dono e admin já têm limites diferentes no convite.
+
