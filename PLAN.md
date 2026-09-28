@@ -133,7 +133,7 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ## WORKSPACE-001 — Modelo de Workspace e Membership
 
-**Status:** READY  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** AUTH-001
 
@@ -146,8 +146,8 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ### Critérios
 
-- [ ] usuário só acessa Workspace do qual participa;
-- [ ] cross-workspace bloqueado.
+- [x] usuário só acessa Workspace do qual participa;
+- [x] cross-workspace bloqueado.
 
 ---
 

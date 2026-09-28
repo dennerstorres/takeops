@@ -412,3 +412,69 @@ PASS
 
 WORKSPACE-001 pode criar Workspace e Membership ligados a `User.id`.
 
+---
+
+## 2026-09-28 — WORKSPACE-001 — Modelo de Workspace e Membership
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Workspace e membership existem no banco. O serviço só devolve workspace de quem participa. Leitura cruzada responde Forbidden.
+
+### Implementação
+
+- Modelos `Workspace` e `WorkspaceMember`, papel `OWNER | ADMIN | MEMBER | VIEWER`. Migration `20260928163000_workspace_membership`.
+- `createWorkspace` grava o autor como OWNER. Slug único, fuso padrão `America/Cuiaba`, logo só com URL http(s).
+- `getWorkspace`, `listWorkspaces`, `requireMembership` e `requireRole` exigem o par usuário + workspace.
+- O repositório Prisma fica em `workspace-prisma.ts`. Os testes de regra usam repositório em memória. Um teste de integração cobre o banco.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928163000_workspace_membership/migration.sql`
+- `src/server/workspace.ts`
+- `src/server/workspace-prisma.ts`
+- `src/server/workspace.test.ts`
+- `src/server/workspace.integration.test.ts`
+
+### Decisões tomadas
+
+- ADR-016. Sem membership a resposta é Forbidden, sem distinguir workspace inexistente de workspace alheio.
+
+### Banco / migrations
+
+- `20260928163000_workspace_membership`, aplicada no Postgres local `takeops`.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+O teste de integração criou dois usuários e confirmou que um não lê o workspace do outro. Não há tela nova.
+
+### Critérios de aceite
+
+- [x] usuário só acessa Workspace do qual participa
+- [x] cross-workspace bloqueado
+
+### Pendências conhecidas
+
+- Primeiro acesso, convite e tela de equipe ficam em WORKSPACE-002 e TEAM-001.
+- Activity log da criação do workspace espera o módulo de auditoria.
+
+### Observações para próxima tarefa
+
+WORKSPACE-002 deve chamar `createWorkspace` e `listWorkspaces` com o `User.id` da sessão. Não duplicar a regra de membership na UI.
+

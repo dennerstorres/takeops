@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-AUTH-001 — Auth.js + Google OAuth
+WORKSPACE-001 — Modelo de Workspace e Membership
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-WORKSPACE-001 — Modelo de Workspace e Membership
+WORKSPACE-002 — Primeiro acesso
 ```
 
 ## Estado dos módulos
@@ -37,7 +37,7 @@ WORKSPACE-001 — Modelo de Workspace e Membership
 |---|---|
 | Bootstrap | DONE |
 | Auth | DONE |
-| Workspace | NOT_STARTED |
+| Workspace | IN_PROGRESS |
 | Equipe | NOT_STARTED |
 | Ideias | NOT_STARTED |
 | Projetos | NOT_STARTED |
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-Próxima: WORKSPACE-001. `npm run test:e2e` ainda não existe. As rotas além do Dashboard ficam na APP-001.
+Modelo de Workspace e membership pronto. O primeiro acesso fica na WORKSPACE-002. `npm run test:e2e` ainda não existe. As rotas além do Dashboard ficam na APP-001.

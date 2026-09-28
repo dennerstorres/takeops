@@ -298,6 +298,27 @@ O logger descarta `access_token`, `refresh_token`, `id_token` e `code`. O debug 
 
 ---
 
+# ADR-016 — Acesso ao Workspace exige membership
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+WORKSPACE-001 introduz `Workspace` e `WorkspaceMember`. A leitura não pode confirmar que um workspace existe para quem não participa dele.
+
+## Decisão
+
+`getWorkspace`, `listWorkspaces` e `requireMembership` filtram por `userId` e `workspaceId`. Sem membership o serviço responde Forbidden, esteja o workspace ausente ou apenas fora do alcance do usuário.
+
+Criar workspace grava o autor como OWNER. O papel não vem do cliente. O slug é único. O fuso padrão é `America/Cuiaba`.
+
+## Consequências
+
+Convite, troca de papel e a tela de primeiro acesso ficam nas tarefas seguintes. Elas reutilizam este serviço.
+
+---
+
 # Template para novas decisões
 
 ```md
