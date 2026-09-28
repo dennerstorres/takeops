@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PROJECT-003 — Converter Idea em VideoProject
+PROJECT-004 — Participantes e funções
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PROJECT-004 — Participantes e funções
+PROJECT-005 — Página Visão Geral
 ```
 
 ## Estado dos módulos
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-Converter em vídeo cria a produção e marca a ideia como convertida na mesma transação. Uma segunda vez não cria outra. `npm run test:e2e` ainda não existe.
+Na produção, a mesma pessoa pode ter várias funções. Só entra quem já está no workspace. O leitor só vê. `npm run test:e2e` ainda não existe.

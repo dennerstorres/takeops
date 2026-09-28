@@ -21,6 +21,7 @@ model User {
   ideas           Idea[]
   projectsCreated VideoProject[] @relation("ProjectCreator")
   projectsOwned   VideoProject[] @relation("ProjectOwner")
+  projectRoles    ProjectMember[]
 }
 
 enum WorkspaceRole {
@@ -167,10 +168,37 @@ model VideoProject {
   createdBy                 User               @relation("ProjectCreator", fields: [createdById], references: [id], onDelete: Restrict)
   owner                     User?              @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   sourceIdea                Idea?              @relation(fields: [sourceIdeaId], references: [id], onDelete: SetNull)
+  members                   ProjectMember[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
   @@index([workspaceId, createdAt])
+}
+
+enum ProjectRole {
+  PRODUCER
+  DIRECTOR
+  SCRIPT_WRITER
+  PRESENTER
+  CAMERA
+  EDITOR
+  REVIEWER
+  APPROVER
+  OTHER
+}
+
+model ProjectMember {
+  id             String       @id @default(uuid())
+  videoProjectId String
+  userId         String
+  role           ProjectRole
+  createdAt      DateTime     @default(now())
+  project        VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([videoProjectId, userId, role])
+  @@index([videoProjectId])
+  @@index([userId])
 }
 
 model WorkspaceMember {

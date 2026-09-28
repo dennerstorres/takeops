@@ -412,11 +412,18 @@ Tudo deve ocorrer atomicamente.
 
 ## PROJECT-004 — Participantes e funções
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PROJECT-002, TEAM-001
 
 Suportar múltiplas funções por usuário.
+
+### Critérios
+
+- [x] a mesma pessoa pode ter mais de uma função na produção;
+- [x] a função repetida é recusada;
+- [x] só entra quem já está no workspace;
+- [x] leitor não adiciona nem remove.
 
 ---
 

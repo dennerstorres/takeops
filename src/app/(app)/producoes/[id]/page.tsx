@@ -1,12 +1,19 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { DeleteProjectButton } from "@/components/projects/delete-project-button";
+import {
+  ParticipantForm,
+  RemoveParticipantButton,
+} from "@/components/projects/participant-form";
 import { ProjectForm } from "@/components/projects/project-form";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { NotFoundError } from "@/server/errors";
 import { listIdeas } from "@/server/idea";
 import { prismaIdeaRepository } from "@/server/idea-prisma";
+import { listParticipants } from "@/server/participant";
+import { prismaParticipantRepository } from "@/server/participant-prisma";
+import { projectRoleLabel } from "@/server/participant-labels";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { projectStatusLabel } from "@/server/project-labels";
@@ -61,6 +68,14 @@ export default async function ProductionPage({
   }
 
   const canEdit = access.workspace.membership.role !== "VIEWER";
+  const participants = await listParticipants(
+    session.user.id,
+    workspaceId,
+    project.id,
+    prismaWorkspaceRepository,
+    prismaProjectRepository,
+    prismaParticipantRepository,
+  );
   const [people, ideas] = await Promise.all([
     listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
     listIdeas(
@@ -84,6 +99,48 @@ export default async function ProductionPage({
         </div>
         {canEdit ? <DeleteProjectButton projectId={project.id} /> : null}
       </header>
+      <section className="flex flex-col gap-3">
+        <h2 className="text-base font-medium">Participantes</h2>
+        {participants.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            Ninguém foi adicionado ainda.
+          </p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {participants.map((person) => (
+              <li
+                key={person.id}
+                className="flex flex-wrap items-center gap-3 rounded-xl border p-3"
+              >
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">
+                    {person.name ?? person.email ?? "Sem nome"}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {projectRoleLabel(person.role)}
+                  </p>
+                </div>
+                {canEdit ? (
+                  <RemoveParticipantButton
+                    projectId={project.id}
+                    userId={person.userId}
+                    role={person.role}
+                  />
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        )}
+        {canEdit ? (
+          <ParticipantForm
+            projectId={project.id}
+            people={people.map((person) => ({
+              id: person.userId,
+              label: person.name ?? person.email ?? "Sem nome",
+            }))}
+          />
+        ) : null}
+      </section>
       <ProjectForm
         canEdit={canEdit}
         people={people.map((person) => ({

@@ -1245,3 +1245,71 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 PROJECT-004 adiciona participantes e funções na produção já criada.
 
+---
+
+## 2026-09-28 — PROJECT-004 — Participantes e funções
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Uma produção aceita várias funções na mesma pessoa. A função repetida não entra. Quem não está no workspace também não entra.
+
+### Implementação
+
+- `ProjectMember` liga produção, usuário e função. A chave única é a combinação dos três.
+- Dono, admin e membro adicionam e removem. Leitor só vê.
+- A tela da produção lista as funções e tem o formulário de adicionar.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928220000_project_members/migration.sql`
+- `src/server/participant.ts`
+- `src/server/participant-prisma.ts`
+- `src/app/(app)/producoes/[id]/page.tsx`
+- `src/components/projects/participant-form.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. A função é da produção, não o papel do workspace.
+
+### Banco / migrations
+
+- `20260928220000_project_members`, aplicada no Postgres local.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+No HTTP, a mesma pessoa ficou como Câmera e Editor. O leitor não viu o botão de adicionar e não criou outra função.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] a mesma pessoa pode ter mais de uma função na produção
+- [x] a função repetida é recusada
+- [x] só entra quem já está no workspace
+- [x] leitor não adiciona nem remove
+
+### Pendências conhecidas
+
+- A visão geral da produção fica na PROJECT-005.
+
+### Observações para próxima tarefa
+
+PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
+
