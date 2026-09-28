@@ -820,9 +820,16 @@ A alteração futura do template não deve retroativamente alterar checklist já
 
 ## CHECK-004 — UI mobile de checklist
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** CHECK-003
+
+### Critérios
+
+- [x] a tela do checklist da gravação abre pela aba Gravação e cabe em 375, 390 e 430px;
+- [x] a linha inteira é o alvo do toque (56px), sem depender de hover;
+- [x] a marca aparece na hora, com barra e contagem de feitos, e volta com aviso se o servidor recusar;
+- [x] leitor vê a lista sem marcar.
 
 ---
 

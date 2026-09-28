@@ -1315,6 +1315,54 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — CHECK-004 — UI mobile de checklist
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+`/producoes/[id]/gravacao/[shootId]/checklist` é a tela de marcar o checklist no celular.
+
+### Implementação
+
+- Coluna única até `max-w-xl`. Cada item é um botão `role="checkbox"` da largura da tela, com 56px de altura.
+- `useOptimistic` marca na hora. A action `toggleShootChecklistItemAction` não redireciona; revalida a página e devolve erro sem texto técnico.
+- Barra de progresso e "x de y feitos" com `aria-live`. Item feito mostra quem marcou.
+- A aba Gravação ganhou "Abrir checklist" quando a gravação tem itens.
+
+### Arquivos principais
+
+- `src/app/(app)/producoes/[id]/gravacao/[shootId]/checklist/page.tsx`
+- `src/components/shoots/shoot-checklist.tsx`
+- `src/server/shoot-actions.ts`
+- `src/app/(app)/producoes/[id]/gravacao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. A regra de marcar já está coberta pelo teste de integração da CHECK-003.
+
+### Pendências conhecidas
+
+- Não houve navegador logado nesta sessão (login é só Google). Os breakpoints 375, 390 e 430px foram revistos pelo código, não na tela. Vale conferir no aparelho na HARDEN-005.
+
+---
+
 ## 2026-09-28 — CHECK-003 — Instanciar checklist em Shoot
 
 **Status:** DONE  

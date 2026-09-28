@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
@@ -190,7 +191,14 @@ export default async function ShootsPage({
                   <p className="text-sm text-muted-foreground">
                     Nenhum checklist nesta gravação.
                   </p>
-                ) : null}
+                ) : (
+                  <Link
+                    href={`/producoes/${project.id}/gravacao/${shoot.id}/checklist`}
+                    className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
+                  >
+                    Abrir checklist
+                  </Link>
+                )}
                 {canEdit && templateOptions.length > 0 ? (
                   <InstantiateChecklistForm
                     projectId={project.id}

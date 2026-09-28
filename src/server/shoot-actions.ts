@@ -15,6 +15,7 @@ import {
 } from "@/server/shoot";
 import {
   instantiateShootChecklist,
+  setShootChecklistItem,
   type ShootChecklistDeps,
 } from "@/server/shoot-checklist";
 import { prismaShootChecklistRepository } from "@/server/shoot-checklist-prisma";
@@ -238,4 +239,29 @@ export async function instantiateShootChecklistAction(
   );
   if (!result.ok) return { message: result.message, fields: result.fields };
   backToShoots(projectId);
+}
+
+// Marcar item fica na mesma tela: sem redirect, a lista se atualiza sozinha.
+export async function toggleShootChecklistItemAction(
+  formData: FormData,
+): Promise<{ ok: true } | { ok: false; message: string }> {
+  const current = await currentWorkspace();
+  const { projectId, shootId } = kitIds(formData);
+  const result = await runAction(
+    current,
+    { operation: "check", entity: "ShootChecklistItem" },
+    () =>
+      setShootChecklistItem(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        shootId,
+        String(formData.get("itemId") ?? ""),
+        { completed: formData.get("completed") },
+        checklistDeps,
+      ),
+  );
+  if (!result.ok) return { ok: false, message: result.message };
+  revalidatePath(`/producoes/${projectId}/gravacao/${shootId}/checklist`);
+  return { ok: true };
 }

@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 9 — Checklists
+Fase 10 — Takes e Modo Gravação
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-CHECK-003 — Instanciar checklist em Shoot
+CHECK-004 — UI mobile de checklist
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-CHECK-004 — UI mobile de checklist
+TAKE-001 — Modelo Take
 ```
 
 ## Estado dos módulos
@@ -45,7 +45,7 @@ CHECK-004 — UI mobile de checklist
 | Roteiro | DONE |
 | Shots | DONE |
 | Gravações | DONE |
-| Checklist | IN_PROGRESS |
+| Checklist | DONE |
 | Modo Gravação | NOT_STARTED |
 | Takes | NOT_STARTED |
 | Assets | NOT_STARTED |
