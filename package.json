@@ -15,7 +15,7 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:check": "prisma db execute --file prisma/check.sql",
-    "test": "node --env-file-if-exists=.env --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test-concurrency=1 --test src/server/service.test.ts src/server/auth.test.ts src/server/workspace.test.ts src/server/workspace.integration.test.ts src/server/team.test.ts src/server/team.integration.test.ts src/server/invite.test.ts src/server/invite.integration.test.ts src/server/idea.test.ts src/server/idea.integration.test.ts src/server/project.test.ts src/server/project.integration.test.ts src/server/participant.test.ts src/server/participant.integration.test.ts src/server/project-overview.test.ts src/server/project-search.test.ts src/server/project-status.test.ts",
+    "test": "node --env-file-if-exists=.env --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test-concurrency=1 --test src/server/service.test.ts src/server/auth.test.ts src/server/workspace.test.ts src/server/workspace.integration.test.ts src/server/team.test.ts src/server/team.integration.test.ts src/server/invite.test.ts src/server/invite.integration.test.ts src/server/idea.test.ts src/server/idea.integration.test.ts src/server/project.test.ts src/server/project.integration.test.ts src/server/participant.test.ts src/server/participant.integration.test.ts src/server/project-overview.test.ts src/server/project-search.test.ts src/server/project-status.test.ts src/server/project-board.test.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

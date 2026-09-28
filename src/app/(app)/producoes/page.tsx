@@ -5,6 +5,7 @@ import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError } from "@/server/errors";
 import { prismaParticipantRepository } from "@/server/participant-prisma";
+import { buildProjectBoard } from "@/server/project-board";
 import { searchProjects } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import {
@@ -42,6 +43,7 @@ export default async function ProductionsPage({
   const query = parseProjectSearch(await searchParams);
   let projects;
   let team;
+  let board;
   try {
     [projects, team] = await Promise.all([
       searchProjects(
@@ -54,6 +56,10 @@ export default async function ProductionsPage({
       ),
       listTeam(session.user.id, workspace.id, prismaWorkspaceRepository),
     ]);
+    const participants = await prismaParticipantRepository.listByProjectIds(
+      projects.map((project) => project.id),
+    );
+    board = buildProjectBoard(projects, participants, team);
   } catch (error) {
     if (error instanceof ForbiddenError) redirect("/comecar");
     throw error;
@@ -62,7 +68,7 @@ export default async function ProductionsPage({
   const filtering = hasProjectSearch(query);
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="space-y-1">
           <h1 className="text-2xl font-medium tracking-tight">Produções</h1>
@@ -221,25 +227,55 @@ export default async function ProductionsPage({
               : "As produções da equipe aparecem aqui."
           }
         />
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {projects.map((project) => (
-            <li key={project.id}>
-              <Link
-                href={`/producoes/${project.id}`}
-                className="flex min-h-11 flex-col gap-1 rounded-xl border p-3 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-              >
-                <span className="truncate text-sm font-medium">
-                  {project.title}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {projectStatusLabel(project.status)}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      ) : null}
+      <div className="flex gap-3 overflow-x-auto pb-2">
+        {board.map((column) => (
+          <section
+            key={column.status}
+            aria-label={column.title}
+            className="flex w-64 shrink-0 flex-col gap-2"
+          >
+            <h2 className="text-sm font-medium">
+              {column.title}
+              <span className="ml-2 text-muted-foreground">
+                {column.cards.length}
+              </span>
+            </h2>
+            <ul className="flex flex-col gap-2">
+              {column.cards.map((card) => (
+                <li key={card.id}>
+                  <Link
+                    href={`/producoes/${card.id}`}
+                    className="flex min-h-11 flex-col gap-2 rounded-xl border p-3 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                  >
+                    {card.thumbnailUrl ? (
+                      // URL externa da produção; o app não define remotePatterns.
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={card.thumbnailUrl}
+                        alt=""
+                        className="h-24 w-full rounded-lg object-cover"
+                      />
+                    ) : null}
+                    <span className="truncate text-sm font-medium">
+                      {card.title}
+                    </span>
+                    {card.people.length > 0 ? (
+                      <span className="truncate text-sm text-muted-foreground">
+                        {card.people.join(", ")}
+                      </span>
+                    ) : null}
+                    <span className="text-sm text-muted-foreground">
+                      {card.priority}
+                      {card.shootDate ? ` · ${card.shootDate}` : ""}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
     </div>
   );
 }

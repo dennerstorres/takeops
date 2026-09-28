@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-KANBAN-001 — Pipeline de status
+KANBAN-002 — Board
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-KANBAN-002 — Board
+KANBAN-003 — Drag & Drop
 ```
 
 ## Estado dos módulos

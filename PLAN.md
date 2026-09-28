@@ -484,9 +484,15 @@ Implementar enum e serviço de alteração de status.
 
 ## KANBAN-002 — Board
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** KANBAN-001
+
+### Critérios
+
+- [x] `/producoes` mostra as colunas da spec;
+- [x] o card fica na etapa e mostra título, responsável, data e prioridade;
+- [x] os filtros da lista continuam valendo no quadro.
 
 Colunas segundo SPEC.
 

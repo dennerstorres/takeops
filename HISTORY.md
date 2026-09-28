@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — KANBAN-002 — Board
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+`/producoes` virou o quadro. As dez colunas da spec aparecem, e Arquivado fica no fim para a produção não sumir.
+
+### Implementação
+
+- `buildProjectBoard` agrupa o que `searchProjects` já filtrou no workspace da sessão.
+- O card mostra thumbnail, título, responsável, participante, data de gravação e prioridade.
+- Alerta, checklist e arrastar ficam nas tarefas seguintes.
+- Os filtros da lista continuam no quadro.
+
+### Arquivos principais
+
+- `src/server/project-board.ts`
+- `src/server/project-board.test.ts`
+- `src/app/(app)/producoes/page.tsx`
+
+### Decisões tomadas
+
+- ADR-024.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — KANBAN-001 — Pipeline de status
 
 **Status:** DONE  

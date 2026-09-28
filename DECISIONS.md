@@ -472,6 +472,25 @@ O quadro e o arrastar vão chamar o mesmo serviço. O log de atividade continua 
 
 ---
 
+# ADR-024 — Quadro inclui a coluna Arquivado
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A spec lista dez colunas, do Ideias ao Publicado. O status `ARCHIVED` existe e não entra nesse fluxo.
+
+## Decisão
+
+O quadro mostra as dez colunas da spec e, no fim, Arquivado. Arrastar fica na KANBAN-003. Alerta e checklist ficam nas tarefas deles. O card não inventa esses dois.
+
+## Consequências
+
+Uma produção arquivada continua visível. O filtro da lista vale para o quadro.
+
+---
+
 # Template para novas decisões
 
 ```md
