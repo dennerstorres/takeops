@@ -550,6 +550,25 @@ Editar e apagar ficam na SHOT-002, reordenar na SHOT-003 e a tela na SHOT-004. O
 
 ---
 
+# ADR-028 — Gravação guarda instante UTC; a tela converte pelo fuso do workspace
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+`Shoot.scheduledAt` tem hora. A regra é persistir UTC, trafegar ISO 8601 e mostrar no fuso do workspace. O input `datetime-local` manda horário sem fuso.
+
+## Decisão
+
+O service de gravação só aceita ISO 8601 com `Z` ou deslocamento. Horário sem fuso é recusado. A server action converte o `datetime-local` pelo `Workspace.timezone` com `zonedLocalToUtc` (`src/lib/zoned-time.ts`, só `Intl`) antes de chamar o service. A tela volta ao horário local com `utcToZonedLocal`. A gravação nasce `PLANNED`; o cliente não escolhe o status na criação. Exclusão é lógica, como cena e shot.
+
+## Consequências
+
+Nenhuma dependência de data nova. Toda tela futura com data e hora (publicação, calendário) usa o mesmo helper.
+
+---
+
 # Template para novas decisões
 
 ```md

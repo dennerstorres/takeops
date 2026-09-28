@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SHOOT-001 — Modelo Shoot
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+A sessão de gravação é gravada na produção. Uma produção pode ter várias. Nasce planejada.
+
+### Implementação
+
+- Tabela `Shoot` com os campos da spec, `deletedAt` e índices `(videoProjectId, scheduledAt)` e `(videoProjectId, status)`.
+- `createShoot`, `listShoots` e `getShoot` passam por `getProject`, que já isola o workspace.
+- `scheduledAt` obrigatório; `endAt` opcional e não pode ser antes do início.
+- `src/lib/zoned-time.ts` converte o horário de parede do workspace para UTC e volta. Ver ADR-028.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928270000_shoot/migration.sql`
+- `src/server/shoot.ts`, `shoot-labels.ts`, `shoot-repository.ts`, `shoot-prisma.ts`
+- `src/server/shoot.test.ts`, `shoot.integration.test.ts`
+- `src/lib/zoned-time.ts`, `zoned-time.test.ts`
+
+### Decisões tomadas
+
+- ADR-028.
+
+### Banco / migrations
+
+- `20260928270000_shoot`: cria `ShootStatus` e `Shoot`, com FK em cascata para `VideoProject`. Rollback conceitual: dropar a tabela e o enum.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — SHOT-004 — UI integrada à Scene
 
 **Status:** DONE  

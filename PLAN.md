@@ -710,9 +710,16 @@ Cada cena deve mostrar seus planos sem exigir navegação excessiva.
 
 ## SHOOT-001 — Modelo Shoot
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PROJECT-002
+
+### Critérios
+
+- [x] uma produção guarda várias sessões, listadas por data;
+- [x] a sessão nasce planejada, com início obrigatório e fim depois do início;
+- [x] data e hora chegam em ISO 8601 com fuso e ficam em UTC;
+- [x] leitor só vê; outra produção ou workspace não alcança.
 
 ---
 

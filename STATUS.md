@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SHOT-004 — UI integrada à Scene
+SHOOT-001 — Modelo Shoot
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SHOOT-001 — Modelo Shoot
+SHOOT-002 — CRUD e agendamento
 ```
 
 ## Estado dos módulos
@@ -44,7 +44,7 @@ SHOOT-001 — Modelo Shoot
 | Kanban | DONE |
 | Roteiro | DONE |
 | Shots | DONE |
-| Gravações | NOT_STARTED |
+| Gravações | IN_PROGRESS |
 | Checklist | NOT_STARTED |
 | Modo Gravação | NOT_STARTED |
 | Takes | NOT_STARTED |

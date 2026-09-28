@@ -172,6 +172,7 @@ model VideoProject {
   members                   ProjectMember[]
   script                    Script?
   scenes                    Scene[]
+  shoots                    Shoot[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -352,4 +353,30 @@ model Shot {
 
   @@unique([sceneId, order])
   @@index([sceneId, status])
+}
+
+enum ShootStatus {
+  PLANNED
+  READY
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+}
+
+model Shoot {
+  id             String       @id @default(uuid())
+  videoProjectId String
+  title          String?
+  scheduledAt    DateTime
+  endAt          DateTime?
+  location       String?
+  status         ShootStatus  @default(PLANNED)
+  notes          String?
+  deletedAt      DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@index([videoProjectId, scheduledAt])
+  @@index([videoProjectId, status])
 }
