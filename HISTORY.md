@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — TAKE-001 — Modelo Take
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O take existe no banco, preso ao shot. Esta tarefa lê; registrar é a TAKE-002.
+
+### Implementação
+
+- Tabela `Take` com os campos da spec, `TakeStatus` (`OK`, `RETAKE`, `DISCARDED`), número único por shot e índice `(shotId, status)`.
+- `listTakes` e `getTake` passam por `getShot`, que já checa workspace, produção e cena.
+- `TakeTarget` (produção, cena, shot) é o endereço do take nas próximas tarefas.
+- O teste de integração tem um `setup()` com dois workspaces, duas cenas e um shot em cada, para as próximas tarefas reaproveitarem.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928320000_take/migration.sql`
+- `src/server/take.ts`, `take-repository.ts`, `take-prisma.ts`
+- `src/server/take.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Take não tem exclusão lógica: descartar é o status `DISCARDED`.
+
+### Banco / migrations
+
+- `20260928320000_take`: cria `TakeStatus` e `Take`, cascata a partir de `Shot`, `SET NULL` em quem gravou. Rollback conceitual: dropar a tabela e o enum.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — CHECK-004 — UI mobile de checklist
 
 **Status:** DONE  

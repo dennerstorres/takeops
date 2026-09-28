@@ -24,6 +24,7 @@ model User {
   projectRoles    ProjectMember[]
   scenesSpoken    Scene[]           @relation("SceneSpeaker")
   completedChecklistItems ShootChecklistItem[]
+  recordedTakes Take[]
 }
 
 enum WorkspaceRole {
@@ -353,6 +354,7 @@ model Shot {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   scene         Scene      @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  takes         Take[]
 
   @@unique([sceneId, order])
   @@index([sceneId, status])
@@ -473,4 +475,28 @@ model ShootChecklistItem {
   completedBy   User?     @relation(fields: [completedById], references: [id], onDelete: SetNull)
 
   @@unique([shootId, order])
+}
+
+enum TakeStatus {
+  OK
+  RETAKE
+  DISCARDED
+}
+
+model Take {
+  id           String     @id @default(uuid())
+  shotId       String
+  number       Int
+  status       TakeStatus
+  notes        String?
+  favorite     Boolean    @default(false)
+  recordedById String?
+  recordedAt   DateTime   @default(now())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  shot         Shot       @relation(fields: [shotId], references: [id], onDelete: Cascade)
+  recordedBy   User?      @relation(fields: [recordedById], references: [id], onDelete: SetNull)
+
+  @@unique([shotId, number])
+  @@index([shotId, status])
 }

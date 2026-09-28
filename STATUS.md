@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-CHECK-004 — UI mobile de checklist
+TAKE-001 — Modelo Take
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TAKE-001 — Modelo Take
+TAKE-002 — Registrar take
 ```
 
 ## Estado dos módulos
@@ -47,7 +47,7 @@ TAKE-001 — Modelo Take
 | Gravações | DONE |
 | Checklist | DONE |
 | Modo Gravação | NOT_STARTED |
-| Takes | NOT_STARTED |
+| Takes | IN_PROGRESS |
 | Assets | NOT_STARTED |
 | Edição | NOT_STARTED |
 | Revisão | NOT_STARTED |

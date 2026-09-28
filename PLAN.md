@@ -837,9 +837,15 @@ A alteração futura do template não deve retroativamente alterar checklist já
 
 ## TAKE-001 — Modelo Take
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SHOT-001
+
+### Critérios
+
+- [x] o take pertence a um shot, com número, status, notas, preferido, quem gravou e quando;
+- [x] o número é único por shot no banco;
+- [x] a leitura passa por workspace, produção, cena e shot; outro shot não alcança o take.
 
 ---
 
