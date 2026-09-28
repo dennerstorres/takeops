@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TEAM-002 — Convites
+TEAM-003 — Gerenciamento de papéis
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TEAM-003 — Gerenciamento de papéis
+APP-001 — Navegação principal
 ```
 
 ## Estado dos módulos
@@ -38,7 +38,7 @@ TEAM-003 — Gerenciamento de papéis
 | Bootstrap | DONE |
 | Auth | DONE |
 | Workspace | IN_PROGRESS |
-| Equipe | IN_PROGRESS |
+| Equipe | DONE |
 | Ideias | NOT_STARTED |
 | Projetos | NOT_STARTED |
 | Kanban | NOT_STARTED |
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-Quem não tem membership cai em `/comecar` ou entra por convite pendente do próprio e-mail. `/equipe` lista a equipe. Dono e admin geram o link em `/convite`. O e-mail não é enviado. `npm run test:e2e` ainda não existe. As outras rotas do menu ficam na APP-001.
+Quem não tem membership cai em `/comecar` ou entra por convite pendente do próprio e-mail. Em `/equipe`, dono e admin mudam os papéis permitidos. A propriedade não se transfere. `npm run test:e2e` ainda não existe. As outras rotas do menu ficam na APP-001.

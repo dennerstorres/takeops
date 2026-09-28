@@ -140,4 +140,16 @@ export const prismaWorkspaceRepository: WorkspaceRepository = {
       joinedAt: membership.createdAt,
     }));
   },
+
+  async updateMemberRole(workspaceId, userId, role) {
+    const updated = await prisma.workspaceMember.updateMany({
+      where: { workspaceId, userId },
+      data: { role },
+    });
+    if (updated.count !== 1) return null;
+    const membership = await prisma.workspaceMember.findFirst({
+      where: { workspaceId, userId },
+    });
+    return membership ? mapMembership(membership) : null;
+  },
 };

@@ -42,6 +42,9 @@ function harness() {
     async listMembers() {
       return [];
     },
+    async updateMemberRole() {
+      throw new Error("não usado");
+    },
   };
 
   const inviteRepo: InviteRepository = {

@@ -79,6 +79,14 @@ function memoryRepository(): WorkspaceRepository {
           joinedAt: membership.createdAt,
         }));
     },
+    async updateMemberRole(workspaceId, userId, role) {
+      const membership = memberships.find(
+        (item) => item.userId === userId && item.workspaceId === workspaceId,
+      );
+      if (!membership) return null;
+      membership.role = role;
+      return membership;
+    },
   };
 }
 

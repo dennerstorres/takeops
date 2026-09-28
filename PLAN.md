@@ -224,16 +224,16 @@ Não é obrigatório enviar e-mail automaticamente no primeiro corte. Pode ser u
 
 ## TEAM-003 — Gerenciamento de papéis
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** TEAM-001
 
 ### Critérios
 
-- [ ] OWNER altera papéis permitidos;
-- [ ] ADMIN respeita restrições;
-- [ ] MEMBER não administra equipe;
-- [ ] VIEWER não administra equipe.
+- [x] OWNER altera papéis permitidos;
+- [x] ADMIN respeita restrições;
+- [x] MEMBER não administra equipe;
+- [x] VIEWER não administra equipe.
 
 ---
 

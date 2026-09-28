@@ -692,3 +692,72 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 TEAM-003 altera papel de quem já participa. Não reaproveitar o aceite do convite para isso. Dono e admin já têm limites diferentes no convite.
 
+---
+
+## 2026-09-28 — TEAM-003 — Gerenciamento de papéis
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Dono e admin alteram papéis na equipe, dentro dos limites de cada um. Membro e leitor não alteram. A propriedade não muda.
+
+### Implementação
+
+- `changeMemberRole` usa o workspace da sessão. O cliente informa a pessoa e o papel novo.
+- Dono altera admin, membro e leitor. Admin altera só membro e leitor. Ninguém altera o próprio papel nem cria outro dono.
+- A tela mostra o seletor só quando a pessoa pode mudar aquele papel.
+
+### Arquivos principais
+
+- `src/server/team.ts`
+- `src/server/team-actions.ts`
+- `src/server/workspace-repository.ts`
+- `src/server/workspace-prisma.ts`
+- `src/app/(app)/equipe/page.tsx`
+- `src/components/team/member-role-form.tsx`
+
+### Decisões tomadas
+
+- ADR-019. Transferir a propriedade fica fora desta tarefa.
+
+### Banco / migrations
+
+- Nenhuma. O papel continua em `WorkspaceMember.role`.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+No HTTP, o dono vê o seletor e o leitor não vê. O admin mudou um leitor para membro. O leitor não tirou o dono.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] OWNER altera papéis permitidos
+- [x] ADMIN respeita restrições
+- [x] MEMBER não administra equipe
+- [x] VIEWER não administra equipe
+
+### Pendências conhecidas
+
+- Remover pessoa da equipe não tem tarefa.
+- Transferir a propriedade não tem tarefa.
+
+### Observações para próxima tarefa
+
+APP-001 liga o restante do menu. Equipe já aponta para `/equipe`.
+

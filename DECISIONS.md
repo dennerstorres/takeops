@@ -365,6 +365,29 @@ O workspace aberto continua sendo a membership mais antiga. Entrar num segundo w
 
 ---
 
+# ADR-019 — Troca de papel não transfere a propriedade
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+TEAM-003 altera o papel de quem já está na equipe. O admin gerencia usuários comuns e não transfere a propriedade.
+
+## Decisão
+
+O dono muda admin, membro e leitor entre esses três papéis. O admin muda só membro e leitor. Membro e leitor não mudam papel.
+
+Ninguém muda o próprio papel. Ninguém passa a ser dono por esta tela. O dono atual permanece dono.
+
+O workspace vem da sessão. O id enviado pelo cliente só escolhe a pessoa dentro desse workspace.
+
+## Consequências
+
+Transferir a propriedade fica fora do MVP até existir uma tarefa própria.
+
+---
+
 # Template para novas decisões
 
 ```md

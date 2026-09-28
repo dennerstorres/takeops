@@ -61,4 +61,9 @@ export type WorkspaceRepository = {
   findWorkspace(workspaceId: string): Promise<WorkspaceRecord | null>;
   listForUser(userId: string): Promise<WorkspaceWithMembership[]>;
   listMembers(workspaceId: string): Promise<TeamMemberRecord[]>;
+  updateMemberRole(
+    workspaceId: string,
+    userId: string,
+    role: WorkspaceRole,
+  ): Promise<MembershipRecord | null>;
 };

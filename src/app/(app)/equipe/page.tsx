@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
 import { InviteForm } from "@/components/team/invite-form";
+import { MemberRoleForm } from "@/components/team/member-role-form";
 import { RevokeInviteButton } from "@/components/team/revoke-invite-button";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError } from "@/server/errors";
 import { invitableRoles, listInvites } from "@/server/invite";
 import { prismaInviteRepository } from "@/server/invite-prisma";
-import { listTeam, roleLabel } from "@/server/team";
+import { listTeam, manageableRoles, roleLabel } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
 function displayName(name: string | null, email: string | null) {
@@ -73,10 +74,14 @@ export default async function TeamPage() {
       <ul className="flex flex-col gap-3">
         {members.map((member) => {
           const name = displayName(member.name, member.email);
+          const options = manageableRoles(
+            access.workspace.membership.role,
+            member.role,
+          );
           return (
             <li
               key={member.userId}
-              className="flex items-center gap-3 rounded-xl border p-3"
+              className="flex flex-wrap items-center gap-3 rounded-xl border p-3"
             >
               {member.image ? (
                 // URL externa do Google. next/image exigiria allowlist.
@@ -100,7 +105,15 @@ export default async function TeamPage() {
                   {member.email ?? "E-mail não informado"}
                 </p>
               </div>
-              <p className="shrink-0 text-sm">{roleLabel(member.role)}</p>
+              {options.length > 0 && member.userId !== session.user.id ? (
+                <MemberRoleForm
+                  userId={member.userId}
+                  role={member.role}
+                  roles={options}
+                />
+              ) : (
+                <p className="shrink-0 text-sm">{roleLabel(member.role)}</p>
+              )}
             </li>
           );
         })}

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import { ForbiddenError } from "./errors.ts";
-import { listTeam } from "./team.ts";
+import { changeMemberRole, listTeam } from "./team.ts";
 import { createWorkspace } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
@@ -74,6 +74,90 @@ describe(
         }
         await prisma.user.deleteMany({
           where: { id: { in: [owner.id, member.id, outsider.id] } },
+        });
+      }
+    });
+
+    it("só dono e admin mudam os papéis permitidos", async () => {
+      const { prisma } = await import("./db.ts");
+      const { prismaWorkspaceRepository } =
+        await import("./workspace-prisma.ts");
+      const suffix = randomUUID();
+      const owner = await prisma.user.create({
+        data: { email: `dono-${suffix}@example.com`, name: "Dono" },
+      });
+      const admin = await prisma.user.create({
+        data: { email: `admin-${suffix}@example.com`, name: "Admin" },
+      });
+      const viewer = await prisma.user.create({
+        data: { email: `leitor-${suffix}@example.com`, name: "Leitor" },
+      });
+      let workspaceId = "";
+
+      try {
+        const workspace = await createWorkspace(
+          owner.id,
+          { name: `Papeis ${suffix}`, slug: `papeis-${suffix}` },
+          prismaWorkspaceRepository,
+        );
+        workspaceId = workspace.workspace.id;
+        await prisma.workspaceMember.createMany({
+          data: [
+            { workspaceId, userId: admin.id, role: "ADMIN" },
+            { workspaceId, userId: viewer.id, role: "VIEWER" },
+          ],
+        });
+
+        await assert.rejects(
+          () =>
+            changeMemberRole(
+              viewer.id,
+              workspaceId,
+              { userId: admin.id, role: "MEMBER" },
+              prismaWorkspaceRepository,
+            ),
+          (error: unknown) => error instanceof ForbiddenError,
+        );
+        await assert.rejects(
+          () =>
+            changeMemberRole(
+              admin.id,
+              workspaceId,
+              { userId: owner.id, role: "MEMBER" },
+              prismaWorkspaceRepository,
+            ),
+          (error: unknown) => error instanceof ForbiddenError,
+        );
+
+        const changed = await changeMemberRole(
+          admin.id,
+          workspaceId,
+          { userId: viewer.id, role: "MEMBER" },
+          prismaWorkspaceRepository,
+        );
+        assert.equal(changed.role, "MEMBER");
+
+        const promoted = await changeMemberRole(
+          owner.id,
+          workspaceId,
+          { userId: viewer.id, role: "ADMIN" },
+          prismaWorkspaceRepository,
+        );
+        assert.equal(promoted.role, "ADMIN");
+        assert.equal(
+          (
+            await prisma.workspaceMember.findFirst({
+              where: { workspaceId, userId: owner.id },
+            })
+          )?.role,
+          "OWNER",
+        );
+      } finally {
+        if (workspaceId) {
+          await prisma.workspace.deleteMany({ where: { id: workspaceId } });
+        }
+        await prisma.user.deleteMany({
+          where: { id: { in: [owner.id, admin.id, viewer.id] } },
         });
       }
     });

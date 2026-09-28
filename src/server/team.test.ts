@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { ForbiddenError } from "./errors.ts";
-import { listTeam, roleLabel } from "./team.ts";
+import { ForbiddenError, ValidationError } from "./errors.ts";
+import { changeMemberRole, listTeam, roleLabel } from "./team.ts";
 import type {
   MembershipRecord,
   TeamMemberRecord,
@@ -38,6 +38,9 @@ function repository(members: TeamMemberRecord[]): WorkspaceRepository {
     },
     async listMembers(workspaceId) {
       return members.filter((member) => member.workspaceId === workspaceId);
+    },
+    async updateMemberRole() {
+      throw new Error("não usado");
     },
   };
 }
@@ -87,6 +90,174 @@ describe("listTeam", () => {
     await assert.rejects(
       () => listTeam("viewer", "ws-b", members),
       (error: unknown) => error instanceof ForbiddenError,
+    );
+  });
+});
+
+function roleRepository() {
+  const memberships: MembershipRecord[] = [];
+  const repository: WorkspaceRepository = {
+    async createWorkspaceWithOwner(): Promise<WorkspaceWithMembership> {
+      throw new Error("não usado");
+    },
+    async findMembership(userId, workspaceId) {
+      return (
+        memberships.find(
+          (item) => item.userId === userId && item.workspaceId === workspaceId,
+        ) ?? null
+      );
+    },
+    async findWorkspace(): Promise<WorkspaceRecord | null> {
+      return null;
+    },
+    async listForUser() {
+      return [];
+    },
+    async listMembers() {
+      return [];
+    },
+    async updateMemberRole(workspaceId, userId, role) {
+      const membership = memberships.find(
+        (item) => item.userId === userId && item.workspaceId === workspaceId,
+      );
+      if (!membership) return null;
+      membership.role = role;
+      return membership;
+    },
+  };
+
+  function add(
+    userId: string,
+    workspaceId: string,
+    role: MembershipRecord["role"],
+  ) {
+    memberships.push({
+      id: `${workspaceId}-${userId}`,
+      workspaceId,
+      userId,
+      role,
+      createdAt: new Date(),
+    });
+  }
+
+  return { repository, memberships, add };
+}
+
+describe("alteração de papel", () => {
+  it("deixa o dono mudar os outros e impede membro, leitor e o próprio papel", async () => {
+    const { repository, memberships, add } = roleRepository();
+    add("owner", "ws-a", "OWNER");
+    add("admin", "ws-a", "ADMIN");
+    add("member", "ws-a", "MEMBER");
+    add("viewer", "ws-a", "VIEWER");
+    add("outsider", "ws-b", "MEMBER");
+
+    await assert.rejects(
+      () =>
+        changeMemberRole(
+          "owner",
+          "ws-a",
+          { userId: "admin", role: "OWNER" },
+          repository,
+        ),
+      (error: unknown) => error instanceof ValidationError,
+    );
+    await assert.rejects(
+      () =>
+        changeMemberRole(
+          "owner",
+          "ws-a",
+          { userId: "owner", role: "ADMIN" },
+          repository,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        changeMemberRole(
+          "owner",
+          "ws-a",
+          { userId: "outsider", role: "VIEWER" },
+          repository,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        changeMemberRole(
+          "member",
+          "ws-a",
+          { userId: "viewer", role: "MEMBER" },
+          repository,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        changeMemberRole(
+          "viewer",
+          "ws-a",
+          { userId: "member", role: "VIEWER" },
+          repository,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+
+    const changed = await changeMemberRole(
+      "owner",
+      "ws-a",
+      { userId: "member", role: "ADMIN" },
+      repository,
+    );
+    assert.equal(changed.role, "ADMIN");
+    assert.equal(
+      memberships.find((item) => item.userId === "outsider")?.role,
+      "MEMBER",
+    );
+  });
+
+  it("deixa o admin mudar só membro e leitor", async () => {
+    const { repository, memberships, add } = roleRepository();
+    add("owner", "ws-a", "OWNER");
+    add("admin", "ws-a", "ADMIN");
+    add("other-admin", "ws-a", "ADMIN");
+    add("viewer", "ws-a", "VIEWER");
+
+    const changed = await changeMemberRole(
+      "admin",
+      "ws-a",
+      { userId: "viewer", role: "MEMBER" },
+      repository,
+    );
+    assert.equal(changed.role, "MEMBER");
+    assert.equal(
+      memberships.find((item) => item.userId === "viewer")?.role,
+      "MEMBER",
+    );
+
+    await assert.rejects(
+      () =>
+        changeMemberRole(
+          "admin",
+          "ws-a",
+          { userId: "other-admin", role: "MEMBER" },
+          repository,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        changeMemberRole(
+          "admin",
+          "ws-a",
+          { userId: "owner", role: "MEMBER" },
+          repository,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    assert.equal(
+      memberships.find((item) => item.userId === "owner")?.role,
+      "OWNER",
     );
   });
 });
