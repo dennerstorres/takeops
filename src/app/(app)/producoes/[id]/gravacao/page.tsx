@@ -2,14 +2,20 @@ import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
 import { DeleteShootButton } from "@/components/shoots/delete-shoot-button";
+import { ShootEquipment } from "@/components/shoots/shoot-equipment";
 import { ShootForm } from "@/components/shoots/shoot-form";
 import { utcToZonedLocal } from "@/lib/zoned-time";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
+import { listEquipment } from "@/server/equipment";
+import { equipmentCategoryLabel } from "@/server/equipment-labels";
+import { prismaEquipmentRepository } from "@/server/equipment-prisma";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { listShoots } from "@/server/shoot";
+import { listShootEquipment } from "@/server/shoot-equipment";
+import { prismaShootEquipmentRepository } from "@/server/shoot-equipment-prisma";
 import { shootStatusLabel } from "@/server/shoot-labels";
 import { prismaShootRepository } from "@/server/shoot-prisma";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
@@ -30,6 +36,8 @@ export default async function ShootsPage({
 
   let project;
   let shoots;
+  let kits;
+  let catalog;
   try {
     project = await getProject(
       session.user.id,
@@ -38,16 +46,40 @@ export default async function ShootsPage({
       prismaWorkspaceRepository,
       prismaProjectRepository,
     );
-    shoots = await listShoots(session.user.id, workspaceId, project.id, {
+    const deps = {
       workspaces: prismaWorkspaceRepository,
       projects: prismaProjectRepository,
       shoots: prismaShootRepository,
-    });
+      shootEquipment: prismaShootEquipmentRepository,
+    };
+    shoots = await listShoots(session.user.id, workspaceId, project.id, deps);
+    const userId = session.user.id;
+    const projectId = project.id;
+    [kits, catalog] = await Promise.all([
+      Promise.all(
+        shoots.map((shoot) =>
+          listShootEquipment(userId, workspaceId, projectId, shoot.id, deps),
+        ),
+      ),
+      listEquipment(
+        userId,
+        workspaceId,
+        prismaWorkspaceRepository,
+        prismaEquipmentRepository,
+      ),
+    ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect("/producoes");
     if (error instanceof ForbiddenError) redirect("/comecar");
     throw error;
   }
+
+  const catalogOptions = catalog
+    .filter((item) => item.active)
+    .map((item) => ({
+      id: item.id,
+      label: `${item.name} · ${equipmentCategoryLabel(item.category)}`,
+    }));
 
   const dateTime = new Intl.DateTimeFormat("pt-BR", {
     timeZone: timezone,
@@ -77,7 +109,7 @@ export default async function ShootsPage({
         />
       ) : (
         <ol className="flex flex-col gap-3">
-          {shoots.map((shoot) => (
+          {shoots.map((shoot, index) => (
             <li key={shoot.id} className="rounded-xl border p-3">
               <div className="min-w-0 space-y-1">
                 <p className="text-sm font-medium">
@@ -103,6 +135,15 @@ export default async function ShootsPage({
                 {shoot.notes ? (
                   <p className="text-sm whitespace-pre-wrap">{shoot.notes}</p>
                 ) : null}
+              </div>
+              <div className="mt-3 border-t pt-3">
+                <ShootEquipment
+                  projectId={project.id}
+                  shootId={shoot.id}
+                  rows={kits[index]}
+                  catalog={catalogOptions}
+                  canEdit={canEdit}
+                />
               </div>
               {canEdit ? (
                 <div className="mt-3 space-y-3">

@@ -754,9 +754,16 @@ Cada cena deve mostrar seus planos sem exigir navegação excessiva.
 
 ## EQUIP-002 — Equipamentos por Shoot
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** SHOOT-002, EQUIP-001
+
+### Critérios
+
+- [x] cada gravação lista os equipamentos planejados, com obrigatório, conferido e notas;
+- [x] só entra item ativo do catálogo do mesmo workspace, uma vez por gravação;
+- [x] quem escreve confere, desmarca e tira; tirar não apaga o item do catálogo;
+- [x] leitor só vê; outra gravação não alcança a linha.
 
 ---
 

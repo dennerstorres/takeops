@@ -13,6 +13,13 @@ import {
   updateShoot,
   type ShootDeps,
 } from "@/server/shoot";
+import {
+  addShootEquipment,
+  removeShootEquipment,
+  updateShootEquipment,
+  type ShootEquipmentDeps,
+} from "@/server/shoot-equipment";
+import { prismaShootEquipmentRepository } from "@/server/shoot-equipment-prisma";
 import { prismaShootRepository } from "@/server/shoot-prisma";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
@@ -22,6 +29,11 @@ const deps: ShootDeps = {
   workspaces: prismaWorkspaceRepository,
   projects: prismaProjectRepository,
   shoots: prismaShootRepository,
+};
+
+const kitDeps: ShootEquipmentDeps = {
+  ...deps,
+  shootEquipment: prismaShootEquipmentRepository,
 };
 
 async function currentWorkspace() {
@@ -112,6 +124,85 @@ export async function deleteShootAction(formData: FormData) {
   const shootId = String(formData.get("shootId") ?? "");
   await runAction(current, { operation: "delete", entity: "Shoot" }, () =>
     deleteShoot(current.userId, current.workspaceId, projectId, shootId, deps),
+  );
+  backToShoots(projectId);
+}
+
+function kitIds(formData: FormData) {
+  return {
+    projectId: String(formData.get("projectId") ?? ""),
+    shootId: String(formData.get("shootId") ?? ""),
+    rowId: String(formData.get("rowId") ?? ""),
+  };
+}
+
+export async function addShootEquipmentAction(
+  _state: ShootFormState,
+  formData: FormData,
+): Promise<ShootFormState> {
+  const current = await currentWorkspace();
+  const { projectId, shootId } = kitIds(formData);
+  const result = await runAction(
+    current,
+    { operation: "add", entity: "ShootEquipment" },
+    () =>
+      addShootEquipment(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        shootId,
+        {
+          equipmentItemId: formData.get("equipmentItemId"),
+          required: formData.get("required"),
+          notes: formData.get("notes"),
+        },
+        kitDeps,
+      ),
+  );
+  if (!result.ok) return { message: result.message, fields: result.fields };
+  backToShoots(projectId);
+}
+
+// Conferir troca só o checked e mantém obrigatório e notas como estão.
+export async function toggleShootEquipmentAction(formData: FormData) {
+  const current = await currentWorkspace();
+  const { projectId, shootId, rowId } = kitIds(formData);
+  await runAction(
+    current,
+    { operation: "check", entity: "ShootEquipment" },
+    () =>
+      updateShootEquipment(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        shootId,
+        rowId,
+        {
+          required: formData.get("required"),
+          checked: formData.get("checked"),
+          notes: formData.get("notes"),
+        },
+        kitDeps,
+      ),
+  );
+  backToShoots(projectId);
+}
+
+export async function removeShootEquipmentAction(formData: FormData) {
+  const current = await currentWorkspace();
+  const { projectId, shootId, rowId } = kitIds(formData);
+  await runAction(
+    current,
+    { operation: "remove", entity: "ShootEquipment" },
+    () =>
+      removeShootEquipment(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        shootId,
+        rowId,
+        kitDeps,
+      ),
   );
   backToShoots(projectId);
 }

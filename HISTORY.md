@@ -1315,6 +1315,55 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — EQUIP-002 — Equipamentos por Shoot
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Cada sessão da aba Gravação mostra os equipamentos planejados e quantos já foram conferidos.
+
+### Implementação
+
+- Tabela `ShootEquipment` (`required`, `checked`, `notes`), única por `(shootId, equipmentItemId)`.
+- O repositório só liga item ativo do mesmo workspace e só acha a linha pela gravação visível da produção do workspace.
+- Item repetido, de outro workspace ou fora de uso vira erro de campo, sem dizer qual caso foi.
+- Tirar da gravação apaga só a ligação. O item do catálogo fica.
+- Tela: Conferir/Desmarcar, Tirar e um formulário com os itens ainda não usados.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928290000_shoot_equipment/migration.sql`
+- `src/server/shoot-equipment.ts`, `shoot-equipment-repository.ts`, `shoot-equipment-prisma.ts`
+- `src/server/shoot-equipment.integration.test.ts`
+- `src/server/shoot-actions.ts`
+- `src/components/shoots/shoot-equipment.tsx`, `add-shoot-equipment-form.tsx`
+- `src/app/(app)/producoes/[id]/gravacao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. A ligação é apagada de fato; histórico de conferência entra com Activity Log se for preciso.
+
+### Banco / migrations
+
+- `20260928290000_shoot_equipment`: cria `ShootEquipment`, FKs em cascata para `Shoot` e `EquipmentItem`. Itens do catálogo não são apagados pela aplicação; a cascata existe para a exclusão do workspace não travar. Rollback conceitual: dropar a tabela.
+- No banco local a migration saiu com RESTRICT primeiro. Foi desfeita só ali (tabela e linha em `_prisma_migrations`) e reaplicada com CASCADE antes do commit.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — EQUIP-001 — Catálogo de equipamentos
 
 **Status:** DONE  

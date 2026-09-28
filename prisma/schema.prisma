@@ -109,7 +109,7 @@ model Idea {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   workspace    Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  author       User        @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  author       User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
   projects     VideoProject[]
 
   @@index([workspaceId, createdAt])
@@ -167,7 +167,7 @@ model VideoProject {
   createdAt                 DateTime           @default(now())
   updatedAt                 DateTime           @updatedAt
   workspace                 Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  createdBy                 User               @relation("ProjectCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  createdBy                 User               @relation("ProjectCreator", fields: [createdById], references: [id], onDelete: Cascade)
   owner                     User?              @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: SetNull)
   sourceIdea                Idea?              @relation(fields: [sourceIdeaId], references: [id], onDelete: SetNull)
   members                   ProjectMember[]
@@ -377,6 +377,7 @@ model Shoot {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  equipment      ShootEquipment[]
 
   @@index([videoProjectId, scheduledAt])
   @@index([videoProjectId, status])
@@ -403,7 +404,24 @@ model EquipmentItem {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
   workspace   Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  shoots      ShootEquipment[]
 
   @@index([workspaceId, active])
   @@index([workspaceId, category])
+}
+
+model ShootEquipment {
+  id              String        @id @default(uuid())
+  shootId         String
+  equipmentItemId String
+  required        Boolean       @default(true)
+  checked         Boolean       @default(false)
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  shoot           Shoot         @relation(fields: [shootId], references: [id], onDelete: Cascade)
+  equipmentItem   EquipmentItem @relation(fields: [equipmentItemId], references: [id], onDelete: Cascade)
+
+  @@unique([shootId, equipmentItemId])
+  @@index([equipmentItemId])
 }

@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 8 — Gravações
+Fase 9 — Checklists
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-EQUIP-001 — Catálogo de equipamentos
+EQUIP-002 — Equipamentos por Shoot
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-EQUIP-002 — Equipamentos por Shoot
+CHECK-001 — Templates de checklist
 ```
 
 ## Estado dos módulos
@@ -44,7 +44,7 @@ EQUIP-002 — Equipamentos por Shoot
 | Kanban | DONE |
 | Roteiro | DONE |
 | Shots | DONE |
-| Gravações | IN_PROGRESS |
+| Gravações | DONE |
 | Checklist | NOT_STARTED |
 | Modo Gravação | NOT_STARTED |
 | Takes | NOT_STARTED |
