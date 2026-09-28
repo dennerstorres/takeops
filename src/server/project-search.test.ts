@@ -102,6 +102,9 @@ function harness(rows: ProjectRecord[]) {
     async softDelete() {
       return false;
     },
+    async setStatus() {
+      return null;
+    },
     async findBySourceIdea() {
       return null;
     },

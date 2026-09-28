@@ -468,9 +468,15 @@ Filtros:
 
 ## KANBAN-001 — Pipeline de status
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PROJECT-002
+
+### Critérios
+
+- [x] a etapa só muda pelo serviço de status;
+- [x] qualquer etapa do enum é aceita, inclusive pulo e arquivo;
+- [x] leitor e quem está fora do workspace não mudam a etapa.
 
 Implementar enum e serviço de alteração de status.
 

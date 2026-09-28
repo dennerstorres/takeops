@@ -451,6 +451,27 @@ O kanban reusa `filterProjects`. A busca desta tarefa olha só o título. Produt
 
 ---
 
+# ADR-023 — Etapa da produção muda só no serviço de status
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+O formulário da produção não escolhe a etapa. O kanban ainda não existe, e o aviso de etapa incompleta é outra tarefa.
+
+## Decisão
+
+`changeVideoProjectStatus` é o único caminho que altera `VideoProject.status` depois da criação. Qualquer valor do enum vale, inclusive arquivo e pulo de etapa. Dono, admin e membro mudam. Leitor não.
+
+O aviso de incompletude fica na KANBAN-004 e não bloqueia esta troca.
+
+## Consequências
+
+O quadro e o arrastar vão chamar o mesmo serviço. O log de atividade continua na fase própria.
+
+---
+
 # Template para novas decisões
 
 ```md

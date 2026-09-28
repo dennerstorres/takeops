@@ -96,6 +96,15 @@ export const prismaProjectRepository: ProjectRepository = {
     return this.find(workspaceId, projectId);
   },
 
+  async setStatus(workspaceId, projectId, status) {
+    const updated = await prisma.videoProject.updateMany({
+      where: { id: projectId, workspaceId, deletedAt: null },
+      data: { status },
+    });
+    if (updated.count !== 1) return null;
+    return this.find(workspaceId, projectId);
+  },
+
   async findBySourceIdea(workspaceId, ideaId) {
     const project = await prisma.videoProject.findFirst({
       where: { workspaceId, sourceIdeaId: ideaId, deletedAt: null },

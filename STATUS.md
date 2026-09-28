@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PROJECT-006 — Busca e filtros
+KANBAN-001 — Pipeline de status
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-KANBAN-001 — Pipeline de status
+KANBAN-002 — Board
 ```
 
 ## Estado dos módulos
@@ -41,7 +41,7 @@ KANBAN-001 — Pipeline de status
 | Equipe | DONE |
 | Ideias | DONE |
 | Projetos | DONE |
-| Kanban | NOT_STARTED |
+| Kanban | IN_PROGRESS |
 | Roteiro | NOT_STARTED |
 | Shots | NOT_STARTED |
 | Gravações | NOT_STARTED |

@@ -120,6 +120,14 @@ function harness() {
         ) ?? null
       );
     },
+    async setStatus(workspaceId, projectId, status) {
+      const project = projects.find(
+        (item) => item.id === projectId && item.workspaceId === workspaceId,
+      );
+      if (!project) return null;
+      project.status = status;
+      return project;
+    },
     async convert(workspaceId, userId, ideaId) {
       const idea = ideas.find(
         (item) => item.id === ideaId && item.workspaceId === workspaceId,

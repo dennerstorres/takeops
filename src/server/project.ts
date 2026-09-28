@@ -2,7 +2,11 @@ import { z } from "zod";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { ideaFormats } from "./idea-labels.ts";
 import type { IdeaRepository } from "./idea-repository.ts";
-import { aspectRatios, projectPriorities } from "./project-labels.ts";
+import {
+  aspectRatios,
+  projectPriorities,
+  videoProjectStatuses,
+} from "./project-labels.ts";
 import type { ParticipantRepository } from "./participant-repository.ts";
 import {
   filterProjects,
@@ -256,6 +260,45 @@ export async function updateProject(
     updated.createdById !== current.createdById
   ) {
     throw new ForbiddenError();
+  }
+  return updated;
+}
+
+const statusSchema = z.object({
+  status: z.enum(videoProjectStatuses, { error: "Escolha uma etapa." }),
+});
+
+export async function changeVideoProjectStatus(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  input: unknown,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const data = parseInput(statusSchema, input);
+  const current = await getProject(
+    userId,
+    workspaceId,
+    projectId,
+    workspaces,
+    projects,
+  );
+  if (current.status === data.status) return current;
+
+  const updated = await projects.setStatus(
+    workspaceId,
+    projectId,
+    data.status,
+  );
+  if (
+    !updated ||
+    updated.id !== projectId ||
+    updated.workspaceId !== workspaceId ||
+    updated.status !== data.status
+  ) {
+    throw new NotFoundError();
   }
   return updated;
 }

@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — KANBAN-001 — Pipeline de status
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+A etapa da produção muda só em `changeVideoProjectStatus`. O cadastro continua nascendo em Ideia e a edição não aceita etapa vinda do cliente.
+
+### Implementação
+
+- O enum do pipeline já existia. O serviço grava qualquer valor dele.
+- Pular etapa e arquivar são permitidos. A mesma etapa não regrava.
+- Leitor e usuário de fora recebem proibido. Produção de outro workspace não é encontrada.
+- Aviso de etapa incompleta fica na KANBAN-004.
+
+### Arquivos principais
+
+- `src/server/project.ts`
+- `src/server/project-prisma.ts`
+- `src/server/project-repository.ts`
+- `src/server/project-status.test.ts`
+- `src/server/project.integration.test.ts`
+
+### Decisões tomadas
+
+- ADR-023.
+
+### Banco / migrations
+
+- Nenhuma. O enum já estava na tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — PROJECT-006 — Busca e filtros
 
 **Status:** DONE  

@@ -48,6 +48,11 @@ export type ProjectRepository = {
     projectId: string,
     input: ProjectWrite,
   ): Promise<ProjectRecord | null>;
+  setStatus(
+    workspaceId: string,
+    projectId: string,
+    status: VideoProjectStatus,
+  ): Promise<ProjectRecord | null>;
   softDelete(
     workspaceId: string,
     projectId: string,

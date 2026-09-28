@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
-import { NotFoundError, ValidationError } from "./errors.ts";
+import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { createIdea } from "./idea.ts";
 import {
   convertIdeaToProject,
@@ -9,6 +9,7 @@ import {
   deleteProject,
   getProject,
   listProjects,
+  changeVideoProjectStatus,
   updateProject,
 } from "./project.ts";
 import { createWorkspace } from "./workspace.ts";
@@ -117,6 +118,39 @@ describe(
         );
         assert.equal(updated.status, "IDEA");
         assert.equal(updated.createdById, author.id);
+        const moved = await changeVideoProjectStatus(
+          author.id,
+          workspaceId,
+          created.id,
+          { status: "RECORDING" },
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+        );
+        assert.equal(moved.status, "RECORDING");
+        const reread = await getProject(
+          author.id,
+          workspaceId,
+          created.id,
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+        );
+        assert.equal(reread.status, "RECORDING");
+        await assert.rejects(
+          () =>
+            changeVideoProjectStatus(
+              outsider.id,
+              workspaceId,
+              created.id,
+              { status: "PUBLISHED" },
+              prismaWorkspaceRepository,
+              prismaProjectRepository,
+            ),
+          (error: unknown) => error instanceof ForbiddenError,
+        );
+        const keptStatus = await prisma.videoProject.findFirst({
+          where: { id: created.id },
+        });
+        assert.equal(keptStatus?.status, "RECORDING");
         assert.equal(stored.title, `Vídeo ${suffix}`);
         await assert.rejects(
           () =>
