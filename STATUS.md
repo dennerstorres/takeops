@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-IDEA-002 — Status de ideia
+IDEA-003 — UX de captura rápida
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-IDEA-003 — UX de captura rápida
+PROJECT-001 — Modelo de VideoProject
 ```
 
 ## Estado dos módulos
@@ -39,7 +39,7 @@ IDEA-003 — UX de captura rápida
 | Auth | DONE |
 | Workspace | IN_PROGRESS |
 | Equipe | DONE |
-| Ideias | IN_PROGRESS |
+| Ideias | DONE |
 | Projetos | NOT_STARTED |
 | Kanban | NOT_STARTED |
 | Roteiro | NOT_STARTED |
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-`/ideias` lista, cria, edita e faz exclusão lógica. Quem escreve muda o status entre Nova, Em análise, Aprovada e Descartada. Convertida fica para a conversão em produção. DASH-001 espera PROJECT-001. `npm run test:e2e` ainda não existe.
+Em `/ideias`, quem escreve anota só o título. O formulário completo continua em `/ideias/nova`. O status muda entre Nova, Em análise, Aprovada e Descartada. DASH-001 espera PROJECT-001. `npm run test:e2e` ainda não existe.

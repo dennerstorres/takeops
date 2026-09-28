@@ -199,6 +199,28 @@ describe("ideias", () => {
   });
 });
 
+describe("captura rápida", () => {
+  it("grava a ideia só com o título", async () => {
+    const { workspaces, ideaRepo, join } = harness();
+    join("member", "ws-a", "MEMBER", "Membro");
+
+    const created = await createIdea(
+      "member",
+      "ws-a",
+      { title: "Só o título" },
+      workspaces,
+      ideaRepo,
+    );
+
+    assert.equal(created.title, "Só o título");
+    assert.equal(created.description, null);
+    assert.equal(created.format, null);
+    assert.equal(created.referenceUrl, null);
+    assert.equal(created.status, "NEW");
+    assert.equal(created.authorId, "member");
+  });
+});
+
 describe("status da ideia", () => {
   it("só move entre os quatro status livres", async () => {
     const { workspaces, ideaRepo, ideas, join } = harness();

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { CaptureIdeaForm } from "@/components/ideas/capture-idea-form";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError } from "@/server/errors";
@@ -47,12 +48,13 @@ export default async function IdeasPage() {
         {canEdit ? (
           <Link
             href="/ideias/nova"
-            className="inline-flex min-h-11 items-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground"
+            className="inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-medium"
           >
-            Nova ideia
+            Completar campos
           </Link>
         ) : null}
       </header>
+      {canEdit ? <CaptureIdeaForm /> : null}
       {ideas.length === 0 ? (
         <EmptyState
           title="Nenhuma ideia"

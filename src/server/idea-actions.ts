@@ -61,6 +61,28 @@ export async function createIdeaAction(
   redirect(`/ideias/${result.data.id}`);
 }
 
+export async function captureIdeaAction(
+  _state: IdeaFormState,
+  formData: FormData,
+): Promise<IdeaFormState> {
+  const current = await currentWorkspace();
+  const result = await runAction(
+    { userId: current.userId, workspaceId: current.workspaceId },
+    { operation: "capture", entity: "Idea" },
+    () =>
+      createIdea(
+        current.userId,
+        current.workspaceId,
+        { title: formData.get("title") },
+        prismaWorkspaceRepository,
+        prismaIdeaRepository,
+      ),
+  );
+  if (!result.ok) return { message: result.message, fields: result.fields };
+  revalidatePath("/ideias");
+  redirect("/ideias");
+}
+
 export async function updateIdeaAction(
   _state: IdeaFormState,
   formData: FormData,

@@ -333,11 +333,17 @@ Estados:
 
 ## IDEA-003 — UX de captura rápida
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** IDEA-001
 
 Objetivo: registrar uma ideia com o mínimo de atrito.
+
+### Critérios
+
+- [x] quem escreve anota só o título na lista;
+- [x] o restante nasce vazio e o status fica Nova;
+- [x] leitor não vê o campo.
 
 ---
 

@@ -972,3 +972,68 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 IDEA-003 reduz o atrito para registrar uma ideia. O cadastro completo em `/ideias/nova` permanece.
 
+---
+
+## 2026-09-28 — IDEA-003 — UX de captura rápida
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+Na lista, quem escreve anota uma ideia só com o título. O restante fica vazio e o status nasce Nova. O formulário completo continua em `/ideias/nova`.
+
+### Implementação
+
+- Campo e botão Anotar no topo de `/ideias`.
+- A action chama `createIdea` só com o título e volta para a lista.
+- Leitor não vê o campo.
+
+### Arquivos principais
+
+- `src/components/ideas/capture-idea-form.tsx`
+- `src/server/idea-actions.ts`
+- `src/app/(app)/ideias/page.tsx`
+- `src/server/idea.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. A captura reusa o cadastro. Não cria um segundo modelo.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+No HTTP, o título entrou na lista com status Nova, descrição vazia e o autor da sessão. O leitor não viu o campo.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] quem escreve anota só o título na lista
+- [x] o restante nasce vazio e o status fica Nova
+- [x] leitor não vê o campo
+
+### Pendências conhecidas
+
+- Converter ideia em produção espera o modelo de VideoProject.
+
+### Observações para próxima tarefa
+
+PROJECT-001 cria o projeto de vídeo. A conversão da ideia fica depois que esse modelo existir.
+
