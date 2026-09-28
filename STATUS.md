@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PROJECT-004 — Participantes e funções
+PROJECT-005 — Página Visão Geral
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PROJECT-005 — Página Visão Geral
+PROJECT-006 — Busca e filtros
 ```
 
 ## Estado dos módulos
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-Na produção, a mesma pessoa pode ter várias funções. Só entra quem já está no workspace. O leitor só vê. `npm run test:e2e` ainda não existe.
+A página da produção é a visão geral: dados, progresso, links e participantes. Editar ficou em `/producoes/[id]/editar`. As outras abas ainda não abrem módulo. `npm run test:e2e` ainda não existe.

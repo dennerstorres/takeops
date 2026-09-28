@@ -429,9 +429,15 @@ Suportar múltiplas funções por usuário.
 
 ## PROJECT-005 — Página Visão Geral
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PROJECT-002
+
+### Critérios
+
+- [x] a página mostra os dados da visão geral da spec;
+- [x] o progresso acompanha a etapa do pipeline;
+- [x] as outras abas aparecem sem abrir módulo que ainda não existe.
 
 ---
 

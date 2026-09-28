@@ -1,28 +1,21 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { DeleteProjectButton } from "@/components/projects/delete-project-button";
 import {
   ParticipantForm,
   RemoveParticipantButton,
 } from "@/components/projects/participant-form";
-import { ProjectForm } from "@/components/projects/project-form";
+import { ProductionTabs } from "@/components/projects/production-tabs";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { NotFoundError } from "@/server/errors";
-import { listIdeas } from "@/server/idea";
-import { prismaIdeaRepository } from "@/server/idea-prisma";
 import { listParticipants } from "@/server/participant";
 import { prismaParticipantRepository } from "@/server/participant-prisma";
 import { projectRoleLabel } from "@/server/participant-labels";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
-import { projectStatusLabel } from "@/server/project-labels";
+import { buildProjectOverview } from "@/server/project-overview";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
-
-function dateInput(value: Date | null) {
-  return value ? value.toISOString().slice(0, 10) : "";
-}
 
 export default async function ProductionPage({
   params,
@@ -68,40 +61,97 @@ export default async function ProductionPage({
   }
 
   const canEdit = access.workspace.membership.role !== "VIEWER";
-  const participants = await listParticipants(
-    session.user.id,
-    workspaceId,
-    project.id,
-    prismaWorkspaceRepository,
-    prismaProjectRepository,
-    prismaParticipantRepository,
-  );
-  const [people, ideas] = await Promise.all([
-    listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
-    listIdeas(
+  const [participants, people] = await Promise.all([
+    listParticipants(
       session.user.id,
       workspaceId,
+      project.id,
       prismaWorkspaceRepository,
-      prismaIdeaRepository,
+      prismaProjectRepository,
+      prismaParticipantRepository,
     ),
+    listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
   ]);
+  const owner = people.find((person) => person.userId === project.ownerId);
+  const overview = buildProjectOverview({
+    project,
+    ownerName: owner ? (owner.name ?? owner.email ?? "Sem nome") : null,
+    participants,
+  });
+  const facts = [
+    ["Objetivo", overview.objective],
+    ["Produto", overview.product],
+    ["Público", overview.audience],
+    ["Formato", overview.format],
+    ["Proporção", overview.aspectRatio],
+    ["Duração", overview.duration],
+    ["Status", overview.status],
+    ["Prioridade", overview.priority],
+    ["Gravação", overview.shootDate],
+    ["Publicação", overview.publishDate],
+    ["Responsável", overview.ownerName],
+  ] as const;
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <h1 className="text-2xl font-medium tracking-tight">
-            {project.title}
+            {overview.title}
           </h1>
           <p className="text-sm text-muted-foreground">
-            {projectStatusLabel(project.status)}
+            Progresso {overview.progress}
           </p>
         </div>
-        {canEdit ? <DeleteProjectButton projectId={project.id} /> : null}
+        {canEdit ? (
+          <Link
+            href={`/producoes/${project.id}/editar`}
+            className="inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-medium"
+          >
+            Editar
+          </Link>
+        ) : null}
       </header>
+      <ProductionTabs projectId={project.id} />
+      <dl className="grid gap-3 sm:grid-cols-2">
+        {facts.map(([label, value]) => (
+          <div key={label} className="rounded-xl border p-3">
+            <dt className="text-sm text-muted-foreground">{label}</dt>
+            <dd className="text-sm font-medium">{value ?? "Não informado"}</dd>
+          </div>
+        ))}
+      </dl>
+      <section className="flex flex-col gap-2">
+        <h2 className="text-base font-medium">Links</h2>
+        {overview.links.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Nenhum link.</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {overview.links.map((link) => (
+              <li key={link.href}>
+                {link.href.startsWith("/") ? (
+                  <Link
+                    href={link.href}
+                    className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={link.href}
+                    className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
+                  >
+                    {link.label}
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
       <section className="flex flex-col gap-3">
         <h2 className="text-base font-medium">Participantes</h2>
-        {participants.length === 0 ? (
+        {overview.participants.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             Ninguém foi adicionado ainda.
           </p>
@@ -141,33 +191,6 @@ export default async function ProductionPage({
           />
         ) : null}
       </section>
-      <ProjectForm
-        canEdit={canEdit}
-        people={people.map((person) => ({
-          id: person.userId,
-          label: person.name ?? person.email ?? "Sem nome",
-        }))}
-        ideas={ideas.map((idea) => ({ id: idea.id, label: idea.title }))}
-        values={{
-          id: project.id,
-          title: project.title,
-          slug: project.slug ?? "",
-          description: project.description ?? "",
-          objective: project.objective ?? "",
-          audience: project.audience ?? "",
-          product: project.product ?? "",
-          format: project.format,
-          aspectRatio: project.aspectRatio,
-          estimatedDurationSeconds:
-            project.estimatedDurationSeconds?.toString() ?? "",
-          priority: project.priority,
-          thumbnailUrl: project.thumbnailUrl ?? "",
-          ownerId: project.ownerId ?? "",
-          plannedShootDate: dateInput(project.plannedShootDate),
-          plannedPublishDate: dateInput(project.plannedPublishDate),
-          sourceIdeaId: project.sourceIdeaId ?? "",
-        }}
-      />
       <Link
         href="/producoes"
         className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"

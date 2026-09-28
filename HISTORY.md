@@ -1313,3 +1313,71 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
+---
+
+## 2026-09-28 — PROJECT-005 — Página Visão Geral
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+A página da produção mostra a visão geral: dados, progresso da etapa, responsável, participantes e links. O formulário longo foi para a edição.
+
+### Implementação
+
+- `buildProjectOverview` monta os campos da spec. A data de calendário sai do dia UTC.
+- O progresso é a posição no fluxo até Publicado. Arquivado fica fora da conta.
+- As abas da spec aparecem. Só Visão Geral abre. Roteiro, cenas e o resto esperam as tarefas deles.
+- Editar continua em `/producoes/[id]/editar`.
+
+### Arquivos principais
+
+- `src/server/project-overview.ts`
+- `src/server/project-overview.test.ts`
+- `src/app/(app)/producoes/[id]/page.tsx`
+- `src/app/(app)/producoes/[id]/editar/page.tsx`
+- `src/components/projects/production-tabs.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. As abas sem módulo não ganham rota vazia.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+No HTTP, a página mostrou título, objetivo, produto, público, formato, progresso 1 de 10, prioridade, data, responsável, thumbnail e o link de editar. Roteiro apareceu sem virar link.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] a página mostra os dados da visão geral da spec
+- [x] o progresso acompanha a etapa do pipeline
+- [x] as outras abas aparecem sem abrir módulo que ainda não existe
+
+### Pendências conhecidas
+
+- Busca e filtros ficam na PROJECT-006.
+- Roteiro, cenas, gravação, edição, revisão, publicação e atividade não têm página.
+
+### Observações para próxima tarefa
+
+PROJECT-006 filtra a lista de produções. A visão geral já lê o projeto isolado pelo workspace.
+
