@@ -46,4 +46,8 @@ export type ShotRepository = {
     shotId: string,
     deletedAt: Date,
   ): Promise<boolean>;
+  reorder(
+    scope: ShotScope,
+    orderedIds: readonly string[],
+  ): Promise<ShotRecord[] | null>;
 };

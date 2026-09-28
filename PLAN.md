@@ -677,9 +677,15 @@ Deve privilegiar leitura rápida do fluxo narrativo.
 
 ## SHOT-003 — Reordenação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SHOT-002
+
+### Critérios
+
+- [x] a nova ordem é gravada numa transação e fica 1, 2, 3 na cena;
+- [x] a lista precisa conter todos os shots visíveis da cena, sem repetir;
+- [x] shot excluído vai para o fim; leitor não reordena.
 
 ---
 

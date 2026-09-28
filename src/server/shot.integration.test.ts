@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
-import { ForbiddenError, NotFoundError } from "./errors.ts";
+import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { createProject } from "./project.ts";
 import { createScene, deleteScene } from "./scene.ts";
 import {
@@ -9,6 +9,7 @@ import {
   deleteShot,
   getShot,
   listShots,
+  reorderShots,
   updateShot,
   type ShotDeps,
 } from "./shot.ts";
@@ -220,6 +221,46 @@ describe(
           where: { id: second.id },
         });
         assert.ok(stored?.deletedAt);
+
+        // O excluído continua com ordem, fora da lista visível.
+        const third = await createShot(
+          author.id,
+          workspaceId,
+          project.id,
+          sceneA.id,
+          {},
+          deps,
+        );
+        const reordered = await reorderShots(
+          author.id,
+          workspaceId,
+          project.id,
+          sceneA.id,
+          { shotIds: [third.id, first.id] },
+          deps,
+        );
+        assert.deepEqual(
+          reordered.map((row) => [row.id, row.order]),
+          [
+            [third.id, 1],
+            [first.id, 2],
+          ],
+        );
+        const hidden = await prisma.shot.findUnique({
+          where: { id: second.id },
+        });
+        assert.equal(hidden?.order, 3);
+        await assert.rejects(
+          reorderShots(
+            author.id,
+            workspaceId,
+            project.id,
+            sceneA.id,
+            { shotIds: [third.id, inB.id] },
+            deps,
+          ),
+          ValidationError,
+        );
 
         // Cena excluída esconde os shots dela.
         await deleteScene(

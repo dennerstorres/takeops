@@ -8,6 +8,7 @@ import {
   deleteShot,
   getShot,
   listShots,
+  reorderShots,
   updateShot,
   type ShotDeps,
 } from "./shot.ts";
@@ -129,6 +130,21 @@ function shotHarness() {
       if (!current) return null;
       Object.assign(current, input);
       return current;
+    },
+    async reorder(scope, orderedIds) {
+      const visible = await this.list(scope);
+      if (
+        orderedIds.length !== visible.length ||
+        new Set(orderedIds).size !== orderedIds.length ||
+        orderedIds.some((id) => !visible.some((item) => item.id === id))
+      ) {
+        return null;
+      }
+      orderedIds.forEach((id, index) => {
+        const shot = visible.find((item) => item.id === id);
+        if (shot) shot.order = index + 1;
+      });
+      return this.list(scope);
     },
     async softDelete(scope, shotId) {
       const current = await this.find(scope, shotId);
@@ -340,6 +356,62 @@ describe("shot", () => {
     await assert.rejects(
       getShot("owner", "ws-a", "p-a", "s-a", first.id, deps),
       NotFoundError,
+    );
+  });
+
+  it("reordena todos os shots da cena e recusa lista incompleta", async () => {
+    const { deps, join } = shotHarness();
+    join("owner", "ws-a", "OWNER");
+    join("viewer", "ws-a", "VIEWER");
+    const a = await createShot("owner", "ws-a", "p-a", "s-a", {}, deps);
+    const b = await createShot("owner", "ws-a", "p-a", "s-a", {}, deps);
+    const c = await createShot("owner", "ws-a", "p-a", "s-a", {}, deps);
+    const elsewhere = await createShot(
+      "owner",
+      "ws-a",
+      "p-a",
+      "s-a2",
+      {},
+      deps,
+    );
+
+    const rows = await reorderShots(
+      "owner",
+      "ws-a",
+      "p-a",
+      "s-a",
+      { shotIds: [c.id, a.id, b.id] },
+      deps,
+    );
+    assert.deepEqual(
+      rows.map((row) => [row.id, row.order]),
+      [
+        [c.id, 1],
+        [a.id, 2],
+        [b.id, 3],
+      ],
+    );
+
+    for (const shotIds of [
+      [c.id, a.id],
+      [c.id, a.id, a.id],
+      [c.id, a.id, elsewhere.id],
+    ]) {
+      await assert.rejects(
+        reorderShots("owner", "ws-a", "p-a", "s-a", { shotIds }, deps),
+        ValidationError,
+      );
+    }
+    await assert.rejects(
+      reorderShots(
+        "viewer",
+        "ws-a",
+        "p-a",
+        "s-a",
+        { shotIds: [a.id, b.id, c.id] },
+        deps,
+      ),
+      ForbiddenError,
     );
   });
 });

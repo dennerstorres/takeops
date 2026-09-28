@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SHOT-003 — Reordenação
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Os shots de uma cena podem ser reordenados. A lista inteira é gravada numa transação.
+
+### Implementação
+
+- `reorderShots` recebe `shotIds` com todos os shots visíveis da cena. Faltando, repetido ou de outra cena, recusa.
+- O repositório passa tudo por ordem negativa antes da final, por causa do índice único `(sceneId, order)`.
+- Shots excluídos ficam no fim da numeração.
+- Mesmo desenho de `reorderScenes`.
+
+### Arquivos principais
+
+- `src/server/shot.ts`
+- `src/server/shot-repository.ts`
+- `src/server/shot-prisma.ts`
+- `src/server/shot.test.ts`
+- `src/server/shot.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — SHOT-002 — CRUD de Shots
 
 **Status:** DONE  

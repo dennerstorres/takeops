@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { NotFoundError } from "./errors.ts";
+import { NotFoundError, ValidationError } from "./errors.ts";
 import type { ProjectRepository } from "./project-repository.ts";
 import { getScene } from "./scene.ts";
 import type { SceneRepository } from "./scene-repository.ts";
@@ -206,4 +206,39 @@ export async function deleteShot(
   const scope = await sceneScope(userId, workspaceId, projectId, sceneId, deps);
   const removed = await deps.shots.softDelete(scope, current.id, deletedAt);
   if (!removed) throw new NotFoundError();
+}
+
+const orderSchema = z.object({
+  shotIds: z.array(z.string().trim().min(1)).max(200),
+});
+
+export async function reorderShots(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  sceneId: string,
+  input: unknown,
+  deps: ShotDeps,
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const scope = await sceneScope(userId, workspaceId, projectId, sceneId, deps);
+  const ids = parseInput(orderSchema, input).shotIds;
+  const rows = await deps.shots.reorder(scope, ids);
+  if (!rows) {
+    throw new ValidationError({
+      order: "A lista de shots mudou. Atualize a página.",
+    });
+  }
+  if (
+    rows.length !== ids.length ||
+    rows.some(
+      (row, index) =>
+        row.id !== ids[index] ||
+        row.order !== index + 1 ||
+        row.sceneId !== scope.sceneId,
+    )
+  ) {
+    throw new NotFoundError();
+  }
+  return rows;
 }

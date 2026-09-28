@@ -105,4 +105,48 @@ export const prismaShotRepository: ShotRepository = {
     });
     return result.count === 1;
   },
+
+  async reorder(scope, orderedIds) {
+    const rows = await prisma.$transaction(async (tx) => {
+      const scene = await tx.scene.findFirst({
+        where: visibleScene(scope),
+        select: { id: true },
+      });
+      if (!scene) return null;
+      const existing = await tx.shot.findMany({
+        where: { sceneId: scene.id },
+        orderBy: { order: "asc" },
+      });
+      const visible = existing.filter((row) => row.deletedAt == null);
+      const visibleIds = new Set(visible.map((row) => row.id));
+      if (
+        orderedIds.length !== visible.length ||
+        new Set(orderedIds).size !== orderedIds.length ||
+        orderedIds.some((id) => !visibleIds.has(id))
+      ) {
+        return null;
+      }
+      // Excluídos vão para o fim. Passar tudo por ordem negativa evita
+      // bater no índice único (sceneId, order) no meio da troca.
+      const deleted = existing.filter((row) => row.deletedAt != null);
+      const final = [...orderedIds, ...deleted.map((row) => row.id)];
+      for (let index = 0; index < final.length; index += 1) {
+        await tx.shot.update({
+          where: { id: final[index] },
+          data: { order: -(index + 1) },
+        });
+      }
+      for (let index = 0; index < final.length; index += 1) {
+        await tx.shot.update({
+          where: { id: final[index] },
+          data: { order: index + 1 },
+        });
+      }
+      return tx.shot.findMany({
+        where: { sceneId: scene.id, deletedAt: null },
+        orderBy: { order: "asc" },
+      });
+    });
+    return rows ? rows.map(mapShot) : null;
+  },
 };

@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SHOT-002 — CRUD de Shots
+SHOT-003 — Reordenação
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SHOT-003 — Reordenação
+SHOT-004 — UI integrada à Scene
 ```
 
 ## Estado dos módulos
