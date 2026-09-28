@@ -40,6 +40,16 @@ export class DuplicateSlugError extends Error {
   }
 }
 
+export type TeamMemberRecord = {
+  userId: string;
+  workspaceId: string;
+  name: string | null;
+  email: string | null;
+  image: string | null;
+  role: WorkspaceRole;
+  joinedAt: Date;
+};
+
 export type WorkspaceRepository = {
   createWorkspaceWithOwner(
     input: CreateWorkspaceData,
@@ -50,4 +60,5 @@ export type WorkspaceRepository = {
   ): Promise<MembershipRecord | null>;
   findWorkspace(workspaceId: string): Promise<WorkspaceRecord | null>;
   listForUser(userId: string): Promise<WorkspaceWithMembership[]>;
+  listMembers(workspaceId: string): Promise<TeamMemberRecord[]>;
 };

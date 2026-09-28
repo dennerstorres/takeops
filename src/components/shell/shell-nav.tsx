@@ -1,11 +1,21 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { shellNavItems } from "@/components/shell/navigation";
 
 const itemClass =
   "flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium";
 
+function isCurrent(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function ShellNav() {
+  const pathname = usePathname();
+
   return (
     <nav aria-label="Principal" className="flex flex-col gap-1 p-3">
       {shellNavItems.map((item) => {
@@ -23,14 +33,19 @@ export function ShellNav() {
           );
         }
 
+        const current = isCurrent(pathname, item.href);
+
         return (
           <Link
             key={item.label}
             href={item.href}
-            aria-current="page"
+            aria-current={current ? "page" : undefined}
             className={cn(
               itemClass,
-              "bg-sidebar-accent text-sidebar-accent-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
+              "focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
+              current
+                ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                : "text-sidebar-foreground",
             )}
           >
             <Icon aria-hidden="true" />

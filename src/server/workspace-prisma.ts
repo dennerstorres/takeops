@@ -2,6 +2,7 @@ import { prisma } from "./db.ts";
 import {
   DuplicateSlugError,
   type MembershipRecord,
+  type TeamMemberRecord,
   type WorkspaceRecord,
   type WorkspaceRepository,
   type WorkspaceRole,
@@ -118,6 +119,25 @@ export const prismaWorkspaceRepository: WorkspaceRepository = {
     return memberships.map((membership) => ({
       workspace: mapWorkspace(membership.workspace),
       membership: mapMembership(membership),
+    }));
+  },
+
+  async listMembers(workspaceId) {
+    const memberships = await prisma.workspaceMember.findMany({
+      where: { workspaceId },
+      include: {
+        user: { select: { id: true, name: true, email: true, image: true } },
+      },
+      orderBy: { createdAt: "asc" },
+    });
+    return memberships.map((membership): TeamMemberRecord => ({
+      userId: membership.user.id,
+      workspaceId: membership.workspaceId,
+      name: membership.user.name,
+      email: membership.user.email,
+      image: membership.user.image,
+      role: membership.role,
+      joinedAt: membership.createdAt,
     }));
   },
 };

@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-WORKSPACE-002 — Primeiro acesso
+TEAM-001 — Listagem de equipe
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TEAM-001 — Listagem de equipe
+TEAM-002 — Convites
 ```
 
 ## Estado dos módulos
@@ -38,7 +38,7 @@ TEAM-001 — Listagem de equipe
 | Bootstrap | DONE |
 | Auth | DONE |
 | Workspace | IN_PROGRESS |
-| Equipe | NOT_STARTED |
+| Equipe | IN_PROGRESS |
 | Ideias | NOT_STARTED |
 | Projetos | NOT_STARTED |
 | Kanban | NOT_STARTED |
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-Quem não tem membership cai em `/comecar`. Quem tem entra no workspace da membership mais antiga. Convite fica na TEAM-002. `npm run test:e2e` ainda não existe. As rotas além do Dashboard ficam na APP-001.
+Quem não tem membership cai em `/comecar`. Quem tem entra no workspace da membership mais antiga. `/equipe` lista essa equipe. Convite fica na TEAM-002. `npm run test:e2e` ainda não existe. As outras rotas do menu ficam na APP-001.

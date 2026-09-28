@@ -549,3 +549,72 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 TEAM-001 lista a equipe do workspace aberto. A membership usada é a mais antiga do usuário da sessão.
 
+---
+
+## 2026-09-28 — TEAM-001 — Listagem de equipe
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+`/equipe` mostra nome, avatar, e-mail e papel de quem participa do workspace aberto. Outro workspace não entra na lista.
+
+### Implementação
+
+- `listTeam` exige membership e filtra por esse `workspaceId`. A página usa o workspace da membership mais antiga, não um id vindo do cliente.
+- Papéis na tela: Dono, Admin, Membro, Leitor. Ordem segue essa sequência e depois o nome.
+- Avatar só entra se a URL for http(s). Sem foto, aparecem as iniciais.
+- O item Equipe do menu aponta para `/equipe`. Os outros itens continuam sem rota.
+
+### Arquivos principais
+
+- `src/server/team.ts`
+- `src/server/workspace-repository.ts`
+- `src/server/workspace-prisma.ts`
+- `src/app/(app)/equipe/page.tsx`
+- `src/components/shell/navigation.ts`
+- `src/components/shell/shell-nav.tsx`
+
+### Decisões tomadas
+
+- Qualquer papel com membership pode ver a lista. Administrar a equipe continua na TEAM-003.
+- Sem ADR. A escolha de rótulos em português fica no `roleLabel`.
+
+### Banco / migrations
+
+- Nenhuma. A consulta usa `WorkspaceMember` e `User`.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+Sem cookie, `/equipe` vai para `/login`. Com sessão, a página mostrou dono e membro, e-mail, papel e avatar, e omitiu a pessoa do outro workspace. O link Equipe ficou marcado como página atual.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] a pessoa vê nome, avatar, e-mail e papel de quem está no workspace aberto
+- [x] a lista de outro workspace não aparece
+
+### Pendências conhecidas
+
+- Convite fica na TEAM-002.
+- Troca de papel fica na TEAM-003.
+
+### Observações para próxima tarefa
+
+TEAM-002 cria o convite. O aceite deve chamar a membership existente, sem gravar papel vindo do cliente.
+

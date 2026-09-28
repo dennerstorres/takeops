@@ -179,7 +179,7 @@ ou
 
 ## TEAM-001 — Listagem de equipe
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** WORKSPACE-001
 
@@ -190,6 +190,11 @@ ou
 - avatar;
 - e-mail;
 - papel.
+
+### Critérios
+
+- [x] a pessoa vê nome, avatar, e-mail e papel de quem está no workspace aberto;
+- [x] a lista de outro workspace não aparece.
 
 ---
 

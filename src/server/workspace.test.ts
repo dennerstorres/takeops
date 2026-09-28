@@ -66,6 +66,19 @@ function memoryRepository(): WorkspaceRepository {
         return workspace ? [{ workspace, membership }] : [];
       });
     },
+    async listMembers(workspaceId) {
+      return memberships
+        .filter((membership) => membership.workspaceId === workspaceId)
+        .map((membership) => ({
+          userId: membership.userId,
+          workspaceId: membership.workspaceId,
+          name: null,
+          email: null,
+          image: null,
+          role: membership.role,
+          joinedAt: membership.createdAt,
+        }));
+    },
   };
 }
 

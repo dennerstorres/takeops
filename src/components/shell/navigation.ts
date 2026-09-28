@@ -15,13 +15,13 @@ export type ShellNavItem = {
   icon: LucideIcon;
 };
 
-// Rotas além do Dashboard entram na APP-001. O shell já mostra a navegação da spec.
+// As outras rotas entram na APP-001. Equipe existe desde a TEAM-001.
 export const shellNavItems: ShellNavItem[] = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
   { label: "Ideias", icon: Lightbulb },
   { label: "Produções", icon: Clapperboard },
   { label: "Calendário", icon: Calendar },
   { label: "Templates", icon: LayoutTemplate },
-  { label: "Equipe", icon: Users },
+  { label: "Equipe", href: "/equipe", icon: Users },
   { label: "Configurações", icon: Settings },
 ];
