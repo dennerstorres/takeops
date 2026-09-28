@@ -3,7 +3,14 @@ import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError } from "./errors.ts";
 import { createProject } from "./project.ts";
-import { createShoot, getShoot, listShoots, type ShootDeps } from "./shoot.ts";
+import {
+  createShoot,
+  deleteShoot,
+  getShoot,
+  listShoots,
+  updateShoot,
+  type ShootDeps,
+} from "./shoot.ts";
 import { createWorkspace } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
@@ -111,6 +118,39 @@ describe(
           listed.map((item) => item.id),
           [first.id, second.id],
         );
+
+        const canceled = await updateShoot(
+          author.id,
+          workspaceId,
+          project.id,
+          second.id,
+          {
+            title: "Externa",
+            scheduledAt: "2026-10-09T09:00:00-03:00",
+            status: "CANCELED",
+          },
+          deps,
+        );
+        assert.equal(canceled.status, "CANCELED");
+        assert.equal(
+          canceled.scheduledAt.toISOString(),
+          "2026-10-09T12:00:00.000Z",
+        );
+        await deleteShoot(author.id, workspaceId, project.id, first.id, deps);
+        const afterDelete = await listShoots(
+          author.id,
+          workspaceId,
+          project.id,
+          deps,
+        );
+        assert.deepEqual(
+          afterDelete.map((item) => item.id),
+          [second.id],
+        );
+        const stored = await prisma.shoot.findUnique({
+          where: { id: first.id },
+        });
+        assert.ok(stored?.deletedAt);
 
         await assert.rejects(
           createShoot(

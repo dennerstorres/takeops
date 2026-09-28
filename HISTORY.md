@@ -1315,6 +1315,52 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SHOOT-002 — CRUD e agendamento
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+A aba Gravação da produção agenda, remarca, troca o status e exclui sessões de gravação.
+
+### Implementação
+
+- `updateShoot` valida como a criação; sem status no envio, fica o atual. `deleteShoot` é lógico.
+- `/producoes/[id]/gravacao`: lista por data com dia, hora e fim no fuso do workspace; editar num `<details>`; excluir com confirmação; agendar no fim.
+- As actions leem o `datetime-local` no `Workspace.timezone` e mandam ISO UTC ao service (ADR-028). O formulário mostra qual fuso vale.
+- A aba Gravação virou link.
+
+### Arquivos principais
+
+- `src/server/shoot.ts`, `shoot-repository.ts`, `shoot-prisma.ts`
+- `src/server/shoot-actions.ts`
+- `src/components/shoots/shoot-form.tsx`, `delete-shoot-button.tsx`
+- `src/app/(app)/producoes/[id]/gravacao/page.tsx`
+- `src/components/projects/production-tabs.tsx`
+- `src/server/shoot.test.ts`, `shoot.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR nova. Status livre entre os cinco da spec; efeitos de status entram com o Modo Gravação.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — SHOOT-001 — Modelo Shoot
 
 **Status:** DONE  

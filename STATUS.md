@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SHOOT-001 — Modelo Shoot
+SHOOT-002 — CRUD e agendamento
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SHOOT-002 — CRUD e agendamento
+EQUIP-001 — Catálogo de equipamentos
 ```
 
 ## Estado dos módulos

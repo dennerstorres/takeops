@@ -2,7 +2,14 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import type { ProjectRepository } from "./project-repository.ts";
-import { createShoot, getShoot, listShoots, type ShootDeps } from "./shoot.ts";
+import {
+  createShoot,
+  deleteShoot,
+  getShoot,
+  listShoots,
+  updateShoot,
+  type ShootDeps,
+} from "./shoot.ts";
 import type { ShootRecord, ShootRepository } from "./shoot-repository.ts";
 import type {
   MembershipRecord,
@@ -67,6 +74,18 @@ function shootHarness() {
       };
       shoots.push(created);
       return created;
+    },
+    async update(workspaceId, projectId, shootId, input) {
+      const current = await this.find(workspaceId, projectId, shootId);
+      if (!current) return null;
+      Object.assign(current, input);
+      return current;
+    },
+    async softDelete(workspaceId, projectId, shootId) {
+      const current = await this.find(workspaceId, projectId, shootId);
+      if (!current) return false;
+      shoots.splice(shoots.indexOf(current), 1);
+      return true;
     },
   };
 
@@ -178,5 +197,79 @@ describe("gravação", () => {
       getShoot("owner", "ws-a", "p-a2", own.id, deps),
       NotFoundError,
     );
+  });
+
+  it("remarca, troca o status e esconde ao excluir", async () => {
+    const { deps, join } = shootHarness();
+    join("owner", "ws-a", "OWNER");
+    join("viewer", "ws-a", "VIEWER");
+    const shoot = await createShoot(
+      "owner",
+      "ws-a",
+      "p-a",
+      { scheduledAt: "2026-10-05T13:00:00Z", location: "Estúdio" },
+      deps,
+    );
+
+    const moved = await updateShoot(
+      "owner",
+      "ws-a",
+      "p-a",
+      shoot.id,
+      {
+        scheduledAt: "2026-10-08T13:00:00Z",
+        location: "Estúdio",
+        status: "READY",
+        videoProjectId: "p-a2",
+      },
+      deps,
+    );
+    assert.equal(moved.scheduledAt.toISOString(), "2026-10-08T13:00:00.000Z");
+    assert.equal(moved.status, "READY");
+    assert.equal(moved.videoProjectId, "p-a");
+
+    const kept = await updateShoot(
+      "owner",
+      "ws-a",
+      "p-a",
+      shoot.id,
+      { scheduledAt: "2026-10-08T13:00:00Z", status: "" },
+      deps,
+    );
+    assert.equal(kept.status, "READY");
+    assert.equal(kept.location, null);
+    await assert.rejects(
+      updateShoot(
+        "owner",
+        "ws-a",
+        "p-a",
+        shoot.id,
+        { scheduledAt: "2026-10-08T13:00:00Z", status: "DONE" },
+        deps,
+      ),
+      ValidationError,
+    );
+    await assert.rejects(
+      updateShoot(
+        "viewer",
+        "ws-a",
+        "p-a",
+        shoot.id,
+        { scheduledAt: "2026-10-08T13:00:00Z" },
+        deps,
+      ),
+      ForbiddenError,
+    );
+    await assert.rejects(
+      deleteShoot("viewer", "ws-a", "p-a", shoot.id, deps),
+      ForbiddenError,
+    );
+    await assert.rejects(
+      deleteShoot("owner", "ws-a", "p-a2", shoot.id, deps),
+      NotFoundError,
+    );
+
+    await deleteShoot("owner", "ws-a", "p-a", shoot.id, deps);
+    assert.deepEqual(await listShoots("owner", "ws-a", "p-a", deps), []);
   });
 });

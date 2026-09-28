@@ -56,4 +56,36 @@ export const prismaShootRepository: ShootRepository = {
     });
     return mapShoot(created);
   },
+
+  async update(workspaceId, projectId, shootId, input) {
+    const updated = await prisma.$transaction(async (tx) => {
+      const project = await tx.videoProject.findFirst({
+        where: visibleProject(workspaceId, projectId),
+        select: { id: true },
+      });
+      if (!project) return null;
+      const result = await tx.shoot.updateMany({
+        where: { id: shootId, videoProjectId: project.id, deletedAt: null },
+        data: input,
+      });
+      if (result.count !== 1) return null;
+      return tx.shoot.findFirst({
+        where: { id: shootId, videoProjectId: project.id, deletedAt: null },
+      });
+    });
+    return updated ? mapShoot(updated) : null;
+  },
+
+  async softDelete(workspaceId, projectId, shootId, deletedAt) {
+    const project = await prisma.videoProject.findFirst({
+      where: visibleProject(workspaceId, projectId),
+      select: { id: true },
+    });
+    if (!project) return false;
+    const result = await prisma.shoot.updateMany({
+      where: { id: shootId, videoProjectId: project.id, deletedAt: null },
+      data: { deletedAt },
+    });
+    return result.count === 1;
+  },
 };

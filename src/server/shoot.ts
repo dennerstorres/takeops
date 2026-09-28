@@ -2,7 +2,7 @@ import { z } from "zod";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
-import type { ShootStatus } from "./shoot-labels.ts";
+import { shootStatuses, type ShootStatus } from "./shoot-labels.ts";
 import type { ShootRepository, ShootWrite } from "./shoot-repository.ts";
 import { parseInput } from "./validation.ts";
 import { requireRole } from "./workspace.ts";
@@ -139,4 +139,57 @@ export async function createShoot(
     throw new NotFoundError();
   }
   return created;
+}
+
+const statusSchema = z.object({
+  status: z.preprocess(
+    (value) => (typeof value === "string" && value ? value : undefined),
+    z.enum(shootStatuses, { error: "Escolha um status." }).optional(),
+  ),
+});
+
+export async function updateShoot(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  shootId: string,
+  input: unknown,
+  deps: ShootDeps,
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const current = await getShoot(userId, workspaceId, projectId, shootId, deps);
+  const status = parseInput(statusSchema, input).status ?? current.status;
+  const updated = await deps.shoots.update(
+    workspaceId,
+    current.videoProjectId,
+    current.id,
+    toShootWrite(input, status),
+  );
+  if (
+    !updated ||
+    updated.id !== current.id ||
+    updated.videoProjectId !== current.videoProjectId
+  ) {
+    throw new NotFoundError();
+  }
+  return updated;
+}
+
+export async function deleteShoot(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  shootId: string,
+  deps: ShootDeps,
+  deletedAt = new Date(),
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const current = await getShoot(userId, workspaceId, projectId, shootId, deps);
+  const removed = await deps.shoots.softDelete(
+    workspaceId,
+    current.videoProjectId,
+    current.id,
+    deletedAt,
+  );
+  if (!removed) throw new NotFoundError();
 }

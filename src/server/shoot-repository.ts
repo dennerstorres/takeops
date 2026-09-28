@@ -30,4 +30,16 @@ export type ShootRepository = {
     projectId: string,
     input: ShootWrite,
   ): Promise<ShootRecord | null>;
+  update(
+    workspaceId: string,
+    projectId: string,
+    shootId: string,
+    input: ShootWrite,
+  ): Promise<ShootRecord | null>;
+  softDelete(
+    workspaceId: string,
+    projectId: string,
+    shootId: string,
+    deletedAt: Date,
+  ): Promise<boolean>;
 };

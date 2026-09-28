@@ -725,9 +725,16 @@ Cada cena deve mostrar seus planos sem exigir navegação excessiva.
 
 ## SHOOT-002 — CRUD e agendamento
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SHOOT-001
+
+### Critérios
+
+- [x] a aba Gravação lista as sessões por data, no fuso do workspace;
+- [x] quem escreve agenda, remarca, troca o status e exclui a sessão;
+- [x] o horário digitado é lido no fuso do workspace e gravado em UTC;
+- [x] leitor só vê.
 
 ---
 
