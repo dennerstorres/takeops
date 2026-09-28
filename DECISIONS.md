@@ -388,6 +388,27 @@ Transferir a propriedade fica fora do MVP até existir uma tarefa própria.
 
 ---
 
+# ADR-020 — Ideia nasce nova e a exclusão só esconde
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+IDEA-001 cadastra a ideia. IDEA-002 muda o status. A exclusão das entidades principais é lógica.
+
+## Decisão
+
+Criar ideia grava o autor da sessão e o status `NEW`. O cliente não escolhe autor, workspace nem status. Editar não muda esses três.
+
+Dono, admin e membro criam, editam e excluem. Leitor só vê. Excluir preenche `deletedAt`. A lista e a leitura ignoram esse registro.
+
+## Consequências
+
+A troca de status fica na IDEA-002. Converter em produção continua numa tarefa posterior.
+
+---
+
 # Template para novas decisões
 
 ```md

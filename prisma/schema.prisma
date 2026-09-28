@@ -18,6 +18,7 @@ model User {
   memberships     WorkspaceMember[]
   invitesSent     WorkspaceInvite[] @relation("InviteInviter")
   invitesAccepted WorkspaceInvite[] @relation("InviteAccepter")
+  ideas           Idea[]
 }
 
 enum WorkspaceRole {
@@ -37,6 +38,7 @@ model Workspace {
   updatedAt DateTime          @updatedAt
   members   WorkspaceMember[]
   invites   WorkspaceInvite[]
+  ideas     Idea[]
 }
 
 enum InviteStatus {
@@ -63,6 +65,47 @@ model WorkspaceInvite {
 
   @@index([workspaceId, status])
   @@index([email, status])
+}
+
+enum IdeaFormat {
+  TUTORIAL
+  SKETCH
+  DEMO
+  FEATURE
+  INSTITUTIONAL
+  EDUCATIONAL
+  BEHIND_THE_SCENES
+  OTHER
+}
+
+enum IdeaStatus {
+  NEW
+  UNDER_REVIEW
+  APPROVED
+  DISCARDED
+  CONVERTED
+}
+
+model Idea {
+  id           String      @id @default(uuid())
+  workspaceId  String
+  title        String
+  description  String?
+  format       IdeaFormat?
+  objective    String?
+  product      String?
+  audience     String?
+  referenceUrl String?
+  notes        String?
+  authorId     String
+  status       IdeaStatus  @default(NEW)
+  deletedAt    DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  workspace    Workspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  author       User        @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([workspaceId, createdAt])
 }
 
 model WorkspaceMember {

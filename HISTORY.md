@@ -831,3 +831,75 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 IDEA-001 pode usar `/ideias`. A página hoje só reserva o lugar.
 
+---
+
+## 2026-09-28 — IDEA-001 — Modelo e CRUD
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+A equipe cria, lista, edita e esconde ideias. O autor é quem está logado. O status começa em Nova e não muda nesta tarefa.
+
+### Implementação
+
+- Modelo `Idea` com os campos da spec, formato, status e `deletedAt`. Migration `20260928200000_ideas`.
+- Dono, admin e membro escrevem. Leitor só lê. Outro workspace não vê.
+- `/ideias` lista. `/ideias/nova` cria. `/ideias/[id]` edita. Excluir pede confirmação e só preenche `deletedAt`.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928200000_ideas/migration.sql`
+- `src/server/idea.ts`
+- `src/server/idea-prisma.ts`
+- `src/app/(app)/ideias/page.tsx`
+- `src/app/(app)/ideias/nova/page.tsx`
+- `src/app/(app)/ideias/[id]/page.tsx`
+- `src/components/ideas/idea-form.tsx`
+
+### Decisões tomadas
+
+- ADR-020.
+
+### Banco / migrations
+
+- `20260928200000_ideas`, aplicada no Postgres local.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+No HTTP, o autor criou, editou e tirou a ideia da lista. O registro continuou no banco com `deletedAt`. O leitor não viu o botão de criar.
+
+Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next dev`.
+
+### Critérios de aceite
+
+- [x] membro cria, edita e tira a ideia da lista
+- [x] leitor só vê
+- [x] ideia de outro workspace não aparece
+- [x] a exclusão não apaga o registro
+
+### Pendências conhecidas
+
+- Mudar o status fica na IDEA-002.
+- Captura rápida fica na IDEA-003.
+- Converter em produção espera o projeto de vídeo.
+
+### Observações para próxima tarefa
+
+IDEA-002 muda o status por serviço, sem o cliente escolher um estado solto. `CONVERTED` continua reservado para a conversão.
+

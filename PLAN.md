@@ -286,7 +286,7 @@ Pode ser implementado parcialmente e enriquecido após módulos correspondentes.
 
 ## IDEA-001 — Modelo e CRUD
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** WORKSPACE-001
 
@@ -298,6 +298,13 @@ Pode ser implementado parcialmente e enriquecido após módulos correspondentes.
 - criação;
 - edição;
 - exclusão lógica.
+
+### Critérios
+
+- [x] membro cria, edita e tira a ideia da lista;
+- [x] leitor só vê;
+- [x] ideia de outro workspace não aparece;
+- [x] a exclusão não apaga o registro.
 
 ---
 

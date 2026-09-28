@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 2 — Shell e Dashboard
+Fase 3 — Ideias
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-APP-001 — Navegação principal
+IDEA-001 — Modelo e CRUD
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-IDEA-001 — Modelo e CRUD
+IDEA-002 — Status de ideia
 ```
 
 ## Estado dos módulos
@@ -39,7 +39,7 @@ IDEA-001 — Modelo e CRUD
 | Auth | DONE |
 | Workspace | IN_PROGRESS |
 | Equipe | DONE |
-| Ideias | NOT_STARTED |
+| Ideias | IN_PROGRESS |
 | Projetos | NOT_STARTED |
 | Kanban | NOT_STARTED |
 | Roteiro | NOT_STARTED |
@@ -79,4 +79,4 @@ UI: Tailwind CSS + shadcn/ui
 
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-O menu abre Dashboard, Ideias, Produções, Calendário, Templates, Equipe e Configurações. Essas páginas ainda não têm o módulo. DASH-001 espera PROJECT-001. `npm run test:e2e` ainda não existe.
+`/ideias` lista, cria, edita e faz exclusão lógica. O status nasce como Nova e ainda não muda. Leitor só vê. DASH-001 espera PROJECT-001. `npm run test:e2e` ainda não existe.
