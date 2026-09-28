@@ -111,6 +111,7 @@ describe("quadro de produções", () => {
         people: ["Ana Lima", "caio@example.com"],
         shootDate: "02/10/2026",
         priority: "Alta",
+        alerts: [],
       },
     ]);
     assert.deepEqual(
@@ -126,6 +127,37 @@ describe("quadro de produções", () => {
         .filter((column) => column.status !== "EDITING" && column.status !== "IDEA" && column.status !== "ARCHIVED")
         .every((column) => column.cards.length === 0),
       true,
+    );
+  });
+
+  it("avisa pronto para gravar sem cena pronta e some quando a cena existe", () => {
+    const missing = buildProjectBoard(
+      [project({ id: "gravar", status: "READY_TO_RECORD", title: "Sem cena" })],
+      [],
+      [],
+    );
+    const ready = buildProjectBoard(
+      [project({ id: "gravar", status: "READY_TO_RECORD", title: "Com cena" })],
+      [],
+      [],
+      { gravar: 1 },
+    );
+    const idea = buildProjectBoard(
+      [project({ id: "ideia", status: "IDEA", title: "Ideia" })],
+      [],
+      [],
+    );
+    assert.deepEqual(
+      missing.find((column) => column.status === "READY_TO_RECORD")?.cards[0]?.alerts,
+      ["Não há cenas prontas."],
+    );
+    assert.deepEqual(
+      ready.find((column) => column.status === "READY_TO_RECORD")?.cards[0]?.alerts,
+      [],
+    );
+    assert.deepEqual(
+      idea.find((column) => column.status === "IDEA")?.cards[0]?.alerts,
+      [],
     );
   });
 });

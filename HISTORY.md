@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — KANBAN-004 — Alertas de incompletude
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+O card em Pronto para gravar avisa quando não há cena pronta. A troca de etapa não é bloqueada.
+
+### Implementação
+
+- `projectAlerts` devolve "Não há cenas prontas." só nessa etapa e só com contagem menor que 1.
+- O quadro usa a contagem recebida. Sem o módulo de cenas, a contagem fica zerada.
+- Ideia, edição e as outras etapas não mostram esse aviso.
+- Arrastar para Pronto para gravar continua gravando a etapa.
+
+### Arquivos principais
+
+- `src/server/project-board.ts`
+- `src/server/project-board.test.ts`
+- `src/server/project-status.test.ts`
+- `src/components/projects/production-board.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. O exemplo do plano é a única regra. Checklist continua na fase própria.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — KANBAN-003 — Drag & Drop
 
 **Status:** DONE  

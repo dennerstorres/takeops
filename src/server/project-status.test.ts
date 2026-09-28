@@ -278,6 +278,28 @@ describe("etapa da produção", () => {
     );
   });
 
+  it("entra em pronto para gravar mesmo sem cena pronta", async () => {
+    const { workspaces, ideas, projectRepo, join } = harness();
+    join("owner", "ws-a", "OWNER");
+    const created = await createProject(
+      "owner",
+      "ws-a",
+      { title: "Peça", format: "DEMO" },
+      workspaces,
+      ideas,
+      projectRepo,
+    );
+    const moved = await submitBoardMove(
+      "owner",
+      "ws-a",
+      { projectId: created.id, status: "READY_TO_RECORD" },
+      workspaces,
+      projectRepo,
+    );
+    assert.equal(moved.status, "READY_TO_RECORD");
+    assert.equal(moved.workspaceId, "ws-a");
+  });
+
   it("recusa gravação que troca o workspace", async () => {
     const { workspaces, ideas, projectRepo, join } = harness();
     join("owner", "ws-a", "OWNER");

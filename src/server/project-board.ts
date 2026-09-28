@@ -17,6 +17,16 @@ export const boardColumns: { status: VideoProjectStatus; title: string }[] = [
   { status: "ARCHIVED", title: "Arquivado" },
 ];
 
+export function projectAlerts(
+  status: VideoProjectStatus,
+  readySceneCount: number,
+) {
+  if (status === "READY_TO_RECORD" && readySceneCount < 1) {
+    return ["Não há cenas prontas."];
+  }
+  return [];
+}
+
 function personLabel(person: { name: string | null; email: string | null } | undefined) {
   if (!person) return "Sem nome";
   return person.name || person.email || "Sem nome";
@@ -29,6 +39,8 @@ export function buildProjectBoard(
     "videoProjectId" | "userId" | "name" | "email"
   >[],
   people: readonly { userId: string; name: string | null; email: string | null }[],
+  // Cena ainda não é um módulo. Sem contagem, não há cena pronta.
+  readySceneCounts: Readonly<Record<string, number>> = {},
 ) {
   const directory = new Map(people.map((person) => [person.userId, person]));
   for (const participant of participants) {
@@ -65,6 +77,10 @@ export function buildProjectBoard(
           people: names,
           shootDate: calendarDate(project.plannedShootDate),
           priority: priorityLabel(project.priority),
+          alerts: projectAlerts(
+            project.status,
+            readySceneCounts[project.id] ?? 0,
+          ),
         };
       }),
   }));

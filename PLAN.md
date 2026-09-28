@@ -516,9 +516,15 @@ Arrastar card altera status.
 
 ## KANBAN-004 — Alertas de incompletude
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** KANBAN-003
+
+### Critérios
+
+- [x] pronto para gravar sem cena pronta mostra aviso no card;
+- [x] a troca de etapa continua permitida;
+- [x] outra etapa não recebe esse aviso.
 
 Exemplo:
 

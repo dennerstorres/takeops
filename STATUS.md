@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 5 — Pipeline e Kanban
+Fase 6 — Roteiro e Cenas
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-KANBAN-003 — Drag & Drop
+KANBAN-004 — Alertas de incompletude
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-KANBAN-004 — Alertas de incompletude
+SCRIPT-001 — Modelo Script
 ```
 
 ## Estado dos módulos
@@ -41,7 +41,7 @@ KANBAN-004 — Alertas de incompletude
 | Equipe | DONE |
 | Ideias | DONE |
 | Projetos | DONE |
-| Kanban | IN_PROGRESS |
+| Kanban | DONE |
 | Roteiro | NOT_STARTED |
 | Shots | NOT_STARTED |
 | Gravações | NOT_STARTED |

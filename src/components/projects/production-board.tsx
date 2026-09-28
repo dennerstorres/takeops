@@ -14,6 +14,7 @@ type BoardCard = {
   people: string[];
   shootDate: string | null;
   priority: string;
+  alerts: string[];
 };
 
 type BoardColumn = {
@@ -109,6 +110,15 @@ export function ProductionBoard({
                       {card.priority}
                       {card.shootDate ? ` · ${card.shootDate}` : ""}
                     </span>
+                    {card.alerts.length > 0 ? (
+                      <ul>
+                        {card.alerts.map((alert) => (
+                          <li key={alert} className="text-sm text-destructive">
+                            {alert}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
                   </Link>
                 </li>
               ))}
