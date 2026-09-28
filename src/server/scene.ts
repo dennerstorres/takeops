@@ -1,0 +1,150 @@
+import { z } from "zod";
+import { NotFoundError, ValidationError } from "./errors.ts";
+import { getProject } from "./project.ts";
+import type { ProjectRepository } from "./project-repository.ts";
+import { sceneTypes } from "./scene-labels.ts";
+import type { SceneRepository, SceneWrite } from "./scene-repository.ts";
+import { parseInput } from "./validation.ts";
+import { requireRole } from "./workspace.ts";
+import type { WorkspaceRepository } from "./workspace-repository.ts";
+
+const writers = ["OWNER", "ADMIN", "MEMBER"] as const;
+
+const optionalText = (max: number, message: string) =>
+  z.preprocess(
+    (value) => (typeof value === "string" ? value : ""),
+    z.string().trim().max(max, message),
+  );
+
+const sceneSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, "Informe o título.")
+    .max(120, "Use no máximo 120 caracteres."),
+  description: optionalText(4000, "A descrição passou de 4000 caracteres."),
+  type: z.enum(sceneTypes, { error: "Escolha um tipo." }),
+  speakerId: optionalText(80, "Escolha quem fala."),
+  dialogue: optionalText(4000, "A fala passou de 4000 caracteres."),
+  action: optionalText(2000, "A ação passou de 2000 caracteres."),
+  estimatedDurationSeconds: z.preprocess(
+    (value) => (value == null || value === "" ? undefined : Number(value)),
+    z
+      .number()
+      .int()
+      .min(1, "A duração precisa ser de pelo menos 1 segundo.")
+      .max(86400, "A duração passou de 24 horas.")
+      .optional(),
+  ),
+  cameraInstructions: optionalText(2000, "A câmera passou de 2000 caracteres."),
+  editingInstructions: optionalText(2000, "A edição passou de 2000 caracteres."),
+  continuityNotes: optionalText(2000, "A continuidade passou de 2000 caracteres."),
+});
+
+function blank(value: string) {
+  return value ? value : null;
+}
+
+async function toWrite(
+  input: unknown,
+  workspaceId: string,
+  workspaces: WorkspaceRepository,
+): Promise<SceneWrite> {
+  const data = parseInput(sceneSchema, input);
+  const speakerId = blank(data.speakerId);
+  if (speakerId) {
+    const member = await workspaces.findMembership(speakerId, workspaceId);
+    if (!member || member.workspaceId !== workspaceId || member.userId !== speakerId) {
+      throw new ValidationError({
+        speakerId: "Essa pessoa não está neste workspace.",
+      });
+    }
+  }
+  return {
+    title: data.title,
+    description: blank(data.description),
+    type: data.type,
+    speakerId,
+    dialogue: blank(data.dialogue),
+    action: blank(data.action),
+    estimatedDurationSeconds: data.estimatedDurationSeconds ?? null,
+    cameraInstructions: blank(data.cameraInstructions),
+    editingInstructions: blank(data.editingInstructions),
+    continuityNotes: blank(data.continuityNotes),
+    status: "PLANNED",
+  };
+}
+
+export async function listScenes(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  scenes: SceneRepository,
+) {
+  const project = await getProject(
+    userId,
+    workspaceId,
+    projectId,
+    workspaces,
+    projects,
+  );
+  const rows = await scenes.list(project.workspaceId, project.id);
+  return rows.filter((scene) => scene.videoProjectId === project.id);
+}
+
+export async function getScene(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  sceneId: string,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  scenes: SceneRepository,
+) {
+  const project = await getProject(
+    userId,
+    workspaceId,
+    projectId,
+    workspaces,
+    projects,
+  );
+  const scene = await scenes.find(project.workspaceId, project.id, sceneId);
+  if (!scene || scene.videoProjectId !== project.id || scene.id !== sceneId) {
+    throw new NotFoundError();
+  }
+  return scene;
+}
+
+export async function createScene(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  input: unknown,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  scenes: SceneRepository,
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const project = await getProject(
+    userId,
+    workspaceId,
+    projectId,
+    workspaces,
+    projects,
+  );
+  const created = await scenes.create(
+    project.workspaceId,
+    project.id,
+    await toWrite(input, project.workspaceId, workspaces),
+  );
+  if (
+    !created ||
+    created.videoProjectId !== project.id ||
+    created.status !== "PLANNED"
+  ) {
+    throw new NotFoundError();
+  }
+  return created;
+}

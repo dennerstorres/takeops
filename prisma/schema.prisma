@@ -22,6 +22,7 @@ model User {
   projectsCreated VideoProject[] @relation("ProjectCreator")
   projectsOwned   VideoProject[] @relation("ProjectOwner")
   projectRoles    ProjectMember[]
+  scenesSpoken    Scene[]           @relation("SceneSpeaker")
 }
 
 enum WorkspaceRole {
@@ -170,6 +171,7 @@ model VideoProject {
   sourceIdea                Idea?              @relation(fields: [sourceIdeaId], references: [id], onDelete: SetNull)
   members                   ProjectMember[]
   script                    Script?
+  scenes                    Scene[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -198,6 +200,51 @@ model Script {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+}
+
+enum SceneType {
+  HOOK
+  TALKING_HEAD
+  DIALOGUE
+  SCREEN_CAPTURE
+  BROLL
+  PRODUCT
+  VOICE_OVER
+  CTA
+  OTHER
+}
+
+enum SceneStatus {
+  PLANNED
+  READY
+  RECORDING
+  RECORDED
+  NEEDS_RETAKE
+  DISCARDED
+}
+
+model Scene {
+  id                        String      @id @default(uuid())
+  videoProjectId            String
+  order                     Int
+  title                     String
+  description               String?
+  type                      SceneType
+  speakerId                 String?
+  dialogue                  String?
+  action                    String?
+  estimatedDurationSeconds  Int?
+  cameraInstructions        String?
+  editingInstructions       String?
+  continuityNotes           String?
+  status                    SceneStatus @default(PLANNED)
+  createdAt                 DateTime    @default(now())
+  updatedAt                 DateTime    @updatedAt
+  videoProject              VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  speaker                   User?        @relation("SceneSpeaker", fields: [speakerId], references: [id], onDelete: SetNull)
+
+  @@unique([videoProjectId, order])
+  @@index([videoProjectId, status])
 }
 
 model ProjectMember {

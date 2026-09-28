@@ -550,9 +550,15 @@ mover para READY_TO_RECORD sem cenas prontas gera aviso, mas não precisa bloque
 
 ## SCENE-001 — Modelo Scene
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PROJECT-002
+
+### Critérios
+
+- [x] a cena guarda os campos da spec na produção do workspace;
+- [x] nasce planejada e a ordem é a próxima da produção;
+- [x] leitor só vê; quem fala precisa ser do workspace.
 
 ---
 

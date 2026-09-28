@@ -512,6 +512,25 @@ A leitura some com a produção apagada em lógica, porque a consulta passa pela
 
 ---
 
+# ADR-026 — Cena nasce planejada e a ordem é do servidor
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A spec descreve `Scene` com ordem, tipo e status. Arrastar, duplicar e excluir são tarefas seguintes. O modelo precisa gravar sem a tela.
+
+## Decisão
+
+Criar cena grava status `PLANNED`. O cliente não escolhe status nem ordem. A ordem é o próximo inteiro da produção. Quem fala precisa ser membro do workspace. A consulta passa pela produção visível desse workspace.
+
+## Consequências
+
+Editar, apagar e reordenar ficam na SCENE-002 e na SCENE-003. A tela entra depois.
+
+---
+
 # Template para novas decisões
 
 ```md

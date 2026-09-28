@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SCENE-001 — Modelo Scene
+
+**Status:** DONE  
+**Agente:** Grok
+
+### Resumo
+
+A produção guarda cenas com os campos da spec. Cada cena nasce planejada, na próxima ordem da produção.
+
+### Implementação
+
+- Tabela `Scene`, com tipo, status e ordem única por produção.
+- `createScene` ignora status e ordem vindos do cliente.
+- Quem fala tem de ser membro do workspace. Leitor só lista e lê.
+- Cena de outra produção não aparece.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`
+- `prisma/migrations/20260928240000_scene/migration.sql`
+- `src/server/scene.ts`
+- `src/server/scene-prisma.ts`
+- `src/server/scene.test.ts`
+- `src/server/scene.integration.test.ts`
+
+### Decisões tomadas
+
+- ADR-026.
+
+### Banco / migrations
+
+- `20260928240000_scene`
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+---
+
 ## 2026-09-28 — SCRIPT-001 — Modelo Script
 
 **Status:** DONE  
