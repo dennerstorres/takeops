@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SCENE-004 — Duplicação
+SCENE-005 — Autosave
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SCENE-005 — Autosave
+SCRIPT-002 — Tela de roteiro
 ```
 
 ## Estado dos módulos

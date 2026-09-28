@@ -99,6 +99,39 @@ export async function updateSceneAction(
   redirect(`/producoes/${projectId}/cenas`);
 }
 
+export type SceneAutosaveResult =
+  | { ok: true }
+  | { ok: false; message: string; fields?: Record<string, string> };
+
+// Autosave grava sem sair da página. A edição fica no formulário mesmo
+// quando o servidor recusa, para a pessoa corrigir e tentar de novo.
+export async function autosaveSceneAction(
+  formData: FormData,
+): Promise<SceneAutosaveResult> {
+  const current = await currentWorkspace();
+  const projectId = String(formData.get("projectId") ?? "");
+  const sceneId = String(formData.get("sceneId") ?? "");
+  const result = await runAction(
+    { userId: current.userId, workspaceId: current.workspaceId },
+    { operation: "autosave", entity: "Scene" },
+    () =>
+      updateScene(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        sceneId,
+        sceneInput(formData),
+        prismaWorkspaceRepository,
+        prismaProjectRepository,
+        prismaSceneRepository,
+      ),
+  );
+  if (!result.ok) {
+    return { ok: false, message: result.message, fields: result.fields };
+  }
+  return { ok: true };
+}
+
 export async function duplicateSceneAction(formData: FormData) {
   const current = await currentWorkspace();
   const projectId = String(formData.get("projectId") ?? "");

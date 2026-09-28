@@ -1315,6 +1315,53 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — SCENE-005 — Autosave
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+A tela de editar cena grava sozinha 1 s depois da última alteração e mostra Salvando..., Salvo ou Erro ao salvar.
+
+### Implementação
+
+- `createAutosave` (`src/lib/autosave.ts`) faz o debounce e segura a próxima gravação enquanto uma está no ar. Só a última edição vai.
+- `autosaveSceneAction` usa a mesma `updateScene`, sem redirecionar. Leitor continua recusado no servidor.
+- Erro mostra a primeira mensagem de campo. O texto fica no formulário e sair da página com edição não gravada pede confirmação.
+- O botão Salvar cena continua e cancela o autosave pendente.
+- A criação de cena não tem autosave: não há registro até o primeiro envio.
+
+### Arquivos principais
+
+- `src/lib/autosave.ts`
+- `src/lib/autosave.test.ts`
+- `src/server/scene-actions.ts`
+- `src/components/scenes/scene-form.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. O mesmo `createAutosave` serve para o roteiro na SCRIPT-002.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Banco local por `npx prisma dev start takeops`.
+
+Sem navegador logado nesta sessão (login é só Google). O comportamento de tela não foi clicado.
+
+---
+
 ## 2026-09-28 — SCENE-004 — Duplicação
 
 **Status:** DONE  

@@ -608,7 +608,7 @@ Reordenação transacional.
 
 ## SCENE-005 — Autosave
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** SCENE-002
 
@@ -617,6 +617,13 @@ Estados:
 - saving;
 - saved;
 - error.
+
+### Critérios
+
+- [x] a edição grava sozinha 1 s depois da última alteração;
+- [x] a tela mostra Salvando..., Salvo e Erro ao salvar;
+- [x] só uma gravação por vez, e a última edição vence;
+- [x] erro mantém o texto no formulário e sair pede confirmação.
 
 ---
 
