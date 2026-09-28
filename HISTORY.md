@@ -1315,6 +1315,35 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — EQUIP-001 — Correção: catálogo só para dono e admin
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+A spec dá "editar configurações operacionais" ao ADMIN e não lista isso para MEMBER. A EQUIP-001 tinha liberado o catálogo para membro. Agora só dono e admin criam e editam itens; membro e leitor veem.
+
+### Arquivos principais
+
+- `src/server/equipment.ts`
+- `src/server/equipment.test.ts`
+- `src/app/(app)/configuracoes/equipamentos/page.tsx`
+
+### Observações
+
+Conferir e tirar equipamento de uma gravação (EQUIP-002) continua com membro: é participar da gravação.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+```
+
+---
+
 ## 2026-09-28 — EQUIP-002 — Equipamentos por Shoot
 
 **Status:** DONE  

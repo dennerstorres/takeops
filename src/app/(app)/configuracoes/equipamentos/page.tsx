@@ -14,7 +14,8 @@ export default async function EquipmentPage() {
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
   if (access.kind === "setup") redirect("/comecar");
-  const canEdit = access.workspace.membership.role !== "VIEWER";
+  const role = access.workspace.membership.role;
+  const canEdit = role === "OWNER" || role === "ADMIN";
   const items = await listEquipment(
     session.user.id,
     access.workspace.workspace.id,

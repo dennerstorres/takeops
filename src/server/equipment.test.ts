@@ -154,7 +154,14 @@ describe("equipamentos", () => {
     join("owner", "ws-a", "OWNER");
     join("viewer", "ws-a", "VIEWER");
     join("stranger", "ws-b", "OWNER");
+    join("member", "ws-a", "MEMBER");
     const input = { name: "Tripé", category: "TRIPOD" };
+
+    // Membro vê o catálogo, mas não mexe nele.
+    await assert.rejects(
+      createEquipment("member", "ws-a", input, workspaces, equipment),
+      ForbiddenError,
+    );
 
     await assert.rejects(
       createEquipment("viewer", "ws-a", input, workspaces, equipment),

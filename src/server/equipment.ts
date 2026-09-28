@@ -9,7 +9,9 @@ import { parseInput } from "./validation.ts";
 import { requireMembership, requireRole } from "./workspace.ts";
 import type { WorkspaceRepository } from "./workspace-repository.ts";
 
-const writers = ["OWNER", "ADMIN", "MEMBER"] as const;
+// Catálogo é configuração operacional do workspace: dono e admin mantêm.
+// Membro usa o catálogo nas gravações, mas não o altera.
+const managers = ["OWNER", "ADMIN"] as const;
 
 const itemSchema = z.object({
   name: z
@@ -61,7 +63,7 @@ export async function createEquipment(
   const membership = await requireRole(
     userId,
     workspaceId,
-    writers,
+    managers,
     workspaces,
   );
   // Item novo entra ativo, mesmo que o envio diga o contrário.
@@ -84,7 +86,7 @@ export async function updateEquipment(
   const membership = await requireRole(
     userId,
     workspaceId,
-    writers,
+    managers,
     workspaces,
   );
   const current = await equipment.find(membership.workspaceId, itemId);
