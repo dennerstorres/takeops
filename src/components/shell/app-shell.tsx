@@ -1,6 +1,7 @@
 "use client";
 
 import { Menu } from "lucide-react";
+import { LogoutButton } from "@/components/shell/logout-button";
 import { ShellNav } from "@/components/shell/shell-nav";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({
+  children,
+  userLabel,
+}: {
+  children: React.ReactNode;
+  userLabel: string;
+}) {
   return (
     <div className="flex min-h-dvh bg-background">
       <a
@@ -27,6 +34,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </p>
         </div>
         <ShellNav />
+        <div className="mt-auto border-t border-sidebar-border p-3">
+          <p className="truncate px-3 pb-1 text-sm">{userLabel}</p>
+          <LogoutButton className="w-full" />
+        </div>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex h-14 items-center gap-2 border-b px-3 md:hidden">
@@ -53,9 +64,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <ShellNav />
             </SheetContent>
           </Sheet>
-          <p className="truncate text-sm font-medium">
-            Video Production Manager
+          <p className="min-w-0 flex-1 truncate text-sm font-medium">
+            {userLabel}
           </p>
+          <LogoutButton />
         </header>
         <main id="conteudo" className="flex-1 px-4 py-6 md:px-8">
           {children}

@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 0 — Bootstrap
+Fase 1 — Autenticação, Workspace e Equipe
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-BOOT-004 — Infraestrutura de validação e serviços
+AUTH-001 — Auth.js + Google OAuth
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-AUTH-001 — Auth.js + Google OAuth
+WORKSPACE-001 — Modelo de Workspace e Membership
 ```
 
 ## Estado dos módulos
@@ -36,7 +36,7 @@ AUTH-001 — Auth.js + Google OAuth
 | Módulo | Status |
 |---|---|
 | Bootstrap | DONE |
-| Auth | NOT_STARTED |
+| Auth | DONE |
 | Workspace | NOT_STARTED |
 | Equipe | NOT_STARTED |
 | Ideias | NOT_STARTED |
@@ -77,6 +77,6 @@ UI: Tailwind CSS + shadcn/ui
 
 ## Observações
 
-Fase 0 fechada. Validação com Zod e services em `src/server`. Testes unitários: `npm test`.
+Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
-`npm run test:e2e` ainda não existe. Próxima: AUTH-001. As rotas além do Dashboard ficam na APP-001.
+Próxima: WORKSPACE-001. `npm run test:e2e` ainda não existe. As rotas além do Dashboard ficam na APP-001.

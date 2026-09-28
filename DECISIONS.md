@@ -275,6 +275,29 @@ Actions e route handlers novos usam esses helpers. A regra de negócio continua 
 
 ---
 
+# ADR-015 — Sessão Auth.js no banco
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A tag `latest` do `next-auth` ainda é a v4. O App Router e o `proxy.ts` do Next.js 16 seguem a API da v5, publicada como `5.0.0-beta.32`.
+
+## Decisão
+
+Usar Auth.js v5 com adapter Prisma e sessão `database`.
+
+O `User.id` é UUID. A sessão guarda esse id, não o subject do Google.
+
+O logger descarta `access_token`, `refresh_token`, `id_token` e `code`. O debug do Auth.js fica desligado porque ele imprime esses tokens.
+
+## Consequências
+
+`AUTH_SECRET`, `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` vêm do ambiente. Sem as credenciais Google o restante da proteção continua ativo.
+
+---
+
 # Template para novas decisões
 
 ```md

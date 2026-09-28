@@ -111,7 +111,7 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ## AUTH-001 — Auth.js + Google OAuth
 
-**Status:** READY  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** BOOT-003
 
@@ -125,15 +125,15 @@ Criar o projeto base com TypeScript e estrutura inicial.
 
 ### Critérios
 
-- [ ] usuário não autenticado não acessa aplicação;
-- [ ] usuário autenticado possui identidade consistente;
-- [ ] tokens não aparecem em logs.
+- [x] usuário não autenticado não acessa aplicação;
+- [x] usuário autenticado possui identidade consistente;
+- [x] tokens não aparecem em logs.
 
 ---
 
 ## WORKSPACE-001 — Modelo de Workspace e Membership
 
-**Status:** TODO  
+**Status:** READY  
 **Prioridade:** P0  
 **Dependências:** AUTH-001
 

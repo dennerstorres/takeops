@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import { AppShell } from "@/components/shell/app-shell";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
@@ -22,7 +21,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body>
         <ThemeProvider>
-          <AppShell>{children}</AppShell>
+          {children}
           <Toaster />
         </ThemeProvider>
       </body>

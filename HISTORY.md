@@ -346,3 +346,69 @@ PASS
 
 AUTH-001 pode começar. O login deve usar `runAction` ou `runHandler` e não devolver token na resposta nem no log.
 
+---
+
+## 2026-09-28 — AUTH-001 — Auth.js + Google OAuth
+
+**Status:** DONE
+**Agente:** Grok
+
+### Resumo
+
+Login Google, sessão no banco, logout e bloqueio de quem não está autenticado.
+
+### Implementação
+
+- Modelos `User`, `Account`, `Session` e `VerificationToken`. Migration `20260928144850_auth_users`.
+- `/login` público. O restante redireciona para lá sem cookie de sessão, e o layout autenticado confirma a sessão no banco.
+- O id da sessão é o `User.id`.
+- Logs passam por `redactForLog`. O debug do Auth.js fica desligado.
+
+### Arquivos principais
+
+- `src/server/auth.ts`
+- `src/proxy.ts`
+- `src/app/login/page.tsx`
+- `src/app/(app)/layout.tsx`
+- `prisma/migrations/20260928144850_auth_users/migration.sql`
+
+### Decisões tomadas
+
+- ADR-015. Pacote `next-auth@5.0.0-beta.32` porque a v4 estável não cobre o `proxy.ts`.
+
+### Banco / migrations
+
+- `20260928144850_auth_users`, aplicada no Postgres local.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado:
+
+```text
+PASS
+```
+
+`GET /` sem sessão respondeu 307 para `/login`. `/login` respondeu 200, sem scroll horizontal em 375 e 1280. O fluxo completo do Google não rodou: não há `AUTH_GOOGLE_ID` nem `AUTH_GOOGLE_SECRET` nesta máquina.
+
+### Critérios de aceite
+
+- [x] usuário não autenticado não acessa a aplicação
+- [x] usuário autenticado recebe o id estável do banco
+- [x] tokens não aparecem em logs
+
+### Pendências conhecidas
+
+- Credenciais Google ainda não configuradas. O botão de entrar aparece quando `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` existem.
+- Primeiro acesso com Workspace fica na WORKSPACE-002.
+
+### Observações para próxima tarefa
+
+WORKSPACE-001 pode criar Workspace e Membership ligados a `User.id`.
+
