@@ -1315,6 +1315,46 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — RECORD-005 — Progresso da sessão
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O Modo Gravação mostra "X / N cenas concluídas", quantas estão para refazer e uma barra.
+
+### Implementação
+
+- `buildRecordView` devolve `done` (RECORDED) e `retakes` (NEEDS_RETAKE) entre as cenas não descartadas.
+- Barra no padrão do checklist (`role="progressbar"`), no topo da cena.
+
+### Arquivos principais
+
+- `src/server/record-view.ts`, `record-view.test.ts`
+- `src/app/(record)/producoes/[id]/gravacao/[shootId]/modo/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. O progresso é das cenas da produção (a sessão não guarda recorte de cenas); cena para refazer não conta como concluída.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — RECORD-004 — Status de Scene durante gravação
 
 **Status:** DONE  

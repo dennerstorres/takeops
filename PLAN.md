@@ -952,7 +952,7 @@ Suportar:
 
 ## RECORD-005 — Progresso da sessão
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** RECORD-004
 
@@ -961,6 +961,11 @@ Exemplo:
 ```text
 7 / 11 cenas concluídas
 ```
+
+### Critérios
+
+- [x] mostra X / N cenas concluídas e quantas estão para refazer, com barra;
+- [x] descartada fica fora do total e refazer não conta como concluída.
 
 ---
 

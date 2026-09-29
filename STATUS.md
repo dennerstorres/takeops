@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-RECORD-004 — Status de Scene durante gravação
+RECORD-005 — Progresso da sessão
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-RECORD-005 — Progresso da sessão
+CONT-001 — Notas de continuidade
 ```
 
 ## Estado dos módulos
@@ -46,7 +46,7 @@ RECORD-005 — Progresso da sessão
 | Shots | DONE |
 | Gravações | DONE |
 | Checklist | DONE |
-| Modo Gravação | IN_PROGRESS |
+| Modo Gravação | DONE |
 | Takes | DONE |
 | Assets | NOT_STARTED |
 | Edição | NOT_STARTED |

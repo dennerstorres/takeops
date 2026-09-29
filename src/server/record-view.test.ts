@@ -71,6 +71,26 @@ describe("modo gravação", () => {
     assert.deepEqual(view.shots, []);
   });
 
+  it("progresso conta gravadas e refazer entre as cenas da gravação", () => {
+    const view = buildRecordView(
+      [
+        scene(1, { status: "RECORDED" }),
+        scene(2, { status: "NEEDS_RETAKE" }),
+        scene(3, { status: "RECORDED" }),
+        scene(4),
+        scene(5, { status: "DISCARDED" }),
+      ],
+      new Map(),
+      [],
+      1,
+    );
+
+    assert.ok(view);
+    assert.equal(view.done, 2);
+    assert.equal(view.retakes, 1);
+    assert.equal(view.total, 4);
+  });
+
   it("sem cena gravável não monta a tela", () => {
     assert.equal(
       buildRecordView([scene(1, { status: "DISCARDED" })], new Map(), [], 1),

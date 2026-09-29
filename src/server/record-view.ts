@@ -63,6 +63,9 @@ export function buildRecordView<S extends SceneLike, T extends ShotLike>(
   return {
     position: index + 1,
     total: list.length,
+    // "Concluída" é só RECORDED: cena para refazer ainda não saiu da lista.
+    done: list.filter((item) => item.status === "RECORDED").length,
+    retakes: list.filter((item) => item.status === "NEEDS_RETAKE").length,
     previous: index > 0 ? index : null,
     next: index < list.length - 1 ? index + 2 : null,
     scene: {

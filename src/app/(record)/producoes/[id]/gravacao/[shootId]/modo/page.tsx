@@ -139,6 +139,30 @@ export default async function RecordModePage({
       ) : (
         <main className="flex flex-1 flex-col gap-5 px-4 py-4">
           <div className="space-y-1">
+            <p className="text-sm font-medium">
+              {view.done} / {view.total} cenas concluídas
+              {view.retakes > 0 ? (
+                <span className="font-normal text-muted-foreground">
+                  {" "}
+                  · {view.retakes} para refazer
+                </span>
+              ) : null}
+            </p>
+            <div
+              className="h-2 overflow-hidden rounded-full bg-muted"
+              role="progressbar"
+              aria-label="Cenas concluídas"
+              aria-valuemin={0}
+              aria-valuemax={view.total}
+              aria-valuenow={view.done}
+            >
+              <div
+                className="h-full bg-primary"
+                style={{ width: `${(view.done / view.total) * 100}%` }}
+              />
+            </div>
+          </div>
+          <div className="space-y-1">
             <p className="text-sm text-muted-foreground">
               Cena {view.position} de {view.total} ·{" "}
               {sceneStatusLabel(view.scene.status)}
