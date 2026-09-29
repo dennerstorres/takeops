@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-REVIEW-002 — Parser de timestamp
+REVIEW-003 — Resolver comentário
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-REVIEW-003 — Resolver comentário
+REVIEW-004 — Tela de revisão
 ```
 
 ## Estado dos módulos

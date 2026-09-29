@@ -25,4 +25,10 @@ export type ReviewRepository = {
     scope: ReviewScope,
     input: { authorId: string; timestampSeconds: number | null; text: string },
   ): Promise<ReviewCommentRecord | null>;
+  // Resolver guarda quem e quando; reabrir limpa os dois.
+  setResolved(
+    scope: ReviewScope,
+    commentId: string,
+    input: { resolved: boolean; userId: string; at: Date },
+  ): Promise<ReviewCommentRecord | null>;
 };

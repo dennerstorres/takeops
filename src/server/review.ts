@@ -97,3 +97,43 @@ export async function createReviewComment(
   }
   return created;
 }
+
+const resolveSchema = z.object({
+  // Checkbox e botão mandam texto; chamada interna pode mandar booleano.
+  resolved: z.preprocess(
+    (value) =>
+      value === true || value === "true" || value === "on"
+        ? true
+        : value === false || value === "false"
+          ? false
+          : value,
+    z.boolean({ error: "Diga se o comentário está resolvido." }),
+  ),
+});
+
+export async function setReviewCommentResolved(
+  userId: string,
+  workspaceId: string,
+  target: ReviewTarget,
+  commentId: string,
+  input: unknown,
+  deps: ReviewDeps,
+  now = new Date(),
+) {
+  await requireRole(userId, workspaceId, reviewers, deps.workspaces);
+  const { resolved } = parseInput(resolveSchema, input);
+  const scope = await reviewScope(userId, workspaceId, target, deps);
+  const updated = await deps.reviews.setResolved(scope, commentId, {
+    resolved,
+    userId,
+    at: now,
+  });
+  if (
+    !updated ||
+    updated.id !== commentId ||
+    updated.editVersionId !== scope.versionId
+  ) {
+    throw new NotFoundError();
+  }
+  return updated;
+}

@@ -1121,9 +1121,15 @@ Avaliar HH:MM:SS.
 
 ## REVIEW-003 — Resolver comentário
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** REVIEW-001
+
+### Critérios
+
+- [x] resolver guarda quem e quando; reabrir limpa os dois;
+- [x] dono, admin e membro resolvem; leitor não;
+- [x] comentário só é alcançado pela própria versão, na produção do workspace.
 
 ---
 

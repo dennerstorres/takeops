@@ -7,6 +7,7 @@ import { createProject } from "./project.ts";
 import {
   createReviewComment,
   listReviewComments,
+  setReviewCommentResolved,
   type ReviewDeps,
 } from "./review.ts";
 import { createWorkspace } from "./workspace.ts";
@@ -206,6 +207,66 @@ describe(
         await assert.rejects(
           listReviewComments(outsider.id, workspaceId, target, deps),
           ForbiddenError,
+        );
+
+        const now = new Date("2026-10-01T12:00:00.000Z");
+        const resolved = await setReviewCommentResolved(
+          member.id,
+          workspaceId,
+          target,
+          late.id,
+          { resolved: "true" },
+          deps,
+          now,
+        );
+        assert.equal(resolved.resolved, true);
+        assert.equal(resolved.resolvedById, member.id);
+        assert.equal(resolved.resolvedAt?.toISOString(), now.toISOString());
+        const reopened = await setReviewCommentResolved(
+          author.id,
+          workspaceId,
+          target,
+          late.id,
+          { resolved: false },
+          deps,
+        );
+        assert.equal(reopened.resolved, false);
+        assert.equal(reopened.resolvedById, null);
+        assert.equal(reopened.resolvedAt, null);
+
+        await assert.rejects(
+          setReviewCommentResolved(
+            viewer.id,
+            workspaceId,
+            target,
+            late.id,
+            { resolved: true },
+            deps,
+          ),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          setReviewCommentResolved(
+            author.id,
+            workspaceId,
+            target,
+            late.id,
+            { resolved: "talvez" },
+            deps,
+          ),
+          ValidationError,
+        );
+        // Comentário de outra versão não é alcançado pela versão errada.
+        await assert.rejects(
+          setReviewCommentResolved(
+            author.id,
+            workspaceId,
+            { projectId: project.id, versionId: v2.id },
+            late.id,
+            { resolved: true },
+            deps,
+          ),
+          NotFoundError,
         );
       } finally {
         if (workspaceId) {

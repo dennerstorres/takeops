@@ -1315,6 +1315,46 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — REVIEW-003 — Resolver comentário
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Comentário de revisão pode ser resolvido e reaberto, guardando quem resolveu e quando.
+
+### Implementação
+
+- `setReviewCommentResolved` (dono, admin, membro): resolver grava `resolvedById` e `resolvedAt` (servidor, UTC); reabrir limpa os dois.
+- `ReviewRepository.setResolved` filtra pelo comentário dentro da versão visível na produção do workspace.
+- Aceita `resolved` como booleano ou "true"/"false"/"on".
+
+### Arquivos principais
+
+- `src/server/review.ts`, `review-repository.ts`, `review-prisma.ts`, `review.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Qualquer membro resolve, não só o autor: quem edita costuma fechar o que corrigiu.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — REVIEW-002 — Parser de timestamp
 
 **Status:** DONE  

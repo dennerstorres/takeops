@@ -52,4 +52,17 @@ export const prismaReviewRepository: ReviewRepository = {
     });
     return mapComment(created);
   },
+
+  async setResolved(scope, commentId, input) {
+    const where = { id: commentId, editVersion: visibleVersion(scope) };
+    const result = await prisma.reviewComment.updateMany({
+      where,
+      data: input.resolved
+        ? { resolved: true, resolvedById: input.userId, resolvedAt: input.at }
+        : { resolved: false, resolvedById: null, resolvedAt: null },
+    });
+    if (result.count !== 1) return null;
+    const row = await prisma.reviewComment.findFirst({ where });
+    return row ? mapComment(row) : null;
+  },
 };
