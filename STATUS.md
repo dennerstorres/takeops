@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-OSS-002 — Imagem Docker
+DEPLOY-001 — Banco e app no Coolify
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-DEPLOY-001 — Banco e app no Coolify
+DEPLOY-002 — OAuth e e-mail de produção (login real)
 ```
 
 ## Estado dos módulos

@@ -1845,7 +1845,7 @@ Produção: `https://takeops.dennerstorres.dev` (DNS já aponta para o Coolify).
 
 ## DEPLOY-001 — Banco e app no Coolify
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** OSS-002
 

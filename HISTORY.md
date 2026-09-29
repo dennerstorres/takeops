@@ -4522,3 +4522,33 @@ Resultado: 140 de 143. A falha é `take.integration.test.ts` (registro simultân
 ### Pendências conhecidas
 
 - Sem Docker nesta máquina: o `docker build` em si não foi executado. Primeira construção real fica na DEPLOY-001 (Coolify) ou na OSS-007 (CI).
+
+---
+
+## 2026-09-29 — DEPLOY-001 — Banco e app no Coolify
+
+**Status:** DONE
+**Agente:** Claude (pelo painel do Coolify via Chrome; segredos digitados pelo dono)
+
+### Resumo
+
+- Projeto `TakeOps`, ambiente `production`.
+- `takeops-db`: `postgres:17-alpine`, usuário e banco `takeops`, senha gerada pelo Coolify. Backup agendado `0 6 * * *` UTC (03:00 BRT), local no servidor (sem S3).
+- `takeops-app`: GitHub App `dennerstorres`, repo `dennerstorres/takeops` (privado), branch `main`, build pack Dockerfile, porta 3000, domínio `https://takeops.dennerstorres.dev`. Deploy automático por webhook a cada push na `main`.
+- Env: `AUTH_URL` (não secreta) e `DATABASE_URL`, `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` (secretas, com "Not available during build" para não irem como build arg). Variáveis "Preview" existem mas preview deployments não estão ligados.
+- Healthcheck do Coolify desligado de propósito: ele usa `curl`, que a imagem não tem; vale o `HEALTHCHECK` do Dockerfile (Node).
+
+### Problema encontrado
+
+Primeiro build falhou: `module-not-found` em `src/server/db.ts`. `src/generated` é ignorado pelo git e a etapa `build` não herdava o cliente gerado na `deps`. Correção: `npx prisma generate` antes do `npm run build` (commit 2c60cf3).
+
+### Verificação
+
+- Deploy por webhook e deploy manual: Success.
+- `https://takeops.dennerstorres.dev/api/health` 200 (migrations aplicadas no start, banco conectado); `/login` 200; `/api/auth/providers` lista Google.
+
+### Pendências conhecidas
+
+- Login real com Google em produção (DEPLOY-002/003) depende do dono testar.
+- O valor de `AUTH_SECRET` apareceu na árvore de acessibilidade lida pelo agente ao abrir o modal da variável. Recomendado gerar outro e trocar no Coolify.
+- Backup só local; configurar destino S3 para backup fora do servidor.
