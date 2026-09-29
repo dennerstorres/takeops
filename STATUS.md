@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TEMPLATE-005 — Usar checklist da produção na gravação
+ACTIVITY-001 — ActivityLog
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-ACTIVITY-001 — ActivityLog
+ACTIVITY-002 — Eventos essenciais
 ```
 
 ## Estado dos módulos
@@ -56,7 +56,7 @@ ACTIVITY-001 — ActivityLog
 | Calendário | DONE |
 | Templates | DONE |
 | Notificações | NOT_STARTED |
-| Activity Log | NOT_STARTED |
+| Activity Log | IN_PROGRESS |
 
 ## Bloqueios
 

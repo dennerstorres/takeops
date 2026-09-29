@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-29 — ACTIVITY-001 — ActivityLog
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Modelo de atividade (spec §41) e aba Atividade da produção, com frases no tom da spec ("Denner adicionou a versão V2.").
+
+### Implementação
+
+- `ActivityLog` (workspace, produção?, usuário?, ação, entidade, metadata JSON, data). `action` é texto validado contra a lista fechada `activityActions` (`activity-labels.ts`); ação desconhecida lida do banco é ignorada na tela.
+- `recordActivity`: efeito de operação já autorizada; falha só vai para o log técnico, não desfaz a operação.
+- `listProjectActivity` (qualquer membro): mais nova primeiro, limite 100, pela produção visível no workspace.
+- `/producoes/[id]/atividade`; a aba "Atividade" virou link. `ProductionTabs.active` passou a derivar de `productionTabs`.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928450000_activity_log/`
+- `src/server/activity.ts`, `activity-labels.ts`, `activity-repository.ts`, `activity-prisma.ts`, `activity.integration.test.ts`
+- `src/app/(app)/producoes/[id]/atividade/page.tsx`, `src/components/projects/production-tabs.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Ação como texto + lista no código (não enum no banco) para não precisar de migration a cada evento novo.
+
+### Banco / migrations
+
+- `20260928450000_activity_log`: tabela, índices `(workspaceId, createdAt)` e `(videoProjectId, createdAt)`, FK cascade em workspace e produção, SET NULL no usuário. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Eventos de verdade entram na ACTIVITY-002.
+
+---
+
 ## 2026-09-29 — TEMPLATE-005 — Usar checklist da produção na gravação
 
 **Status:** DONE  

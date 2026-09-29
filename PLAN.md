@@ -1418,9 +1418,15 @@ Na aba Gravação, oferecer "Checklist da produção" como origem ao montar o ch
 
 ## ACTIVITY-001 — ActivityLog
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** WORKSPACE-001
+
+### Critérios
+
+- [x] atividade com workspace, produção, usuário, ação da lista fechada, entidade e metadata;
+- [x] aba Atividade lista a da produção, mais nova primeiro, no fuso do workspace;
+- [x] falha ao registrar não desfaz a operação; outro workspace não alcança.
 
 ---
 

@@ -33,6 +33,7 @@ model User {
   reviewResolved  ReviewComment[] @relation("ReviewCommentResolver")
   approvalsRequested Approval[] @relation("ApprovalRequester")
   approvalsReviewed  Approval[] @relation("ApprovalReviewer")
+  activities         ActivityLog[]
   productionTemplates ProductionTemplate[]
 }
 
@@ -58,6 +59,7 @@ model Workspace {
   equipment EquipmentItem[]
   checklistTemplates ChecklistTemplate[]
   productionTemplates ProductionTemplate[]
+  activities ActivityLog[]
 }
 
 enum InviteStatus {
@@ -197,6 +199,7 @@ model VideoProject {
   approvals                 Approval[]
   publications              Publication[]
   checklistItems            ProjectChecklistItem[]
+  activities                ActivityLog[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -745,4 +748,24 @@ model ProjectChecklistItem {
   videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
 
   @@unique([videoProjectId, order])
+}
+
+// Registro de negócio, não log técnico (AGENTS §19). `action` é validada no
+// serviço contra a lista fechada de activity-labels.ts.
+model ActivityLog {
+  id             String        @id @default(uuid())
+  workspaceId    String
+  videoProjectId String?
+  userId         String?
+  action         String
+  entityType     String?
+  entityId       String?
+  metadata       Json?
+  createdAt      DateTime      @default(now())
+  workspace      Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  videoProject   VideoProject? @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, createdAt])
+  @@index([videoProjectId, createdAt])
 }
