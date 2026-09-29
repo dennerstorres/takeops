@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-29 — NOTIFY-001 — Modelo Notification
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Avisos internos por pessoa (spec §40): modelo, envio, lista dos meus avisos, contagem de não lidos e marcar como lido. Sem push.
+
+### Implementação
+
+- `Notification` (workspace, destinatário, autor?, produção?, tipo, metadata, lido em, data). Tipo validado contra a lista fechada `notificationTypes`.
+- `notify`: tira o autor e repetidos, só entrega a quem ainda é membro do workspace; falha não desfaz a operação que gerou o aviso.
+- `listMyNotifications`, `countMyUnread`, `markMyNotificationsRead` (um ou todos): cada pessoa só alcança os próprios avisos no workspace aberto.
+- Produção excluída some do aviso (sem título nem link).
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928460000_notification/`
+- `src/server/notification.ts`, `notification-labels.ts`, `notification-repository.ts`, `notification-prisma.ts`, `notification.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. A spec não traz modelo; ficou no mesmo formato do ActivityLog (tipo em texto + lista no código).
+
+### Banco / migrations
+
+- `20260928460000_notification`: tabela, índices `(userId, workspaceId, readAt)` e `(userId, workspaceId, createdAt)`, FK cascade em workspace, destinatário e produção; SET NULL no autor. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Inbox é a NOTIFY-002; eventos, NOTIFY-003.
+
+---
+
 ## 2026-09-29 — ACTIVITY-002 — Eventos essenciais
 
 **Status:** DONE  

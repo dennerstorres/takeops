@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-ACTIVITY-002 — Eventos essenciais
+NOTIFY-001 — Modelo Notification
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-NOTIFY-001 — Modelo Notification
+NOTIFY-002 — Inbox interna
 ```
 
 ## Estado dos módulos
@@ -55,7 +55,7 @@ NOTIFY-001 — Modelo Notification
 | Publicação | DONE |
 | Calendário | DONE |
 | Templates | DONE |
-| Notificações | NOT_STARTED |
+| Notificações | IN_PROGRESS |
 | Activity Log | DONE |
 
 ## Bloqueios

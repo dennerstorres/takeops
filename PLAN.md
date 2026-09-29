@@ -1455,9 +1455,15 @@ Cobrir:
 
 ## NOTIFY-001 — Modelo Notification
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** WORKSPACE-001
+
+### Critérios
+
+- [x] aviso por pessoa com tipo da lista fechada, produção, autor e lido;
+- [x] autor não recebe o próprio aviso; só membros do workspace recebem;
+- [x] cada pessoa lista, conta e marca só os próprios avisos.
 
 ---
 

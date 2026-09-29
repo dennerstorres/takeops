@@ -34,6 +34,8 @@ model User {
   approvalsRequested Approval[] @relation("ApprovalRequester")
   approvalsReviewed  Approval[] @relation("ApprovalReviewer")
   activities         ActivityLog[]
+  notifications      Notification[] @relation("NotificationRecipient")
+  notificationsSent  Notification[] @relation("NotificationActor")
   productionTemplates ProductionTemplate[]
 }
 
@@ -60,6 +62,7 @@ model Workspace {
   checklistTemplates ChecklistTemplate[]
   productionTemplates ProductionTemplate[]
   activities ActivityLog[]
+  notifications Notification[]
 }
 
 enum InviteStatus {
@@ -200,6 +203,7 @@ model VideoProject {
   publications              Publication[]
   checklistItems            ProjectChecklistItem[]
   activities                ActivityLog[]
+  notifications             Notification[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -768,4 +772,25 @@ model ActivityLog {
 
   @@index([workspaceId, createdAt])
   @@index([videoProjectId, createdAt])
+}
+
+// Aviso interno para uma pessoa (spec §40). Sem push no MVP. `type` é
+// validado no serviço contra a lista fechada de notification-labels.ts.
+model Notification {
+  id             String        @id @default(uuid())
+  workspaceId    String
+  userId         String
+  actorId        String?
+  videoProjectId String?
+  type           String
+  metadata       Json?
+  readAt         DateTime?
+  createdAt      DateTime      @default(now())
+  workspace      Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user           User          @relation("NotificationRecipient", fields: [userId], references: [id], onDelete: Cascade)
+  actor          User?         @relation("NotificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  videoProject   VideoProject? @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@index([userId, workspaceId, readAt])
+  @@index([userId, workspaceId, createdAt])
 }
