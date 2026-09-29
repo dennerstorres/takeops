@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — TEMPLATE-003 — Checklist no template
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O template pode apontar um checklist de gravação do workspace. A produção criada pelo template recebe cópia dos itens (TEMPLATE-004).
+
+### Implementação
+
+- `ProductionTemplate.checklistTemplateId` (FK SET NULL): excluir o checklist tira a referência sem apagar o template.
+- `setTemplateChecklist` (dono e admin): o checklist precisa ser do mesmo workspace (checado na transação); vazio tira.
+- Página do template: seção "Checklist" (`#checklist`) mostra o ligado e, para quem mantém, um seletor só com checklists de gravação.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928430000_production_template_checklist/`
+- `src/server/production-template.ts`, `production-template-repository.ts`, `production-template-prisma.ts`, `production-template-actions.ts`, `production-template.integration.test.ts`
+- `src/components/templates/template-checklist-form.tsx`, `src/app/(app)/templates/[templateId]/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR nova. O template referencia o checklist do workspace (configuração); a produção nunca referencia, recebe cópia.
+
+### Banco / migrations
+
+- `20260928430000_production_template_checklist`: coluna `checklistTemplateId` + FK SET NULL. Rollback conceitual: dropar a coluna.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — TEMPLATE-002 — Cenas no template
 
 **Status:** DONE  

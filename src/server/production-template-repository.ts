@@ -5,6 +5,7 @@ export type ProductionTemplateRecord = {
   workspaceId: string;
   name: string;
   description: string | null;
+  checklistTemplateId: string | null;
   createdById: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -61,6 +62,12 @@ export type ProductionTemplateRepository = {
     templateId: string,
     sceneId: string,
   ): Promise<TemplateSceneRecord[] | null>;
+  // "invalid" quando o checklist não é do mesmo workspace.
+  setChecklist(
+    workspaceId: string,
+    templateId: string,
+    checklistTemplateId: string | null,
+  ): Promise<ProductionTemplateRecord | "invalid" | null>;
   moveScene(
     workspaceId: string,
     templateId: string,

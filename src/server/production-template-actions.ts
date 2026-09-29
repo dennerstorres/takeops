@@ -10,6 +10,7 @@ import {
   deleteProductionTemplate,
   moveTemplateScene,
   removeTemplateScene,
+  setTemplateChecklist,
   updateProductionTemplate,
   type ProductionTemplateDeps,
 } from "@/server/production-template";
@@ -155,4 +156,27 @@ export async function changeTemplateSceneAction(formData: FormData) {
   );
   revalidatePath(templatePage(templateId));
   redirect(`${templatePage(templateId)}#cenas`);
+}
+
+export async function setTemplateChecklistAction(
+  _state: ProductionTemplateFormState,
+  formData: FormData,
+): Promise<ProductionTemplateFormState> {
+  const current = await currentWorkspace();
+  const templateId = String(formData.get("templateId") ?? "");
+  const result = await runAction(
+    current,
+    { operation: "set-checklist", entity: "ProductionTemplate" },
+    () =>
+      setTemplateChecklist(
+        current.userId,
+        current.workspaceId,
+        templateId,
+        { checklistTemplateId: formData.get("checklistTemplateId") },
+        deps,
+      ),
+  );
+  if (!result.ok) return { message: result.message, fields: result.fields };
+  revalidatePath(templatePage(templateId));
+  redirect(`${templatePage(templateId)}#checklist`);
 }

@@ -11,6 +11,7 @@ import {
   listTemplateScenes,
   moveTemplateScene,
   removeTemplateScene,
+  setTemplateChecklist,
   updateProductionTemplate,
   type ProductionTemplateDeps,
 } from "./production-template.ts";
@@ -290,6 +291,75 @@ describe(
           ),
           NotFoundError,
         );
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+
+    it("aponta um checklist do workspace e aceita tirar", async () => {
+      const ctx = await templateSetup();
+      try {
+        const { prisma, deps, workspaceId } = ctx;
+        const template = await createProductionTemplate(
+          ctx.owner.id,
+          workspaceId,
+          { name: "Demo" },
+          deps,
+        );
+        const checklist = await prisma.checklistTemplate.create({
+          data: { workspaceId, name: "Gravação padrão" },
+        });
+        const foreignChecklist = await prisma.checklistTemplate.create({
+          data: { workspaceId: ctx.foreignId, name: "Alheio" },
+        });
+
+        const linked = await setTemplateChecklist(
+          ctx.admin.id,
+          workspaceId,
+          template.id,
+          { checklistTemplateId: checklist.id },
+          deps,
+        );
+        assert.equal(linked.checklistTemplateId, checklist.id);
+        await assert.rejects(
+          setTemplateChecklist(
+            ctx.owner.id,
+            workspaceId,
+            template.id,
+            { checklistTemplateId: foreignChecklist.id },
+            deps,
+          ),
+          ValidationError,
+        );
+        await assert.rejects(
+          setTemplateChecklist(
+            ctx.member.id,
+            workspaceId,
+            template.id,
+            { checklistTemplateId: "" },
+            deps,
+          ),
+          ForbiddenError,
+        );
+
+        // Excluir o checklist tira a referência sem apagar o template.
+        await prisma.checklistTemplate.delete({ where: { id: checklist.id } });
+        const after = await getProductionTemplate(
+          ctx.owner.id,
+          workspaceId,
+          template.id,
+          deps,
+        );
+        assert.equal(after.checklistTemplateId, null);
+
+        const cleared = await setTemplateChecklist(
+          ctx.owner.id,
+          workspaceId,
+          template.id,
+          { checklistTemplateId: "" },
+          deps,
+        );
+        assert.equal(cleared.checklistTemplateId, null);
       } finally {
         await ctx.cleanup();
       }

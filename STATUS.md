@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TEMPLATE-002 — Cenas no template
+TEMPLATE-003 — Checklist no template
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TEMPLATE-003 — Checklist no template
+TEMPLATE-004 — Criar projeto por template
 ```
 
 ## Estado dos módulos

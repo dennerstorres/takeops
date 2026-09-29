@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { NotFoundError } from "./errors.ts";
+import { NotFoundError, ValidationError } from "./errors.ts";
 import type {
   ProductionTemplateRepository,
   ProductionTemplateWrite,
@@ -250,4 +250,36 @@ export async function moveTemplateScene(
     ),
     template.id,
   );
+}
+
+const checklistSchema = z.object({
+  checklistTemplateId: z.preprocess(
+    (value) => (typeof value === "string" ? value.trim() : ""),
+    z.string().max(80, "Checklist inválido."),
+  ),
+});
+
+// Vazio tira o checklist do template. O checklist precisa ser do mesmo
+// workspace; a produção criada recebe cópia dos itens (TEMPLATE-004).
+export async function setTemplateChecklist(
+  userId: string,
+  workspaceId: string,
+  templateId: string,
+  input: unknown,
+  deps: ProductionTemplateDeps,
+) {
+  const template = await managedTemplate(userId, workspaceId, templateId, deps);
+  const { checklistTemplateId } = parseInput(checklistSchema, input);
+  const updated = await deps.templates.setChecklist(
+    template.workspaceId,
+    template.id,
+    checklistTemplateId || null,
+  );
+  if (updated === "invalid") {
+    throw new ValidationError({
+      checklistTemplateId: "Escolha um checklist deste workspace.",
+    });
+  }
+  if (!updated || updated.id !== template.id) throw new NotFoundError();
+  return updated;
 }

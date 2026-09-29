@@ -54,6 +54,7 @@ function mapTemplate(row: ProductionTemplateRecord): ProductionTemplateRecord {
     workspaceId: row.workspaceId,
     name: row.name,
     description: row.description,
+    checklistTemplateId: row.checklistTemplateId,
     createdById: row.createdById,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
@@ -147,6 +148,28 @@ export const prismaProductionTemplateRepository: ProductionTemplateRepository =
         [ids[index], ids[target]] = [ids[target], ids[index]];
         await renumber(tx, ids);
         return loadScenes(tx, workspaceId, templateId);
+      });
+    },
+
+    async setChecklist(workspaceId, templateId, checklistTemplateId) {
+      return prisma.$transaction(async (tx) => {
+        const template = await tx.productionTemplate.findFirst({
+          where: { id: templateId, workspaceId },
+          select: { id: true },
+        });
+        if (!template) return null;
+        if (checklistTemplateId) {
+          const checklist = await tx.checklistTemplate.findFirst({
+            where: { id: checklistTemplateId, workspaceId },
+            select: { id: true },
+          });
+          if (!checklist) return "invalid" as const;
+        }
+        const row = await tx.productionTemplate.update({
+          where: { id: template.id },
+          data: { checklistTemplateId },
+        });
+        return mapTemplate(row);
       });
     },
   };

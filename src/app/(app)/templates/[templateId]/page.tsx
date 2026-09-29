@@ -4,9 +4,12 @@ import {
   DeleteProductionTemplateButton,
   ProductionTemplateForm,
 } from "@/components/templates/production-template-form";
+import { TemplateChecklistForm } from "@/components/templates/template-checklist-form";
 import { TemplateSceneForm } from "@/components/templates/template-scene-form";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
+import { listChecklistTemplates } from "@/server/checklist";
+import { prismaChecklistRepository } from "@/server/checklist-prisma";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
 import {
   getProductionTemplate,
@@ -36,6 +39,7 @@ export default async function TemplatePage({
   };
   let template;
   let scenes;
+  let checklists;
   try {
     template = await getProductionTemplate(
       session.user.id,
@@ -43,17 +47,28 @@ export default async function TemplatePage({
       templateId,
       deps,
     );
-    scenes = await listTemplateScenes(
-      session.user.id,
-      access.workspace.workspace.id,
-      template.id,
-      deps,
-    );
+    [scenes, checklists] = await Promise.all([
+      listTemplateScenes(
+        session.user.id,
+        access.workspace.workspace.id,
+        template.id,
+        deps,
+      ),
+      listChecklistTemplates(
+        session.user.id,
+        access.workspace.workspace.id,
+        prismaWorkspaceRepository,
+        prismaChecklistRepository,
+      ),
+    ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect("/templates");
     if (error instanceof ForbiddenError) redirect("/comecar");
     throw error;
   }
+
+  const linkedChecklist =
+    checklists.find((item) => item.id === template.checklistTemplateId) ?? null;
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
@@ -147,6 +162,28 @@ export default async function TemplatePage({
         {canManage ? (
           <div className="rounded-xl border p-3">
             <TemplateSceneForm templateId={template.id} />
+          </div>
+        ) : null}
+      </section>
+      <section id="checklist" className="space-y-3">
+        <h2 className="text-base font-medium">Checklist</h2>
+        <p className="text-sm text-muted-foreground">
+          {linkedChecklist
+            ? `${linkedChecklist.name} · ${linkedChecklist.items.length} itens. A produção criada recebe uma cópia.`
+            : "Nenhum checklist ligado ao template."}
+        </p>
+        {canManage ? (
+          <div className="rounded-xl border p-3">
+            <TemplateChecklistForm
+              templateId={template.id}
+              current={template.checklistTemplateId ?? ""}
+              options={checklists
+                .filter((item) => item.type === "SHOOT")
+                .map((item) => ({
+                  id: item.id,
+                  label: `${item.name} · ${item.items.length} itens`,
+                }))}
+            />
           </div>
         ) : null}
       </section>

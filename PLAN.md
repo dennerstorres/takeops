@@ -1370,9 +1370,15 @@ Registrar decisão se escolher persistência própria.
 
 ## TEMPLATE-003 — Checklist no template
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** TEMPLATE-001
+
+### Critérios
+
+- [x] template aponta um checklist de gravação do mesmo workspace ou nenhum;
+- [x] excluir o checklist tira a referência sem apagar o template;
+- [x] dono e admin escolhem; os outros veem.
 
 ---
 
