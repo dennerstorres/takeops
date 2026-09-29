@@ -16,7 +16,7 @@ Fase 20 — Hardening (restam HARDEN-006, 008, 009)
 ## Tarefa ativa
 
 ```text
-Nenhuma
+OSS-005 — Login por link de e-mail (falta teste real com SMTP em produção)
 ```
 
 ## Última tarefa concluída

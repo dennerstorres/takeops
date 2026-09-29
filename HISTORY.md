@@ -4561,3 +4561,28 @@ Primeiro build falhou: `module-not-found` em `src/server/db.ts`. `src/generated`
 **Agente:** Claude
 
 Dono configurou no Google Console a origem e o redirect de `https://takeops.dennerstorres.dev` e entrou com Google em produção: login real funcionando. Falta a parte de e-mail (SMTP), que depende da OSS-005.
+
+---
+
+## 2026-09-29 — OSS-005 — Login por link de e-mail (implementado, falta teste real)
+
+**Status:** IN_PROGRESS
+**Agente:** Claude
+
+### Resumo
+
+- Provider `Nodemailer` do Auth.js (dependência `nodemailer`, MIT-0), ativo só com `EMAIL_SERVER` (smtp/smtps) e `EMAIL_FROM` preenchidos.
+- `loginMethods(env)` em `src/server/env.ts` é a fonte única de quais métodos existem (auth e tela de login usam a mesma função).
+- Validação de env (ADR-036/040): produção exige ao menos um login; par incompleto (Google ou e-mail), SMTP sem `smtp(s)://` e remetente inválido são erro na subida.
+- E-mail próprio em pt-BR (`login-email.ts`), com HTML escapado. O link nunca vai para log (logger do Auth.js segue com debug desligado).
+- Tela de login mostra Google, e-mail ou os dois; `/login/verificar` (pública) pede para conferir a caixa.
+- `.env.example` reescrito e comentado.
+
+### Testes
+
+`env.test.ts` (7 casos) e `login-email.test.ts` (link, assunto, escape de HTML); lint, typecheck, build.
+
+### Pendências
+
+- Envio real depende de `EMAIL_SERVER`/`EMAIL_FROM` no Coolify (caixa `takeops@dennerstorres.dev`, Stalwart) e teste do dono.
+- Sem limite de tentativas no pedido de link; avaliar na HARDEN-006.

@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation";
+import { EmailLoginForm } from "@/components/auth/email-login-form";
 import { loginWithGoogle } from "@/server/auth-actions";
 import { safeNextPath } from "@/server/auth-routes";
 import { auth } from "@/server/auth";
+import { loginMethods } from "@/server/env";
 import { Button } from "@/components/ui/button";
 
 export default async function LoginPage({
@@ -17,19 +19,17 @@ export default async function LoginPage({
   const session = await auth();
   if (session?.user?.id) redirect(nextPath ?? "/");
 
-  const googleReady = Boolean(
-    process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET,
-  );
+  const methods = loginMethods(process.env);
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-6 px-4">
       <div className="space-y-1">
         <h1 className="text-2xl font-medium tracking-tight">Entrar</h1>
         <p className="text-sm text-muted-foreground">
-          Use a conta Google da equipe para acessar a produção.
+          Entre com a sua conta para acessar a produção.
         </p>
       </div>
-      {googleReady ? (
+      {methods.google ? (
         <form action={loginWithGoogle}>
           {nextPath ? (
             <input type="hidden" name="callbackUrl" value={nextPath} />
@@ -38,11 +38,18 @@ export default async function LoginPage({
             Continuar com Google
           </Button>
         </form>
-      ) : (
+      ) : null}
+      {methods.google && methods.email ? (
+        <p className="text-center text-sm text-muted-foreground">ou</p>
+      ) : null}
+      {methods.email ? (
+        <EmailLoginForm callbackUrl={nextPath ?? undefined} />
+      ) : null}
+      {!methods.google && !methods.email ? (
         <p className="text-sm text-muted-foreground">
-          O login Google ainda não está configurado.
+          Nenhum método de login está configurado.
         </p>
-      )}
+      ) : null}
     </main>
   );
 }

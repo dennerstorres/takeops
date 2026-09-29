@@ -1790,7 +1790,7 @@ README público em inglês com `README.pt-BR.md`: o que é, prints, requisitos, 
 
 ## OSS-005 — Login por link de e-mail
 
-**Status:** TODO  
+**Status:** IN_PROGRESS  
 **Prioridade:** P0  
 **Dependências:** AUTH-001
 
