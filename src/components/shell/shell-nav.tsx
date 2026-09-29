@@ -13,7 +13,8 @@ function isCurrent(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function ShellNav() {
+// Contagens por href (hoje só avisos não lidos), vindas do servidor.
+export function ShellNav({ counts = {} }: { counts?: Record<string, number> }) {
   const pathname = usePathname();
 
   return (
@@ -38,6 +39,12 @@ export function ShellNav() {
           >
             <Icon aria-hidden="true" />
             {item.label}
+            {counts[item.href] ? (
+              <span className="ml-auto rounded-full bg-primary px-2 text-xs text-primary-foreground tabular-nums">
+                {counts[item.href]}
+                <span className="sr-only"> não lidos</span>
+              </span>
+            ) : null}
           </Link>
         );
       })}

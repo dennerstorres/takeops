@@ -16,10 +16,12 @@ export function AppShell({
   children,
   userLabel,
   workspaceName,
+  unread = 0,
 }: {
   children: React.ReactNode;
   userLabel: string;
   workspaceName: string;
+  unread?: number;
 }) {
   return (
     <div className="flex min-h-dvh bg-background">
@@ -38,7 +40,7 @@ export function AppShell({
             {workspaceName}
           </p>
         </div>
-        <ShellNav />
+        <ShellNav counts={{ "/avisos": unread }} />
         <div className="mt-auto border-t border-sidebar-border p-3">
           <p className="truncate px-3 pb-1 text-sm">{userLabel}</p>
           <LogoutButton className="w-full" />
@@ -66,7 +68,7 @@ export function AppShell({
               <SheetHeader className="pr-12">
                 <SheetTitle>Video Production Manager</SheetTitle>
               </SheetHeader>
-              <ShellNav />
+              <ShellNav counts={{ "/avisos": unread }} />
             </SheetContent>
           </Sheet>
           <div className="min-w-0 flex-1">

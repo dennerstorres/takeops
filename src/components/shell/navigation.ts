@@ -1,4 +1,5 @@
 import {
+  Bell,
   Calendar,
   Clapperboard,
   LayoutDashboard,
@@ -17,6 +18,7 @@ export type ShellNavItem = {
 
 export const shellNavItems: ShellNavItem[] = [
   { label: "Dashboard", href: "/", icon: LayoutDashboard },
+  { label: "Avisos", href: "/avisos", icon: Bell },
   { label: "Ideias", href: "/ideias", icon: Lightbulb },
   { label: "Produções", href: "/producoes", icon: Clapperboard },
   { label: "Calendário", href: "/calendario", icon: Calendar },

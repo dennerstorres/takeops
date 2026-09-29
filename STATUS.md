@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-NOTIFY-001 — Modelo Notification
+NOTIFY-002 — Inbox interna
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-NOTIFY-002 — Inbox interna
+NOTIFY-003 — Eventos essenciais
 ```
 
 ## Estado dos módulos

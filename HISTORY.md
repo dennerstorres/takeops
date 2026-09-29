@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-29 — NOTIFY-002 — Inbox interna
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Menu ganhou "Avisos" com contador de não lidos; `/avisos` lista os avisos da pessoa, com abrir, marcar como lido e marcar todos.
+
+### Implementação
+
+- `(app)/layout.tsx` conta não lidos (`countMyUnread`) e passa para `AppShell` → `ShellNav` (`counts` por href). Se a contagem falhar, a página abre sem o número.
+- `/avisos`: não lidos destacados; "Abrir" marca como lido e leva à produção (aba Revisão para versão, comentário, alteração e aprovação); "Marcar todos como lidos".
+- `markNotificationsReadAction` revalida o layout e só redireciona para `/producoes/...` ou `/avisos`.
+
+### Arquivos principais
+
+- `src/app/(app)/avisos/page.tsx`, `src/app/(app)/layout.tsx`
+- `src/components/shell/navigation.ts`, `shell-nav.tsx`, `app-shell.tsx`
+- `src/server/notification-actions.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Contagem no layout (uma consulta indexada por página) em vez de polling.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Regras em `notification.integration.test.ts`. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-29 — NOTIFY-001 — Modelo Notification
 
 **Status:** DONE  

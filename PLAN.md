@@ -1469,9 +1469,15 @@ Cobrir:
 
 ## NOTIFY-002 — Inbox interna
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** NOTIFY-001
+
+### Critérios
+
+- [x] menu mostra Avisos com contador de não lidos;
+- [x] a página lista os avisos da pessoa, destaca não lidos, abre a produção e marca como lido;
+- [x] marcar todos zera o contador; ninguém mexe no aviso de outra pessoa.
 
 ---
 
