@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-APPROVAL-003 — Aprovar
+APPROVAL-004 — Permissões de aprovação
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-APPROVAL-004 — Permissões de aprovação
+PUBLISH-001
 ```
 
 ## Estado dos módulos
@@ -51,7 +51,7 @@ APPROVAL-004 — Permissões de aprovação
 | Assets | DONE |
 | Edição | DONE |
 | Revisão | DONE |
-| Aprovação | IN_PROGRESS |
+| Aprovação | DONE |
 | Publicação | NOT_STARTED |
 | Calendário | NOT_STARTED |
 | Templates | NOT_STARTED |

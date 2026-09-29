@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import {
   approveVersion,
+  canDecideApproval,
   listApprovals,
   requestApproval,
   requestChanges,
@@ -21,6 +22,8 @@ async function setup() {
   const { prismaEditVersionRepository } =
     await import("./edit-version-prisma.ts");
   const { prismaIdeaRepository } = await import("./idea-prisma.ts");
+  const { prismaParticipantRepository } =
+    await import("./participant-prisma.ts");
   const { prismaProjectRepository } = await import("./project-prisma.ts");
   const { prismaWorkspaceRepository } = await import("./workspace-prisma.ts");
   const deps: ApprovalDeps = {
@@ -28,6 +31,7 @@ async function setup() {
     projects: prismaProjectRepository,
     versions: prismaEditVersionRepository,
     approvals: prismaApprovalRepository,
+    participants: prismaParticipantRepository,
   };
   const suffix = randomUUID();
   const [owner, admin, member, approver, viewer, outsider] = await Promise.all(
@@ -65,6 +69,13 @@ async function setup() {
     prismaIdeaRepository,
     prismaProjectRepository,
   );
+  await prisma.projectMember.createMany({
+    data: [
+      { videoProjectId: project.id, userId: approver.id, role: "APPROVER" },
+      { videoProjectId: project.id, userId: member.id, role: "REVIEWER" },
+      { videoProjectId: project.id, userId: viewer.id, role: "APPROVER" },
+    ],
+  });
   const other = await createProject(
     outsider.id,
     foreignId,
@@ -295,8 +306,21 @@ describe(
           ForbiddenError,
         );
 
+        assert.equal(
+          await canDecideApproval(
+            ctx.approver.id,
+            workspaceId,
+            project.id,
+            deps,
+          ),
+          true,
+        );
+        assert.equal(
+          await canDecideApproval(ctx.member.id, workspaceId, project.id, deps),
+          false,
+        );
         const approved = await approveVersion(
-          ctx.owner.id,
+          ctx.approver.id,
           workspaceId,
           project.id,
           pending.id,
@@ -304,7 +328,7 @@ describe(
           deps,
         );
         assert.equal(approved.status, "APPROVED");
-        assert.equal(approved.reviewedById, ctx.owner.id);
+        assert.equal(approved.reviewedById, ctx.approver.id);
         assert.equal(approved.notes, null);
         const stored = await prisma.videoProject.findUnique({
           where: { id: project.id },

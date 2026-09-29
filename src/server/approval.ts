@@ -1,18 +1,61 @@
 import { z } from "zod";
 import type { ApprovalRepository } from "./approval-repository.ts";
 import { getEditVersion, type EditVersionDeps } from "./edit-version.ts";
-import { NotFoundError, ValidationError } from "./errors.ts";
+import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
+import type { ParticipantRepository } from "./participant-repository.ts";
 import { getProject } from "./project.ts";
 import { parseInput } from "./validation.ts";
-import { requireRole } from "./workspace.ts";
+import { requireMembership, requireRole } from "./workspace.ts";
 
 // Pedir aprovação é de quem produz: dono, admin e membro.
 const requesters = ["OWNER", "ADMIN", "MEMBER"] as const;
 
-// A spec dá "aprovar vídeos" a dono e admin.
-const deciders = ["OWNER", "ADMIN"] as const;
+export type ApprovalDeps = EditVersionDeps & {
+  approvals: ApprovalRepository;
+  participants: ParticipantRepository;
+};
 
-export type ApprovalDeps = EditVersionDeps & { approvals: ApprovalRepository };
+// Dono e admin decidem em qualquer produção (spec §7). Membro decide só
+// onde foi colocado como APPROVER. Leitor nunca (ADR-033).
+export async function canDecideApproval(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  deps: ApprovalDeps,
+) {
+  const membership = await requireMembership(
+    userId,
+    workspaceId,
+    deps.workspaces,
+  );
+  if (membership.role === "OWNER" || membership.role === "ADMIN") return true;
+  if (membership.role !== "MEMBER") return false;
+  const project = await getProject(
+    userId,
+    workspaceId,
+    projectId,
+    deps.workspaces,
+    deps.projects,
+  );
+  const people = await deps.participants.list(project.id);
+  return people.some(
+    (person) =>
+      person.videoProjectId === project.id &&
+      person.userId === userId &&
+      person.role === "APPROVER",
+  );
+}
+
+async function requireDecider(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  deps: ApprovalDeps,
+) {
+  if (!(await canDecideApproval(userId, workspaceId, projectId, deps))) {
+    throw new ForbiddenError("Você não pode aprovar esta produção.");
+  }
+}
 
 export async function listApprovals(
   userId: string,
@@ -120,7 +163,7 @@ export async function requestChanges(
   deps: ApprovalDeps,
   now = new Date(),
 ) {
-  await requireRole(userId, workspaceId, deciders, deps.workspaces);
+  await requireDecider(userId, workspaceId, projectId, deps);
   const { notes } = parseInput(changesSchema, input);
   return decide(
     userId,
@@ -143,7 +186,7 @@ export async function approveVersion(
   deps: ApprovalDeps,
   now = new Date(),
 ) {
-  await requireRole(userId, workspaceId, deciders, deps.workspaces);
+  await requireDecider(userId, workspaceId, projectId, deps);
   const { notes } = parseInput(approveSchema, input);
   return decide(
     userId,

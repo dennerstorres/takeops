@@ -1208,13 +1208,19 @@ VideoProject = APPROVED
 
 ## APPROVAL-004 — Permissões de aprovação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** APPROVAL-003, PROJECT-004
 
 Respeitar papéis de Workspace e/ou ProjectRole conforme implementação definida.
 
 Qualquer decisão durável deve ser registrada em `DECISIONS.md`.
+
+### Critérios
+
+- [x] dono e admin decidem em qualquer produção; membro só como APPROVER da produção; leitor nunca;
+- [x] a tela mostra os botões pela mesma regra do serviço;
+- [x] decisão durável em ADR-033.
 
 ---
 

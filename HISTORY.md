@@ -1315,6 +1315,51 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — APPROVAL-004 — Permissões de aprovação
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Quem decide aprovação: dono e admin em qualquer produção; membro só onde é APPROVER; leitor nunca (ADR-033).
+
+### Implementação
+
+- `canDecideApproval` lê papel de workspace e, para MEMBER, os participantes da produção (PROJECT-004). `requestChanges` e `approveVersion` chamam antes de validar a entrada.
+- `ApprovalDeps` ganhou `participants`. A aba Revisão usa a mesma função para mostrar o formulário de decisão.
+
+### Arquivos principais
+
+- `src/server/approval.ts`, `approval-actions.ts`, `approval.integration.test.ts`
+- `src/app/(app)/producoes/[id]/revisao/page.tsx`
+- `DECISIONS.md` (ADR-033)
+
+### Decisões tomadas
+
+- ADR-033.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Teste cobre APPROVER membro aprovando, membro REVIEWER e leitor APPROVER barrados.
+
+### Pendências conhecidas
+
+- Kanban deixa membro mover para "Aprovado" sem passar pela aprovação (HARDEN-001).
+
+---
+
 ## 2026-09-28 — APPROVAL-003 — Aprovar
 
 **Status:** DONE  

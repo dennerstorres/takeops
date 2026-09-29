@@ -645,6 +645,25 @@ Cliente externo que só revisa entra como membro. Quando a configuração existi
 
 ---
 
+# ADR-033 — Quem decide aprovação: dono, admin ou APPROVER da produção
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A spec dá "aprovar vídeos" a OWNER e ADMIN (§7) e tem o papel de produção APPROVER (§17). A APPROVAL-004 pede combinar papel de workspace e de produção.
+
+## Decisão
+
+`canDecideApproval` (`src/server/approval.ts`): OWNER e ADMIN decidem em qualquer produção; MEMBER decide só onde é participante com papel APPROVER; VIEWER nunca, mesmo marcado como APPROVER. Pedir aprovação continua de dono, admin e membro.
+
+## Consequências
+
+A tela usa a mesma função para mostrar os botões. Aprovar externo (cliente) exige entrar como membro e ser APPROVER da produção. O kanban ainda deixa membro mover a produção para "Aprovado" à mão; fechar isso é tarefa da HARDEN-001.
+
+---
+
 # Template para novas decisões
 
 ```md

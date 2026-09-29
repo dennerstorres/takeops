@@ -9,13 +9,14 @@ import {
 import { ReviewCommentForm } from "@/components/review/review-comment-form";
 import { formatTimestamp } from "@/lib/timestamp";
 import { openWorkspace } from "@/server/access";
-import { listApprovals } from "@/server/approval";
+import { canDecideApproval, listApprovals } from "@/server/approval";
 import { approvalStatusLabel } from "@/server/approval-labels";
 import { prismaApprovalRepository } from "@/server/approval-prisma";
 import { auth } from "@/server/auth";
 import { listEditVersions, versionLabel } from "@/server/edit-version";
 import { prismaEditVersionRepository } from "@/server/edit-version-prisma";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
+import { prismaParticipantRepository } from "@/server/participant-prisma";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { listReviewComments } from "@/server/review";
@@ -43,22 +44,21 @@ export default async function ReviewPage({
   const { versao } = await searchParams;
   const workspaceId = access.workspace.workspace.id;
   const timezone = access.workspace.workspace.timezone;
-  const role = access.workspace.membership.role;
-  const canEdit = role !== "VIEWER";
-  // Mesma regra do serviço (requestChanges): dono e admin decidem.
-  const canDecide = role === "OWNER" || role === "ADMIN";
+  const canEdit = access.workspace.membership.role !== "VIEWER";
   const deps = {
     workspaces: prismaWorkspaceRepository,
     projects: prismaProjectRepository,
     versions: prismaEditVersionRepository,
     reviews: prismaReviewRepository,
     approvals: prismaApprovalRepository,
+    participants: prismaParticipantRepository,
   };
 
   let project;
   let versions;
   let team;
   let approvals;
+  let canDecide;
   try {
     project = await getProject(
       session.user.id,
@@ -67,10 +67,11 @@ export default async function ReviewPage({
       deps.workspaces,
       deps.projects,
     );
-    [versions, team, approvals] = await Promise.all([
+    [versions, team, approvals, canDecide] = await Promise.all([
       listEditVersions(session.user.id, workspaceId, project.id, deps),
       listTeam(session.user.id, workspaceId, deps.workspaces),
       listApprovals(session.user.id, workspaceId, project.id, deps),
+      canDecideApproval(session.user.id, workspaceId, project.id, deps),
     ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect("/producoes");

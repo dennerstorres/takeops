@@ -12,6 +12,7 @@ import {
 import { prismaApprovalRepository } from "@/server/approval-prisma";
 import { auth } from "@/server/auth";
 import { prismaEditVersionRepository } from "@/server/edit-version-prisma";
+import { prismaParticipantRepository } from "@/server/participant-prisma";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { runAction, type ActionFailure } from "@/server/service";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
@@ -26,6 +27,7 @@ const deps: ApprovalDeps = {
   projects: prismaProjectRepository,
   versions: prismaEditVersionRepository,
   approvals: prismaApprovalRepository,
+  participants: prismaParticipantRepository,
 };
 
 async function currentWorkspace() {
