@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-EDIT-002 — Tela de edição
+VERSION-001 — EditVersion
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-VERSION-001 — EditVersion
+VERSION-002 — Numeração sequencial
 ```
 
 ## Estado dos módulos

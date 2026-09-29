@@ -28,6 +28,7 @@ model User {
   continuityNotes ContinuityNote[]
   assetsCreated   Asset[]
   editingAssigned EditingInfo[]
+  editVersions    EditVersion[]
 }
 
 enum WorkspaceRole {
@@ -183,6 +184,7 @@ model VideoProject {
   continuityNotes           ContinuityNote[]
   assets                    Asset[]
   editingInfo               EditingInfo?
+  editVersions              EditVersion[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -575,4 +577,22 @@ model EditingInfo {
   editor           User?        @relation(fields: [editorId], references: [id], onDelete: SetNull)
 
   @@index([editorId])
+}
+
+// Cada corte enviado para revisão vira uma versão numerada por produção
+// (V1, V2...). O arquivo fica fora; aqui só os links.
+model EditVersion {
+  id             String       @id @default(uuid())
+  videoProjectId String
+  versionNumber  Int
+  title          String?
+  previewUrl     String?
+  fileUrl        String?
+  notes          String?
+  createdById    String?
+  createdAt      DateTime     @default(now())
+  videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  createdBy      User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@unique([videoProjectId, versionNumber])
 }

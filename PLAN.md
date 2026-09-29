@@ -1036,9 +1036,16 @@ Validar URLs.
 
 ## VERSION-001 — EditVersion
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** EDIT-001
+
+### Critérios
+
+- [x] versão da produção com número, título, preview, arquivo, notas e autor;
+- [x] número vem do servidor e é único por produção; cliente não escolhe;
+- [x] pelo menos um link, só http(s);
+- [x] leitor lê; dono, admin e membro criam; outra produção ou workspace não alcança.
 
 ---
 

@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — VERSION-001 — EditVersion
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Versões de edição por produção (spec §29): número, título, link de preview, link do arquivo, notas, quem criou.
+
+### Implementação
+
+- Modelo `EditVersion` com único `(videoProjectId, versionNumber)`.
+- `createEditVersion` (dono, admin, membro): o número vem do repositório (máximo + 1 por produção); o `versionNumber` enviado pelo cliente é ignorado.
+- Exige pelo menos um link (preview ou arquivo); os dois passam por `externalUrl` (ADR-030).
+- `listEditVersions` (mais nova primeiro) e `getEditVersion` pela produção visível no workspace. `versionLabel` monta "V1".
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928360000_edit_version/`
+- `src/server/edit-version.ts`, `edit-version-repository.ts`, `edit-version-prisma.ts`, `edit-version.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. "FINAL" da spec não virou número nem campo: a versão final sai da aprovação (Fase 14).
+- Numeração concorrente fica para a VERSION-002 (o índice único já recusa duplicata).
+
+### Banco / migrations
+
+- `20260928360000_edit_version`: tabela `EditVersion`, único `(videoProjectId, versionNumber)`, FK cascade na produção e SET NULL no autor. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — EDIT-002 — Tela de edição
 
 **Status:** DONE  
