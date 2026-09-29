@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 17 — Templates de Produção
+Fase 18 — Activity Log e Notificações
 ```
 
 ## Tarefa ativa
@@ -28,7 +28,7 @@ TEMPLATE-005 — Usar checklist da produção na gravação
 ## Próxima tarefa recomendada
 
 ```text
-ACTIVITY-001
+ACTIVITY-001 — ActivityLog
 ```
 
 ## Estado dos módulos
