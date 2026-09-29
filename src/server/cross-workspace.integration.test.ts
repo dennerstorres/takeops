@@ -367,6 +367,16 @@ describe(
           ctx.approvalDeps,
         );
         assert.equal(approvals[0]?.status, "PENDING");
+        const { prismaDashboardRepository } =
+          await import("./dashboard-prisma.ts");
+        assert.deepEqual(
+          await prismaDashboardRepository.pendingApprovalProjectIds(ctx.homeId),
+          [],
+        );
+        assert.deepEqual(
+          await prismaDashboardRepository.pendingApprovalProjectIds(f),
+          [project.id],
+        );
         const member = await ctx.prisma.workspaceMember.findFirst({
           where: { workspaceId: f, userId: ctx.victimMember.id },
         });

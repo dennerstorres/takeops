@@ -265,7 +265,7 @@ Não é obrigatório enviar e-mail automaticamente no primeiro corte. Pode ser u
 
 ## DASH-001 — Dashboard inicial
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** APP-001, PROJECT-001
 

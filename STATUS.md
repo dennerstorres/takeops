@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-HARDEN-004 — Estados vazios e erros
+DASH-001 — Dashboard inicial
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-DASH-001 — Dashboard inicial
+HARDEN-007 — Build de produção
 ```
 
 ## Estado dos módulos

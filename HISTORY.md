@@ -4434,3 +4434,30 @@ npm run lint, npm run typecheck, npm run build
 ```
 
 Resultado: PASS. No `next dev`: rota inexistente dá 404 com a página nova; dono segue vendo "Excluir". `error.tsx` não foi provocado ao vivo.
+
+---
+
+## 2026-09-29 — DASH-001 — Dashboard inicial
+
+**Status:** DONE
+**Agente:** Claude
+
+### Resumo
+
+A home (`/`) deixa de ser a vitrine da BOOT-002 e vira o dashboard da spec §10: contadores (ideias abertas, pré-produção, gravação, edição, revisão, publicados), próximas gravações (14 dias, sem canceladas, com participantes e etapa), aguardando aprovação, aguardando revisão, produções em andamento (com próxima ação) e ideias recentes. Cada bloco tem estado vazio.
+
+### Implementação
+
+- `src/server/dashboard.ts`: `buildDashboard` (pura) e `loadDashboard` (membership + serviços existentes: projetos, ideias, calendário, participantes).
+- `DashboardRepository.pendingApprovalProjectIds` em `dashboard-prisma.ts`, filtrado por `workspaceId`; repositório separado para não mexer nos fakes de aprovação.
+- "Aguardando revisão" = etapa REVIEW; "Aguardando aprovação" = produção com pedido PENDING.
+- Listas limitadas a 5; revisão e aprovação mostram todas.
+
+### Testes executados
+
+```text
+dashboard.test.ts (novo), cross-workspace.integration.test.ts (checa pendências por workspace)
+npm run lint, npm run typecheck, npm run build
+```
+
+Resultado: PASS. No `next dev` com dados reais: gravação aparece; sem rolagem lateral em 375/390/430px.
