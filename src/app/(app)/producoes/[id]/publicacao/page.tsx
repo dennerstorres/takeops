@@ -3,6 +3,8 @@ import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
 import { DeletePublicationButton } from "@/components/publications/delete-publication-button";
 import { PublicationForm } from "@/components/publications/publication-form";
+import { SchedulePublicationForm } from "@/components/publications/schedule-publication-form";
+import { utcToZonedLocal } from "@/lib/zoned-time";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
@@ -144,6 +146,19 @@ export default async function PublicationsPage({
                 <p className="text-sm text-muted-foreground">
                   {publication.notes}
                 </p>
+              ) : null}
+              {canEdit && publication.status !== "PUBLISHED" ? (
+                <div className="mt-3 border-t pt-3">
+                  <SchedulePublicationForm
+                    projectId={project.id}
+                    publicationId={publication.id}
+                    scheduledLocal={
+                      publication.scheduledAt
+                        ? utcToZonedLocal(publication.scheduledAt, timezone)
+                        : ""
+                    }
+                  />
+                </div>
               ) : null}
               {canEdit ? (
                 <details className="mt-3 border-t pt-3">

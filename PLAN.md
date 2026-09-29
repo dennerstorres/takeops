@@ -1256,9 +1256,15 @@ Qualquer decisão durável deve ser registrada em `DECISIONS.md`.
 
 ## PUB-003 — Agendamento manual
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PUB-002
+
+### Critérios
+
+- [x] agendar guarda o instante em UTC e marca SCHEDULED; vazio volta para PENDING;
+- [x] o formulário usa o fuso do workspace; horário sem fuso é recusado no serviço;
+- [x] publicação já feita não se reagenda; leitor não agenda.
 
 ---
 

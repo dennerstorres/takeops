@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { NotFoundError, ValidationError } from "./errors.ts";
+import { instant } from "./instant.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
 import { shootStatuses, type ShootStatus } from "./shoot-labels.ts";
@@ -21,19 +22,6 @@ const optionalText = (max: number, message: string) =>
     (value) => (typeof value === "string" ? value : ""),
     z.string().trim().max(max, message),
   );
-
-// A API recebe instante com fuso explícito. Sem Z ou deslocamento o horário
-// seria lido no fuso do servidor, que não é o do workspace.
-const isoInstant =
-  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/;
-
-function instant(value: string, field: string) {
-  const date = isoInstant.test(value) ? new Date(value) : null;
-  if (!date || Number.isNaN(date.getTime())) {
-    throw new ValidationError({ [field]: "Informe data e hora válidas." });
-  }
-  return date;
-}
 
 const shootSchema = z.object({
   title: optionalText(120, "Use no máximo 120 caracteres."),

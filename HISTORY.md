@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — PUB-003 — Agendamento manual
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Cada destino pode ser agendado, reagendado ou ter o agendamento tirado. É só registro: o sistema não publica (spec §33).
+
+### Implementação
+
+- `schedulePublication` (dono, admin, membro): instante ISO com fuso → `scheduledAt` em UTC e status SCHEDULED; vazio → PENDING sem horário. Publicação já PUBLISHED não se reagenda.
+- `instant()` saiu de `shoot.ts` para `src/server/instant.ts` e serve aos dois.
+- `schedulePublicationAction` converte o horário de parede do workspace para UTC (`zonedLocalToUtc`, ADR-028); botão "Tirar agendamento" manda `intent=clear`.
+- Formulário com `datetime-local` preenchido no fuso do workspace, em cada destino ainda não publicado.
+
+### Arquivos principais
+
+- `src/server/publication.ts`, `publication-actions.ts`, `publication.integration.test.ts`, `instant.ts`, `shoot.ts`
+- `src/components/publications/schedule-publication-form.tsx`
+- `src/app/(app)/producoes/[id]/publicacao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Agendar não muda o status da produção: a spec não define esse efeito.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — PUB-002 — CRUD de destinos
 
 **Status:** DONE  

@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { NotFoundError } from "./errors.ts";
+import { NotFoundError, ValidationError } from "./errors.ts";
+import { instant } from "./instant.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
 import { platforms } from "./publication-labels.ts";
@@ -153,4 +154,51 @@ export async function deletePublication(
     publicationId,
   );
   if (!removed) throw new NotFoundError();
+}
+
+const scheduleSchema = z.object({
+  scheduledAt: z.preprocess(
+    (value) => (typeof value === "string" ? value.trim() : ""),
+    z.string().max(40, "Informe data e hora válidas."),
+  ),
+});
+
+// Agendar é só registro (spec §33): guarda o instante em UTC e marca
+// SCHEDULED. Horário vazio desfaz o agendamento e volta para PENDING.
+export async function schedulePublication(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  publicationId: string,
+  input: unknown,
+  deps: PublicationDeps,
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const data = parseInput(scheduleSchema, input);
+  const scheduledAt = data.scheduledAt
+    ? instant(data.scheduledAt, "scheduledAt")
+    : null;
+  const current = await getPublication(
+    userId,
+    workspaceId,
+    projectId,
+    publicationId,
+    deps,
+  );
+  if (current.status === "PUBLISHED") {
+    throw new ValidationError({
+      scheduledAt: "Esta publicação já saiu; não dá para agendar de novo.",
+    });
+  }
+  const updated = await deps.publications.update(
+    workspaceId,
+    current.videoProjectId,
+    current.id,
+    {
+      scheduledAt,
+      status: scheduledAt ? "SCHEDULED" : "PENDING",
+    },
+  );
+  if (!updated || updated.id !== current.id) throw new NotFoundError();
+  return updated;
 }

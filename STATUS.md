@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PUB-002 — CRUD de destinos
+PUB-003 — Agendamento manual
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PUB-003 — Agendamento manual
+PUB-004 — Marcar publicação realizada
 ```
 
 ## Estado dos módulos

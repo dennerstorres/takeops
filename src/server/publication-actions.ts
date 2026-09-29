@@ -2,12 +2,14 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { zonedLocalToUtc } from "@/lib/zoned-time";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import {
   createPublication,
   deletePublication,
+  schedulePublication,
   updatePublication,
   type PublicationDeps,
 } from "@/server/publication";
@@ -34,6 +36,7 @@ async function currentWorkspace() {
   return {
     userId: session.user.id,
     workspaceId: access.workspace.workspace.id,
+    timezone: access.workspace.workspace.timezone,
   };
 }
 
@@ -94,6 +97,45 @@ export async function deletePublicationAction(formData: FormData) {
       deps,
     ),
   );
+  revalidatePath(page(projectId));
+  redirect(page(projectId));
+}
+
+// O formulário manda o horário de parede do workspace; o serviço só aceita
+// instante com fuso (ADR-028). "clear" desfaz o agendamento.
+export async function schedulePublicationAction(
+  _state: PublicationFormState,
+  formData: FormData,
+): Promise<PublicationFormState> {
+  const current = await currentWorkspace();
+  const projectId = String(formData.get("projectId") ?? "");
+  const raw = String(formData.get("scheduledAt") ?? "").trim();
+  const clear = formData.get("intent") === "clear";
+  const scheduledAt = clear
+    ? ""
+    : raw
+      ? (zonedLocalToUtc(raw, current.timezone)?.toISOString() ?? raw)
+      : "";
+  if (!clear && !scheduledAt) {
+    return {
+      message: "Informe data e hora.",
+      fields: { scheduledAt: "Informe data e hora." },
+    };
+  }
+  const result = await runAction(
+    current,
+    { operation: "schedule", entity: "Publication" },
+    () =>
+      schedulePublication(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        String(formData.get("publicationId") ?? ""),
+        { scheduledAt },
+        deps,
+      ),
+  );
+  if (!result.ok) return { message: result.message, fields: result.fields };
   revalidatePath(page(projectId));
   redirect(page(projectId));
 }

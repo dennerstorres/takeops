@@ -8,6 +8,7 @@ import {
   deletePublication,
   getPublication,
   listPublications,
+  schedulePublication,
   updatePublication,
   type PublicationDeps,
 } from "./publication.ts";
@@ -266,6 +267,93 @@ describe(
         assert.deepEqual(
           await listPublications(ctx.owner.id, workspaceId, project.id, deps),
           [],
+        );
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+
+    it("agenda em UTC, desagenda e não reagenda o que já saiu", async () => {
+      const ctx = await setup();
+      try {
+        const { prisma, deps, workspaceId, project } = ctx;
+        const reels = await prisma.publication.create({
+          data: { videoProjectId: project.id, platform: "INSTAGRAM_REELS" },
+        });
+        const scheduled = await schedulePublication(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          reels.id,
+          { scheduledAt: "2026-10-10T18:30:00-03:00" },
+          deps,
+        );
+        assert.equal(scheduled.status, "SCHEDULED");
+        assert.equal(
+          scheduled.scheduledAt?.toISOString(),
+          "2026-10-10T21:30:00.000Z",
+        );
+
+        const cleared = await schedulePublication(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          reels.id,
+          { scheduledAt: "" },
+          deps,
+        );
+        assert.equal(cleared.status, "PENDING");
+        assert.equal(cleared.scheduledAt, null);
+
+        // Sem fuso o horário seria lido no fuso do servidor (ADR-028).
+        await assert.rejects(
+          schedulePublication(
+            ctx.member.id,
+            workspaceId,
+            project.id,
+            reels.id,
+            { scheduledAt: "2026-10-10T18:30" },
+            deps,
+          ),
+          ValidationError,
+        );
+        await assert.rejects(
+          schedulePublication(
+            ctx.viewer.id,
+            workspaceId,
+            project.id,
+            reels.id,
+            { scheduledAt: "2026-10-10T18:30:00Z" },
+            deps,
+          ),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          schedulePublication(
+            ctx.owner.id,
+            workspaceId,
+            ctx.sibling.id,
+            reels.id,
+            { scheduledAt: "2026-10-10T18:30:00Z" },
+            deps,
+          ),
+          NotFoundError,
+        );
+
+        await prisma.publication.update({
+          where: { id: reels.id },
+          data: { status: "PUBLISHED" },
+        });
+        await assert.rejects(
+          schedulePublication(
+            ctx.owner.id,
+            workspaceId,
+            project.id,
+            reels.id,
+            { scheduledAt: "2026-10-11T18:30:00Z" },
+            deps,
+          ),
+          ValidationError,
         );
       } finally {
         await ctx.cleanup();
