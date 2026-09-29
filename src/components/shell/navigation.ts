@@ -11,18 +11,27 @@ import {
 } from "lucide-react";
 
 export type ShellNavItem = {
-  label: string;
+  // Chave em `shell.nav` nos catálogos.
+  labelKey:
+    | "dashboard"
+    | "notifications"
+    | "ideas"
+    | "projects"
+    | "calendar"
+    | "templates"
+    | "team"
+    | "settings";
   href: string;
   icon: LucideIcon;
 };
 
 export const shellNavItems: ShellNavItem[] = [
-  { label: "Dashboard", href: "/", icon: LayoutDashboard },
-  { label: "Avisos", href: "/avisos", icon: Bell },
-  { label: "Ideias", href: "/ideias", icon: Lightbulb },
-  { label: "Produções", href: "/producoes", icon: Clapperboard },
-  { label: "Calendário", href: "/calendario", icon: Calendar },
-  { label: "Templates", href: "/templates", icon: LayoutTemplate },
-  { label: "Equipe", href: "/equipe", icon: Users },
-  { label: "Configurações", href: "/configuracoes", icon: Settings },
+  { labelKey: "dashboard", href: "/", icon: LayoutDashboard },
+  { labelKey: "notifications", href: "/avisos", icon: Bell },
+  { labelKey: "ideas", href: "/ideias", icon: Lightbulb },
+  { labelKey: "projects", href: "/producoes", icon: Clapperboard },
+  { labelKey: "calendar", href: "/calendario", icon: Calendar },
+  { labelKey: "templates", href: "/templates", icon: LayoutTemplate },
+  { labelKey: "team", href: "/equipe", icon: Users },
+  { labelKey: "settings", href: "/configuracoes", icon: Settings },
 ];

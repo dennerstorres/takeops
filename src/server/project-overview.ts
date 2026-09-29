@@ -1,3 +1,4 @@
+import type { Translate } from "../i18n/translate.ts";
 import { formatLabel } from "./idea-labels.ts";
 import { projectRoleLabel, type ProjectRole } from "./participant-labels.ts";
 import type { ProjectRecord } from "./project-repository.ts";
@@ -27,18 +28,21 @@ export function calendarDate(value: Date | null) {
   return `${day}/${month}/${year}`;
 }
 
-export function pipelineProgress(status: ProjectRecord["status"]) {
+export function pipelineProgress(
+  t: Translate,
+  status: ProjectRecord["status"],
+) {
   if (status === "ARCHIVED") {
     return {
       step: null,
       total: mainFlow.length,
-      label: projectStatusLabel(status),
+      label: projectStatusLabel(t, status),
     };
   }
   return {
     step: mainFlow.indexOf(status) + 1,
     total: mainFlow.length,
-    label: projectStatusLabel(status),
+    label: projectStatusLabel(t, status),
   };
 }
 
@@ -50,16 +54,18 @@ export function buildProjectOverview(input: {
     role: ProjectRole;
   }[];
   ownerName: string | null;
+  t: Translate;
 }) {
+  const { t } = input;
   const { project } = input;
-  const progress = pipelineProgress(project.status);
+  const progress = pipelineProgress(t, project.status);
   return {
     title: project.title,
     objective: project.objective,
     product: project.product,
     audience: project.audience,
-    format: formatLabel(project.format),
-    aspectRatio: aspectLabel(project.aspectRatio),
+    format: formatLabel(t, project.format),
+    aspectRatio: aspectLabel(t, project.aspectRatio),
     duration: project.estimatedDurationSeconds
       ? `${project.estimatedDurationSeconds} s`
       : null,
@@ -68,13 +74,13 @@ export function buildProjectOverview(input: {
       progress.step === null
         ? progress.label
         : `${progress.step} de ${progress.total}`,
-    priority: priorityLabel(project.priority),
+    priority: priorityLabel(t, project.priority),
     shootDate: calendarDate(project.plannedShootDate),
     publishDate: calendarDate(project.plannedPublishDate),
     ownerName: input.ownerName,
     participants: input.participants.map((person) => ({
       name: person.name ?? person.email ?? "Sem nome",
-      role: projectRoleLabel(person.role),
+      role: projectRoleLabel(t, person.role),
     })),
     links: [
       project.thumbnailUrl

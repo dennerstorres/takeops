@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +26,7 @@ export type EquipmentFormValues = {
 };
 
 export function EquipmentForm({ values }: { values: EquipmentFormValues }) {
+  const t = useTranslations();
   const editing = Boolean(values.itemId);
   const [state, action, pending] = useActionState(
     editing ? updateEquipmentAction : createEquipmentAction,
@@ -62,7 +64,7 @@ export function EquipmentForm({ values }: { values: EquipmentFormValues }) {
         >
           {equipmentCategories.map((category) => (
             <option key={category} value={category}>
-              {equipmentCategoryLabel(category)}
+              {equipmentCategoryLabel(t, category)}
             </option>
           ))}
         </select>

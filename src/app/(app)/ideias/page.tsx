@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -11,6 +12,7 @@ import { statusLabel } from "@/server/idea-labels";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
 export default async function IdeasPage() {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -72,7 +74,7 @@ export default async function IdeasPage() {
                   {idea.title}
                 </span>
                 <span className="text-sm text-muted-foreground">
-                  {statusLabel(idea.status)} · {when.format(idea.createdAt)}
+                  {statusLabel(t, idea.status)} · {when.format(idea.createdAt)}
                 </span>
               </Link>
             </li>

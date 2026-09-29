@@ -1,3 +1,5 @@
+import type { Translate } from "../i18n/translate.ts";
+
 export const shotTypes = [
   "CAMERA",
   "SCREEN_CAPTURE",
@@ -30,49 +32,42 @@ export const framingPresets = [
 export type ShotType = (typeof shotTypes)[number];
 export type ShotStatus = (typeof shotStatuses)[number];
 
-const typeLabels: Record<ShotType, string> = {
-  CAMERA: "Câmera",
-  SCREEN_CAPTURE: "Captura de tela",
-  BROLL: "Apoio",
-  INSERT: "Inserto",
-  VOICE_ONLY: "Só voz",
-  OTHER: "Outro",
-};
-
-const statusLabels: Record<ShotStatus, string> = {
-  PLANNED: "Planejado",
-  RECORDED: "Gravado",
-  NEEDS_RETAKE: "Refazer",
-  DISCARDED: "Descartado",
-};
-
-export function shotTypeLabel(value: ShotType) {
-  return typeLabels[value];
+export function shotTypeLabel(t: Translate, value: ShotType) {
+  return t(`enums.shotType.${value}`);
 }
 
-export function shotStatusLabel(value: ShotStatus) {
-  return statusLabels[value];
+export function shotStatusLabel(t: Translate, value: ShotStatus) {
+  return t(`enums.shotStatus.${value}`);
 }
 
 // Linha curta para ler o plano sem abrir o formulário.
-export function shotSummary(shot: {
-  shotType: ShotType;
-  framing: string | null;
-  cameraLabel: string | null;
-  requiredTakes: number;
-}) {
+export function shotSummary(
+  t: Translate,
+  shot: {
+    shotType: ShotType;
+    framing: string | null;
+    cameraLabel: string | null;
+    requiredTakes: number;
+  },
+) {
   return [
-    shotTypeLabel(shot.shotType),
+    shotTypeLabel(t, shot.shotType),
     shot.framing,
     shot.cameraLabel,
-    shot.requiredTakes === 1 ? "1 take" : `${shot.requiredTakes} takes`,
+    t("labels.takes", { count: shot.requiredTakes }),
   ]
     .filter(Boolean)
     .join(" · ");
 }
 
 // Shot sem nome aparece como A, B, C na ordem da cena, como na spec.
-export function shotDisplayName(name: string | null, index: number) {
+export function shotDisplayName(
+  t: Translate,
+  name: string | null,
+  index: number,
+) {
   if (name) return name;
-  return `Shot ${index < 26 ? String.fromCharCode(65 + index) : index + 1}`;
+  return t("labels.shot", {
+    name: index < 26 ? String.fromCharCode(65 + index) : String(index + 1),
+  });
 }

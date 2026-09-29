@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EquipmentForm } from "@/components/equipment/equipment-form";
@@ -10,6 +11,7 @@ import { prismaEquipmentRepository } from "@/server/equipment-prisma";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
 export default async function EquipmentPage() {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -48,7 +50,7 @@ export default async function EquipmentPage() {
             <li key={item.id} className="rounded-xl border p-3">
               <p className="text-sm font-medium">{item.name}</p>
               <p className="text-sm text-muted-foreground">
-                {equipmentCategoryLabel(item.category)}
+                {equipmentCategoryLabel(t, item.category)}
                 {item.active ? null : " · Fora de uso"}
                 {item.notes ? ` · ${item.notes}` : null}
               </p>

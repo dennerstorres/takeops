@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +27,7 @@ export type AssetFormValues = {
 };
 
 export function AssetForm({ values }: { values: AssetFormValues }) {
+  const t = useTranslations();
   const editing = Boolean(values.assetId);
   const [state, action, pending] = useActionState(
     editing ? updateAssetAction : createAssetAction,
@@ -65,7 +67,7 @@ export function AssetForm({ values }: { values: AssetFormValues }) {
           >
             {assetTypes.map((type) => (
               <option key={type} value={type}>
-                {assetTypeLabel(type)}
+                {assetTypeLabel(t, type)}
               </option>
             ))}
           </select>

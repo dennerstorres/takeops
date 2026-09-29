@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -25,6 +26,7 @@ export default async function TemplatePage({
 }: {
   params: Promise<{ templateId: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -113,7 +115,7 @@ export default async function TemplatePage({
                   {scene.order}. {scene.title}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {sceneTypeLabel(scene.type)}
+                  {sceneTypeLabel(t, scene.type)}
                   {scene.description ? ` · ${scene.description}` : null}
                 </p>
                 {canManage ? (

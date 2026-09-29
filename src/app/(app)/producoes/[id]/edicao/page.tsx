@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { EditVersionForm } from "@/components/editing/edit-version-form";
 import { EditingForm } from "@/components/editing/editing-form";
@@ -27,6 +28,7 @@ export default async function EditingPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -143,7 +145,7 @@ export default async function EditingPage({
             ["FPS", info?.targetFps?.toString()],
             [
               "Proporção",
-              info?.aspectRatio ? aspectLabel(info.aspectRatio) : null,
+              info?.aspectRatio ? aspectLabel(t, info.aspectRatio) : null,
             ],
             ["Legenda", info ? (info.captionsRequired ? "Sim" : "Não") : null],
             ["Música", info ? (info.musicRequired ? "Sim" : "Não") : null],

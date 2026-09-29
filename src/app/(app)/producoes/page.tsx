@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -31,6 +32,7 @@ export default async function ProductionsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -57,7 +59,7 @@ export default async function ProductionsPage({
     const participants = await prismaParticipantRepository.listByProjectIds(
       projects.map((project) => project.id),
     );
-    board = buildProjectBoard(projects, participants, team);
+    board = buildProjectBoard(projects, participants, team, t);
   } catch (error) {
     if (error instanceof ForbiddenError) redirect("/comecar");
     throw error;
@@ -107,7 +109,7 @@ export default async function ProductionsPage({
             <option value="">Todos</option>
             {videoProjectStatuses.map((status) => (
               <option key={status} value={status}>
-                {projectStatusLabel(status)}
+                {projectStatusLabel(t, status)}
               </option>
             ))}
           </select>
@@ -122,7 +124,7 @@ export default async function ProductionsPage({
             <option value="">Todas</option>
             {projectPriorities.map((priority) => (
               <option key={priority} value={priority}>
-                {priorityLabel(priority)}
+                {priorityLabel(t, priority)}
               </option>
             ))}
           </select>

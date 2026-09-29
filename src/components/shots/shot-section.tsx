@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { DeleteShotButton } from "@/components/shots/delete-shot-button";
 import { ShotForm } from "@/components/shots/shot-form";
 import { TakeList } from "@/components/takes/take-list";
@@ -26,6 +27,7 @@ export function ShotSection({
   takes: Map<string, TakeRecord[]>;
   canEdit: boolean;
 }) {
+  const t = useTranslations();
   return (
     <section id="shots" className="space-y-3">
       <h2 className="text-base font-medium">Shots</h2>
@@ -37,10 +39,10 @@ export function ShotSection({
             <li key={shot.id} className="rounded-xl border p-3">
               <div className="min-w-0 space-y-1">
                 <p className="text-sm font-medium">
-                  {shotDisplayName(shot.name, index)}
+                  {shotDisplayName(t, shot.name, index)}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {shotSummary(shot)} · {shotStatusLabel(shot.status)}
+                  {shotSummary(t, shot)} · {shotStatusLabel(t, shot.status)}
                 </p>
                 {shot.description ? (
                   <p className="text-sm whitespace-pre-wrap">

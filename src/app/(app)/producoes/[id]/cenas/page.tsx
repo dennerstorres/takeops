@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -28,6 +29,7 @@ export default async function ScenesPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -98,8 +100,8 @@ export default async function ScenesPage({
                     {scene.order}. {scene.title}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {sceneTypeLabel(scene.type)} ·{" "}
-                    {sceneStatusLabel(scene.status)}
+                    {sceneTypeLabel(t, scene.type)} ·{" "}
+                    {sceneStatusLabel(t, scene.status)}
                   </p>
                 </div>
                 {canEdit ? (
@@ -162,10 +164,10 @@ export default async function ScenesPage({
                   {shotsByScene.get(scene.id)?.map((shot, shotIndex) => (
                     <li key={shot.id} className="text-sm">
                       <span className="font-medium">
-                        {shotDisplayName(shot.name, shotIndex)}
+                        {shotDisplayName(t, shot.name, shotIndex)}
                       </span>{" "}
                       <span className="text-muted-foreground">
-                        {shotSummary(shot)}
+                        {shotSummary(t, shot)}
                       </span>
                     </li>
                   ))}

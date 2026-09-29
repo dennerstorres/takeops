@@ -1822,7 +1822,7 @@ Lint, typecheck, testes com serviço Postgres real (resolve a pendência do test
 
 ## OSS-008 — Idiomas pt-BR e en
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** nenhuma
 

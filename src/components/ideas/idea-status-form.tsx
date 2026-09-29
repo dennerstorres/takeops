@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { changeIdeaStatusAction } from "@/server/idea-actions";
 import { statusLabel } from "@/server/idea-labels";
@@ -11,6 +12,7 @@ export function IdeaStatusForm({
   ideaId: string;
   status: IdeaStatus;
 }) {
+  const t = useTranslations();
   return (
     <form
       action={changeIdeaStatusAction}
@@ -28,7 +30,7 @@ export function IdeaStatusForm({
       >
         {editableIdeaStatuses.map((item) => (
           <option key={item} value={item}>
-            {statusLabel(item)}
+            {statusLabel(t, item)}
           </option>
         ))}
       </select>

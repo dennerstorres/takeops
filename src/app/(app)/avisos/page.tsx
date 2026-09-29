@@ -1,3 +1,4 @@
+import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { openWorkspace } from "@/server/access";
@@ -12,10 +13,6 @@ import { prismaNotificationRepository } from "@/server/notification-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-function personLabel(member: { name: string | null; email: string | null }) {
-  return member.name || member.email || "Sem nome";
-}
-
 // Para onde o aviso leva: versão e revisão abrem a aba Revisão.
 function target(type: NotificationType, projectId: string | null) {
   if (!projectId) return null;
@@ -25,6 +22,8 @@ function target(type: NotificationType, projectId: string | null) {
 }
 
 export default async function NotificationsPage() {
+  const t = await getTranslations();
+  const locale = await getLocale();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -40,10 +39,13 @@ export default async function NotificationsPage() {
     listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
   ]);
   const names = new Map(
-    team.map((member) => [member.userId, personLabel(member)]),
+    team.map((member) => [
+      member.userId,
+      member.name || member.email || t("common.noName"),
+    ]),
   );
   const unread = rows.filter((row) => !row.readAt).length;
-  const dateTime = new Intl.DateTimeFormat("pt-BR", {
+  const dateTime = new Intl.DateTimeFormat(locale, {
     timeZone: timezone,
     day: "2-digit",
     month: "short",
@@ -57,27 +59,25 @@ export default async function NotificationsPage() {
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">Avisos</h1>
+          <h1 className="text-2xl font-medium tracking-tight">
+            {t("notifications.title")}
+          </h1>
           <p className="text-sm text-muted-foreground">
-            {unread === 0
-              ? "Tudo lido."
-              : unread === 1
-                ? "1 aviso não lido."
-                : `${unread} avisos não lidos.`}
+            {t("notifications.unread", { count: unread })}
           </p>
         </div>
         {unread > 0 ? (
           <form action={markNotificationsReadAction}>
             <button type="submit" className={buttonClass}>
-              Marcar todos como lidos
+              {t("notifications.markAllRead")}
             </button>
           </form>
         ) : null}
       </header>
       {rows.length === 0 ? (
         <EmptyState
-          title="Nenhum aviso"
-          description="Novas versões, pedidos de alteração e aprovações aparecem aqui."
+          title={t("notifications.emptyTitle")}
+          description={t("notifications.emptyDescription")}
         />
       ) : (
         <ul className="flex flex-col gap-2">
@@ -91,11 +91,16 @@ export default async function NotificationsPage() {
                 }`}
               >
                 <p className="text-sm">
-                  {row.readAt ? null : <span className="sr-only">Novo: </span>}
+                  {row.readAt ? null : (
+                    <span className="sr-only">
+                      {t("notifications.newPrefix")}
+                    </span>
+                  )}
                   {describeNotification(
+                    t,
                     row.actorId
-                      ? (names.get(row.actorId) ?? "Ex-membro")
-                      : "Alguém",
+                      ? (names.get(row.actorId) ?? t("common.formerMember"))
+                      : t("common.someone"),
                     row.type,
                     row.projectTitle,
                     row.metadata,
@@ -119,12 +124,12 @@ export default async function NotificationsPage() {
                         value={href}
                         className={buttonClass}
                       >
-                        Abrir
+                        {t("notifications.open")}
                       </button>
                     ) : null}
                     {row.readAt ? null : (
                       <button type="submit" className={buttonClass}>
-                        Marcar como lido
+                        {t("notifications.markRead")}
                       </button>
                     )}
                   </form>

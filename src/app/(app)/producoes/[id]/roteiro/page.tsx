@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -33,6 +34,7 @@ export default async function ScriptPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -135,7 +137,8 @@ export default async function ScriptPage({
                   {row.order}. {row.title}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {sceneTypeLabel(row.type)} · {sceneStatusLabel(row.status)}
+                  {sceneTypeLabel(t, row.type)} ·{" "}
+                  {sceneStatusLabel(t, row.status)}
                   {row.duration ? ` · ${row.duration}` : null}
                 </p>
                 {row.dialogue ? (

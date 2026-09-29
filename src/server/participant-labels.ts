@@ -1,3 +1,5 @@
+import type { Translate } from "../i18n/translate.ts";
+
 export const projectRoles = [
   "PRODUCER",
   "DIRECTOR",
@@ -12,18 +14,6 @@ export const projectRoles = [
 
 export type ProjectRole = (typeof projectRoles)[number];
 
-const labels: Record<ProjectRole, string> = {
-  PRODUCER: "Produtor",
-  DIRECTOR: "Diretor",
-  SCRIPT_WRITER: "Roteirista",
-  PRESENTER: "Apresentador",
-  CAMERA: "Câmera",
-  EDITOR: "Editor",
-  REVIEWER: "Revisor",
-  APPROVER: "Aprovador",
-  OTHER: "Outro",
-};
-
-export function projectRoleLabel(role: ProjectRole) {
-  return labels[role];
+export function projectRoleLabel(t: Translate, role: ProjectRole) {
+  return t(`enums.projectRole.${role}`);
 }

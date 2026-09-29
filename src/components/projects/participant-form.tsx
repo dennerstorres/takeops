@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   addParticipantAction,
@@ -18,6 +19,7 @@ export function ParticipantForm({
   people: { id: string; label: string }[];
   canManageApprovers: boolean;
 }) {
+  const t = useTranslations();
   return (
     <form
       action={addParticipantAction}
@@ -52,7 +54,7 @@ export function ParticipantForm({
           .filter((role) => canManageApprovers || role !== "APPROVER")
           .map((role) => (
             <option key={role} value={role}>
-              {projectRoleLabel(role)}
+              {projectRoleLabel(t, role)}
             </option>
           ))}
       </select>

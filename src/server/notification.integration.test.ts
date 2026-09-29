@@ -16,17 +16,26 @@ import { addParticipant } from "./participant.ts";
 import { createProject } from "./project.ts";
 import { createReviewComment } from "./review.ts";
 import { createWorkspace } from "./workspace.ts";
+import { testTranslator } from "../i18n/test-translator.ts";
+
+const t = testTranslator();
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
 
 describe("frase do aviso", () => {
   it("fala com quem recebe", () => {
     assert.equal(
-      describeNotification("Ana", "PROJECT_MEMBER_ADDED", "Lançamento", null),
+      describeNotification(
+        t,
+        "Ana",
+        "PROJECT_MEMBER_ADDED",
+        "Lançamento",
+        null,
+      ),
       "Ana adicionou você à produção Lançamento.",
     );
     assert.equal(
-      describeNotification("Ana", "VERSION_CREATED", "Lançamento", {
+      describeNotification(t, "Ana", "VERSION_CREATED", "Lançamento", {
         version: "V2",
       }),
       "Nova versão V2 em Lançamento disponível.",

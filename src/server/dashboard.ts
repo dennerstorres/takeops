@@ -1,3 +1,4 @@
+import type { Translate } from "../i18n/translate.ts";
 import type { CalendarEvent } from "./calendar.ts";
 import { listCalendarEvents, type CalendarDeps } from "./calendar.ts";
 import type { IdeaRecord, IdeaRepository } from "./idea-repository.ts";
@@ -74,11 +75,14 @@ export function buildDashboard(input: {
     email: string | null;
   }[];
   pendingApprovalProjectIds: readonly string[];
+  t: Translate;
 }) {
+  const { t } = input;
   const board = buildProjectBoard(
     input.projects,
     input.participants,
     input.people,
+    t,
   );
   const cards = new Map(
     board.flatMap((column) => column.cards).map((card) => [card.id, card]),
@@ -86,7 +90,7 @@ export function buildDashboard(input: {
   const byId = new Map(input.projects.map((project) => [project.id, project]));
   const card = (project: ProjectRecord) => ({
     ...cards.get(project.id)!,
-    status: projectStatusLabel(project.status),
+    status: projectStatusLabel(t, project.status),
     nextAction: nextAction[project.status],
   });
   const recent = (a: ProjectRecord, b: ProjectRecord) =>
@@ -107,7 +111,7 @@ export function buildDashboard(input: {
         ...event,
         people: cards.get(event.projectId)?.people ?? [],
         status: byId.get(event.projectId)
-          ? projectStatusLabel(byId.get(event.projectId)!.status)
+          ? projectStatusLabel(t, byId.get(event.projectId)!.status)
           : null,
       })),
     inProgress: input.projects
@@ -146,6 +150,7 @@ export async function loadDashboard(
     email: string | null;
   }[],
   deps: DashboardDeps,
+  t: Translate,
 ) {
   await requireMembership(userId, workspaceId, deps.workspaces);
   const to = new Date(range.now.getTime() + upcomingDays * 86_400_000);
@@ -157,6 +162,7 @@ export async function loadDashboard(
       workspaceId,
       { from: range.now, to, timezone: range.timezone },
       deps,
+      t,
     ),
     deps.dashboard.pendingApprovalProjectIds(workspaceId),
   ]);
@@ -170,5 +176,6 @@ export async function loadDashboard(
     participants,
     people,
     pendingApprovalProjectIds: pendingIds,
+    t,
   });
 }

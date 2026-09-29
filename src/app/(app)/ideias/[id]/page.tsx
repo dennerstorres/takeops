@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ConvertIdeaButton } from "@/components/ideas/convert-idea-button";
@@ -19,6 +20,7 @@ export default async function IdeaPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -75,7 +77,7 @@ export default async function IdeaPage({
         <div className="space-y-1">
           <h1 className="text-2xl font-medium tracking-tight">{idea.title}</h1>
           <p className="text-sm text-muted-foreground">
-            {statusLabel(idea.status)} · {idea.authorName ?? "Sem nome"}
+            {statusLabel(t, idea.status)} · {idea.authorName ?? "Sem nome"}
           </p>
           {canEdit && idea.status !== "CONVERTED" ? (
             <IdeaStatusForm ideaId={idea.id} status={idea.status} />

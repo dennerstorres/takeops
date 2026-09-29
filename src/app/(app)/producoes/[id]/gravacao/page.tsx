@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -34,6 +35,7 @@ export default async function ShootsPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -108,7 +110,7 @@ export default async function ShootsPage({
     .filter((item) => item.active)
     .map((item) => ({
       id: item.id,
-      label: `${item.name} · ${equipmentCategoryLabel(item.category)}`,
+      label: `${item.name} · ${equipmentCategoryLabel(t, item.category)}`,
     }));
 
   const templateOptions = [
@@ -198,7 +200,7 @@ export default async function ShootsPage({
                   ) : null}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {shootStatusLabel(shoot.status)}
+                  {shootStatusLabel(t, shoot.status)}
                   {shoot.location ? ` · ${shoot.location}` : null}
                 </p>
                 {shoot.notes ? (

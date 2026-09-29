@@ -850,3 +850,25 @@ O repositório será público; a interface era só pt-BR.
 ## Consequências
 
 OSS-008 vem antes do refactor de UI. Docs do projeto (harness) seguem em pt-BR; README público em inglês com versão pt-BR.
+
+---
+
+# ADR-042 — Como o texto passa pelo i18n
+
+**Status:** Accepted  
+**Data:** 2026-09-29
+
+## Contexto
+
+OSS-008 precisava tirar texto fixo sem prender serviços ao Next (testes rodam em `node --test`).
+
+## Decisão
+
+- Sem prefixo de idioma na URL. `src/i18n/request.ts` resolve: `User.locale` (vai na sessão) → `Accept-Language` → `en`.
+- Rótulos (`*-labels.ts`) e montadores do servidor recebem `t: Translate` por parâmetro; testes usam `testTranslator()` com o catálogo real.
+- Activity Log grava códigos (`to`, `platformCode`, `status`), não texto. Registros antigos com `toLabel`/`platform` em pt-BR continuam legíveis.
+- Erro de serviço: `DomainError.messageKey` é traduzido em `runAction`/`runHandler`; sem chave, sai a `message` como está (mensagens específicas migram por tela).
+
+## Consequências
+
+Tela nova usa `getTranslations`/`useTranslations`; teste `i18n.test.ts` falha se uma chave faltar num idioma.

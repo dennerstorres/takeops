@@ -1,0 +1,208 @@
+{
+  "metadata": {
+    "description": "Organização da produção de vídeos, da ideia à publicação."
+  },
+  "common": {
+    "noName": "Sem nome",
+    "account": "Conta",
+    "someone": "Alguém",
+    "formerMember": "Ex-membro"
+  },
+  "shell": {
+    "skipToContent": "Ir para o conteúdo",
+    "openMenu": "Abrir menu",
+    "mainNav": "Principal",
+    "unreadSuffix": " não lidos",
+    "logout": "Sair",
+    "language": "Idioma",
+    "nav": {
+      "dashboard": "Dashboard",
+      "notifications": "Avisos",
+      "ideas": "Ideias",
+      "projects": "Produções",
+      "calendar": "Calendário",
+      "templates": "Templates",
+      "team": "Equipe",
+      "settings": "Configurações"
+    }
+  },
+  "locale": {
+    "pt-BR": "Português (Brasil)",
+    "en": "English",
+    "saveFailed": "Não foi possível trocar o idioma. Tente novamente."
+  },
+  "notifications": {
+    "title": "Avisos",
+    "unread": "{count, plural, =0 {Tudo lido.} one {1 aviso não lido.} other {# avisos não lidos.}}",
+    "markAllRead": "Marcar todos como lidos",
+    "emptyTitle": "Nenhum aviso",
+    "emptyDescription": "Novas versões, pedidos de alteração e aprovações aparecem aqui.",
+    "newPrefix": "Novo: ",
+    "open": "Abrir",
+    "markRead": "Marcar como lido",
+    "types": {
+      "PROJECT_MEMBER_ADDED": "{actor} adicionou você à produção{hasProject, select, yes { {project}} other {}}.",
+      "VERSION_CREATED": "Nova versão{hasVersion, select, yes { {version}} other {}}{hasProject, select, yes { em {project}} other {}} disponível.",
+      "REVIEW_COMMENT_CREATED": "{actor} comentou{hasVersion, select, yes { a {version}} other {}}{hasProject, select, yes { em {project}} other {}}.",
+      "CHANGES_REQUESTED": "{actor} solicitou alterações{hasVersion, select, yes { na {version}} other {}}{hasProject, select, yes { em {project}} other {}}.",
+      "VERSION_APPROVED": "{actor} aprovou o vídeo{hasProject, select, yes { em {project}} other {}}."
+    }
+  },
+  "activity": {
+    "PROJECT_CREATED": "{actor} criou a produção.",
+    "PROJECT_STATUS_CHANGED": "{hasTarget, select, yes {{actor} moveu a produção para {to}.} other {{actor} mudou a etapa da produção.}}",
+    "VERSION_CREATED": "{hasVersion, select, yes {{actor} adicionou a versão {version}.} other {{actor} adicionou uma versão.}}",
+    "APPROVAL_REQUESTED": "{actor} pediu aprovação{hasVersion, select, yes { da {version}} other {}}.",
+    "CHANGES_REQUESTED": "{actor} solicitou alterações{hasVersion, select, yes { da {version}} other {}}.",
+    "VERSION_APPROVED": "{actor} aprovou o vídeo{hasVersion, select, yes { da {version}} other {}}.",
+    "PUBLICATION_SCHEDULED": "{hasPlatform, select, yes {{actor} agendou a publicação em {platform}.} other {{actor} agendou uma publicação.}}",
+    "PUBLICATION_RECORDED": "{actor} registrou {status, select, PUBLISHED {a publicação} FAILED {falha na publicação} CANCELED {o cancelamento da publicação} other {o resultado da publicação}}{hasPlatform, select, yes { em {platform}} other {}}."
+  },
+  "errors": {
+    "unexpected": "Não foi possível concluir. Tente novamente.",
+    "validation": "Verifique os dados e tente novamente.",
+    "notFound": "Não encontrado.",
+    "forbidden": "Você não tem acesso a este recurso."
+  },
+  "labels": {
+    "takes": "{count, plural, one {# take} other {# takes}}",
+    "shot": "Shot {name}"
+  },
+  "enums": {
+    "approvalStatus": {
+      "PENDING": "Aguardando aprovação",
+      "CHANGES_REQUESTED": "Alterações solicitadas",
+      "APPROVED": "Aprovada"
+    },
+    "assetType": {
+      "RAW_FOOTAGE": "Material bruto",
+      "SCREEN_RECORDING": "Gravação de tela",
+      "REFERENCE": "Referência",
+      "AUDIO": "Áudio",
+      "IMAGE": "Imagem",
+      "PROJECT_FILE": "Projeto de edição",
+      "FINAL_EXPORT": "Exportação final",
+      "FOLDER": "Pasta",
+      "OTHER": "Outro"
+    },
+    "equipmentCategory": {
+      "CAMERA": "Câmera",
+      "SMARTPHONE": "Smartphone",
+      "MICROPHONE": "Microfone",
+      "TRIPOD": "Tripé",
+      "LIGHTING": "Iluminação",
+      "POWER": "Energia",
+      "LAPTOP": "Notebook",
+      "OTHER": "Outros"
+    },
+    "ideaFormat": {
+      "TUTORIAL": "Tutorial",
+      "SKETCH": "Esquete",
+      "DEMO": "Demonstração",
+      "FEATURE": "Funcionalidade",
+      "INSTITUTIONAL": "Institucional",
+      "EDUCATIONAL": "Educativo",
+      "BEHIND_THE_SCENES": "Bastidores",
+      "OTHER": "Outro"
+    },
+    "ideaStatus": {
+      "NEW": "Nova",
+      "UNDER_REVIEW": "Em análise",
+      "APPROVED": "Aprovada",
+      "DISCARDED": "Descartada",
+      "CONVERTED": "Convertida"
+    },
+    "projectRole": {
+      "PRODUCER": "Produtor",
+      "DIRECTOR": "Diretor",
+      "SCRIPT_WRITER": "Roteirista",
+      "PRESENTER": "Apresentador",
+      "CAMERA": "Câmera",
+      "EDITOR": "Editor",
+      "REVIEWER": "Revisor",
+      "APPROVER": "Aprovador",
+      "OTHER": "Outro"
+    },
+    "aspectRatio": {
+      "NINE_SIXTEEN": "9:16",
+      "SIXTEEN_NINE": "16:9",
+      "ONE_ONE": "1:1",
+      "FOUR_FIVE": "4:5"
+    },
+    "priority": {
+      "LOW": "Baixa",
+      "NORMAL": "Normal",
+      "HIGH": "Alta",
+      "URGENT": "Urgente"
+    },
+    "projectStatus": {
+      "IDEA": "Ideia",
+      "PRE_PRODUCTION": "Pré-produção",
+      "SCRIPTING": "Roteiro",
+      "READY_TO_RECORD": "Pronto para gravar",
+      "RECORDING": "Gravação",
+      "EDITING": "Edição",
+      "REVIEW": "Revisão",
+      "APPROVED": "Aprovado",
+      "SCHEDULED": "Agendado",
+      "PUBLISHED": "Publicado",
+      "ARCHIVED": "Arquivado"
+    },
+    "platform": {
+      "INSTAGRAM_REELS": "Instagram Reels",
+      "TIKTOK": "TikTok",
+      "YOUTUBE_SHORTS": "YouTube Shorts",
+      "YOUTUBE": "YouTube",
+      "LINKEDIN": "LinkedIn",
+      "FACEBOOK": "Facebook",
+      "OTHER": "Outra"
+    },
+    "publicationStatus": {
+      "PENDING": "A publicar",
+      "SCHEDULED": "Agendada",
+      "PUBLISHED": "Publicada",
+      "FAILED": "Falhou",
+      "CANCELED": "Cancelada"
+    },
+    "sceneType": {
+      "HOOK": "Gancho",
+      "TALKING_HEAD": "Apresentador",
+      "DIALOGUE": "Diálogo",
+      "SCREEN_CAPTURE": "Tela",
+      "BROLL": "Apoio",
+      "PRODUCT": "Produto",
+      "VOICE_OVER": "Narração",
+      "CTA": "Chamada",
+      "OTHER": "Outro"
+    },
+    "sceneStatus": {
+      "PLANNED": "Planejada",
+      "READY": "Pronta",
+      "RECORDING": "Gravando",
+      "RECORDED": "Gravada",
+      "NEEDS_RETAKE": "Refazer",
+      "DISCARDED": "Descartada"
+    },
+    "shootStatus": {
+      "PLANNED": "Planejada",
+      "READY": "Pronta",
+      "IN_PROGRESS": "Gravando",
+      "COMPLETED": "Concluída",
+      "CANCELED": "Cancelada"
+    },
+    "shotType": {
+      "CAMERA": "Câmera",
+      "SCREEN_CAPTURE": "Captura de tela",
+      "BROLL": "Apoio",
+      "INSERT": "Inserto",
+      "VOICE_ONLY": "Só voz",
+      "OTHER": "Outro"
+    },
+    "shotStatus": {
+      "PLANNED": "Planejado",
+      "RECORDED": "Gravado",
+      "NEEDS_RETAKE": "Refazer",
+      "DISCARDED": "Descartado"
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import type { Translate } from "../i18n/translate.ts";
+
 // Lista fechada de avisos (spec §40). Tipo fora daqui não é gravado.
 export const notificationTypes = [
   "PROJECT_MEMBER_ADDED",
@@ -23,23 +25,18 @@ function text(metadata: Metadata, key: string) {
 }
 
 export function describeNotification(
+  t: Translate,
   actor: string,
   type: NotificationType,
   projectTitle: string | null,
   metadata: Metadata,
 ) {
-  const project = projectTitle ? ` em ${projectTitle}` : "";
   const version = text(metadata, "version");
-  switch (type) {
-    case "PROJECT_MEMBER_ADDED":
-      return `${actor} adicionou você à produção${projectTitle ? ` ${projectTitle}` : ""}.`;
-    case "VERSION_CREATED":
-      return `Nova versão${version ? ` ${version}` : ""}${project} disponível.`;
-    case "REVIEW_COMMENT_CREATED":
-      return `${actor} comentou${version ? ` a ${version}` : ""}${project}.`;
-    case "CHANGES_REQUESTED":
-      return `${actor} solicitou alterações${version ? ` na ${version}` : ""}${project}.`;
-    case "VERSION_APPROVED":
-      return `${actor} aprovou o vídeo${project}.`;
-  }
+  return t(`notifications.types.${type}`, {
+    actor,
+    hasProject: projectTitle ? "yes" : "no",
+    project: projectTitle ?? "",
+    hasVersion: version ? "yes" : "no",
+    version: version ?? "",
+  });
 }

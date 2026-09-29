@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +36,7 @@ export function ShootForm({
   values: ShootFormValues;
   timezone: string;
 }) {
+  const t = useTranslations();
   const editing = Boolean(values.shootId);
   const [state, action, pending] = useActionState(
     editing ? updateShootAction : createShootAction,
@@ -105,7 +107,7 @@ export function ShootForm({
           >
             {shootStatuses.map((status) => (
               <option key={status} value={status}>
-                {shootStatusLabel(status)}
+                {shootStatusLabel(t, status)}
               </option>
             ))}
           </select>

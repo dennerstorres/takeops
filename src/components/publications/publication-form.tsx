@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +25,7 @@ export type PublicationFormValues = {
 };
 
 export function PublicationForm({ values }: { values: PublicationFormValues }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     savePublicationAction,
     null as PublicationFormState,
@@ -55,7 +57,7 @@ export function PublicationForm({ values }: { values: PublicationFormValues }) {
         >
           {platforms.map((platform) => (
             <option key={platform} value={platform}>
-              {platformLabel(platform)}
+              {platformLabel(t, platform)}
             </option>
           ))}
         </select>

@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
@@ -24,6 +25,7 @@ export default async function PublicationsPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -106,10 +108,10 @@ export default async function PublicationsPage({
           {publications.map((publication) => (
             <li key={publication.id} className="rounded-xl border p-3">
               <p className="text-sm font-medium">
-                {platformLabel(publication.platform)}
+                {platformLabel(t, publication.platform)}
                 <span className="font-normal text-muted-foreground">
                   {" · "}
-                  {publicationStatusLabel(publication.status)}
+                  {publicationStatusLabel(t, publication.status)}
                 </span>
               </p>
               {publication.scheduledAt ? (

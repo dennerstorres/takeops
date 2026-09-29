@@ -1,3 +1,7 @@
+import type { Translate } from "../i18n/translate.ts";
+import { isPlatform, platformLabel } from "./publication-labels.ts";
+import { isProjectStatus, projectStatusLabel } from "./project-labels.ts";
+
 // Lista fechada do que vira atividade (spec §41, PLAN ACTIVITY-002). Ação
 // fora daqui não é gravada: evita string solta e log técnico.
 export const activityActions = [
@@ -27,49 +31,31 @@ function text(metadata: Metadata, key: string) {
 }
 
 // Frase curta no tom da spec: "Ana adicionou a versão V2."
+// Metadados guardam códigos; o texto sai no idioma de quem lê. Registros
+// antigos guardavam o rótulo em pt-BR (`toLabel`, `platform`) e ainda valem.
 export function describeActivity(
+  t: Translate,
   actor: string,
   action: ActivityAction,
   metadata: Metadata,
 ) {
-  switch (action) {
-    case "PROJECT_CREATED":
-      return `${actor} criou a produção.`;
-    case "PROJECT_STATUS_CHANGED": {
-      const to = text(metadata, "toLabel");
-      return to
-        ? `${actor} moveu a produção para ${to}.`
-        : `${actor} mudou a etapa da produção.`;
-    }
-    case "VERSION_CREATED": {
-      const version = text(metadata, "version");
-      return version
-        ? `${actor} adicionou a versão ${version}.`
-        : `${actor} adicionou uma versão.`;
-    }
-    case "APPROVAL_REQUESTED":
-      return `${actor} pediu aprovação${versionSuffix(metadata)}.`;
-    case "CHANGES_REQUESTED":
-      return `${actor} solicitou alterações${versionSuffix(metadata)}.`;
-    case "VERSION_APPROVED":
-      return `${actor} aprovou o vídeo${versionSuffix(metadata)}.`;
-    case "PUBLICATION_SCHEDULED": {
-      const platform = text(metadata, "platform");
-      return platform
-        ? `${actor} agendou a publicação em ${platform}.`
-        : `${actor} agendou uma publicação.`;
-    }
-    case "PUBLICATION_RECORDED": {
-      const platform = text(metadata, "platform");
-      const outcome = text(metadata, "outcome");
-      return `${actor} registrou ${outcome ?? "o resultado da publicação"}${
-        platform ? ` em ${platform}` : ""
-      }.`;
-    }
-  }
-}
-
-function versionSuffix(metadata: Metadata) {
   const version = text(metadata, "version");
-  return version ? ` da ${version}` : "";
+  const to = metadata?.to;
+  const toText = isProjectStatus(to)
+    ? projectStatusLabel(t, to)
+    : text(metadata, "toLabel");
+  const code = metadata?.platformCode;
+  const platform = isPlatform(code)
+    ? platformLabel(t, code)
+    : text(metadata, "platform");
+  return t(`activity.${action}`, {
+    actor,
+    hasVersion: version ? "yes" : "no",
+    version: version ?? "",
+    hasTarget: toText ? "yes" : "no",
+    to: toText ?? "",
+    hasPlatform: platform ? "yes" : "no",
+    platform: platform ?? "",
+    status: text(metadata, "status") ?? "other",
+  });
 }

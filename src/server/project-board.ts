@@ -1,3 +1,4 @@
+import type { Translate } from "../i18n/translate.ts";
 import type { ParticipantRecord } from "./participant-repository.ts";
 import { calendarDate } from "./project-overview.ts";
 import { priorityLabel, type VideoProjectStatus } from "./project-labels.ts";
@@ -27,7 +28,9 @@ export function projectAlerts(
   return [];
 }
 
-function personLabel(person: { name: string | null; email: string | null } | undefined) {
+function personLabel(
+  person: { name: string | null; email: string | null } | undefined,
+) {
   if (!person) return "Sem nome";
   return person.name || person.email || "Sem nome";
 }
@@ -38,13 +41,19 @@ export function buildProjectBoard(
     ParticipantRecord,
     "videoProjectId" | "userId" | "name" | "email"
   >[],
-  people: readonly { userId: string; name: string | null; email: string | null }[],
+  people: readonly {
+    userId: string;
+    name: string | null;
+    email: string | null;
+  }[],
   // Cena ainda não é um módulo. Sem contagem, não há cena pronta.
+  t: Translate,
   readySceneCounts: Readonly<Record<string, number>> = {},
 ) {
   const directory = new Map(people.map((person) => [person.userId, person]));
   for (const participant of participants) {
-    if (!directory.has(participant.userId)) directory.set(participant.userId, participant);
+    if (!directory.has(participant.userId))
+      directory.set(participant.userId, participant);
   }
   const byProject = new Map<string, (typeof participants)[number][]>();
   for (const participant of participants) {
@@ -76,7 +85,7 @@ export function buildProjectBoard(
           thumbnailUrl: project.thumbnailUrl,
           people: names,
           shootDate: calendarDate(project.plannedShootDate),
-          priority: priorityLabel(project.priority),
+          priority: priorityLabel(t, project.priority),
           alerts: projectAlerts(
             project.status,
             readySceneCounts[project.id] ?? 0,

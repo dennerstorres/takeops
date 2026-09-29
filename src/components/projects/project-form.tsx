@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { formatLabel, ideaFormats } from "@/server/idea-labels";
@@ -76,6 +77,7 @@ export function ProjectForm({
   // Só na criação: a produção nasce com cópia das cenas e do checklist.
   templateId?: string;
 }) {
+  const t = useTranslations();
   const action = values.id ? updateProjectAction : createProjectAction;
   const [state, formAction, pending] = useActionState(action, initialState);
   const disabled = pending || !canEdit;
@@ -109,7 +111,7 @@ export function ProjectForm({
         >
           {ideaFormats.map((format) => (
             <option key={format} value={format}>
-              {formatLabel(format)}
+              {formatLabel(t, format)}
             </option>
           ))}
         </select>
@@ -128,7 +130,7 @@ export function ProjectForm({
         >
           {aspectRatios.map((ratio) => (
             <option key={ratio} value={ratio}>
-              {aspectLabel(ratio)}
+              {aspectLabel(t, ratio)}
             </option>
           ))}
         </select>
@@ -147,7 +149,7 @@ export function ProjectForm({
         >
           {projectPriorities.map((priority) => (
             <option key={priority} value={priority}>
-              {priorityLabel(priority)}
+              {priorityLabel(t, priority)}
             </option>
           ))}
         </select>

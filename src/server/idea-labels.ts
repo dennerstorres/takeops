@@ -1,3 +1,5 @@
+import type { Translate } from "../i18n/translate.ts";
+
 export const ideaFormats = [
   "TUTORIAL",
   "SKETCH",
@@ -20,29 +22,10 @@ export const ideaStatuses = [
 export type IdeaFormat = (typeof ideaFormats)[number];
 export type IdeaStatus = (typeof ideaStatuses)[number];
 
-const formatLabels: Record<IdeaFormat, string> = {
-  TUTORIAL: "Tutorial",
-  SKETCH: "Esquete",
-  DEMO: "Demonstração",
-  FEATURE: "Funcionalidade",
-  INSTITUTIONAL: "Institucional",
-  EDUCATIONAL: "Educativo",
-  BEHIND_THE_SCENES: "Bastidores",
-  OTHER: "Outro",
-};
-
-const statusLabels: Record<IdeaStatus, string> = {
-  NEW: "Nova",
-  UNDER_REVIEW: "Em análise",
-  APPROVED: "Aprovada",
-  DISCARDED: "Descartada",
-  CONVERTED: "Convertida",
-};
-
-export function formatLabel(format: IdeaFormat) {
-  return formatLabels[format];
+export function formatLabel(t: Translate, format: IdeaFormat) {
+  return t(`enums.ideaFormat.${format}`);
 }
 
-export function statusLabel(status: IdeaStatus) {
-  return statusLabels[status];
+export function statusLabel(t: Translate, status: IdeaStatus) {
+  return t(`enums.ideaStatus.${status}`);
 }

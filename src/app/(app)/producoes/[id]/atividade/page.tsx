@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
@@ -21,6 +22,7 @@ export default async function ActivityPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -84,6 +86,7 @@ export default async function ActivityPage({
             <li key={row.id} className="rounded-xl border p-3">
               <p className="text-sm">
                 {describeActivity(
+                  t,
                   row.userId
                     ? (names.get(row.userId) ?? "Ex-membro")
                     : "Alguém",

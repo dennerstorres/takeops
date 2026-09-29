@@ -6,7 +6,7 @@ import { externalUrl } from "./external-url.ts";
 import { instant } from "./instant.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
-import { platformLabel, platforms } from "./publication-labels.ts";
+import { platforms } from "./publication-labels.ts";
 import type { PublicationRepository } from "./publication-repository.ts";
 import { parseInput } from "./validation.ts";
 import { requireRole } from "./workspace.ts";
@@ -213,7 +213,7 @@ export async function schedulePublication(
       entityType: "Publication",
       entityId: current.id,
       metadata: {
-        platform: platformLabel(current.platform),
+        platformCode: current.platform,
         scheduledAt: scheduledAt.toISOString(),
       },
     });
@@ -270,11 +270,6 @@ export async function recordPublicationOutcome(
     { status: data.status, publishedAt, url },
   );
   if (!updated || updated.id !== current.id) throw new NotFoundError();
-  const outcomes = {
-    PUBLISHED: "a publicação",
-    FAILED: "falha na publicação",
-    CANCELED: "o cancelamento da publicação",
-  } as const;
   await recordActivity(deps.activities, {
     workspaceId,
     videoProjectId: current.videoProjectId,
@@ -283,8 +278,7 @@ export async function recordPublicationOutcome(
     entityType: "Publication",
     entityId: current.id,
     metadata: {
-      platform: platformLabel(current.platform),
-      outcome: outcomes[data.status],
+      platformCode: current.platform,
       status: data.status,
     },
   });

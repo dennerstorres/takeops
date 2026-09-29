@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { AssetForm } from "@/components/assets/asset-form";
@@ -18,6 +19,7 @@ export default async function AssetsPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -88,7 +90,7 @@ export default async function AssetsPage({
           {assets.map((asset) => (
             <li key={asset.id} className="rounded-xl border p-3">
               <p className="text-sm text-muted-foreground">
-                {assetTypeLabel(asset.type)}
+                {assetTypeLabel(t, asset.type)}
               </p>
               <a
                 href={asset.url}

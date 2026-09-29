@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -36,6 +37,7 @@ export default async function ReviewPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ versao?: string | string[] }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -214,7 +216,7 @@ export default async function ReviewPage({
             <h2 className="text-base font-medium">Aprovação</h2>
             <p className="text-sm">
               {approval
-                ? approvalStatusLabel(approval.status)
+                ? approvalStatusLabel(t, approval.status)
                 : "Aprovação ainda não pedida."}
               {approval?.reviewedAt ? (
                 <span className="text-muted-foreground">

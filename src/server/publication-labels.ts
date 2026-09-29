@@ -1,3 +1,5 @@
+import type { Translate } from "../i18n/translate.ts";
+
 export const platforms = [
   "INSTAGRAM_REELS",
   "TIKTOK",
@@ -19,28 +21,14 @@ export const publicationStatuses = [
 export type Platform = (typeof platforms)[number];
 export type PublicationStatus = (typeof publicationStatuses)[number];
 
-const platformLabels: Record<Platform, string> = {
-  INSTAGRAM_REELS: "Instagram Reels",
-  TIKTOK: "TikTok",
-  YOUTUBE_SHORTS: "YouTube Shorts",
-  YOUTUBE: "YouTube",
-  LINKEDIN: "LinkedIn",
-  FACEBOOK: "Facebook",
-  OTHER: "Outra",
-};
-
-const statusLabels: Record<PublicationStatus, string> = {
-  PENDING: "A publicar",
-  SCHEDULED: "Agendada",
-  PUBLISHED: "Publicada",
-  FAILED: "Falhou",
-  CANCELED: "Cancelada",
-};
-
-export function platformLabel(value: Platform) {
-  return platformLabels[value];
+export function platformLabel(t: Translate, value: Platform) {
+  return t(`enums.platform.${value}`);
 }
 
-export function publicationStatusLabel(value: PublicationStatus) {
-  return statusLabels[value];
+export function publicationStatusLabel(t: Translate, value: PublicationStatus) {
+  return t(`enums.publicationStatus.${value}`);
+}
+
+export function isPlatform(value: unknown): value is Platform {
+  return (platforms as readonly unknown[]).includes(value);
 }

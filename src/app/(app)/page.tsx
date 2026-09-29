@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -85,6 +86,7 @@ function ProjectList({ cards }: { cards: ProjectCard[] }) {
 }
 
 export default async function Home() {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -109,6 +111,7 @@ export default async function Home() {
       calendar: prismaCalendarRepository,
       dashboard: prismaDashboardRepository,
     },
+    t,
   );
 
   const when = new Intl.DateTimeFormat("pt-BR", {

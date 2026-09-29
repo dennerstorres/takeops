@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -55,6 +56,7 @@ export function IdeaForm({
   values: IdeaFormValues;
   canEdit: boolean;
 }) {
+  const t = useTranslations();
   const action = values.id ? updateIdeaAction : createIdeaAction;
   const [state, formAction, pending] = useActionState(action, initialState);
   const disabled = pending || !canEdit;
@@ -102,7 +104,7 @@ export function IdeaForm({
           <option value="">Sem formato</option>
           {ideaFormats.map((format) => (
             <option key={format} value={format}>
-              {formatLabel(format)}
+              {formatLabel(t, format)}
             </option>
           ))}
         </select>

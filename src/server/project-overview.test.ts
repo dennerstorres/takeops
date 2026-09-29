@@ -7,6 +7,9 @@ import {
   productionTabs,
 } from "./project-overview.ts";
 import type { ProjectRecord } from "./project-repository.ts";
+import { testTranslator } from "../i18n/test-translator.ts";
+
+const t = testTranslator();
 
 function project(patch: Partial<ProjectRecord> = {}): ProjectRecord {
   return {
@@ -40,6 +43,7 @@ describe("visão geral", () => {
     const overview = buildProjectOverview({
       project: project(),
       ownerName: "Ana",
+      t,
       participants: [
         { name: "Bia", email: null, role: "CAMERA" },
         { name: null, email: "caio@example.com", role: "EDITOR" },
@@ -67,8 +71,8 @@ describe("visão geral", () => {
       { label: "Thumbnail", href: "https://cdn.example/thumb.jpg" },
       { label: "Ideia de origem", href: "/ideias/idea-1" },
     ]);
-    assert.equal(pipelineProgress("PUBLISHED").step, 10);
-    assert.equal(pipelineProgress("ARCHIVED").step, null);
+    assert.equal(pipelineProgress(t, "PUBLISHED").step, 10);
+    assert.equal(pipelineProgress(t, "ARCHIVED").step, null);
     assert.equal(calendarDate(null), null);
     assert.equal(productionTabs[0], "Visão Geral");
     assert.equal(productionTabs.includes("Roteiro"), true);

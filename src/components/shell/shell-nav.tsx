@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { shellNavItems } from "@/components/shell/navigation";
@@ -16,9 +17,10 @@ function isCurrent(pathname: string, href: string) {
 // Contagens por href (hoje só avisos não lidos), vindas do servidor.
 export function ShellNav({ counts = {} }: { counts?: Record<string, number> }) {
   const pathname = usePathname();
+  const t = useTranslations("shell");
 
   return (
-    <nav aria-label="Principal" className="flex flex-col gap-1 p-3">
+    <nav aria-label={t("mainNav")} className="flex flex-col gap-1 p-3">
       {shellNavItems.map((item) => {
         const Icon = item.icon;
 
@@ -26,7 +28,7 @@ export function ShellNav({ counts = {} }: { counts?: Record<string, number> }) {
 
         return (
           <Link
-            key={item.label}
+            key={item.href}
             href={item.href}
             aria-current={current ? "page" : undefined}
             className={cn(
@@ -38,11 +40,11 @@ export function ShellNav({ counts = {} }: { counts?: Record<string, number> }) {
             )}
           >
             <Icon aria-hidden="true" />
-            {item.label}
+            {t(`nav.${item.labelKey}`)}
             {counts[item.href] ? (
               <span className="ml-auto rounded-full bg-primary px-2 text-xs text-primary-foreground tabular-nums">
                 {counts[item.href]}
-                <span className="sr-only"> não lidos</span>
+                <span className="sr-only">{t("unreadSuffix")}</span>
               </span>
             ) : null}
           </Link>

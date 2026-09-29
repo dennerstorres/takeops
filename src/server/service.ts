@@ -1,3 +1,4 @@
+import type { Translate } from "../i18n/translate.ts";
 import { DomainError, ValidationError } from "./errors.ts";
 
 export type ServiceContext = {
@@ -46,7 +47,7 @@ export async function runAction<T>(
   try {
     return { ok: true, data: await runService(context, meta, fn) };
   } catch (error) {
-    return toFailure(error);
+    return toFailure(error, await requestTranslator());
   }
 }
 
@@ -58,7 +59,7 @@ export async function runHandler<T>(
   try {
     return Response.json(await runService(context, meta, fn));
   } catch (error) {
-    const failure = toFailure(error);
+    const failure = toFailure(error, await requestTranslator());
     const status = error instanceof DomainError ? error.status : 500;
     return Response.json(
       { message: failure.message, fields: failure.fields },
@@ -67,15 +68,29 @@ export async function runHandler<T>(
   }
 }
 
-function toFailure(error: unknown): ActionFailure {
-  if (error instanceof ValidationError) {
-    return { ok: false, message: error.message, fields: error.fields };
+// Tradutor do idioma de quem fez a requisição. Fora do Next (testes, seed)
+// não há requisição: a mensagem sai no texto original.
+async function requestTranslator(): Promise<Translate | null> {
+  try {
+    const { getTranslations } = await import("next-intl/server");
+    return (await getTranslations()) as unknown as Translate;
+  } catch {
+    return null;
   }
+}
+
+export function toFailure(
+  error: unknown,
+  t: Translate | null = null,
+): ActionFailure {
   if (error instanceof DomainError) {
-    return { ok: false, message: error.message };
+    const message = t && error.messageKey ? t(error.messageKey) : error.message;
+    return error instanceof ValidationError
+      ? { ok: false, message, fields: error.fields }
+      : { ok: false, message };
   }
   // Erro inesperado não vai para a tela. O detalhe fica só no log.
-  return { ok: false, message: fallbackMessage };
+  return { ok: false, message: t ? t("errors.unexpected") : fallbackMessage };
 }
 
 function logServiceError(

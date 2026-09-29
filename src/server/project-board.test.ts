@@ -2,6 +2,9 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { buildProjectBoard, boardColumns } from "./project-board.ts";
 import type { ProjectRecord } from "./project-repository.ts";
+import { testTranslator } from "../i18n/test-translator.ts";
+
+const t = testTranslator();
 
 function project(
   overrides: Partial<ProjectRecord> & Pick<ProjectRecord, "id" | "status">,
@@ -32,7 +35,7 @@ function project(
 
 describe("quadro de produções", () => {
   it("abre as colunas da spec e guarda o arquivado no fim", () => {
-    const board = buildProjectBoard([], [], []);
+    const board = buildProjectBoard([], [], [], t);
     assert.deepEqual(
       board.map((column) => column.title),
       [
@@ -101,6 +104,7 @@ describe("quadro de produções", () => {
         },
       ],
       [{ userId: "ana", name: "Ana Lima", email: null }],
+      t,
     );
     const editing = board.find((column) => column.status === "EDITING");
     assert.deepEqual(editing?.cards, [
@@ -115,16 +119,25 @@ describe("quadro de produções", () => {
       },
     ]);
     assert.deepEqual(
-      board.find((column) => column.status === "IDEA")?.cards.map((card) => card.id),
+      board
+        .find((column) => column.status === "IDEA")
+        ?.cards.map((card) => card.id),
       ["idea"],
     );
     assert.deepEqual(
-      board.find((column) => column.status === "ARCHIVED")?.cards.map((card) => card.title),
+      board
+        .find((column) => column.status === "ARCHIVED")
+        ?.cards.map((card) => card.title),
       ["Antigo"],
     );
     assert.equal(
       board
-        .filter((column) => column.status !== "EDITING" && column.status !== "IDEA" && column.status !== "ARCHIVED")
+        .filter(
+          (column) =>
+            column.status !== "EDITING" &&
+            column.status !== "IDEA" &&
+            column.status !== "ARCHIVED",
+        )
         .every((column) => column.cards.length === 0),
       true,
     );
@@ -135,24 +148,29 @@ describe("quadro de produções", () => {
       [project({ id: "gravar", status: "READY_TO_RECORD", title: "Sem cena" })],
       [],
       [],
+      t,
     );
     const ready = buildProjectBoard(
       [project({ id: "gravar", status: "READY_TO_RECORD", title: "Com cena" })],
       [],
       [],
+      t,
       { gravar: 1 },
     );
     const idea = buildProjectBoard(
       [project({ id: "ideia", status: "IDEA", title: "Ideia" })],
       [],
       [],
+      t,
     );
     assert.deepEqual(
-      missing.find((column) => column.status === "READY_TO_RECORD")?.cards[0]?.alerts,
+      missing.find((column) => column.status === "READY_TO_RECORD")?.cards[0]
+        ?.alerts,
       ["Não há cenas prontas."],
     );
     assert.deepEqual(
-      ready.find((column) => column.status === "READY_TO_RECORD")?.cards[0]?.alerts,
+      ready.find((column) => column.status === "READY_TO_RECORD")?.cards[0]
+        ?.alerts,
       [],
     );
     assert.deepEqual(

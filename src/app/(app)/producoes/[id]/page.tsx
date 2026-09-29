@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -22,6 +23,7 @@ export default async function ProductionPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -81,6 +83,7 @@ export default async function ProductionPage({
     project,
     ownerName: owner ? (owner.name ?? owner.email ?? "Sem nome") : null,
     participants,
+    t,
   });
   const facts = [
     ["Objetivo", overview.objective],
@@ -175,7 +178,7 @@ export default async function ProductionPage({
                     {person.name ?? person.email ?? "Sem nome"}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {projectRoleLabel(person.role)}
+                    {projectRoleLabel(t, person.role)}
                   </p>
                 </div>
                 {canEdit &&

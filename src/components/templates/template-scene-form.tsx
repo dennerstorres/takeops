@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +13,7 @@ const fieldClass =
   "w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
 
 export function TemplateSceneForm({ templateId }: { templateId: string }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     addTemplateSceneAction,
     null as ProductionTemplateFormState,
@@ -47,7 +49,7 @@ export function TemplateSceneForm({ templateId }: { templateId: string }) {
           >
             {sceneTypes.map((type) => (
               <option key={type} value={type}>
-                {sceneTypeLabel(type)}
+                {sceneTypeLabel(t, type)}
               </option>
             ))}
           </select>

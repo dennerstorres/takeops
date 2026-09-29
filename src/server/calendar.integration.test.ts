@@ -5,6 +5,9 @@ import { listCalendarEvents, type CalendarDeps } from "./calendar.ts";
 import { ForbiddenError, ValidationError } from "./errors.ts";
 import { createProject } from "./project.ts";
 import { createWorkspace } from "./workspace.ts";
+import { testTranslator } from "../i18n/test-translator.ts";
+
+const t = testTranslator();
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
 
@@ -131,6 +134,7 @@ describe(
           workspaceId,
           range,
           deps,
+          t,
         );
         assert.deepEqual(
           events.map((event) => [event.kind, event.label]),
@@ -146,7 +150,7 @@ describe(
         assert.ok(!events.some((event) => event.projectId === outOfRange.id));
 
         await assert.rejects(
-          listCalendarEvents(outsider.id, workspaceId, range, deps),
+          listCalendarEvents(outsider.id, workspaceId, range, deps, t),
           ForbiddenError,
         );
         await assert.rejects(
@@ -159,6 +163,7 @@ describe(
               timezone: range.timezone,
             },
             deps,
+            t,
           ),
           ValidationError,
         );

@@ -14,7 +14,11 @@ HARDEN-001..005, HARDEN-007, DASH-001, OSS-001, OSS-002, OSS-005, DEPLOY-001, DE
 - `npm test`: tudo passa exceto `take.integration.test.ts` (PGlite, ADR-031) — vai rodar em Postgres real na OSS-007 (CI).
 - Git limpo em `main`, sincronizado com `origin`.
 
-## Próxima tarefa
+## Atualização
+
+OSS-008 concluída em sessão seguinte (ver `HISTORY.md`). Próxima: UI-001.
+
+## Próxima tarefa (original)
 
 `OSS-008 — Idiomas pt-BR e en` (ADR-041): `next-intl`, catálogos em `messages/`, idioma por usuário → `Accept-Language` → `en`, erros de serviço por código, `*-labels.ts` pelo catálogo, teste de chaves faltando. Critério: shell + uma tela completa nos dois idiomas; o resto migra nas UI-002..007.
 

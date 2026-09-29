@@ -20,6 +20,9 @@ import type {
   WorkspaceRepository,
   WorkspaceRole,
 } from "./workspace-repository.ts";
+import { testTranslator } from "../i18n/test-translator.ts";
+
+const t = testTranslator();
 
 function scene(id: string, videoProjectId: string): SceneRecord {
   return {
@@ -461,7 +464,7 @@ describe("shot", () => {
 
   it("resume o plano em uma linha", () => {
     assert.equal(
-      shotSummary({
+      shotSummary(t, {
         shotType: "CAMERA",
         framing: "Close",
         cameraLabel: "Lateral",
@@ -470,7 +473,7 @@ describe("shot", () => {
       "Câmera · Close · Lateral · 3 takes",
     );
     assert.equal(
-      shotSummary({
+      shotSummary(t, {
         shotType: "SCREEN_CAPTURE",
         framing: null,
         cameraLabel: null,

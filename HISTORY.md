@@ -4600,3 +4600,25 @@ Dono configurou no Google Console a origem e o redirect de `https://takeops.denn
 - Dono recebeu o e-mail e entrou pelo link em `https://takeops.dennerstorres.dev`. Google também confirmado antes.
 
 Nota para self-host: servidor SMTP próprio em Docker pode ter o mesmo problema de DANE/DNSSEC; documentar na OSS-004.
+
+---
+
+## 2026-09-29 — OSS-008 — Idiomas pt-BR e en
+
+**Status:** DONE
+**Agente:** Claude
+
+- `next-intl` (MIT), catálogos `messages/pt-BR.json` e `messages/en.json`, sem prefixo na URL.
+- Migration `20260929100000_user_locale`: `User.locale`. Idioma: preferência → `Accept-Language` → `en`. Seletor de idioma no shell (desktop e menu mobile), action `setLocaleAction`.
+- Shell, layout (`lang`, descrição) e `/avisos` inteiros pelo catálogo, datas com `Intl` no idioma e fuso do workspace.
+- Todos os `*-labels.ts` e as frases de atividade/aviso vêm do catálogo (ADR-042). Activity Log passa a gravar códigos.
+- Erros padrão (validação, não encontrado, sem acesso, inesperado) traduzidos por chave.
+
+### Testes
+
+`src/i18n/i18n.test.ts` (paridade de chaves, `resolveLocale`, erro traduzido). Testes de rótulo usam o catálogo real. `npm test`: 150 ok, falha só `take no banco` (conhecido, ADR-031). Lint, typecheck, build. Smoke em `next start`: `lang` e textos mudam pelo navegador e a preferência salva vence.
+
+### Pendências
+
+- Texto fixo ainda nas demais telas, títulos do kanban/dashboard (`boardColumns`, `dashboardCounters`), mensagens específicas de erro e de validação: migram nas UI-002..007.
+- Rótulo do Toaster (sonner) em inglês fixo: UI-003.

@@ -1,6 +1,8 @@
 "use client";
 
 import { Menu } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { LocaleSwitcher } from "@/components/shell/locale-switcher";
 import { LogoutButton } from "@/components/shell/logout-button";
 import { ShellNav } from "@/components/shell/shell-nav";
 import { Button } from "@/components/ui/button";
@@ -23,13 +25,14 @@ export function AppShell({
   workspaceName: string;
   unread?: number;
 }) {
+  const t = useTranslations("shell");
   return (
     <div className="flex min-h-dvh bg-background">
       <a
         href="#conteudo"
         className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-50 focus:rounded-lg focus:bg-background focus:px-3 focus:py-2 focus:ring-3 focus:ring-ring/50"
       >
-        Ir para o conteúdo
+        {t("skipToContent")}
       </a>
       <aside className="hidden w-60 shrink-0 flex-col border-r border-sidebar-border bg-sidebar md:flex">
         <div className="px-5 pt-5 pb-2">
@@ -43,6 +46,7 @@ export function AppShell({
         <ShellNav counts={{ "/avisos": unread }} />
         <div className="mt-auto border-t border-sidebar-border p-3">
           <p className="truncate px-3 pb-1 text-sm">{userLabel}</p>
+          <LocaleSwitcher />
           <LogoutButton className="w-full" />
         </div>
       </aside>
@@ -55,7 +59,7 @@ export function AppShell({
                   variant="outline"
                   size="icon"
                   className="size-11"
-                  aria-label="Abrir menu"
+                  aria-label={t("openMenu")}
                 />
               }
             >
@@ -69,6 +73,9 @@ export function AppShell({
                 <SheetTitle>Video Production Manager</SheetTitle>
               </SheetHeader>
               <ShellNav counts={{ "/avisos": unread }} />
+              <div className="border-t border-sidebar-border p-3">
+                <LocaleSwitcher />
+              </div>
             </SheetContent>
           </Sheet>
           <div className="min-w-0 flex-1">

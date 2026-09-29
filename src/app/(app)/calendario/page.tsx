@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -31,6 +32,7 @@ export default async function CalendarPage({
     semana?: string | string[];
   }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -60,6 +62,7 @@ export default async function CalendarPage({
       workspaces: prismaWorkspaceRepository,
       calendar: prismaCalendarRepository,
     },
+    t,
   );
 
   const time = new Intl.DateTimeFormat("pt-BR", {

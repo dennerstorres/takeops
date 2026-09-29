@@ -47,6 +47,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session({ session, user }) {
       // O id estável é o do banco, não o subject do provedor.
       session.user.id = user.id;
+      // Idioma salvo segue na sessão para o i18n não consultar o banco de novo.
+      session.user.locale = user.locale ?? null;
       return session;
     },
   },

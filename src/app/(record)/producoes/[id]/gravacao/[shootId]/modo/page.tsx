@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -32,6 +33,7 @@ export default async function RecordModePage({
   params: Promise<{ id: string; shootId: string }>;
   searchParams: Promise<{ cena?: string | string[] }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -165,7 +167,7 @@ export default async function RecordModePage({
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">
               Cena {view.position} de {view.total} ·{" "}
-              {sceneStatusLabel(view.scene.status)}
+              {sceneStatusLabel(t, view.scene.status)}
             </p>
             <h1 className="text-xl font-medium tracking-tight">
               {view.scene.title}
@@ -197,10 +199,10 @@ export default async function RecordModePage({
                 {view.shots.map((shot, index) => (
                   <li key={shot.id} className="rounded-xl border p-3">
                     <p className="text-sm font-medium">
-                      {shotDisplayName(shot.name, index)}
+                      {shotDisplayName(t, shot.name, index)}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {shotSummary(shot)}
+                      {shotSummary(t, shot)}
                     </p>
                     {shot.description ? (
                       <p className="mt-1 text-sm whitespace-pre-wrap">

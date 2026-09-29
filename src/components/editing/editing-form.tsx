@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +36,7 @@ export function EditingForm({
   values: EditingFormValues;
   people: { id: string; label: string }[];
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     saveEditingAction,
     null as EditingFormState,
@@ -122,7 +124,7 @@ export function EditingForm({
             <option value="">Não definida</option>
             {aspectRatios.map((ratio) => (
               <option key={ratio} value={ratio}>
-                {aspectLabel(ratio)}
+                {aspectLabel(t, ratio)}
               </option>
             ))}
           </select>

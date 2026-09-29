@@ -7,7 +7,6 @@ import type { IdeaRepository } from "./idea-repository.ts";
 import {
   aspectRatios,
   projectPriorities,
-  projectStatusLabel,
   videoProjectStatuses,
 } from "./project-labels.ts";
 import type { ParticipantRepository } from "./participant-repository.ts";
@@ -329,7 +328,6 @@ export async function changeVideoProjectStatus(
     metadata: {
       from: current.status,
       to: updated.status,
-      toLabel: projectStatusLabel(updated.status),
     },
   });
   return updated;

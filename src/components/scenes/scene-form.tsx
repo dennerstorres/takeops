@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import {
   AutosaveStatusText,
@@ -49,6 +50,7 @@ export function SceneForm({
   people: { id: string; label: string }[];
   editing: boolean;
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     editing ? updateSceneAction : createSceneAction,
     null as SceneFormState,
@@ -92,7 +94,7 @@ export function SceneForm({
         >
           {sceneTypes.map((type) => (
             <option key={type} value={type}>
-              {sceneTypeLabel(type)}
+              {sceneTypeLabel(t, type)}
             </option>
           ))}
         </select>
@@ -107,7 +109,7 @@ export function SceneForm({
           >
             {sceneStatuses.map((status) => (
               <option key={status} value={status}>
-                {sceneStatusLabel(status)}
+                {sceneStatusLabel(t, status)}
               </option>
             ))}
           </select>

@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { AppShell } from "@/components/shell/app-shell";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
@@ -16,6 +17,7 @@ export default async function AuthenticatedLayout({
 
   const access = await openWorkspace(session.user.id);
   if (access.kind === "setup") redirect("/comecar");
+  const t = await getTranslations();
 
   // O contador é enfeite: se falhar, a página abre sem ele.
   const unread = await countMyUnread(
@@ -29,7 +31,7 @@ export default async function AuthenticatedLayout({
 
   return (
     <AppShell
-      userLabel={session.user.name ?? session.user.email ?? "Conta"}
+      userLabel={session.user.name ?? session.user.email ?? t("common.account")}
       workspaceName={access.workspace.workspace.name}
       unread={unread}
     >

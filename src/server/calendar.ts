@@ -1,3 +1,4 @@
+import type { Translate } from "../i18n/translate.ts";
 import { utcToZonedLocal } from "../lib/zoned-time.ts";
 import type {
   CalendarPlannedRow,
@@ -42,6 +43,7 @@ export function buildCalendarEvents(
   from: Date,
   to: Date,
   days: { first: string; last: string },
+  t: Translate,
 ): CalendarEvent[] {
   const inRange = (date: Date | null): date is Date =>
     date !== null && date >= from && date < to;
@@ -90,8 +92,8 @@ export function buildCalendarEvents(
       projectTitle: row.projectTitle,
       label:
         row.status === "PUBLISHED"
-          ? `Publicada · ${platformLabel(row.platform)}`
-          : `Publicação · ${platformLabel(row.platform)}`,
+          ? `Publicada · ${platformLabel(t, row.platform)}`
+          : `Publicação · ${platformLabel(t, row.platform)}`,
       href: `/producoes/${row.projectId}/publicacao`,
       at,
       day: null,
@@ -117,6 +119,7 @@ export async function listCalendarEvents(
   workspaceId: string,
   range: { from: Date; to: Date; timezone: string },
   deps: CalendarDeps,
+  t: Translate,
 ) {
   const membership = await requireMembership(
     userId,
@@ -145,5 +148,5 @@ export async function listCalendarEvents(
     deps.calendar.plannedPublishes(membership.workspaceId, dayStart, dayEnd),
     deps.calendar.publications(membership.workspaceId, from, to),
   ]);
-  return buildCalendarEvents(shoots, planned, publications, from, to, days);
+  return buildCalendarEvents(shoots, planned, publications, from, to, days, t);
 }

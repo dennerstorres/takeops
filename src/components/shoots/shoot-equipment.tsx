@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { AddShootEquipmentForm } from "@/components/shoots/add-shoot-equipment-form";
 import {
   removeShootEquipmentAction,
@@ -22,6 +23,7 @@ export function ShootEquipment({
   catalog: { id: string; label: string }[];
   canEdit: boolean;
 }) {
+  const t = useTranslations();
   const used = new Set(rows.map((row) => row.equipmentItemId));
   const options = catalog.filter((item) => !used.has(item.id));
   const checked = rows.filter((row) => row.checked).length;
@@ -52,7 +54,7 @@ export function ShootEquipment({
                 </span>
                 <span className="text-muted-foreground">
                   {" "}
-                  · {equipmentCategoryLabel(row.item.category)}
+                  · {equipmentCategoryLabel(t, row.item.category)}
                   {row.required ? "" : " · opcional"}
                   {row.notes ? ` · ${row.notes}` : ""}
                 </span>

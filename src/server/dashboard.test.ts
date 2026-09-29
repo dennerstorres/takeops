@@ -5,6 +5,9 @@ import { buildDashboard } from "./dashboard.ts";
 import type { IdeaRecord } from "./idea-repository.ts";
 import type { VideoProjectStatus } from "./project-labels.ts";
 import type { ProjectRecord } from "./project-repository.ts";
+import { testTranslator } from "../i18n/test-translator.ts";
+
+const t = testTranslator();
 
 function project(
   id: string,
@@ -110,6 +113,7 @@ describe("dashboard", () => {
       ],
       people: [{ userId: "owner", name: "Dono", email: null }],
       pendingApprovalProjectIds: ["rev"],
+      t,
     });
 
     assert.deepEqual(
@@ -157,6 +161,7 @@ describe("dashboard", () => {
       participants: [],
       people: [],
       pendingApprovalProjectIds: ["outra"],
+      t,
     });
     assert.deepEqual(data.approval, []);
   });

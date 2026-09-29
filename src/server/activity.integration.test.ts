@@ -16,21 +16,24 @@ import {
   schedulePublication,
 } from "./publication.ts";
 import { createWorkspace } from "./workspace.ts";
+import { testTranslator } from "../i18n/test-translator.ts";
+
+const t = testTranslator();
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
 
 describe("frase da atividade", () => {
   it("fala como a spec", () => {
     assert.equal(
-      describeActivity("Ana", "VERSION_CREATED", { version: "V2" }),
+      describeActivity(t, "Ana", "VERSION_CREATED", { version: "V2" }),
       "Ana adicionou a versão V2.",
     );
     assert.equal(
-      describeActivity("Daniel", "VERSION_APPROVED", { version: "V3" }),
+      describeActivity(t, "Daniel", "VERSION_APPROVED", { version: "V3" }),
       "Daniel aprovou o vídeo da V3.",
     );
     assert.equal(
-      describeActivity("Ana", "PROJECT_STATUS_CHANGED", null),
+      describeActivity(t, "Ana", "PROJECT_STATUS_CHANGED", null),
       "Ana mudou a etapa da produção.",
     );
   });
@@ -304,7 +307,7 @@ describe(
         const approved = rows.find((row) => row.action === "VERSION_APPROVED");
         assert.ok(approved);
         assert.equal(
-          describeActivity("Ana", approved.action, approved.metadata),
+          describeActivity(t, "Ana", approved.action, approved.metadata),
           "Ana aprovou o vídeo da V1.",
         );
         const recorded = rows.find(
@@ -312,7 +315,7 @@ describe(
         );
         assert.ok(recorded);
         assert.equal(
-          describeActivity("Ana", recorded.action, recorded.metadata),
+          describeActivity(t, "Ana", recorded.action, recorded.metadata),
           "Ana registrou a publicação em TikTok.",
         );
       } finally {
