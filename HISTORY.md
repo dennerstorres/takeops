@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — CAL-001 — Modelo de eventos derivados
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Os eventos do calendário são derivados na leitura: gravações, datas planejadas de publicação e publicações agendadas ou feitas. Sem tabela `CalendarEvent`.
+
+### Implementação
+
+- `CalendarRepository` lê o workspace inteiro num intervalo `[from, to)`, só produções não excluídas; gravação excluída fica fora.
+- `listCalendarEvents` (qualquer membro, inclusive leitor): intervalo válido de até 45 dias. `buildCalendarEvents` junta e ordena.
+- Data planejada é dia inteiro (`day` AAAA-MM-DD, sem fuso): entra quando o dia cai entre o primeiro e o último dia do intervalo no fuso do workspace.
+- Publicação publicada aparece no dia em que saiu; as outras, no agendamento. Cancelada vem marcada (`canceled`).
+
+### Arquivos principais
+
+- `src/server/calendar.ts`, `calendar-repository.ts`, `calendar-prisma.ts`, `calendar.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR: a PLAN só pede registro se houver persistência própria, e não há.
+
+### Banco / migrations
+
+- Nenhuma. Índices usados: `Shoot(videoProjectId, scheduledAt)`, `Publication(scheduledAt)`.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — PUB-004 — Marcar publicação realizada
 
 **Status:** DONE  

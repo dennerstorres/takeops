@@ -1292,7 +1292,7 @@ Registrar:
 
 ## CAL-001 — Modelo de eventos derivados
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** SHOOT-002, PUB-003
 
@@ -1301,6 +1301,12 @@ Não necessariamente criar tabela CalendarEvent.
 Pode derivar eventos de Shoot e Publication.
 
 Registrar decisão se escolher persistência própria.
+
+### Critérios
+
+- [x] eventos derivados de Shoot, data planejada da produção e Publication, sem tabela nova;
+- [x] data planejada é dia inteiro e respeita os dias do fuso do workspace;
+- [x] só o workspace aberto; intervalo inválido ou maior que 45 dias é recusado.
 
 ---
 

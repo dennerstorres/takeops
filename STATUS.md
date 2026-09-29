@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PUB-004 — Marcar publicação realizada
+CAL-001 — Modelo de eventos derivados
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-CAL-001 — Modelo de eventos derivados
+CAL-002 — Visualização mensal
 ```
 
 ## Estado dos módulos
@@ -53,7 +53,7 @@ CAL-001 — Modelo de eventos derivados
 | Revisão | DONE |
 | Aprovação | DONE |
 | Publicação | DONE |
-| Calendário | NOT_STARTED |
+| Calendário | IN_PROGRESS |
 | Templates | NOT_STARTED |
 | Notificações | NOT_STARTED |
 | Activity Log | NOT_STARTED |
