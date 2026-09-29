@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
+import { prismaNotificationRepository } from "@/server/notification-prisma";
 import { auth } from "@/server/auth";
 import { addParticipant, removeParticipant } from "@/server/participant";
 import { prismaParticipantRepository } from "@/server/participant-prisma";
@@ -36,6 +37,7 @@ export async function addParticipantAction(formData: FormData) {
         prismaWorkspaceRepository,
         prismaProjectRepository,
         prismaParticipantRepository,
+        prismaNotificationRepository,
       ),
   );
   revalidatePath(`/producoes/${projectId}`);

@@ -1315,6 +1315,52 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-29 — NOTIFY-003 — Eventos essenciais
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Avisos saem sozinhos: você foi adicionado a uma produção, nova versão, comentário de revisão, alterações solicitadas e vídeo aprovado.
+
+### Implementação
+
+- `projectAudience` (`notification-audience.ts`): responsável da produção + participantes (+ extras). `notify` tira o autor e quem saiu do workspace.
+- `addParticipant` avisa a pessoa adicionada (só na primeira função na produção); `createEditVersion` avisa quem acompanha; `createReviewComment` avisa quem acompanha e quem enviou a versão; decisão de aprovação avisa quem acompanha e quem pediu.
+- Dependências novas são opcionais (`notifications?`, `participants?`); actions passam os repositórios Prisma.
+
+### Arquivos principais
+
+- `src/server/notification-audience.ts`, `participant.ts`, `edit-version.ts`, `review.ts`, `approval.ts`
+- `src/server/participant-actions.ts`, `edit-version-actions.ts`, `review-actions.ts`, `approval-actions.ts`
+- `src/server/notification.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. "Gravação próxima" (spec §40) precisa de rotina agendada; fica para quando houver job (não há infraestrutura de fila no MVP).
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Teste percorre adicionar participante → versão → comentário → pedir → aprovar e confere quem recebe o quê.
+
+### Pendências conhecidas
+
+- Aviso de "gravação próxima" depende de rotina agendada.
+
+---
+
 ## 2026-09-29 — NOTIFY-002 — Inbox interna
 
 **Status:** DONE  

@@ -7,6 +7,10 @@ import type {
 } from "./edit-version-repository.ts";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import { externalUrl } from "./external-url.ts";
+import { notify } from "./notification.ts";
+import { projectAudience } from "./notification-audience.ts";
+import type { NotificationRepository } from "./notification-repository.ts";
+import type { ParticipantRepository } from "./participant-repository.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
 import { parseInput } from "./validation.ts";
@@ -20,6 +24,8 @@ export type EditVersionDeps = {
   projects: ProjectRepository;
   versions: EditVersionRepository;
   activities?: ActivityRepository;
+  notifications?: NotificationRepository;
+  participants?: ParticipantRepository;
 };
 
 const optionalText = (max: number, message: string) =>
@@ -134,5 +140,25 @@ export async function createEditVersion(
     entityId: created.id,
     metadata: { version: versionLabel(created.versionNumber) },
   });
+  if (deps.notifications) {
+    const project = await getProject(
+      userId,
+      workspaceId,
+      scope.projectId,
+      deps.workspaces,
+      deps.projects,
+    );
+    await notify(
+      deps.notifications,
+      {
+        workspaceId: scope.workspaceId,
+        actorId: userId,
+        videoProjectId: scope.projectId,
+        type: "VERSION_CREATED",
+        metadata: { version: versionLabel(created.versionNumber) },
+      },
+      await projectAudience(project, deps.participants),
+    );
+  }
   return created;
 }

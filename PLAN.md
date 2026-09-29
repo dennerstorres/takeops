@@ -1483,9 +1483,15 @@ Cobrir:
 
 ## NOTIFY-003 — Eventos essenciais
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** NOTIFY-002
+
+### Critérios
+
+- [x] adicionar participante, nova versão, comentário, alterações solicitadas e aprovação geram aviso;
+- [x] recebem responsável e participantes (e quem pediu ou enviou, quando cabe), nunca o autor;
+- [x] gravação próxima fica para quando houver rotina agendada.
 
 ---
 

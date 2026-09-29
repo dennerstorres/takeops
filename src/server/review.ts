@@ -1,7 +1,14 @@
 import { z } from "zod";
 import { parseTimestamp } from "../lib/timestamp.ts";
-import { getEditVersion, type EditVersionDeps } from "./edit-version.ts";
+import {
+  getEditVersion,
+  versionLabel,
+  type EditVersionDeps,
+} from "./edit-version.ts";
 import { NotFoundError } from "./errors.ts";
+import { notify } from "./notification.ts";
+import { projectAudience } from "./notification-audience.ts";
+import { getProject } from "./project.ts";
 import type { ReviewRepository, ReviewScope } from "./review-repository.ts";
 import { parseInput } from "./validation.ts";
 import { requireRole } from "./workspace.ts";
@@ -94,6 +101,31 @@ export async function createReviewComment(
   });
   if (!created || created.editVersionId !== scope.versionId) {
     throw new NotFoundError();
+  }
+  if (deps.notifications) {
+    const [project, version] = await Promise.all([
+      getProject(
+        userId,
+        workspaceId,
+        scope.projectId,
+        deps.workspaces,
+        deps.projects,
+      ),
+      deps.versions.find(workspaceId, scope.projectId, scope.versionId),
+    ]);
+    await notify(
+      deps.notifications,
+      {
+        workspaceId,
+        actorId: userId,
+        videoProjectId: scope.projectId,
+        type: "REVIEW_COMMENT_CREATED",
+        metadata: version
+          ? { version: versionLabel(version.versionNumber) }
+          : null,
+      },
+      await projectAudience(project, deps.participants, [version?.createdById]),
+    );
   }
   return created;
 }

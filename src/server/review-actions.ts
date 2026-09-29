@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
+import { prismaParticipantRepository } from "@/server/participant-prisma";
+import { prismaNotificationRepository } from "@/server/notification-prisma";
 import { auth } from "@/server/auth";
 import { prismaEditVersionRepository } from "@/server/edit-version-prisma";
 import { prismaProjectRepository } from "@/server/project-prisma";
@@ -25,6 +27,8 @@ const deps: ReviewDeps = {
   projects: prismaProjectRepository,
   versions: prismaEditVersionRepository,
   reviews: prismaReviewRepository,
+  notifications: prismaNotificationRepository,
+  participants: prismaParticipantRepository,
 };
 
 async function currentWorkspace() {

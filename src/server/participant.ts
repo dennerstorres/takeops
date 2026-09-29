@@ -1,3 +1,5 @@
+import { notify } from "./notification.ts";
+import type { NotificationRepository } from "./notification-repository.ts";
 import { z } from "zod";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import { projectRoles } from "./participant-labels.ts";
@@ -42,6 +44,7 @@ export async function addParticipant(
   workspaces: WorkspaceRepository,
   projects: ProjectRepository,
   participants: ParticipantRepository,
+  notifications?: NotificationRepository,
 ) {
   await requireRole(userId, workspaceId, writers, workspaces);
   const data = parseInput(assignmentSchema, input);
@@ -74,6 +77,20 @@ export async function addParticipant(
   const created = await participants.add(project.id, data.userId, data.role);
   if (created.videoProjectId !== project.id || created.role !== data.role) {
     throw new NotFoundError();
+  }
+  // Nova função para quem já participava não gera aviso de novo.
+  if (!current.some((row) => row.userId === data.userId)) {
+    await notify(
+      notifications,
+      {
+        workspaceId,
+        actorId: userId,
+        videoProjectId: project.id,
+        type: "PROJECT_MEMBER_ADDED",
+        metadata: null,
+      },
+      [data.userId],
+    );
   }
   return created;
 }

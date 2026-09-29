@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { recordActivity } from "./activity-record.ts";
+import { notify } from "./notification.ts";
+import { projectAudience } from "./notification-audience.ts";
 import type { ApprovalRepository } from "./approval-repository.ts";
 import {
   getEditVersion,
@@ -181,6 +183,23 @@ async function decide(
     entityId: decided.id,
     metadata: version ? { version: versionLabel(version.versionNumber) } : null,
   });
+  // Quem pediu a aprovação e quem acompanha a produção ficam sabendo.
+  await notify(
+    deps.notifications,
+    {
+      workspaceId: project.workspaceId,
+      actorId: userId,
+      videoProjectId: project.id,
+      type:
+        decision.status === "APPROVED"
+          ? "VERSION_APPROVED"
+          : "CHANGES_REQUESTED",
+      metadata: version
+        ? { version: versionLabel(version.versionNumber) }
+        : null,
+    },
+    await projectAudience(project, deps.participants, [decided.requestedById]),
+  );
   return decided;
 }
 

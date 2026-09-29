@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
+import { prismaNotificationRepository } from "@/server/notification-prisma";
 import { prismaActivityRepository } from "@/server/activity-prisma";
 import {
   approveVersion,
@@ -30,6 +31,7 @@ const deps: ApprovalDeps = {
   approvals: prismaApprovalRepository,
   participants: prismaParticipantRepository,
   activities: prismaActivityRepository,
+  notifications: prismaNotificationRepository,
 };
 
 async function currentWorkspace() {

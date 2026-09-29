@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-NOTIFY-002 — Inbox interna
+NOTIFY-003 — Eventos essenciais
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-NOTIFY-003 — Eventos essenciais
+SEED-001
 ```
 
 ## Estado dos módulos
@@ -55,7 +55,7 @@ NOTIFY-003 — Eventos essenciais
 | Publicação | DONE |
 | Calendário | DONE |
 | Templates | DONE |
-| Notificações | IN_PROGRESS |
+| Notificações | DONE |
 | Activity Log | DONE |
 
 ## Bloqueios

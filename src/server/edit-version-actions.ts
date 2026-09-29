@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
+import { prismaParticipantRepository } from "@/server/participant-prisma";
+import { prismaNotificationRepository } from "@/server/notification-prisma";
 import { prismaActivityRepository } from "@/server/activity-prisma";
 import { auth } from "@/server/auth";
 import { createEditVersion } from "@/server/edit-version";
@@ -52,6 +54,8 @@ export async function createEditVersionAction(
           projects: prismaProjectRepository,
           versions: prismaEditVersionRepository,
           activities: prismaActivityRepository,
+          notifications: prismaNotificationRepository,
+          participants: prismaParticipantRepository,
         },
       ),
   );

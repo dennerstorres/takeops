@@ -10,7 +10,11 @@ import {
   notify,
   type NotificationDeps,
 } from "./notification.ts";
+import { approveVersion, requestApproval } from "./approval.ts";
+import { createEditVersion } from "./edit-version.ts";
+import { addParticipant } from "./participant.ts";
 import { createProject } from "./project.ts";
+import { createReviewComment } from "./review.ts";
 import { createWorkspace } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
@@ -147,6 +151,122 @@ describe(
         }
         await prisma.user.deleteMany({
           where: { id: { in: [owner.id, member.id, outsider.id] } },
+        });
+      }
+    });
+
+    it("avisa quem acompanha: participante, versão, comentário e aprovação", async () => {
+      const { prisma } = await import("./db.ts");
+      const { prismaApprovalRepository } = await import("./approval-prisma.ts");
+      const { prismaEditVersionRepository } =
+        await import("./edit-version-prisma.ts");
+      const { prismaIdeaRepository } = await import("./idea-prisma.ts");
+      const { prismaNotificationRepository } =
+        await import("./notification-prisma.ts");
+      const { prismaParticipantRepository } =
+        await import("./participant-prisma.ts");
+      const { prismaProjectRepository } = await import("./project-prisma.ts");
+      const { prismaReviewRepository } = await import("./review-prisma.ts");
+      const { prismaWorkspaceRepository } =
+        await import("./workspace-prisma.ts");
+      const deps = {
+        workspaces: prismaWorkspaceRepository,
+        projects: prismaProjectRepository,
+        versions: prismaEditVersionRepository,
+        approvals: prismaApprovalRepository,
+        reviews: prismaReviewRepository,
+        participants: prismaParticipantRepository,
+        notifications: prismaNotificationRepository,
+      };
+      const suffix = randomUUID();
+      const [owner, editor] = await Promise.all(
+        ["dono", "editor"].map((name) =>
+          prisma.user.create({
+            data: { email: `ntf-flow-${name}-${suffix}@example.com`, name },
+          }),
+        ),
+      );
+      let workspaceId = "";
+      const types = async (userId: string) =>
+        (await listMyNotifications(userId, workspaceId, deps))
+          .map((row) => row.type)
+          .sort();
+      try {
+        workspaceId = (
+          await createWorkspace(
+            owner.id,
+            { name: `Fluxo aviso ${suffix}`, slug: `fluxo-aviso-${suffix}` },
+            prismaWorkspaceRepository,
+          )
+        ).workspace.id;
+        await prisma.workspaceMember.create({
+          data: { workspaceId, userId: editor.id, role: "MEMBER" },
+        });
+        const project = await createProject(
+          owner.id,
+          workspaceId,
+          { title: `Peça ${suffix}`, format: "DEMO", ownerId: owner.id },
+          prismaWorkspaceRepository,
+          prismaIdeaRepository,
+          prismaProjectRepository,
+        );
+        await addParticipant(
+          owner.id,
+          workspaceId,
+          project.id,
+          { userId: editor.id, role: "EDITOR" },
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+          prismaParticipantRepository,
+          prismaNotificationRepository,
+        );
+        const version = await createEditVersion(
+          owner.id,
+          workspaceId,
+          project.id,
+          { previewUrl: "https://vimeo.com/1" },
+          deps,
+        );
+        assert.deepEqual(await types(editor.id), [
+          "PROJECT_MEMBER_ADDED",
+          "VERSION_CREATED",
+        ]);
+        assert.deepEqual(await types(owner.id), []);
+
+        await createReviewComment(
+          editor.id,
+          workspaceId,
+          { projectId: project.id, versionId: version.id },
+          { text: "cortar pausa", timestamp: "00:18" },
+          deps,
+        );
+        const pending = await requestApproval(
+          editor.id,
+          workspaceId,
+          project.id,
+          version.id,
+          deps,
+        );
+        await approveVersion(
+          owner.id,
+          workspaceId,
+          project.id,
+          pending.id,
+          {},
+          deps,
+        );
+        assert.deepEqual(await types(owner.id), ["REVIEW_COMMENT_CREATED"]);
+        assert.deepEqual(await types(editor.id), [
+          "PROJECT_MEMBER_ADDED",
+          "VERSION_APPROVED",
+          "VERSION_CREATED",
+        ]);
+      } finally {
+        if (workspaceId) {
+          await prisma.workspace.deleteMany({ where: { id: workspaceId } });
+        }
+        await prisma.user.deleteMany({
+          where: { id: { in: [owner.id, editor.id] } },
         });
       }
     });
