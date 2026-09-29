@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { assetTypes } from "./asset-labels.ts";
 import type { AssetRepository, AssetWrite } from "./asset-repository.ts";
-import { NotFoundError, ValidationError } from "./errors.ts";
+import { NotFoundError } from "./errors.ts";
+import { externalUrl } from "./external-url.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
 import { parseInput } from "./validation.ts";
@@ -33,29 +34,6 @@ const assetSchema = z.object({
     z.string().trim().max(1000, "A descrição passou de 1000 caracteres."),
   ),
 });
-
-// O link vira <a href> para toda a equipe: só http(s), com host, e sem
-// usuário e senha embutidos, que vazariam para quem abre a produção.
-export function externalUrl(value: string) {
-  let parsed: URL;
-  try {
-    parsed = new URL(value);
-  } catch {
-    throw new ValidationError({ url: "Informe um link http(s) válido." });
-  }
-  if (
-    (parsed.protocol !== "http:" && parsed.protocol !== "https:") ||
-    !parsed.hostname
-  ) {
-    throw new ValidationError({ url: "Informe um link http(s) válido." });
-  }
-  if (parsed.username || parsed.password) {
-    throw new ValidationError({
-      url: "Tire usuário e senha do link; compartilhe o acesso pela ferramenta.",
-    });
-  }
-  return parsed.toString();
-}
 
 function toWrite(input: unknown): AssetWrite {
   const data = parseInput(assetSchema, input);

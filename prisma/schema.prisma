@@ -27,6 +27,7 @@ model User {
   recordedTakes Take[]
   continuityNotes ContinuityNote[]
   assetsCreated   Asset[]
+  editingAssigned EditingInfo[]
 }
 
 enum WorkspaceRole {
@@ -181,6 +182,7 @@ model VideoProject {
   shoots                    Shoot[]
   continuityNotes           ContinuityNote[]
   assets                    Asset[]
+  editingInfo               EditingInfo?
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -551,4 +553,26 @@ model Asset {
 
   @@index([videoProjectId, type])
   @@index([videoProjectId, createdAt])
+}
+
+// Um registro por produção com o combinado da edição. O vídeo é editado fora
+// (ADR-007); aqui fica quem edita, onde está o projeto e o formato de saída.
+model EditingInfo {
+  id               String       @id @default(uuid())
+  videoProjectId   String       @unique
+  editorId         String?
+  software         String?
+  projectFileUrl   String?
+  notes            String?
+  targetResolution String?
+  targetFps        Float?
+  aspectRatio      AspectRatio?
+  captionsRequired Boolean      @default(false)
+  musicRequired    Boolean      @default(false)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  videoProject     VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  editor           User?        @relation(fields: [editorId], references: [id], onDelete: SetNull)
+
+  @@index([editorId])
 }

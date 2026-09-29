@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-ASSET-001 — Referências externas
+EDIT-001 — EditingInfo
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-EDIT-001 — EditingInfo
+EDIT-002 — Tela de edição
 ```
 
 ## Estado dos módulos
@@ -49,7 +49,7 @@ EDIT-001 — EditingInfo
 | Modo Gravação | DONE |
 | Takes | DONE |
 | Assets | DONE |
-| Edição | NOT_STARTED |
+| Edição | IN_PROGRESS |
 | Revisão | NOT_STARTED |
 | Aprovação | NOT_STARTED |
 | Publicação | NOT_STARTED |

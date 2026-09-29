@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — EDIT-001 — EditingInfo
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Cada produção pode ter um registro de edição (spec §28): editor, software, link do projeto, notas, resolução, fps, proporção, legenda e música.
+
+### Implementação
+
+- Modelo `EditingInfo` com `videoProjectId` único; `aspectRatio` reaproveita o enum da produção; `targetFps` é `Float` (23.976, 29.97).
+- `getEditingInfo` (todos os papéis) devolve `null` antes do primeiro salvamento. `saveEditingInfo` (dono, admin, membro) faz upsert pela produção visível.
+- Editor precisa ser do workspace; link do projeto passa por `externalUrl` (ADR-030); fps aceita vírgula, > 0, ≤ 240, até 3 casas.
+- `externalUrl` saiu de `asset.ts` para `external-url.ts`, com o campo do erro como parâmetro.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928350000_editing_info/`
+- `src/server/editing.ts`, `editing-repository.ts`, `editing-prisma.ts`, `editing.integration.test.ts`
+- `src/server/external-url.ts`, `src/server/asset.ts`, `asset.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Salvar sempre envia o formulário inteiro: campo vazio limpa o valor.
+
+### Banco / migrations
+
+- `20260928350000_editing_info`: tabela `EditingInfo`, único em `videoProjectId`, índice `editorId`, FK cascade na produção e SET NULL no editor. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Tela fica na EDIT-002.
+
+---
+
 ## 2026-09-28 — ASSET-001 — Referências externas
 
 **Status:** DONE  

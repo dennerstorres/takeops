@@ -4,12 +4,12 @@ import { describe, it } from "node:test";
 import {
   createAsset,
   deleteAsset,
-  externalUrl,
   listAssets,
   updateAsset,
   type AssetDeps,
 } from "./asset.ts";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
+import { externalUrl } from "./external-url.ts";
 import { createProject } from "./project.ts";
 import { createWorkspace } from "./workspace.ts";
 

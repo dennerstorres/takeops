@@ -1007,9 +1007,15 @@ Validar URLs.
 
 ## EDIT-001 — EditingInfo
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PROJECT-002
+
+### Critérios
+
+- [x] um registro de edição por produção, com os campos da spec;
+- [x] editor precisa ser do workspace; link do projeto só http(s); fps até 240 com três casas;
+- [x] leitor lê; dono, admin e membro salvam; outra produção ou workspace não alcança.
 
 ---
 

@@ -599,7 +599,7 @@ Asset (e depois EditVersion) guarda links para Drive, Dropbox, NAS, Frame.io. O 
 
 ## Decisão
 
-`externalUrl` (`src/server/asset.ts`) aceita só `http:`/`https:` com host e recusa usuário/senha embutidos no link. `file://`, `smb://`, `ftp://` ficam de fora: NAS entra pelo link web de compartilhamento. O link abre em nova aba com `noopener noreferrer`.
+`externalUrl` (`src/server/external-url.ts`) aceita só `http:`/`https:` com host e recusa usuário/senha embutidos no link. `file://`, `smb://`, `ftp://` ficam de fora: NAS entra pelo link web de compartilhamento. O link abre em nova aba com `noopener noreferrer`.
 
 ## Consequências
 
