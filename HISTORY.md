@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — RECORD-002 — Navegação entre cenas
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Modo Gravação troca de cena por "Anterior" e "Próxima", fixos no rodapé.
+
+### Implementação
+
+- A cena atual vem de `?cena=N` (1-based). `clampPosition` leva valor inválido para a primeira cena e excesso para a última.
+- Rodapé fixo com dois botões de 48px; some na primeira/última ponta e quando há uma cena só.
+- Navegação por link: voltar do navegador volta à cena anterior e a URL pode ser compartilhada no set.
+
+### Arquivos principais
+
+- `src/app/(record)/producoes/[id]/gravacao/[shootId]/modo/page.tsx`
+- `src/server/record-view.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Posição na URL em vez de estado no cliente.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — RECORD-001 — Layout do Modo Gravação
 
 **Status:** DONE  

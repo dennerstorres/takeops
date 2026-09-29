@@ -85,5 +85,6 @@ describe("modo gravação", () => {
     assert.equal(clampPosition("2.5", 5), 1);
     assert.equal(clampPosition("3", 5), 3);
     assert.equal(clampPosition("9", 5), 5);
+    assert.equal(clampPosition(["2", "3"], 5), 1);
   });
 });

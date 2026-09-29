@@ -904,9 +904,15 @@ Mobile-first.
 
 ## RECORD-002 — Navegação entre cenas
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** RECORD-001
+
+### Critérios
+
+- [x] Anterior e Próxima no rodapé fixo, com alvo de 48px e sem hover;
+- [x] a cena fica na URL (?cena=N); valor inválido cai na primeira e excesso na última;
+- [x] sem botão para além das pontas.
 
 ---
 

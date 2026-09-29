@@ -8,7 +8,7 @@ import { prismaProjectRepository } from "@/server/project-prisma";
 import { listScenes } from "@/server/scene";
 import { sceneStatusLabel } from "@/server/scene-labels";
 import { prismaSceneRepository } from "@/server/scene-prisma";
-import { buildRecordView } from "@/server/record-view";
+import { buildRecordView, clampPosition } from "@/server/record-view";
 import { getShoot } from "@/server/shoot";
 import { prismaShootRepository } from "@/server/shoot-prisma";
 import { listShotsByScene } from "@/server/shot";
@@ -23,8 +23,10 @@ function personLabel(member: { name: string | null; email: string | null }) {
 
 export default async function RecordModePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string; shootId: string }>;
+  searchParams: Promise<{ cena?: string | string[] }>;
 }) {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
@@ -71,9 +73,10 @@ export default async function RecordModePage({
       id: member.userId,
       label: personLabel(member),
     })),
-    1,
+    clampPosition((await searchParams).cena, scenes.length),
   );
   const exit = `/producoes/${id}/gravacao`;
+  const here = `/producoes/${id}/gravacao/${shoot.id}/modo`;
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col">
@@ -181,6 +184,33 @@ export default async function RecordModePage({
           ) : null}
         </main>
       )}
+      {view !== null && view.total > 1 ? (
+        <nav
+          aria-label="Cenas"
+          className="sticky bottom-0 grid grid-cols-2 gap-3 border-t bg-background px-4 py-3"
+        >
+          {view.previous !== null ? (
+            <Link
+              href={`${here}?cena=${view.previous}`}
+              className="inline-flex min-h-12 items-center justify-center rounded-lg border px-3 text-sm font-medium"
+            >
+              Anterior
+            </Link>
+          ) : (
+            <span aria-hidden />
+          )}
+          {view.next !== null ? (
+            <Link
+              href={`${here}?cena=${view.next}`}
+              className="inline-flex min-h-12 items-center justify-center rounded-lg border px-3 text-sm font-medium"
+            >
+              Próxima
+            </Link>
+          ) : (
+            <span aria-hidden />
+          )}
+        </nav>
+      ) : null}
     </div>
   );
 }

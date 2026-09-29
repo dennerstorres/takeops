@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-RECORD-001 — Layout do Modo Gravação
+RECORD-002 — Navegação entre cenas
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-RECORD-002 — Navegação entre cenas
+RECORD-003 — Takes dentro do Modo Gravação
 ```
 
 ## Estado dos módulos
