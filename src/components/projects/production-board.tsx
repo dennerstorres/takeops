@@ -26,9 +26,11 @@ type BoardColumn = {
 export function ProductionBoard({
   columns,
   canEdit,
+  canApprove,
 }: {
   columns: BoardColumn[];
   canEdit: boolean;
+  canApprove: boolean;
 }) {
   const [state, action, pending] = useActionState(
     moveProjectStatusAction,
@@ -40,6 +42,7 @@ export function ProductionBoard({
 
   function move(projectId: string, status: string) {
     if (!canEdit || pending) return;
+    if (status === "APPROVED" && !canApprove) return;
     if (!projectId || !projectIdRef.current || !statusRef.current) return;
     projectIdRef.current.value = projectId;
     statusRef.current.value = status;
@@ -134,7 +137,15 @@ export function ProductionBoard({
                       className="mt-1 min-h-11 w-full rounded-lg border bg-background px-2 text-sm"
                     >
                       {columns.map((option) => (
-                        <option key={option.status} value={option.status}>
+                        <option
+                          key={option.status}
+                          value={option.status}
+                          disabled={
+                            option.status === "APPROVED" &&
+                            !canApprove &&
+                            column.status !== "APPROVED"
+                          }
+                        >
                           {option.title}
                         </option>
                       ))}

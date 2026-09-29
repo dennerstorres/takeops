@@ -12,9 +12,11 @@ import {
 export function ParticipantForm({
   projectId,
   people,
+  canManageApprovers,
 }: {
   projectId: string;
   people: { id: string; label: string }[];
+  canManageApprovers: boolean;
 }) {
   return (
     <form
@@ -46,11 +48,13 @@ export function ParticipantForm({
         defaultValue="PRODUCER"
         className="h-11 rounded-lg border border-input bg-transparent px-3 text-sm"
       >
-        {projectRoles.map((role) => (
-          <option key={role} value={role}>
-            {projectRoleLabel(role)}
-          </option>
-        ))}
+        {projectRoles
+          .filter((role) => canManageApprovers || role !== "APPROVER")
+          .map((role) => (
+            <option key={role} value={role}>
+              {projectRoleLabel(role)}
+            </option>
+          ))}
       </select>
       <Button type="submit" className="min-h-11">
         Adicionar

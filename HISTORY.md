@@ -4408,3 +4408,29 @@ Dados criados pela própria tela no workspace do usuário: produção de título
 
 - Sem inspeção visual (captura de tela do iframe veio em branco). Vale uma olhada no aparelho no Modo Gravação.
 - Kanban com o novo "Mover para" (HARDEN-003) conferido só por medida.
+
+---
+
+## 2026-09-29 — HARDEN-004 — Estados vazios e erros
+
+**Status:** DONE
+**Agente:** Claude
+
+### Resumo
+
+- Estados vazios conferidos no app rodando (workspace sem dados): ideias, templates, avisos, checklists, equipamentos, continuidade, revisão, kanban. Todos com mensagem e próximo passo. Registro inexistente já mostrava "não está na lista".
+- Novo `src/app/not-found.tsx` em português (antes: 404 padrão do Next, em inglês).
+- Novo `error.tsx` em `(app)` e `(record)` com `RouteError` (`components/feedback`): mensagem, "Tentar novamente" e link para o início. Detalhe só no log.
+- Tela deixa de oferecer a membro o que o serviço recusa (ADR-035): botão excluir produção, função APPROVER (adicionar e remover) e mover para "Aprovado" no kanban (opção desabilitada e arraste ignorado).
+
+### Fora do escopo
+
+- Dashboard (`/`) ainda é a vitrine da BOOT-002 ("A base da interface está pronta…"). É a DASH-001, que segue TODO.
+
+### Testes executados
+
+```text
+npm run lint, npm run typecheck, npm run build
+```
+
+Resultado: PASS. No `next dev`: rota inexistente dá 404 com a página nova; dono segue vendo "Excluir". `error.tsx` não foi provocado ao vivo.

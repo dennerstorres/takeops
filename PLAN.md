@@ -1580,7 +1580,7 @@ Revisar endpoint/action por endpoint/action.
 
 ## HARDEN-004 — Estados vazios e erros
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** UI principal pronta
 

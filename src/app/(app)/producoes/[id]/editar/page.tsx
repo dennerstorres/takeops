@@ -65,7 +65,9 @@ export default async function EditProductionPage({
           </h1>
           <p className="text-sm text-muted-foreground">{project.title}</p>
         </div>
-        <DeleteProjectButton projectId={project.id} />
+        {access.workspace.membership.role === "MEMBER" ? null : (
+          <DeleteProjectButton projectId={project.id} />
+        )}
       </header>
       <ProjectForm
         canEdit

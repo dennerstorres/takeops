@@ -739,4 +739,4 @@ A HARDEN-001 achou três caminhos em que MEMBER ia além da spec §7: excluir pr
 
 ## Consequências
 
-A regra está só no serviço; a tela ainda mostra o botão de excluir, a coluna "Aprovado" e a opção APPROVER para membro, que recebe o erro. Esconder fica na HARDEN-004.
+A regra autoritativa está no serviço. Desde a HARDEN-004 a tela também esconde de membro o botão de excluir, a opção APPROVER e o destino "Aprovado" no kanban.

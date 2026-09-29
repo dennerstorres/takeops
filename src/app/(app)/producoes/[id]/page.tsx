@@ -61,6 +61,10 @@ export default async function ProductionPage({
   }
 
   const canEdit = access.workspace.membership.role !== "VIEWER";
+  // Só dono e admin definem quem aprova (ADR-035).
+  const canManageApprovers = ["OWNER", "ADMIN"].includes(
+    access.workspace.membership.role,
+  );
   const [participants, people] = await Promise.all([
     listParticipants(
       session.user.id,
@@ -174,7 +178,8 @@ export default async function ProductionPage({
                     {projectRoleLabel(person.role)}
                   </p>
                 </div>
-                {canEdit ? (
+                {canEdit &&
+                (person.role !== "APPROVER" || canManageApprovers) ? (
                   <RemoveParticipantButton
                     projectId={project.id}
                     userId={person.userId}
@@ -187,6 +192,7 @@ export default async function ProductionPage({
         )}
         {canEdit ? (
           <ParticipantForm
+            canManageApprovers={canManageApprovers}
             projectId={project.id}
             people={people.map((person) => ({
               id: person.userId,

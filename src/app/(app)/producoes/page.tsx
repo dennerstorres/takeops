@@ -15,10 +15,7 @@ import {
   projectStatusLabel,
   videoProjectStatuses,
 } from "@/server/project-labels";
-import {
-  hasProjectSearch,
-  parseProjectSearch,
-} from "@/server/project-search";
+import { hasProjectSearch, parseProjectSearch } from "@/server/project-search";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
@@ -229,7 +226,11 @@ export default async function ProductionsPage({
           }
         />
       ) : null}
-      <ProductionBoard columns={board} canEdit={canEdit} />
+      <ProductionBoard
+        columns={board}
+        canEdit={canEdit}
+        canApprove={access.workspace.membership.role !== "MEMBER"}
+      />
     </div>
   );
 }
