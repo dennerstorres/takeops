@@ -38,14 +38,18 @@ export function ProductionBoard({
   const projectIdRef = useRef<HTMLInputElement>(null);
   const statusRef = useRef<HTMLInputElement>(null);
 
-  function dropOn(status: string, event: React.DragEvent<HTMLElement>) {
+  function move(projectId: string, status: string) {
     if (!canEdit || pending) return;
-    event.preventDefault();
-    const projectId = event.dataTransfer.getData("text/plain");
     if (!projectId || !projectIdRef.current || !statusRef.current) return;
     projectIdRef.current.value = projectId;
     statusRef.current.value = status;
     formRef.current?.requestSubmit();
+  }
+
+  function dropOn(status: string, event: React.DragEvent<HTMLElement>) {
+    if (!canEdit || pending) return;
+    event.preventDefault();
+    move(event.dataTransfer.getData("text/plain"), status);
   }
 
   return (
@@ -120,6 +124,22 @@ export function ProductionBoard({
                       </ul>
                     ) : null}
                   </Link>
+                  {canEdit ? (
+                    // Arrastar não funciona por teclado nem no toque.
+                    <select
+                      aria-label={`Mover ${card.title} para`}
+                      value={column.status}
+                      disabled={pending}
+                      onChange={(event) => move(card.id, event.target.value)}
+                      className="mt-1 min-h-11 w-full rounded-lg border bg-background px-2 text-sm"
+                    >
+                      {columns.map((option) => (
+                        <option key={option.status} value={option.status}>
+                          {option.title}
+                        </option>
+                      ))}
+                    </select>
+                  ) : null}
                 </li>
               ))}
             </ul>

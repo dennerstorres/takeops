@@ -22,7 +22,7 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-HARDEN-002 — Testes cross-workspace
+HARDEN-003 — Acessibilidade básica
 ```
 
 ## Próxima tarefa recomendada

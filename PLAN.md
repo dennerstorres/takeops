@@ -1572,7 +1572,7 @@ Revisar endpoint/action por endpoint/action.
 
 ## HARDEN-003 — Acessibilidade básica
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** UI principal pronta
 

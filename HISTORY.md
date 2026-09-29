@@ -4356,3 +4356,31 @@ npm test, npm run lint, npm run typecheck
 ```
 
 Resultado: 133 de 136 passam. Falhas só em `take.integration.test.ts` (registro simultâneo em PGlite, ADR-031), iguais antes da tarefa.
+
+---
+
+## 2026-09-29 — HARDEN-003 — Acessibilidade básica
+
+**Status:** DONE
+**Agente:** Claude
+
+### Resumo
+
+Auditoria estática dos 95 `.tsx` contra spec §57.
+
+- Teclado: kanban só mudava etapa arrastando (nem teclado nem toque). Cada card ganhou select "Mover para" (44px, `aria-label` com o título), que usa o mesmo form do arraste.
+- Cor: calendário já escreve o tipo em texto; evento cancelado era só riscado, ganhou "(cancelada)" para leitor de tela.
+- Já atendidos: labels em todos os campos (Field com `htmlFor` ou `aria-label`), botões com `min-h-11`/`size-11`, botão só ícone com nome, `img` com `alt`, link "Ir para o conteúdo", `lang="pt-BR"`, progressbar com ARIA, erros em `role="alert"`, sem `onClick` em elemento não interativo.
+- Contraste: tokens do shadcn, sem mudança.
+
+### Arquivos principais
+
+- `src/components/projects/production-board.tsx`, `src/app/(app)/calendario/page.tsx`
+
+### Testes executados
+
+```text
+npm run lint, npm run typecheck, npm run build
+```
+
+Resultado: PASS. Sem teste automático de UI (não há e2e). Conferir com leitor de tela e teclado fica na HARDEN-005, que precisa de login.

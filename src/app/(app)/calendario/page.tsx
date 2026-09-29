@@ -134,6 +134,9 @@ export default async function CalendarPage({
             className={`mr-1 inline-block size-2 rounded-full ${kindClass[event.kind]}`}
           />
           <span className="font-medium">{event.label}</span>
+          {event.canceled ? (
+            <span className="sr-only"> (cancelada)</span>
+          ) : null}
           <span className="block truncate text-muted-foreground">
             {event.projectTitle}
           </span>
