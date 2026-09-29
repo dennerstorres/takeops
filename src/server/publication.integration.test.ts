@@ -1,11 +1,14 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
-import { ForbiddenError, NotFoundError } from "./errors.ts";
+import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { createProject } from "./project.ts";
 import {
+  createPublication,
+  deletePublication,
   getPublication,
   listPublications,
+  updatePublication,
   type PublicationDeps,
 } from "./publication.ts";
 import { createWorkspace } from "./workspace.ts";
@@ -160,6 +163,109 @@ describe(
         await assert.rejects(
           listPublications(ctx.outsider.id, workspaceId, project.id, deps),
           ForbiddenError,
+        );
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+
+    it("cria, edita e remove destinos; leitor só vê", async () => {
+      const ctx = await setup();
+      try {
+        const { deps, workspaceId, project } = ctx;
+        const tiktok = await createPublication(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          {
+            platform: "TIKTOK",
+            caption: " Novo recurso ",
+            notes: "",
+            status: "PUBLISHED",
+            url: "https://tiktok.com/x",
+          },
+          deps,
+        );
+        assert.equal(tiktok.status, "PENDING");
+        assert.equal(tiktok.url, null);
+        assert.equal(tiktok.caption, "Novo recurso");
+        assert.equal(tiktok.notes, null);
+
+        const edited = await updatePublication(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          tiktok.id,
+          { platform: "YOUTUBE_SHORTS", caption: "", notes: "sem música" },
+          deps,
+        );
+        assert.equal(edited.platform, "YOUTUBE_SHORTS");
+        assert.equal(edited.caption, null);
+        assert.equal(edited.notes, "sem música");
+        assert.equal(edited.status, "PENDING");
+
+        await assert.rejects(
+          createPublication(
+            ctx.owner.id,
+            workspaceId,
+            project.id,
+            { platform: "ORKUT" },
+            deps,
+          ),
+          ValidationError,
+        );
+        await assert.rejects(
+          createPublication(
+            ctx.viewer.id,
+            workspaceId,
+            project.id,
+            { platform: "TIKTOK" },
+            deps,
+          ),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          updatePublication(
+            ctx.owner.id,
+            workspaceId,
+            ctx.sibling.id,
+            tiktok.id,
+            { platform: "TIKTOK" },
+            deps,
+          ),
+          NotFoundError,
+        );
+        await assert.rejects(
+          deletePublication(
+            ctx.viewer.id,
+            workspaceId,
+            project.id,
+            tiktok.id,
+            deps,
+          ),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          createPublication(
+            ctx.owner.id,
+            workspaceId,
+            ctx.other.id,
+            { platform: "TIKTOK" },
+            deps,
+          ),
+          NotFoundError,
+        );
+
+        await deletePublication(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          tiktok.id,
+          deps,
+        );
+        assert.deepEqual(
+          await listPublications(ctx.owner.id, workspaceId, project.id, deps),
+          [],
         );
       } finally {
         await ctx.cleanup();

@@ -1242,9 +1242,15 @@ Qualquer decisão durável deve ser registrada em `DECISIONS.md`.
 
 ## PUB-002 — CRUD de destinos
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PUB-001
+
+### Critérios
+
+- [x] a aba Publicação cria, edita e exclui destinos com plataforma, legenda e notas;
+- [x] status, horário e link não mudam por aqui;
+- [x] membro escreve; leitor só vê; outra produção ou workspace não alcança.
 
 ---
 

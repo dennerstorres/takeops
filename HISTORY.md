@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — PUB-002 — CRUD de destinos
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+A aba Publicação lista os destinos da produção e permite criar, editar e excluir (plataforma, legenda, notas).
+
+### Implementação
+
+- `createPublication`, `updatePublication`, `deletePublication` (dono, admin, membro; leitor só vê). O destino só mexe em plataforma, legenda e notas: status, horário e link enviados junto são ignorados (fluxos da PUB-003/004).
+- `/producoes/[id]/publicacao`; a aba "Publicação" virou link. Cada destino mostra status, agendamento e publicação no fuso do workspace, link e legenda.
+- Excluir pede confirmação e avisa que nada muda na plataforma.
+
+### Arquivos principais
+
+- `src/server/publication.ts`, `publication-actions.ts`, `publication.integration.test.ts`
+- `src/components/publications/publication-form.tsx`, `delete-publication-button.tsx`
+- `src/app/(app)/producoes/[id]/publicacao/page.tsx`, `src/components/projects/production-tabs.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Excluir apaga o registro (spec não prevê lixeira para publicação).
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — PUB-001 — Modelo Publication
 
 **Status:** DONE  

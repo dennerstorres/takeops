@@ -1,8 +1,15 @@
+import { z } from "zod";
 import { NotFoundError } from "./errors.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
+import { platforms } from "./publication-labels.ts";
 import type { PublicationRepository } from "./publication-repository.ts";
+import { parseInput } from "./validation.ts";
+import { requireRole } from "./workspace.ts";
 import type { WorkspaceRepository } from "./workspace-repository.ts";
+
+// A spec dá a membro "atualizar publicações"; leitor só vê.
+const writers = ["OWNER", "ADMIN", "MEMBER"] as const;
 
 export type PublicationDeps = {
   workspaces: WorkspaceRepository;
@@ -58,4 +65,92 @@ export async function getPublication(
     throw new NotFoundError();
   }
   return row;
+}
+
+const optionalText = (max: number, message: string) =>
+  z.preprocess(
+    (value) => (typeof value === "string" ? value : ""),
+    z.string().trim().max(max, message),
+  );
+
+const destinationSchema = z.object({
+  platform: z.enum(platforms, { error: "Escolha a plataforma." }),
+  caption: optionalText(5000, "A legenda passou de 5000 caracteres."),
+  notes: optionalText(2000, "As notas passaram de 2000 caracteres."),
+});
+
+// Destino é onde e com que texto: plataforma, legenda e notas. Horário,
+// link e status têm fluxo próprio (PUB-003 e PUB-004).
+function toDestination(input: unknown) {
+  const data = parseInput(destinationSchema, input);
+  return {
+    platform: data.platform,
+    caption: data.caption ? data.caption : null,
+    notes: data.notes ? data.notes : null,
+  };
+}
+
+export async function createPublication(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  input: unknown,
+  deps: PublicationDeps,
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const data = toDestination(input);
+  const scope = await publicationScope(userId, workspaceId, projectId, deps);
+  const created = await deps.publications.create(
+    scope.workspaceId,
+    scope.projectId,
+    data,
+  );
+  if (!created || created.videoProjectId !== scope.projectId) {
+    throw new NotFoundError();
+  }
+  return created;
+}
+
+export async function updatePublication(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  publicationId: string,
+  input: unknown,
+  deps: PublicationDeps,
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const data = toDestination(input);
+  const scope = await publicationScope(userId, workspaceId, projectId, deps);
+  const updated = await deps.publications.update(
+    scope.workspaceId,
+    scope.projectId,
+    publicationId,
+    data,
+  );
+  if (
+    !updated ||
+    updated.id !== publicationId ||
+    updated.videoProjectId !== scope.projectId
+  ) {
+    throw new NotFoundError();
+  }
+  return updated;
+}
+
+export async function deletePublication(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  publicationId: string,
+  deps: PublicationDeps,
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const scope = await publicationScope(userId, workspaceId, projectId, deps);
+  const removed = await deps.publications.remove(
+    scope.workspaceId,
+    scope.projectId,
+    publicationId,
+  );
+  if (!removed) throw new NotFoundError();
 }
