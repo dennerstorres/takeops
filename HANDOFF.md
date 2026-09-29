@@ -1,29 +1,36 @@
-# HANDOFF — 2026-09-29
+# HANDOFF — 2026-09-29 (sessão 2)
 
-Sessão encerrada perto do limite de 5h. Nada ficou pela metade; cada tarefa tem commit próprio.
+Sessão encerrada por limite de contexto, antes de começar a OSS-008. Nada ficou pela metade; cada tarefa tem commit próprio e está no GitHub.
 
 ## Feito nesta sessão
 
-RECORD-001..005, CONT-001, ASSET-001, EDIT-001..002, VERSION-001..003, REVIEW-001..004, APPROVAL-001..004, PUB-001..004, CAL-001..003, TEMPLATE-001..005 (005 criada nesta sessão), ACTIVITY-001..002, NOTIFY-001..003, SEED-001..002.
-
-Detalhes: `HISTORY.md`. Decisões novas: ADR-030 (link externo só http(s), sem credencial), ADR-031 (número de versão por contador na produção), ADR-032 (leitor não comenta revisão), ADR-033 (quem decide aprovação), ADR-034 (produção por template recebe cópias).
+HARDEN-001..005, HARDEN-007, DASH-001, OSS-001, OSS-002, OSS-005, DEPLOY-001, DEPLOY-002. Planejamento das fases 21–24 (UI/PanelUI, self-hosted, Coolify, i18n). ADR-035..041. Detalhes: `HISTORY.md`.
 
 ## Estado atual
 
-- Fase 20 — Hardening. Próxima: `HARDEN-001 — Auditoria de autorização`.
-- `npm test` (135), `lint`, `typecheck` e `build` passando no último commit. Git limpo em `main`.
-- `npm run db:seed` cria Acme Software + produção demo (idempotente).
+- Produção no ar: `https://takeops.dennerstorres.dev` (Coolify, Dockerfile, deploy automático a cada push na `main`). Login por Google e por link de e-mail funcionando.
+- Postgres `takeops-db` no Coolify com backup diário local (sem S3).
+- Repositório `dennerstorres/takeops` ainda **privado**; histórico já sem e-mail pessoal; `LICENSE` AGPL-3.0.
+- `npm test`: tudo passa exceto `take.integration.test.ts` (PGlite, ADR-031) — vai rodar em Postgres real na OSS-007 (CI).
+- Git limpo em `main`, sincronizado com `origin`.
 
-## Pontos para o Hardening
+## Próxima tarefa
 
-- Kanban deixa membro mover a produção para "Aprovado" sem passar pela aprovação (ADR-033).
-- "Um pedido de aprovação aberto por produção" é regra de serviço, sem índice parcial.
-- `prisma dev` (PGlite) mistura transações paralelas: testes simultâneos (take, versão) só valem de verdade em Postgres real (`PG_CONCURRENCY=1`, ADR-031).
-- Aviso de "gravação próxima" (spec §40) precisa de rotina agendada; não existe.
-- Nenhuma tela foi clicada (login só Google): conferir no aparelho em 375/390/430px, principalmente Modo Gravação e calendário.
+`OSS-008 — Idiomas pt-BR e en` (ADR-041): `next-intl`, catálogos em `messages/`, idioma por usuário → `Accept-Language` → `en`, erros de serviço por código, `*-labels.ts` pelo catálogo, teste de chaves faltando. Critério: shell + uma tela completa nos dois idiomas; o resto migra nas UI-002..007.
 
-## Ambiente
+Ordem depois: UI-001..008 (PanelUI só referência visual, ADR-038) → OSS-003/004/006/007 → HARDEN-006/008/009 → MVP-001..004.
 
-- Banco local: `npx prisma dev start takeops`.
-- Migration: `migrate dev --create-only`, renomear para o próximo carimbo (`20260928470000_...`), `migrate deploy`. Não rode `prisma format` (reformata o schema inteiro).
-- Rode `prettier --write` só nos arquivos da tarefa.
+## Pendências do dono
+
+- Trocar `AUTH_SECRET` no Coolify (o valor apareceu na leitura de tela do agente) e redeployar.
+- Configurar destino S3 para o backup do banco.
+- Abrir o Modo Gravação num celular real.
+
+## Ambiente local
+
+- Sem Bash funcional nesta máquina: usar PowerShell. Para escrever arquivos com acento, usar a ferramenta Write + `python` (PowerShell 5.1 corrompe UTF-8).
+- Banco local: `npx prisma dev -n takeops -d`; URL direta `postgres://postgres:postgres@localhost:51214/template1?sslmode=disable` (defina `DATABASE_URL` no terminal; o `.env` do dono tem os segredos e não deve ser lido).
+- `npm run verify` = lint + typecheck + test + build.
+- Migrations: `migrate dev --create-only`, renomear para o próximo carimbo, `migrate deploy`. Não rodar `prisma format`.
+- Rodar `prettier --write` só nos arquivos da tarefa (vários arquivos antigos acusariam diferença de fim de linha).
+- Chrome via MCP `chrome-mcp-stdio` (o `claude-in-chrome` não conecta). Coolify em `https://coolify.dennerstorres.dev`.
