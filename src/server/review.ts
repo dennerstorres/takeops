@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { parseTimestamp } from "../lib/timestamp.ts";
 import { getEditVersion, type EditVersionDeps } from "./edit-version.ts";
 import { NotFoundError } from "./errors.ts";
 import type { ReviewRepository, ReviewScope } from "./review-repository.ts";
@@ -22,11 +23,21 @@ const commentSchema = z.object({
     .trim()
     .min(1, "Escreva o comentário.")
     .max(2000, "O comentário passou de 2000 caracteres."),
-  timestampSeconds: z.preprocess(
-    (value) => (value == null || value === "" ? null : Number(value)),
+  // A tela manda o texto digitado ("01:04"); chamada interna pode mandar
+  // segundos já contados.
+  timestamp: z.preprocess(
+    (value) =>
+      typeof value === "string"
+        ? parseTimestamp(value)
+        : value == null
+          ? null
+          : value,
     z
-      .number({ error: "Informe o tempo em segundos." })
-      .int("Informe o tempo em segundos inteiros.")
+      .number({ error: "Use o tempo como 01:04 ou 1:02:03." })
+      .refine((value) => !Number.isNaN(value), {
+        message: "Use o tempo como 01:04 ou 1:02:03.",
+      })
+      .int("Use o tempo em segundos inteiros.")
       .min(0, "O tempo não pode ser negativo.")
       .max(MAX_TIMESTAMP_SECONDS, "O tempo passou de 23:59:59.")
       .nullable(),
@@ -78,7 +89,7 @@ export async function createReviewComment(
   const scope = await reviewScope(userId, workspaceId, target, deps);
   const created = await deps.reviews.create(scope, {
     authorId: userId,
-    timestampSeconds: data.timestampSeconds,
+    timestampSeconds: data.timestamp,
     text: data.text,
   });
   if (!created || created.editVersionId !== scope.versionId) {

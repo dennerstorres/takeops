@@ -118,7 +118,7 @@ describe(
           member.id,
           workspaceId,
           target,
-          { text: "aumentar legenda", timestampSeconds: "64" },
+          { text: "aumentar legenda", timestamp: "01:04" },
           deps,
         );
         assert.equal(late.authorId, member.id);
@@ -134,14 +134,14 @@ describe(
           author.id,
           workspaceId,
           target,
-          { text: " cortar essa pausa ", timestampSeconds: 18 },
+          { text: " cortar essa pausa ", timestamp: 18 },
           deps,
         );
         await createReviewComment(
           author.id,
           workspaceId,
           { projectId: project.id, versionId: v2.id },
-          { text: "outra versão", timestampSeconds: 1 },
+          { text: "outra versão", timestamp: 1 },
           deps,
         );
 
@@ -162,9 +162,11 @@ describe(
 
         for (const input of [
           { text: " " },
-          { text: "x", timestampSeconds: -1 },
-          { text: "x", timestampSeconds: 1.5 },
-          { text: "x", timestampSeconds: 86400 },
+          { text: "x", timestamp: "0:60" },
+          { text: "x", timestamp: 1.5 },
+          { text: "x", timestamp: 86400 },
+          { text: "x", timestamp: "24:00:00" },
+          { text: "x", timestamp: -1 },
         ]) {
           await assert.rejects(
             createReviewComment(author.id, workspaceId, target, input, deps),

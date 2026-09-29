@@ -1099,7 +1099,7 @@ Evitar duplicidade em criação concorrente.
 
 ## REVIEW-002 — Parser de timestamp
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** REVIEW-001
 
@@ -1110,6 +1110,12 @@ MM:SS
 ```
 
 Avaliar HH:MM:SS.
+
+### Critérios
+
+- [x] aceita MM:SS, H:MM:SS e segundos soltos e guarda segundos;
+- [x] segundos acima de 59, formato torto e tempo acima de 23:59:59 são recusados com mensagem;
+- [x] exibe MM:SS até uma hora e H:MM:SS depois.
 
 ---
 

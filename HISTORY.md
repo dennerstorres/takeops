@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — REVIEW-002 — Parser de timestamp
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O comentário aceita o tempo como a equipe digita ("00:18", "1:04", "1:02:03" ou "18") e guarda segundos.
+
+### Implementação
+
+- `src/lib/timestamp.ts`: `parseTimestamp` (null para vazio, NaN para inválido) e `formatTimestamp` (MM:SS até uma hora, H:MM:SS depois). Sem dependência de servidor, serve à tela também.
+- Regras: segundos sempre com 2 dígitos e ≤ 59; em H:MM:SS os minutos também; em MM:SS os minutos podem passar de 59 ("75:00").
+- `createReviewComment` recebe `timestamp` (texto ou número); inválido vira erro de campo "Use o tempo como 01:04 ou 1:02:03."; teto 23:59:59.
+
+### Arquivos principais
+
+- `src/lib/timestamp.ts`, `src/lib/timestamp.test.ts`
+- `src/server/review.ts`, `src/server/review.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. HH:MM:SS entrou (a PLAN pedia avaliar): custo baixo e vídeo longo existe.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — REVIEW-001 — ReviewComment
 
 **Status:** DONE  
