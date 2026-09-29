@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — RECORD-001 — Layout do Modo Gravação
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Tela cheia do Modo Gravação por sessão, aberta pelo botão "Abrir Modo Gravação" em cada gravação.
+
+### Implementação
+
+- Grupo de rotas `(record)` com layout próprio (auth + workspace), sem AppShell: `/producoes/[id]/gravacao/[shootId]/modo`.
+- `buildRecordView` monta a cena: "Cena X de N", quem fala, fala, ação, shots, câmera, edição e continuidade (em destaque). Cena DISCARDED não entra na contagem.
+- `clampPosition` já prepara a posição vinda da URL (RECORD-002).
+- Nesta tarefa a tela abre sempre na primeira cena.
+
+### Arquivos principais
+
+- `src/server/record-view.ts`, `record-view.test.ts`
+- `src/app/(record)/layout.tsx`, `src/app/(record)/producoes/[id]/gravacao/[shootId]/modo/page.tsx`
+- `src/app/(app)/producoes/[id]/gravacao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. O modo é por sessão (Shoot) porque o progresso da RECORD-005 é "da sessão"; as cenas são todas as da produção, fora as descartadas.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — TAKE-003 — Take preferido
 
 **Status:** DONE  

@@ -887,11 +887,18 @@ Permitir um ou mais Takes OK e destacar preferido.
 
 ## RECORD-001 — Layout do Modo Gravação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** SCENE-002, SHOT-002, SHOOT-002
 
 Mobile-first.
+
+### Critérios
+
+- [x] a tela cheia abre por sessão de gravação, fora do menu, e cabe em 375, 390 e 430px;
+- [x] mostra Cena X de N, quem fala, fala, ação, shots, câmera, edição e continuidade;
+- [x] cena descartada não entra na contagem; produção sem cena mostra aviso;
+- [x] leitura passa por workspace, produção e gravação.
 
 ---
 

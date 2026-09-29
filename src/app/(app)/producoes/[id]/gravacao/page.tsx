@@ -163,6 +163,12 @@ export default async function ShootsPage({
                   <p className="text-sm whitespace-pre-wrap">{shoot.notes}</p>
                 ) : null}
               </div>
+              <Link
+                href={`/producoes/${project.id}/gravacao/${shoot.id}/modo`}
+                className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground"
+              >
+                Abrir Modo Gravação
+              </Link>
               <div className="mt-3 border-t pt-3">
                 <ShootEquipment
                   projectId={project.id}

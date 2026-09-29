@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TAKE-003 — Take preferido
+RECORD-001 — Layout do Modo Gravação
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-RECORD-001 — Layout do Modo Gravação
+RECORD-002 — Navegação entre cenas
 ```
 
 ## Estado dos módulos
@@ -46,7 +46,7 @@ RECORD-001 — Layout do Modo Gravação
 | Shots | DONE |
 | Gravações | DONE |
 | Checklist | DONE |
-| Modo Gravação | NOT_STARTED |
+| Modo Gravação | IN_PROGRESS |
 | Takes | DONE |
 | Assets | NOT_STARTED |
 | Edição | NOT_STARTED |
