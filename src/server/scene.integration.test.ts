@@ -10,6 +10,7 @@ import {
   getScene,
   listScenes,
   reorderScenes,
+  setSceneRecordingStatus,
   updateScene,
 } from "./scene.ts";
 import { createWorkspace } from "./workspace.ts";
@@ -25,7 +26,8 @@ describe(
       const { prismaIdeaRepository } = await import("./idea-prisma.ts");
       const { prismaProjectRepository } = await import("./project-prisma.ts");
       const { prismaSceneRepository } = await import("./scene-prisma.ts");
-      const { prismaWorkspaceRepository } = await import("./workspace-prisma.ts");
+      const { prismaWorkspaceRepository } =
+        await import("./workspace-prisma.ts");
       const suffix = randomUUID();
       const author = await prisma.user.create({
         data: { email: `cena-${suffix}@example.com`, name: "Autor" },
@@ -145,7 +147,8 @@ describe(
               prismaSceneRepository,
             ),
           (error: unknown) =>
-            error instanceof ValidationError && error.fields.speakerId !== undefined,
+            error instanceof ValidationError &&
+            error.fields.speakerId !== undefined,
         );
         await assert.rejects(
           () =>
@@ -169,7 +172,12 @@ describe(
           workspaceId,
           project.id,
           first.id,
-          { title: "Abertura nova", type: "DIALOGUE", status: "READY", order: 9 },
+          {
+            title: "Abertura nova",
+            type: "DIALOGUE",
+            status: "READY",
+            order: 9,
+          },
           prismaWorkspaceRepository,
           prismaProjectRepository,
           prismaSceneRepository,
@@ -177,6 +185,32 @@ describe(
         assert.equal(edited.title, "Abertura nova");
         assert.equal(edited.status, "READY");
         assert.equal(edited.order, 1);
+        const recorded = await setSceneRecordingStatus(
+          speaker.id,
+          workspaceId,
+          project.id,
+          first.id,
+          { status: "RECORDED" },
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+          prismaSceneRepository,
+        );
+        assert.equal(recorded.status, "RECORDED");
+        assert.equal(recorded.title, "Abertura nova");
+        await assert.rejects(
+          () =>
+            setSceneRecordingStatus(
+              outsider.id,
+              foreignId,
+              project.id,
+              first.id,
+              { status: "NEEDS_RETAKE" },
+              prismaWorkspaceRepository,
+              prismaProjectRepository,
+              prismaSceneRepository,
+            ),
+          NotFoundError,
+        );
         const reordered = await reorderScenes(
           author.id,
           workspaceId,
@@ -215,7 +249,9 @@ describe(
           afterDelete.map((item) => item.id),
           [first.id],
         );
-        const hidden = await prisma.scene.findFirst({ where: { id: second.id } });
+        const hidden = await prisma.scene.findFirst({
+          where: { id: second.id },
+        });
         assert.ok(hidden?.deletedAt);
         const copy = await duplicateScene(
           author.id,
@@ -252,7 +288,9 @@ describe(
           await prisma.workspace.deleteMany({ where: { id: foreignId } });
         }
         await prisma.user.deleteMany({
-          where: { id: { in: [author.id, speaker.id, viewer.id, outsider.id] } },
+          where: {
+            id: { in: [author.id, speaker.id, viewer.id, outsider.id] },
+          },
         });
       }
     });

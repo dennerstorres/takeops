@@ -11,6 +11,7 @@ import {
   duplicateScene,
   listScenes,
   reorderScenes,
+  setSceneRecordingStatus,
   updateScene,
 } from "@/server/scene";
 import { ValidationError } from "@/server/errors";
@@ -216,4 +217,38 @@ export async function deleteSceneAction(formData: FormData) {
   );
   revalidatePath(`/producoes/${projectId}/cenas`);
   redirect(`/producoes/${projectId}/cenas`);
+}
+
+function recordPath(value: FormDataEntryValue | null) {
+  const path = String(value ?? "");
+  return path.startsWith("/producoes/") ? path : "";
+}
+
+// Cena concluída avança sozinha para a próxima; refazer fica na mesma cena
+// para a equipe seguir gravando. Se o servidor recusar, também não avança.
+export async function recordSceneStatusAction(formData: FormData) {
+  const current = await currentWorkspace();
+  const projectId = String(formData.get("projectId") ?? "");
+  const status = formData.get("status");
+  const here =
+    recordPath(formData.get("returnTo")) || `/producoes/${projectId}/gravacao`;
+  const next = recordPath(formData.get("nextTo"));
+  const result = await runAction(
+    { userId: current.userId, workspaceId: current.workspaceId },
+    { operation: "record-status", entity: "Scene" },
+    () =>
+      setSceneRecordingStatus(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        String(formData.get("sceneId") ?? ""),
+        { status },
+        prismaWorkspaceRepository,
+        prismaProjectRepository,
+        prismaSceneRepository,
+      ),
+  );
+  revalidatePath(here.split(/[?#]/)[0]);
+  revalidatePath(`/producoes/${projectId}/cenas`);
+  redirect(result.ok && status === "RECORDED" && next ? next : here);
 }

@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — RECORD-004 — Status de Scene durante gravação
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+No Modo Gravação a cena é marcada como gravada (e avança) ou como precisa refazer.
+
+### Implementação
+
+- `setSceneRecordingStatus` aceita só `RECORDED` e `NEEDS_RETAKE`; membro pode, leitor não. Troca só o status.
+- `SceneRepository.update` passou a aceitar `Partial<SceneWrite>`: marcar no set não regrava o texto que outra pessoa pode estar editando.
+- `recordSceneStatusAction`: "Cena concluída" vai para `?cena=próxima`; "Precisa refazer" fica na cena; se o servidor recusar, não avança. Revalida o modo e a lista de cenas.
+- Botões de 48px no fim da cena, com `aria-pressed` no status atual. Na última cena o texto é só "Cena concluída".
+
+### Arquivos principais
+
+- `src/server/scene.ts`, `scene-repository.ts`, `scene-actions.ts`
+- `src/server/scene.test.ts`, `scene.integration.test.ts`
+- `src/app/(record)/producoes/[id]/gravacao/[shootId]/modo/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Só "concluída" avança; refazer fica para a equipe seguir gravando. Activity Log não existe ainda (módulo NOT_STARTED).
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — RECORD-003 — Takes dentro do Modo Gravação
 
 **Status:** DONE  

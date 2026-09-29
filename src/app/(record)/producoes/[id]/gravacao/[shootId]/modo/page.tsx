@@ -10,6 +10,7 @@ import { listScenes } from "@/server/scene";
 import { sceneStatusLabel } from "@/server/scene-labels";
 import { prismaSceneRepository } from "@/server/scene-prisma";
 import { buildRecordView, clampPosition } from "@/server/record-view";
+import { recordSceneStatusAction } from "@/server/scene-actions";
 import { getShoot } from "@/server/shoot";
 import { prismaShootRepository } from "@/server/shoot-prisma";
 import { listShotsByScene } from "@/server/shot";
@@ -229,6 +230,45 @@ export default async function RecordModePage({
                 {view.scene.continuityNotes}
               </p>
             </section>
+          ) : null}
+          {canEdit ? (
+            <form
+              action={recordSceneStatusAction}
+              className="grid grid-cols-1 gap-2 border-t pt-4"
+            >
+              <input type="hidden" name="projectId" value={id} />
+              <input type="hidden" name="sceneId" value={view.scene.id} />
+              <input
+                type="hidden"
+                name="returnTo"
+                value={`${here}?cena=${view.position}`}
+              />
+              <input
+                type="hidden"
+                name="nextTo"
+                value={view.next !== null ? `${here}?cena=${view.next}` : ""}
+              />
+              <button
+                type="submit"
+                name="status"
+                value="RECORDED"
+                aria-pressed={view.scene.status === "RECORDED"}
+                className="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground"
+              >
+                {view.next !== null
+                  ? "✓ Cena concluída e próxima"
+                  : "✓ Cena concluída"}
+              </button>
+              <button
+                type="submit"
+                name="status"
+                value="NEEDS_RETAKE"
+                aria-pressed={view.scene.status === "NEEDS_RETAKE"}
+                className="inline-flex min-h-12 items-center justify-center rounded-lg border px-3 text-sm font-medium"
+              >
+                Precisa refazer
+              </button>
+            </form>
           ) : null}
         </main>
       )}

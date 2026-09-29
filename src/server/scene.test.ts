@@ -9,6 +9,7 @@ import {
   getScene,
   listScenes,
   reorderScenes,
+  setSceneRecordingStatus,
   updateScene,
 } from "./scene.ts";
 import type { SceneRecord, SceneRepository } from "./scene-repository.ts";
@@ -289,7 +290,14 @@ describe("cena", () => {
     );
     await assert.rejects(
       () =>
-        listScenes("outsider", "ws-a", "p-a", workspaces, projectRepo, sceneRepo),
+        listScenes(
+          "outsider",
+          "ws-a",
+          "p-a",
+          workspaces,
+          projectRepo,
+          sceneRepo,
+        ),
       ForbiddenError,
     );
     await assert.rejects(
@@ -358,7 +366,14 @@ describe("cena", () => {
       sceneRepo,
     );
     assert.deepEqual(
-      await listScenes("owner", "ws-a", "p-a", workspaces, projectRepo, sceneRepo),
+      await listScenes(
+        "owner",
+        "ws-a",
+        "p-a",
+        workspaces,
+        projectRepo,
+        sceneRepo,
+      ),
       [],
     );
     await assert.rejects(
@@ -368,6 +383,88 @@ describe("cena", () => {
           "ws-a",
           "p-a",
           created.id,
+          workspaces,
+          projectRepo,
+          sceneRepo,
+        ),
+      NotFoundError,
+    );
+  });
+
+  it("no set marca gravada ou refazer sem tocar no resto da cena", async () => {
+    const { workspaces, projectRepo, sceneRepo, join } = harness();
+    join("owner", "ws-a", "OWNER");
+    join("member", "ws-a", "MEMBER");
+    join("viewer", "ws-a", "VIEWER");
+    const created = await createScene(
+      "owner",
+      "ws-a",
+      "p-a",
+      { title: "Abertura", type: "HOOK", dialogue: "Olá" },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    const recorded = await setSceneRecordingStatus(
+      "member",
+      "ws-a",
+      "p-a",
+      created.id,
+      { status: "RECORDED", title: "Ignorado" },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    assert.equal(recorded.status, "RECORDED");
+    assert.equal(recorded.title, "Abertura");
+    assert.equal(recorded.dialogue, "Olá");
+    const retake = await setSceneRecordingStatus(
+      "member",
+      "ws-a",
+      "p-a",
+      created.id,
+      { status: "NEEDS_RETAKE" },
+      workspaces,
+      projectRepo,
+      sceneRepo,
+    );
+    assert.equal(retake.status, "NEEDS_RETAKE");
+    await assert.rejects(
+      () =>
+        setSceneRecordingStatus(
+          "member",
+          "ws-a",
+          "p-a",
+          created.id,
+          { status: "DISCARDED" },
+          workspaces,
+          projectRepo,
+          sceneRepo,
+        ),
+      ValidationError,
+    );
+    await assert.rejects(
+      () =>
+        setSceneRecordingStatus(
+          "viewer",
+          "ws-a",
+          "p-a",
+          created.id,
+          { status: "RECORDED" },
+          workspaces,
+          projectRepo,
+          sceneRepo,
+        ),
+      ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        setSceneRecordingStatus(
+          "owner",
+          "ws-a",
+          "p-b",
+          created.id,
+          { status: "RECORDED" },
           workspaces,
           projectRepo,
           sceneRepo,

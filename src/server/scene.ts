@@ -37,8 +37,14 @@ const sceneSchema = z.object({
       .optional(),
   ),
   cameraInstructions: optionalText(2000, "A câmera passou de 2000 caracteres."),
-  editingInstructions: optionalText(2000, "A edição passou de 2000 caracteres."),
-  continuityNotes: optionalText(2000, "A continuidade passou de 2000 caracteres."),
+  editingInstructions: optionalText(
+    2000,
+    "A edição passou de 2000 caracteres.",
+  ),
+  continuityNotes: optionalText(
+    2000,
+    "A continuidade passou de 2000 caracteres.",
+  ),
 });
 
 function blank(value: string) {
@@ -55,7 +61,11 @@ async function toWrite(
   const speakerId = blank(data.speakerId);
   if (speakerId) {
     const member = await workspaces.findMembership(speakerId, workspaceId);
-    if (!member || member.workspaceId !== workspaceId || member.userId !== speakerId) {
+    if (
+      !member ||
+      member.workspaceId !== workspaceId ||
+      member.userId !== speakerId
+    ) {
       throw new ValidationError({
         speakerId: "Essa pessoa não está neste workspace.",
       });
@@ -241,6 +251,48 @@ export async function updateScene(
     updated.id !== current.id ||
     updated.videoProjectId !== current.videoProjectId ||
     updated.order !== current.order
+  ) {
+    throw new NotFoundError();
+  }
+  return updated;
+}
+
+// No set só se marca o resultado da gravação. Os outros status continuam na
+// edição da cena.
+export const recordingSceneStatuses = ["RECORDED", "NEEDS_RETAKE"] as const;
+
+const recordingSchema = z.object({
+  status: z.enum(recordingSceneStatuses, { error: "Escolha um status." }),
+});
+
+export async function setSceneRecordingStatus(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  sceneId: string,
+  input: unknown,
+  workspaces: WorkspaceRepository,
+  projects: ProjectRepository,
+  scenes: SceneRepository,
+) {
+  await requireRole(userId, workspaceId, writers, workspaces);
+  const { status } = parseInput(recordingSchema, input);
+  const current = await getScene(
+    userId,
+    workspaceId,
+    projectId,
+    sceneId,
+    workspaces,
+    projects,
+    scenes,
+  );
+  const updated = await scenes.update(workspaceId, projectId, current.id, {
+    status,
+  });
+  if (
+    !updated ||
+    updated.id !== current.id ||
+    updated.videoProjectId !== current.videoProjectId
   ) {
     throw new NotFoundError();
   }

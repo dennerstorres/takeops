@@ -36,11 +36,13 @@ export type SceneRepository = {
     projectId: string,
     input: SceneWrite,
   ): Promise<SceneRecord | null>;
+  // Parcial para o Modo Gravação trocar só o status sem regravar o texto
+  // que outra pessoa pode estar editando.
   update(
     workspaceId: string,
     projectId: string,
     sceneId: string,
-    input: SceneWrite,
+    input: Partial<SceneWrite>,
   ): Promise<SceneRecord | null>;
   softDelete(
     workspaceId: string,

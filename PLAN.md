@@ -933,7 +933,7 @@ Mobile-first.
 
 ## RECORD-004 — Status de Scene durante gravação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** RECORD-003
 
@@ -941,6 +941,12 @@ Suportar:
 
 - RECORDED;
 - NEEDS_RETAKE.
+
+### Critérios
+
+- [x] no Modo Gravação a cena vira Gravada ou Precisa refazer, trocando só o status;
+- [x] cena concluída avança sozinha para a próxima; refazer fica na cena; recusa não avança;
+- [x] outros status seguem na edição da cena; leitor não marca; outro workspace não alcança a cena.
 
 ---
 
