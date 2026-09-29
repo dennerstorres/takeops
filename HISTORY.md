@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — TEMPLATE-001 — ProductionTemplate
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Templates de produção do workspace (spec §35): nome, descrição, quem criou. Tela `/templates` com lista e criação; `/templates/[id]` edita e exclui.
+
+### Implementação
+
+- Modelo `ProductionTemplate` preso ao workspace.
+- `production-template.ts`: listar e ler (qualquer membro); criar, editar, excluir (dono e admin — spec §7 "configurar/criar templates").
+- Excluir o template não afeta produções já criadas (TEMPLATE-004 copia, não referencia). Excluir pede confirmação.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928410000_production_template/`
+- `src/server/production-template.ts`, `production-template-repository.ts`, `production-template-prisma.ts`, `production-template-actions.ts`, `production-template.integration.test.ts`
+- `src/components/templates/production-template-form.tsx`
+- `src/app/(app)/templates/page.tsx`, `src/app/(app)/templates/[templateId]/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Mesmo papel do checklist: dono e admin mantêm.
+
+### Banco / migrations
+
+- `20260928410000_production_template`: tabela, índice `(workspaceId, name)`, FK cascade no workspace e SET NULL no autor. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — CAL-003 — Visualização semanal
 
 **Status:** DONE  

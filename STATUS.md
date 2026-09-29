@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-CAL-003 — Visualização semanal
+TEMPLATE-001 — ProductionTemplate
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TEMPLATE-001 — ProductionTemplate
+TEMPLATE-002 — Cenas no template
 ```
 
 ## Estado dos módulos
@@ -54,7 +54,7 @@ TEMPLATE-001 — ProductionTemplate
 | Aprovação | DONE |
 | Publicação | DONE |
 | Calendário | DONE |
-| Templates | NOT_STARTED |
+| Templates | IN_PROGRESS |
 | Notificações | NOT_STARTED |
 | Activity Log | NOT_STARTED |
 

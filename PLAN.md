@@ -1342,9 +1342,15 @@ Registrar decisão se escolher persistência própria.
 
 ## TEMPLATE-001 — ProductionTemplate
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** SCENE-001, CHECK-001
+
+### Critérios
+
+- [x] template de produção do workspace com nome, descrição e autor;
+- [x] dono e admin criam, editam e excluem; membro e leitor só leem;
+- [x] outro workspace não alcança; excluir não afeta produções já criadas.
 
 ---
 

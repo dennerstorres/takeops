@@ -33,6 +33,7 @@ model User {
   reviewResolved  ReviewComment[] @relation("ReviewCommentResolver")
   approvalsRequested Approval[] @relation("ApprovalRequester")
   approvalsReviewed  Approval[] @relation("ApprovalReviewer")
+  productionTemplates ProductionTemplate[]
 }
 
 enum WorkspaceRole {
@@ -56,6 +57,7 @@ model Workspace {
   projects  VideoProject[]
   equipment EquipmentItem[]
   checklistTemplates ChecklistTemplate[]
+  productionTemplates ProductionTemplate[]
 }
 
 enum InviteStatus {
@@ -691,4 +693,20 @@ model Publication {
 
   @@index([videoProjectId, status])
   @@index([scheduledAt])
+}
+
+// Modelo de produção do workspace. Criar produção por template copia a
+// estrutura; nada fica ligado ao template depois (TEMPLATE-004).
+model ProductionTemplate {
+  id          String    @id @default(uuid())
+  workspaceId String
+  name        String
+  description String?
+  createdById String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdBy   User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, name])
 }
