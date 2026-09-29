@@ -22,7 +22,8 @@ FROM base AS build
 ENV DATABASE_URL=postgresql://build:build@localhost:5432/build
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+# O cliente gerado (src/generated) não é versionado nem vem da etapa deps.
+RUN npx prisma generate && npm run build
 
 # CLI do Prisma só para `migrate deploy` no start, na versão do lockfile.
 FROM base AS migrator
