@@ -1784,13 +1784,13 @@ Decisões: ADR-037 (Docker/Coolify), ADR-039 (AGPL-3.0), ADR-040 (login por e-ma
 **Prioridade:** P0  
 **Dependências:** OSS-003, OSS-005
 
-README público em inglês com `README.pt-BR.md`: o que é, prints, requisitos, docker-compose, Coolify, variáveis, OAuth Google (URIs), SMTP, backup, atualização. Separar notas internas do harness do README.
+README público em inglês com `README.pt-BR.md` (incluir nota sobre SMTP próprio em Docker e DANE/DNSSEC): o que é, prints, requisitos, docker-compose, Coolify, variáveis, OAuth Google (URIs), SMTP, backup, atualização. Separar notas internas do harness do README.
 
 ---
 
 ## OSS-005 — Login por link de e-mail
 
-**Status:** IN_PROGRESS  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** AUTH-001
 
@@ -1857,7 +1857,7 @@ Produção: `https://takeops.dennerstorres.dev` (DNS já aponta para o Coolify).
 
 ## DEPLOY-002 — OAuth e e-mail de produção
 
-**Status:** IN_PROGRESS  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** DEPLOY-001, OSS-005
 

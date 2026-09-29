@@ -16,19 +16,19 @@ Fase 20 — Hardening (restam HARDEN-006, 008, 009)
 ## Tarefa ativa
 
 ```text
-OSS-005 — Login por link de e-mail (falta teste real com SMTP em produção)
+Nenhuma
 ```
 
 ## Última tarefa concluída
 
 ```text
-DEPLOY-001 — Banco e app no Coolify
+OSS-005 — Login por link de e-mail (e DEPLOY-002)
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-OSS-005 — Login por link de e-mail (depois fecha DEPLOY-002)
+OSS-008 — Idiomas pt-BR e en
 ```
 
 ## Estado dos módulos

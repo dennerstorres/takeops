@@ -4586,3 +4586,17 @@ Dono configurou no Google Console a origem e o redirect de `https://takeops.denn
 
 - Envio real depende de `EMAIL_SERVER`/`EMAIL_FROM` no Coolify (caixa `takeops@dennerstorres.dev`, Stalwart) e teste do dono.
 - Sem limite de tentativas no pedido de link; avaliar na HARDEN-006.
+
+---
+
+## 2026-09-29 — OSS-005 e DEPLOY-002 — Login por e-mail em produção
+
+**Status:** DONE
+**Agente:** Claude
+
+- `EMAIL_SERVER`/`EMAIL_FROM` no Coolify (caixa `takeops@dennerstorres.dev`, Stalwart do dono), só em runtime.
+- App gerava e entregava o link ao Stalwart, mas a mensagem ficava na fila com "DANE validation failed" (destino Gmail).
+- Stalwart (servidor compartilhado do dono): resolvedor DNS trocado de System (DNS do Docker, sem DNSSEC) para Cloudflare; DANE da estratégia TLS `default` desligado pelo próprio dono (a trava automática do agente bloqueou enfraquecer TLS) e contêiner reiniciado. Fila esvaziou.
+- Dono recebeu o e-mail e entrou pelo link em `https://takeops.dennerstorres.dev`. Google também confirmado antes.
+
+Nota para self-host: servidor SMTP próprio em Docker pode ter o mesmo problema de DANE/DNSSEC; documentar na OSS-004.
