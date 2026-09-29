@@ -1,10 +1,12 @@
 import { z } from "zod";
+import { recordActivity } from "./activity-record.ts";
+import type { ActivityRepository } from "./activity-repository.ts";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import { externalUrl } from "./external-url.ts";
 import { instant } from "./instant.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
-import { platforms } from "./publication-labels.ts";
+import { platformLabel, platforms } from "./publication-labels.ts";
 import type { PublicationRepository } from "./publication-repository.ts";
 import { parseInput } from "./validation.ts";
 import { requireRole } from "./workspace.ts";
@@ -17,6 +19,7 @@ export type PublicationDeps = {
   workspaces: WorkspaceRepository;
   projects: ProjectRepository;
   publications: PublicationRepository;
+  activities?: ActivityRepository;
 };
 
 export async function publicationScope(
@@ -201,6 +204,20 @@ export async function schedulePublication(
     },
   );
   if (!updated || updated.id !== current.id) throw new NotFoundError();
+  if (scheduledAt) {
+    await recordActivity(deps.activities, {
+      workspaceId,
+      videoProjectId: current.videoProjectId,
+      userId,
+      action: "PUBLICATION_SCHEDULED",
+      entityType: "Publication",
+      entityId: current.id,
+      metadata: {
+        platform: platformLabel(current.platform),
+        scheduledAt: scheduledAt.toISOString(),
+      },
+    });
+  }
   return updated;
 }
 
@@ -253,5 +270,23 @@ export async function recordPublicationOutcome(
     { status: data.status, publishedAt, url },
   );
   if (!updated || updated.id !== current.id) throw new NotFoundError();
+  const outcomes = {
+    PUBLISHED: "a publicação",
+    FAILED: "falha na publicação",
+    CANCELED: "o cancelamento da publicação",
+  } as const;
+  await recordActivity(deps.activities, {
+    workspaceId,
+    videoProjectId: current.videoProjectId,
+    userId,
+    action: "PUBLICATION_RECORDED",
+    entityType: "Publication",
+    entityId: current.id,
+    metadata: {
+      platform: platformLabel(current.platform),
+      outcome: outcomes[data.status],
+      status: data.status,
+    },
+  });
   return updated;
 }

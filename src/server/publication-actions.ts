@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { zonedLocalToUtc } from "@/lib/zoned-time";
 import { openWorkspace } from "@/server/access";
+import { prismaActivityRepository } from "@/server/activity-prisma";
 import { auth } from "@/server/auth";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import {
@@ -27,6 +28,7 @@ const deps: PublicationDeps = {
   workspaces: prismaWorkspaceRepository,
   projects: prismaProjectRepository,
   publications: prismaPublicationRepository,
+  activities: prismaActivityRepository,
 };
 
 async function currentWorkspace() {

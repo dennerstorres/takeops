@@ -1,17 +1,17 @@
 import { z } from "zod";
+import { recordActivity } from "./activity-record.ts";
+import type { ActivityRepository } from "./activity-repository.ts";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { ideaFormats } from "./idea-labels.ts";
 import type { IdeaRepository } from "./idea-repository.ts";
 import {
   aspectRatios,
   projectPriorities,
+  projectStatusLabel,
   videoProjectStatuses,
 } from "./project-labels.ts";
 import type { ParticipantRepository } from "./participant-repository.ts";
-import {
-  filterProjects,
-  type ProjectSearch,
-} from "./project-search.ts";
+import { filterProjects, type ProjectSearch } from "./project-search.ts";
 import type { ProjectRepository, ProjectWrite } from "./project-repository.ts";
 import { parseInput } from "./validation.ts";
 import { requireMembership, requireRole } from "./workspace.ts";
@@ -179,7 +179,9 @@ export async function searchProjects(
   participants: ParticipantRepository,
 ) {
   const rows = await listProjects(userId, workspaceId, workspaces, projects);
-  const memberships = await participants.listByProjectIds(rows.map((row) => row.id));
+  const memberships = await participants.listByProjectIds(
+    rows.map((row) => row.id),
+  );
   return filterProjects(rows, memberships, query).filter(
     (project) => project.workspaceId === workspaceId,
   );
@@ -206,6 +208,7 @@ export async function createProject(
   workspaces: WorkspaceRepository,
   ideas: IdeaRepository,
   projects: ProjectRepository,
+  activities?: ActivityRepository,
 ) {
   await requireRole(userId, workspaceId, writers, workspaces);
   const created = await projects.create(
@@ -217,6 +220,15 @@ export async function createProject(
     throw new ForbiddenError();
   }
   if (created.status !== "IDEA") throw new ForbiddenError();
+  await recordActivity(activities, {
+    workspaceId,
+    videoProjectId: created.id,
+    userId,
+    action: "PROJECT_CREATED",
+    entityType: "VideoProject",
+    entityId: created.id,
+    metadata: null,
+  });
   return created;
 }
 
@@ -275,6 +287,7 @@ export async function changeVideoProjectStatus(
   input: unknown,
   workspaces: WorkspaceRepository,
   projects: ProjectRepository,
+  activities?: ActivityRepository,
 ) {
   await requireRole(userId, workspaceId, writers, workspaces);
   const data = parseInput(statusSchema, input);
@@ -287,11 +300,7 @@ export async function changeVideoProjectStatus(
   );
   if (current.status === data.status) return current;
 
-  const updated = await projects.setStatus(
-    workspaceId,
-    projectId,
-    data.status,
-  );
+  const updated = await projects.setStatus(workspaceId, projectId, data.status);
   if (
     !updated ||
     updated.id !== projectId ||
@@ -300,6 +309,19 @@ export async function changeVideoProjectStatus(
   ) {
     throw new NotFoundError();
   }
+  await recordActivity(activities, {
+    workspaceId,
+    videoProjectId: updated.id,
+    userId,
+    action: "PROJECT_STATUS_CHANGED",
+    entityType: "VideoProject",
+    entityId: updated.id,
+    metadata: {
+      from: current.status,
+      to: updated.status,
+      toLabel: projectStatusLabel(updated.status),
+    },
+  });
   return updated;
 }
 
@@ -309,6 +331,7 @@ export async function submitBoardMove(
   input: { projectId?: unknown; status?: unknown; workspaceId?: unknown },
   workspaces: WorkspaceRepository,
   projects: ProjectRepository,
+  activities?: ActivityRepository,
 ) {
   return changeVideoProjectStatus(
     userId,
@@ -317,6 +340,7 @@ export async function submitBoardMove(
     { status: input.status },
     workspaces,
     projects,
+    activities,
   );
 }
 

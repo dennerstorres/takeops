@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
+import { prismaActivityRepository } from "@/server/activity-prisma";
 import { auth } from "@/server/auth";
 import { prismaIdeaRepository } from "@/server/idea-prisma";
 import {
@@ -73,6 +74,7 @@ export async function createProjectAction(
                 ideas: prismaIdeaRepository,
                 projects: prismaProjectRepository,
                 templates: prismaProductionTemplateRepository,
+                activities: prismaActivityRepository,
               },
             )
           ).project
@@ -83,6 +85,7 @@ export async function createProjectAction(
             prismaWorkspaceRepository,
             prismaIdeaRepository,
             prismaProjectRepository,
+            prismaActivityRepository,
           ),
   );
   if (!result.ok) return { message: result.message, fields: result.fields };
@@ -135,6 +138,7 @@ export async function moveProjectStatusAction(
         },
         prismaWorkspaceRepository,
         prismaProjectRepository,
+        prismaActivityRepository,
       ),
   );
   if (!result.ok) return { message: result.message, fields: result.fields };

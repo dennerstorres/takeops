@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { recordActivity } from "./activity-record.ts";
+import type { ActivityRepository } from "./activity-repository.ts";
 import type {
   EditVersionRepository,
   EditVersionWrite,
@@ -17,6 +19,7 @@ export type EditVersionDeps = {
   workspaces: WorkspaceRepository;
   projects: ProjectRepository;
   versions: EditVersionRepository;
+  activities?: ActivityRepository;
 };
 
 const optionalText = (max: number, message: string) =>
@@ -122,5 +125,14 @@ export async function createEditVersion(
   if (!created || created.videoProjectId !== scope.projectId) {
     throw new NotFoundError();
   }
+  await recordActivity(deps.activities, {
+    workspaceId: scope.workspaceId,
+    videoProjectId: scope.projectId,
+    userId,
+    action: "VERSION_CREATED",
+    entityType: "EditVersion",
+    entityId: created.id,
+    metadata: { version: versionLabel(created.versionNumber) },
+  });
   return created;
 }

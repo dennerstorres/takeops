@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-29 — ACTIVITY-002 — Eventos essenciais
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Os serviços passam a registrar atividade: produção criada, etapa mudada, versão criada, aprovação pedida, alterações solicitadas, vídeo aprovado, publicação agendada e resultado da publicação.
+
+### Implementação
+
+- `recordActivity` foi para `activity-record.ts` (sem importar `project.ts`, evita ciclo) e aceita repositório ausente: serviço chamado sem `activities` (testes antigos, fakes) não registra nada.
+- `createProject`, `changeVideoProjectStatus` e `submitBoardMove` ganharam `activities?` como último parâmetro; `EditVersionDeps`, `ApprovalDeps` e `PublicationDeps` ganharam `activities?`; `createProjectFromTemplate` repassa.
+- Registro depois da operação dar certo, com metadata curta para a frase (versão "V2", etapa, plataforma, resultado). Pedido de aprovação repetido (mesmo pedido) não registra de novo.
+- Actions passam `prismaActivityRepository`.
+
+### Arquivos principais
+
+- `src/server/activity-record.ts`, `activity.ts`, `activity.integration.test.ts`
+- `src/server/project.ts`, `edit-version.ts`, `approval.ts`, `publication.ts`, `production-template.ts`
+- `src/server/project-actions.ts`, `edit-version-actions.ts`, `approval-actions.ts`, `publication-actions.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Atividade fora da transação da operação (best-effort, ACTIVITY-001): perder uma linha de histórico é melhor que desfazer a ação do usuário.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Teste percorre criar → mudar etapa → versão → pedir → alterar → pedir → aprovar → agendar → publicar e confere as frases.
+
+---
+
 ## 2026-09-29 — ACTIVITY-001 — ActivityLog
 
 **Status:** DONE  

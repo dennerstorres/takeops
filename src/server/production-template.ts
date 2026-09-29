@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { NotFoundError, ValidationError } from "./errors.ts";
+import type { ActivityRepository } from "./activity-repository.ts";
 import type { IdeaRepository } from "./idea-repository.ts";
 import { createProject, getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
@@ -290,6 +291,7 @@ export async function setTemplateChecklist(
 export type ProjectTemplateDeps = ProductionTemplateDeps & {
   ideas: IdeaRepository;
   projects: ProjectRepository;
+  activities?: ActivityRepository;
 };
 
 // Criar por template (spec §36): a produção nasce como qualquer outra e
@@ -316,6 +318,7 @@ export async function createProjectFromTemplate(
     deps.workspaces,
     deps.ideas,
     deps.projects,
+    deps.activities,
   );
   const copied = await deps.templates.applyToProject(
     project.workspaceId,

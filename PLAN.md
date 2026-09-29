@@ -1432,7 +1432,7 @@ Na aba Gravação, oferecer "Checklist da produção" como origem ao montar o ch
 
 ## ACTIVITY-002 — Eventos essenciais
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** ACTIVITY-001
 
@@ -1444,6 +1444,12 @@ Cobrir:
 - approval;
 - changes requested;
 - publication.
+
+### Critérios
+
+- [x] produção criada, etapa mudada, versão criada, aprovação, alterações solicitadas e publicação viram atividade;
+- [x] registro depois da operação dar certo, sem desfazê-la se falhar;
+- [x] a aba Atividade mostra as frases com versão, etapa e plataforma.
 
 ---
 

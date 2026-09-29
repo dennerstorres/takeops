@@ -8,7 +8,13 @@ import {
   type ActivityDeps,
 } from "./activity.ts";
 import { ForbiddenError, NotFoundError } from "./errors.ts";
-import { createProject } from "./project.ts";
+import { approveVersion, requestApproval, requestChanges } from "./approval.ts";
+import { createEditVersion } from "./edit-version.ts";
+import { changeVideoProjectStatus, createProject } from "./project.ts";
+import {
+  recordPublicationOutcome,
+  schedulePublication,
+} from "./publication.ts";
 import { createWorkspace } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
@@ -164,6 +170,156 @@ describe(
         await prisma.user.deleteMany({
           where: { id: { in: [owner.id, viewer.id, outsider.id] } },
         });
+      }
+    });
+
+    it("registra os eventos essenciais do fluxo da produção", async () => {
+      const { prisma } = await import("./db.ts");
+      const { prismaActivityRepository } = await import("./activity-prisma.ts");
+      const { prismaApprovalRepository } = await import("./approval-prisma.ts");
+      const { prismaEditVersionRepository } =
+        await import("./edit-version-prisma.ts");
+      const { prismaIdeaRepository } = await import("./idea-prisma.ts");
+      const { prismaParticipantRepository } =
+        await import("./participant-prisma.ts");
+      const { prismaProjectRepository } = await import("./project-prisma.ts");
+      const { prismaPublicationRepository } =
+        await import("./publication-prisma.ts");
+      const { prismaWorkspaceRepository } =
+        await import("./workspace-prisma.ts");
+      const deps = {
+        workspaces: prismaWorkspaceRepository,
+        projects: prismaProjectRepository,
+        versions: prismaEditVersionRepository,
+        approvals: prismaApprovalRepository,
+        participants: prismaParticipantRepository,
+        publications: prismaPublicationRepository,
+        activities: prismaActivityRepository,
+      };
+      const suffix = randomUUID();
+      const owner = await prisma.user.create({
+        data: { email: `act-flow-${suffix}@example.com`, name: "Denner" },
+      });
+      let workspaceId = "";
+      try {
+        workspaceId = (
+          await createWorkspace(
+            owner.id,
+            { name: `Fluxo ${suffix}`, slug: `fluxo-${suffix}` },
+            prismaWorkspaceRepository,
+          )
+        ).workspace.id;
+        const project = await createProject(
+          owner.id,
+          workspaceId,
+          { title: `Peça ${suffix}`, format: "DEMO" },
+          prismaWorkspaceRepository,
+          prismaIdeaRepository,
+          prismaProjectRepository,
+          prismaActivityRepository,
+        );
+        await changeVideoProjectStatus(
+          owner.id,
+          workspaceId,
+          project.id,
+          { status: "EDITING" },
+          prismaWorkspaceRepository,
+          prismaProjectRepository,
+          prismaActivityRepository,
+        );
+        const v1 = await createEditVersion(
+          owner.id,
+          workspaceId,
+          project.id,
+          { previewUrl: "https://vimeo.com/1" },
+          deps,
+        );
+        const first = await requestApproval(
+          owner.id,
+          workspaceId,
+          project.id,
+          v1.id,
+          deps,
+        );
+        await requestChanges(
+          owner.id,
+          workspaceId,
+          project.id,
+          first.id,
+          { notes: "trocar música" },
+          deps,
+        );
+        const second = await requestApproval(
+          owner.id,
+          workspaceId,
+          project.id,
+          v1.id,
+          deps,
+        );
+        await approveVersion(
+          owner.id,
+          workspaceId,
+          project.id,
+          second.id,
+          {},
+          deps,
+        );
+        const publication = await prisma.publication.create({
+          data: { videoProjectId: project.id, platform: "TIKTOK" },
+        });
+        await schedulePublication(
+          owner.id,
+          workspaceId,
+          project.id,
+          publication.id,
+          { scheduledAt: "2026-10-10T18:00:00Z" },
+          deps,
+        );
+        await recordPublicationOutcome(
+          owner.id,
+          workspaceId,
+          project.id,
+          publication.id,
+          { status: "PUBLISHED" },
+          deps,
+        );
+
+        const rows = await listProjectActivity(
+          owner.id,
+          workspaceId,
+          project.id,
+          deps,
+        );
+        assert.deepEqual(rows.map((row) => row.action).sort(), [
+          "APPROVAL_REQUESTED",
+          "APPROVAL_REQUESTED",
+          "CHANGES_REQUESTED",
+          "PROJECT_CREATED",
+          "PROJECT_STATUS_CHANGED",
+          "PUBLICATION_RECORDED",
+          "PUBLICATION_SCHEDULED",
+          "VERSION_APPROVED",
+          "VERSION_CREATED",
+        ]);
+        const approved = rows.find((row) => row.action === "VERSION_APPROVED");
+        assert.ok(approved);
+        assert.equal(
+          describeActivity("Denner", approved.action, approved.metadata),
+          "Denner aprovou o vídeo da V1.",
+        );
+        const recorded = rows.find(
+          (row) => row.action === "PUBLICATION_RECORDED",
+        );
+        assert.ok(recorded);
+        assert.equal(
+          describeActivity("Denner", recorded.action, recorded.metadata),
+          "Denner registrou a publicação em TikTok.",
+        );
+      } finally {
+        if (workspaceId) {
+          await prisma.workspace.deleteMany({ where: { id: workspaceId } });
+        }
+        await prisma.user.deleteMany({ where: { id: owner.id } });
       }
     });
   },

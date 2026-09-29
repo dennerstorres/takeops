@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-ACTIVITY-001 — ActivityLog
+ACTIVITY-002 — Eventos essenciais
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-ACTIVITY-002 — Eventos essenciais
+NOTIFY-001 — Modelo Notification
 ```
 
 ## Estado dos módulos
@@ -56,7 +56,7 @@ ACTIVITY-002 — Eventos essenciais
 | Calendário | DONE |
 | Templates | DONE |
 | Notificações | NOT_STARTED |
-| Activity Log | IN_PROGRESS |
+| Activity Log | DONE |
 
 ## Bloqueios
 

@@ -1,6 +1,11 @@
 import { z } from "zod";
+import { recordActivity } from "./activity-record.ts";
 import type { ApprovalRepository } from "./approval-repository.ts";
-import { getEditVersion, type EditVersionDeps } from "./edit-version.ts";
+import {
+  getEditVersion,
+  versionLabel,
+  type EditVersionDeps,
+} from "./edit-version.ts";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import type { ParticipantRepository } from "./participant-repository.ts";
 import { getProject } from "./project.ts";
@@ -105,6 +110,17 @@ export async function requestApproval(
     });
   }
   if (result.approval.editVersionId !== version.id) throw new NotFoundError();
+  if (result.kind === "created") {
+    await recordActivity(deps.activities, {
+      workspaceId,
+      videoProjectId: version.videoProjectId,
+      userId,
+      action: "APPROVAL_REQUESTED",
+      entityType: "Approval",
+      entityId: result.approval.id,
+      metadata: { version: versionLabel(version.versionNumber) },
+    });
+  }
   return result.approval;
 }
 
@@ -150,6 +166,21 @@ async function decide(
     { ...decision, reviewedById: userId, at: now },
   );
   if (!decided || decided.id !== approvalId) throw new NotFoundError();
+  const version = await deps.versions.find(
+    project.workspaceId,
+    project.id,
+    decided.editVersionId,
+  );
+  await recordActivity(deps.activities, {
+    workspaceId: project.workspaceId,
+    videoProjectId: project.id,
+    userId,
+    action:
+      decision.status === "APPROVED" ? "VERSION_APPROVED" : "CHANGES_REQUESTED",
+    entityType: "Approval",
+    entityId: decided.id,
+    metadata: version ? { version: versionLabel(version.versionNumber) } : null,
+  });
   return decided;
 }
 

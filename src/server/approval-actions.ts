@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
+import { prismaActivityRepository } from "@/server/activity-prisma";
 import {
   approveVersion,
   requestApproval,
@@ -28,6 +29,7 @@ const deps: ApprovalDeps = {
   versions: prismaEditVersionRepository,
   approvals: prismaApprovalRepository,
   participants: prismaParticipantRepository,
+  activities: prismaActivityRepository,
 };
 
 async function currentWorkspace() {
