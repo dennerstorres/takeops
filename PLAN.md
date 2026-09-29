@@ -1151,9 +1151,16 @@ Avaliar HH:MM:SS.
 
 ## APPROVAL-001 — Modelo e service
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** VERSION-001
+
+### Critérios
+
+- [x] aprovação pertence à versão e à produção, com status, quem pediu, quem decidiu, notas e datas;
+- [x] um pedido aberto por produção; repetir para a mesma versão devolve o existente;
+- [x] dono, admin e membro pedem; leitor vê; outra produção ou workspace não alcança;
+- [x] aba Revisão mostra o estado e o botão de pedir.
 
 ---
 

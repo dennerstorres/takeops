@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-REVIEW-004 — Tela de revisão
+APPROVAL-001 — Modelo e service
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-APPROVAL-001 — Modelo e service
+APPROVAL-002 — Solicitar alterações
 ```
 
 ## Estado dos módulos
@@ -51,7 +51,7 @@ APPROVAL-001 — Modelo e service
 | Assets | DONE |
 | Edição | DONE |
 | Revisão | DONE |
-| Aprovação | NOT_STARTED |
+| Aprovação | IN_PROGRESS |
 | Publicação | NOT_STARTED |
 | Calendário | NOT_STARTED |
 | Templates | NOT_STARTED |

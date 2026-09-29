@@ -2,9 +2,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
+import { RequestApprovalForm } from "@/components/review/approval-panel";
 import { ReviewCommentForm } from "@/components/review/review-comment-form";
 import { formatTimestamp } from "@/lib/timestamp";
 import { openWorkspace } from "@/server/access";
+import { listApprovals } from "@/server/approval";
+import { approvalStatusLabel } from "@/server/approval-labels";
+import { prismaApprovalRepository } from "@/server/approval-prisma";
 import { auth } from "@/server/auth";
 import { listEditVersions, versionLabel } from "@/server/edit-version";
 import { prismaEditVersionRepository } from "@/server/edit-version-prisma";
@@ -42,11 +46,13 @@ export default async function ReviewPage({
     projects: prismaProjectRepository,
     versions: prismaEditVersionRepository,
     reviews: prismaReviewRepository,
+    approvals: prismaApprovalRepository,
   };
 
   let project;
   let versions;
   let team;
+  let approvals;
   try {
     project = await getProject(
       session.user.id,
@@ -55,9 +61,10 @@ export default async function ReviewPage({
       deps.workspaces,
       deps.projects,
     );
-    [versions, team] = await Promise.all([
+    [versions, team, approvals] = await Promise.all([
       listEditVersions(session.user.id, workspaceId, project.id, deps),
       listTeam(session.user.id, workspaceId, deps.workspaces),
+      listApprovals(session.user.id, workspaceId, project.id, deps),
     ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect("/producoes");
@@ -78,6 +85,15 @@ export default async function ReviewPage({
       )
     : [];
   const open = comments.filter((comment) => !comment.resolved);
+  // A lista vem do mais novo para o mais antigo: o primeiro da versão é o
+  // estado atual dela.
+  const approval = current
+    ? (approvals.find((row) => row.editVersionId === current.id) ?? null)
+    : null;
+  const pendingAny = approvals.find((row) => row.status === "PENDING");
+  const pendingVersion = pendingAny
+    ? versions.find((version) => version.id === pendingAny.editVersionId)
+    : undefined;
   const resolved = comments.filter((comment) => comment.resolved);
   const names = new Map(
     team.map((member) => [member.userId, personLabel(member)]),
@@ -186,6 +202,43 @@ export default async function ReviewPage({
                 </a>
               ) : null}
             </div>
+          </section>
+          <section className="space-y-2 rounded-xl border p-3">
+            <h2 className="text-base font-medium">Aprovação</h2>
+            <p className="text-sm">
+              {approval
+                ? approvalStatusLabel(approval.status)
+                : "Aprovação ainda não pedida."}
+              {approval?.reviewedAt ? (
+                <span className="text-muted-foreground">
+                  {" · "}
+                  {approval.reviewedById
+                    ? (names.get(approval.reviewedById) ?? "ex-membro")
+                    : "ex-membro"}
+                  {" · "}
+                  <time dateTime={approval.reviewedAt.toISOString()}>
+                    {dateTime.format(approval.reviewedAt)}
+                  </time>
+                </span>
+              ) : null}
+            </p>
+            {approval?.notes ? (
+              <p className="text-sm whitespace-pre-wrap">{approval.notes}</p>
+            ) : null}
+            {pendingAny &&
+            pendingVersion &&
+            pendingAny.editVersionId !== current.id ? (
+              <p className="text-sm text-muted-foreground">
+                {versionLabel(pendingVersion.versionNumber)} está aguardando
+                aprovação.
+              </p>
+            ) : null}
+            {canEdit && !pendingAny && approval?.status !== "APPROVED" ? (
+              <RequestApprovalForm
+                projectId={project.id}
+                versionId={current.id}
+              />
+            ) : null}
           </section>
           {canEdit ? (
             <ReviewCommentForm projectId={project.id} versionId={current.id} />

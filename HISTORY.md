@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — APPROVAL-001 — Modelo e service
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Pedido de aprovação por versão (spec §32): modelo `Approval`, pedir aprovação e ver o estado na aba Revisão.
+
+### Implementação
+
+- Enum `ApprovalStatus` (PENDING, CHANGES_REQUESTED, APPROVED) e modelo `Approval` (produção, versão, status, quem pediu, quem decidiu, notas, datas).
+- `requestApproval` (dono, admin, membro): um pedido aberto por produção. Pedir de novo para a mesma versão devolve o pedido existente; para outra versão dá erro de campo até o aberto ser decidido. Tudo numa transação no repositório.
+- `listApprovals` (todos) pela produção visível no workspace.
+- Aba Revisão: seção "Aprovação" com o estado da versão, quem decidiu e quando, notas, aviso de outra versão pendente e botão "Pedir aprovação desta versão".
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928390000_approval/`
+- `src/server/approval.ts`, `approval-repository.ts`, `approval-prisma.ts`, `approval-labels.ts`, `approval-actions.ts`, `approval.integration.test.ts`
+- `src/components/review/approval-panel.tsx`, `src/app/(app)/producoes/[id]/revisao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Pedir aprovação não muda o status da produção (a spec só define efeito na decisão).
+- Sem índice parcial para "um PENDING por produção" (mesma linha da TAKE-003); dois pedidos no mesmo instante podem abrir dois. Revisar na HARDEN-002.
+
+### Banco / migrations
+
+- `20260928390000_approval`: enum e tabela `Approval`, índices `(videoProjectId, status)` e `(editVersionId, createdAt)`, FK cascade em produção e versão, SET NULL nos usuários. Rollback conceitual: dropar tabela e enum.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — REVIEW-004 — Tela de revisão
 
 **Status:** DONE  

@@ -31,6 +31,8 @@ model User {
   editVersions    EditVersion[]
   reviewComments  ReviewComment[] @relation("ReviewCommentAuthor")
   reviewResolved  ReviewComment[] @relation("ReviewCommentResolver")
+  approvalsRequested Approval[] @relation("ApprovalRequester")
+  approvalsReviewed  Approval[] @relation("ApprovalReviewer")
 }
 
 enum WorkspaceRole {
@@ -190,6 +192,7 @@ model VideoProject {
   assets                    Asset[]
   editingInfo               EditingInfo?
   editVersions              EditVersion[]
+  approvals                 Approval[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -599,6 +602,7 @@ model EditVersion {
   videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
   createdBy      User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
   comments       ReviewComment[]
+  approvals      Approval[]
 
   @@unique([videoProjectId, versionNumber])
 }
@@ -621,4 +625,31 @@ model ReviewComment {
   resolvedBy       User?       @relation("ReviewCommentResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
 
   @@index([editVersionId, resolved])
+}
+
+enum ApprovalStatus {
+  PENDING
+  CHANGES_REQUESTED
+  APPROVED
+}
+
+// Pedido de aprovação de uma versão. A decisão muda o status da produção
+// na mesma transação (APPROVED ou EDITING).
+model Approval {
+  id             String         @id @default(uuid())
+  videoProjectId String
+  editVersionId  String
+  status         ApprovalStatus @default(PENDING)
+  requestedById  String?
+  reviewedById   String?
+  notes          String?
+  createdAt      DateTime       @default(now())
+  reviewedAt     DateTime?
+  videoProject   VideoProject   @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  editVersion    EditVersion    @relation(fields: [editVersionId], references: [id], onDelete: Cascade)
+  requestedBy    User?          @relation("ApprovalRequester", fields: [requestedById], references: [id], onDelete: SetNull)
+  reviewedBy     User?          @relation("ApprovalReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([videoProjectId, status])
+  @@index([editVersionId, createdAt])
 }
