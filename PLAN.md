@@ -1673,7 +1673,7 @@ Decisão: ADR-038. PanelUI é React Native/Expo; serve só de referência visual
 
 **Status:** TODO  
 **Prioridade:** P0  
-**Dependências:** UI-001
+**Dependências:** UI-001, OSS-008
 
 Sidebar, header mobile, troca de tema, avisos, usuário. Mobile-first, 44px de toque.
 
@@ -1683,7 +1683,7 @@ Sidebar, header mobile, troca de tema, avisos, usuário. Mobile-first, 44px de t
 
 **Status:** TODO  
 **Prioridade:** P0  
-**Dependências:** UI-001
+**Dependências:** UI-001, OSS-008
 
 Botões, campos (substituir `<input>`/`<select>` crus por componentes), card, badge de status (texto + cor), lista, tabela, tabs, empty/error/loading, diálogo, toast.
 
@@ -1735,7 +1735,7 @@ Login com Google e/ou e-mail (conforme env), criar workspace, aceitar convite.
 **Prioridade:** P0  
 **Dependências:** UI-004..UI-007
 
-Repetir HARDEN-003 e HARDEN-005 (375/390/430 + desktop, claro e escuro) e conferir no celular real.
+Repetir HARDEN-003 e HARDEN-005 (375/390/430 + desktop, claro e escuro, pt-BR e en) e conferir no celular real. Nenhum texto fixo fora do catálogo.
 
 ---
 
@@ -1784,7 +1784,7 @@ Decisões: ADR-037 (Docker/Coolify), ADR-039 (AGPL-3.0), ADR-040 (login por e-ma
 **Prioridade:** P0  
 **Dependências:** OSS-003, OSS-005
 
-README público: o que é, prints, requisitos, docker-compose, Coolify, variáveis, OAuth Google (URIs), SMTP, backup, atualização. Separar notas internas do harness do README.
+README público em inglês com `README.pt-BR.md`: o que é, prints, requisitos, docker-compose, Coolify, variáveis, OAuth Google (URIs), SMTP, backup, atualização. Separar notas internas do harness do README.
 
 ---
 
@@ -1820,13 +1820,22 @@ Lint, typecheck, testes com serviço Postgres real (resolve a pendência do test
 
 ---
 
-## OSS-008 — Idioma
+## OSS-008 — Idiomas pt-BR e en
 
 **Status:** TODO  
-**Prioridade:** P1  
-**Dependências:** decisão do dono
+**Prioridade:** P0  
+**Dependências:** nenhuma
 
-Interface hoje só em pt-BR. Definir se o público do repositório exige inglês/i18n.
+Infra de i18n (ADR-041), antes do refactor de UI para não traduzir duas vezes:
+
+- biblioteca `next-intl`, idiomas `pt-BR` e `en`, catálogos em `messages/`;
+- idioma por usuário (preferência salva), senão `Accept-Language`, senão `en`;
+- datas e números por `Intl` no idioma do usuário e fuso do workspace;
+- mensagens de erro de serviço e validação traduzíveis (chave, não texto fixo);
+- enums com rótulo por idioma (`*-labels.ts` passam a usar o catálogo);
+- teste que falha se uma chave existir em um idioma e faltar no outro.
+
+Critério: shell e uma tela completa nos dois idiomas; demais telas migram nas tarefas UI-002..007.
 
 ---
 

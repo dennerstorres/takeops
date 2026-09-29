@@ -745,7 +745,7 @@ A regra autoritativa está no serviço. Desde a HARDEN-004 a tela também escond
 
 # ADR-036 — Env validado na subida do servidor
 
-**Status:** Accepted
+**Status:** Accepted  
 **Data:** 2026-09-29
 
 ## Contexto
@@ -764,7 +764,7 @@ Servidor com env inválido não sobe. Os módulos seguem lendo `process.env` dir
 
 # ADR-037 — Distribuição por imagem Docker; produção no Coolify
 
-**Status:** Accepted
+**Status:** Accepted  
 **Data:** 2026-09-29
 
 ## Contexto
@@ -783,7 +783,7 @@ Uma imagem, dois caminhos de instalação. Nada específico da VPS do dono entra
 
 # ADR-038 — PanelUI como referência visual
 
-**Status:** Accepted
+**Status:** Accepted  
 **Data:** 2026-09-29
 
 ## Contexto
@@ -802,7 +802,7 @@ Fase 21 (UI-001..008). `DESIGN.md` vira a fonte dos tokens.
 
 # ADR-039 — Licença AGPL-3.0
 
-**Status:** Accepted
+**Status:** Accepted  
 **Data:** 2026-09-29
 
 ## Decisão
@@ -817,7 +817,7 @@ Repositório público sob AGPL-3.0: livre para usar e hospedar; quem oferecer ve
 
 # ADR-040 — Login por Google e por link de e-mail
 
-**Status:** Accepted
+**Status:** Accepted  
 **Data:** 2026-09-29
 
 ## Contexto
@@ -831,3 +831,22 @@ Dois métodos, cada um liga se configurado: Google OAuth e link mágico por e-ma
 ## Consequências
 
 OSS-005; validação de env (ADR-036) muda para "ao menos um provider". Tela de login mostra só os métodos ativos.
+
+---
+
+# ADR-041 — Interface em português e inglês
+
+**Status:** Accepted  
+**Data:** 2026-09-29
+
+## Contexto
+
+O repositório será público; a interface era só pt-BR.
+
+## Decisão
+
+`pt-BR` e `en` com `next-intl`. Idioma por usuário, com fallback para `Accept-Language` e depois `en`. Catálogos em `messages/`. Texto de interface sempre por chave; serviços devolvem código de erro traduzível. Fuso continua do workspace (spec §14).
+
+## Consequências
+
+OSS-008 vem antes do refactor de UI. Docs do projeto (harness) seguem em pt-BR; README público em inglês com versão pt-BR.

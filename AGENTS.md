@@ -534,7 +534,8 @@ O repositório é público e self-hosted (ADR-037, ADR-039). Por isso:
 - toda variável nova entra no `.env.example` comentada, na validação de `src/server/env.ts` e no README;
 - nenhum dado pessoal, e-mail real ou nome de cliente em seed, teste ou doc;
 - dependência nova precisa de licença compatível com AGPL-3.0;
-- nenhum código ou asset de terceiro sem licença que permita (PanelUI é só referência visual, ADR-038).
+- nenhum código ou asset de terceiro sem licença que permita (PanelUI é só referência visual, ADR-038);
+- depois da OSS-008, nenhum texto de interface fixo no código: chave nos catálogos `pt-BR` e `en` (ADR-041).
 
 ---
 
