@@ -1384,11 +1384,27 @@ Registrar decisão se escolher persistência própria.
 
 ## TEMPLATE-004 — Criar projeto por template
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** TEMPLATE-002, TEMPLATE-003, PROJECT-002
 
 Operação deve duplicar estruturas, nunca compartilhar registros mutáveis.
+
+### Critérios
+
+- [x] nova produção pode começar de um template do workspace;
+- [x] cenas e itens do checklist são copiados numa transação; nada fica ligado ao template;
+- [x] template de outro workspace não cria produção.
+
+---
+
+## TEMPLATE-005 — Usar checklist da produção na gravação
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** TEMPLATE-004, CHECK-003
+
+Na aba Gravação, oferecer "Checklist da produção" como origem ao montar o checklist de uma gravação, copiando `ProjectChecklistItem` para `ShootChecklistItem` (mesma regra da CHECK-003).
 
 ---
 

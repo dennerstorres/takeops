@@ -62,6 +62,18 @@ export type ProductionTemplateRepository = {
     templateId: string,
     sceneId: string,
   ): Promise<TemplateSceneRecord[] | null>;
+  // Copia cenas e itens do checklist para a produção numa transação,
+  // depois das cenas e itens que ela já tiver. null quando template ou
+  // produção não são visíveis no workspace.
+  applyToProject(
+    workspaceId: string,
+    templateId: string,
+    projectId: string,
+  ): Promise<{ scenes: number; checklistItems: number } | null>;
+  projectChecklist(
+    workspaceId: string,
+    projectId: string,
+  ): Promise<{ id: string; order: number; text: string }[]>;
   // "invalid" quando o checklist não é do mesmo workspace.
   setChecklist(
     workspaceId: string,

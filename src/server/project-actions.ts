@@ -12,6 +12,8 @@ import {
   submitBoardMove,
   updateProject,
 } from "@/server/project";
+import { createProjectFromTemplate } from "@/server/production-template";
+import { prismaProductionTemplateRepository } from "@/server/production-template-prisma";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { runAction, type ActionFailure } from "@/server/service";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
@@ -54,18 +56,34 @@ export async function createProjectAction(
   formData: FormData,
 ): Promise<ProjectFormState> {
   const current = await currentWorkspace();
+  const templateId = String(formData.get("templateId") ?? "");
   const result = await runAction(
     { userId: current.userId, workspaceId: current.workspaceId },
     { operation: "create", entity: "VideoProject" },
-    () =>
-      createProject(
-        current.userId,
-        current.workspaceId,
-        projectInput(formData),
-        prismaWorkspaceRepository,
-        prismaIdeaRepository,
-        prismaProjectRepository,
-      ),
+    async () =>
+      templateId
+        ? (
+            await createProjectFromTemplate(
+              current.userId,
+              current.workspaceId,
+              templateId,
+              projectInput(formData),
+              {
+                workspaces: prismaWorkspaceRepository,
+                ideas: prismaIdeaRepository,
+                projects: prismaProjectRepository,
+                templates: prismaProductionTemplateRepository,
+              },
+            )
+          ).project
+        : createProject(
+            current.userId,
+            current.workspaceId,
+            projectInput(formData),
+            prismaWorkspaceRepository,
+            prismaIdeaRepository,
+            prismaProjectRepository,
+          ),
   );
   if (!result.ok) return { message: result.message, fields: result.fields };
   redirect(`/producoes/${result.data.id}`);

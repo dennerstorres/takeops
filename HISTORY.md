@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-29 — TEMPLATE-004 — Criar projeto por template
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+"Nova produção" deixa escolher um template. A produção nasce como qualquer outra e recebe cópia das cenas e do checklist do template (ADR-034).
+
+### Implementação
+
+- `createProjectFromTemplate`: confere o template no workspace, cria a produção pelo `createProject` de sempre e chama `applyToProject`, que numa transação copia cenas-modelo para `Scene` (PLANNED, depois das existentes) e itens do checklist ligado para `ProjectChecklistItem`.
+- Nova tabela `ProjectChecklistItem` (cópia; único `(videoProjectId, order)`).
+- `/producoes/nova?template=<id>`: chips "Em branco" + templates; o formulário leva `templateId` escondido. Template de outro workspace na URL é ignorado; no servidor dá NotFound sem criar produção.
+- Aba Gravação mostra "Checklist da produção" (recolhido) quando há cópia.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928440000_project_checklist_item/`
+- `src/server/production-template.ts`, `production-template-repository.ts`, `production-template-prisma.ts`, `production-template.integration.test.ts`, `project-actions.ts`
+- `src/components/projects/project-form.tsx`, `src/app/(app)/producoes/nova/page.tsx`, `src/app/(app)/producoes/[id]/gravacao/page.tsx`
+- `DECISIONS.md` (ADR-034), `PLAN.md` (nova TEMPLATE-005)
+
+### Decisões tomadas
+
+- ADR-034. Nova tarefa TEMPLATE-005 para usar a cópia ao montar o checklist da gravação.
+
+### Banco / migrations
+
+- `20260928440000_project_checklist_item`: tabela, único `(videoProjectId, order)`, FK cascade na produção. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Teste confere cópia (mudar template e checklist depois não altera a produção) e template alheio sem criar produção.
+
+---
+
 ## 2026-09-28 — TEMPLATE-003 — Checklist no template
 
 **Status:** DONE  

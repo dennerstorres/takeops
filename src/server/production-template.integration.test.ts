@@ -5,9 +5,11 @@ import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import {
   addTemplateScene,
   createProductionTemplate,
+  createProjectFromTemplate,
   deleteProductionTemplate,
   getProductionTemplate,
   listProductionTemplates,
+  listProjectChecklist,
   listTemplateScenes,
   moveTemplateScene,
   removeTemplateScene,
@@ -360,6 +362,134 @@ describe(
           deps,
         );
         assert.equal(cleared.checklistTemplateId, null);
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+
+    it("cria produção por template copiando cenas e checklist", async () => {
+      const ctx = await templateSetup();
+      try {
+        const { prisma, deps, workspaceId } = ctx;
+        const { prismaIdeaRepository } = await import("./idea-prisma.ts");
+        const { prismaProjectRepository } = await import("./project-prisma.ts");
+        const full = {
+          ...deps,
+          ideas: prismaIdeaRepository,
+          projects: prismaProjectRepository,
+        };
+        const checklist = await prisma.checklistTemplate.create({
+          data: {
+            workspaceId,
+            name: "Gravação",
+            items: {
+              create: [
+                { order: 1, text: "Bateria carregada" },
+                { order: 2, text: "Microfone testado" },
+              ],
+            },
+          },
+        });
+        const template = await createProductionTemplate(
+          ctx.owner.id,
+          workspaceId,
+          { name: "Demo" },
+          deps,
+        );
+        for (const [title, type] of [
+          ["Hook", "HOOK"],
+          ["CTA", "CTA"],
+        ]) {
+          await addTemplateScene(
+            ctx.owner.id,
+            workspaceId,
+            template.id,
+            { title, type, description: "curta" },
+            deps,
+          );
+        }
+        await setTemplateChecklist(
+          ctx.owner.id,
+          workspaceId,
+          template.id,
+          { checklistTemplateId: checklist.id },
+          deps,
+        );
+
+        const result = await createProjectFromTemplate(
+          ctx.member.id,
+          workspaceId,
+          template.id,
+          { title: `Por template ${ctx.suffix}`, format: "DEMO" },
+          full,
+        );
+        assert.equal(result.scenes, 2);
+        assert.equal(result.checklistItems, 2);
+        const scenes = await prisma.scene.findMany({
+          where: { videoProjectId: result.project.id },
+          orderBy: { order: "asc" },
+        });
+        assert.deepEqual(
+          scenes.map((scene) => [scene.order, scene.title, scene.status]),
+          [
+            [1, "Hook", "PLANNED"],
+            [2, "CTA", "PLANNED"],
+          ],
+        );
+        assert.deepEqual(
+          (
+            await listProjectChecklist(
+              ctx.member.id,
+              workspaceId,
+              result.project.id,
+              full,
+            )
+          ).map((item) => item.text),
+          ["Bateria carregada", "Microfone testado"],
+        );
+
+        // Cópia, não referência: mudar o template e o checklist depois não
+        // altera a produção.
+        await prisma.checklistTemplateItem.updateMany({
+          where: { checklistTemplateId: checklist.id },
+          data: { text: "mudou" },
+        });
+        await prisma.productionTemplateScene.updateMany({
+          where: { templateId: template.id },
+          data: { title: "mudou" },
+        });
+        const again = await prisma.scene.findMany({
+          where: { videoProjectId: result.project.id },
+        });
+        assert.ok(again.every((scene) => scene.title !== "mudou"));
+        const items = await prisma.projectChecklistItem.findMany({
+          where: { videoProjectId: result.project.id },
+        });
+        assert.ok(items.every((item) => item.text !== "mudou"));
+
+        const foreign = await createProductionTemplate(
+          ctx.outsider.id,
+          ctx.foreignId,
+          { name: "Alheio" },
+          deps,
+        );
+        const before = await prisma.videoProject.count({
+          where: { workspaceId },
+        });
+        await assert.rejects(
+          createProjectFromTemplate(
+            ctx.owner.id,
+            workspaceId,
+            foreign.id,
+            { title: "Não", format: "DEMO" },
+            full,
+          ),
+          NotFoundError,
+        );
+        assert.equal(
+          await prisma.videoProject.count({ where: { workspaceId } }),
+          before,
+        );
       } finally {
         await ctx.cleanup();
       }

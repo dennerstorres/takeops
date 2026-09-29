@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TEMPLATE-003 — Checklist no template
+TEMPLATE-004 — Criar projeto por template
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TEMPLATE-004 — Criar projeto por template
+TEMPLATE-005 — Usar checklist da produção na gravação
 ```
 
 ## Estado dos módulos

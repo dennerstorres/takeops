@@ -196,6 +196,7 @@ model VideoProject {
   editVersions              EditVersion[]
   approvals                 Approval[]
   publications              Publication[]
+  checklistItems            ProjectChecklistItem[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -731,4 +732,17 @@ model ProductionTemplateScene {
   template    ProductionTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
 
   @@unique([templateId, order])
+}
+
+// Cópia dos itens do checklist do template na criação da produção. Mudar o
+// checklist ou o template depois não altera a produção (TEMPLATE-004).
+model ProjectChecklistItem {
+  id             String       @id @default(uuid())
+  videoProjectId String
+  order          Int
+  text           String
+  createdAt      DateTime     @default(now())
+  videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@unique([videoProjectId, order])
 }

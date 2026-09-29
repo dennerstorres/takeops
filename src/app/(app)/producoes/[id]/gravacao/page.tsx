@@ -15,6 +15,8 @@ import { listEquipment } from "@/server/equipment";
 import { equipmentCategoryLabel } from "@/server/equipment-labels";
 import { prismaEquipmentRepository } from "@/server/equipment-prisma";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
+import { listProjectChecklist } from "@/server/production-template";
+import { prismaProductionTemplateRepository } from "@/server/production-template-prisma";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { listShoots } from "@/server/shoot";
@@ -46,6 +48,7 @@ export default async function ShootsPage({
   let catalog;
   let checklists;
   let templates;
+  let projectChecklist;
   try {
     project = await getProject(
       session.user.id,
@@ -64,30 +67,36 @@ export default async function ShootsPage({
     shoots = await listShoots(session.user.id, workspaceId, project.id, deps);
     const userId = session.user.id;
     const projectId = project.id;
-    [kits, catalog, checklists, templates] = await Promise.all([
-      Promise.all(
-        shoots.map((shoot) =>
-          listShootEquipment(userId, workspaceId, projectId, shoot.id, deps),
+    [kits, catalog, checklists, templates, projectChecklist] =
+      await Promise.all([
+        Promise.all(
+          shoots.map((shoot) =>
+            listShootEquipment(userId, workspaceId, projectId, shoot.id, deps),
+          ),
         ),
-      ),
-      listEquipment(
-        userId,
-        workspaceId,
-        prismaWorkspaceRepository,
-        prismaEquipmentRepository,
-      ),
-      Promise.all(
-        shoots.map((shoot) =>
-          listShootChecklist(userId, workspaceId, projectId, shoot.id, deps),
+        listEquipment(
+          userId,
+          workspaceId,
+          prismaWorkspaceRepository,
+          prismaEquipmentRepository,
         ),
-      ),
-      listChecklistTemplates(
-        userId,
-        workspaceId,
-        prismaWorkspaceRepository,
-        prismaChecklistRepository,
-      ),
-    ]);
+        Promise.all(
+          shoots.map((shoot) =>
+            listShootChecklist(userId, workspaceId, projectId, shoot.id, deps),
+          ),
+        ),
+        listChecklistTemplates(
+          userId,
+          workspaceId,
+          prismaWorkspaceRepository,
+          prismaChecklistRepository,
+        ),
+        listProjectChecklist(userId, workspaceId, projectId, {
+          workspaces: prismaWorkspaceRepository,
+          projects: prismaProjectRepository,
+          templates: prismaProductionTemplateRepository,
+        }),
+      ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect("/producoes");
     if (error instanceof ForbiddenError) redirect("/comecar");
@@ -129,6 +138,21 @@ export default async function ShootsPage({
         <h1 className="text-2xl font-medium tracking-tight">Gravação</h1>
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
+      {projectChecklist.length > 0 ? (
+        <details className="rounded-xl border p-3">
+          <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
+            Checklist da produção · {projectChecklist.length} itens
+          </summary>
+          <p className="text-sm text-muted-foreground">
+            Veio do template na criação da produção.
+          </p>
+          <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm">
+            {projectChecklist.map((item) => (
+              <li key={item.id}>{item.text}</li>
+            ))}
+          </ol>
+        </details>
+      ) : null}
       <Link
         href={`/producoes/${project.id}/continuidade`}
         className="inline-flex min-h-11 w-fit items-center rounded-lg border px-3 text-sm"

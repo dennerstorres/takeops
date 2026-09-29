@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { NotFoundError, ValidationError } from "./errors.ts";
+import type { IdeaRepository } from "./idea-repository.ts";
+import { createProject, getProject } from "./project.ts";
+import type { ProjectRepository } from "./project-repository.ts";
 import type {
   ProductionTemplateRepository,
   ProductionTemplateWrite,
@@ -282,4 +285,59 @@ export async function setTemplateChecklist(
   }
   if (!updated || updated.id !== template.id) throw new NotFoundError();
   return updated;
+}
+
+export type ProjectTemplateDeps = ProductionTemplateDeps & {
+  ideas: IdeaRepository;
+  projects: ProjectRepository;
+};
+
+// Criar por template (spec §36): a produção nasce como qualquer outra e
+// recebe cópias das cenas e do checklist. Nada fica ligado ao template.
+// O template é conferido antes, para não criar produção com template
+// inválido.
+export async function createProjectFromTemplate(
+  userId: string,
+  workspaceId: string,
+  templateId: string,
+  input: unknown,
+  deps: ProjectTemplateDeps,
+) {
+  const template = await getProductionTemplate(
+    userId,
+    workspaceId,
+    templateId,
+    deps,
+  );
+  const project = await createProject(
+    userId,
+    workspaceId,
+    input,
+    deps.workspaces,
+    deps.ideas,
+    deps.projects,
+  );
+  const copied = await deps.templates.applyToProject(
+    project.workspaceId,
+    template.id,
+    project.id,
+  );
+  if (!copied) throw new NotFoundError();
+  return { project, ...copied };
+}
+
+export async function listProjectChecklist(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  deps: ProductionTemplateDeps & { projects: ProjectRepository },
+) {
+  const project = await getProject(
+    userId,
+    workspaceId,
+    projectId,
+    deps.workspaces,
+    deps.projects,
+  );
+  return deps.templates.projectChecklist(project.workspaceId, project.id);
 }

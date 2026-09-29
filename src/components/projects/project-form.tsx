@@ -67,11 +67,14 @@ export function ProjectForm({
   canEdit,
   people,
   ideas,
+  templateId,
 }: {
   values: ProjectFormValues;
   canEdit: boolean;
   people: ProjectOption[];
   ideas: ProjectOption[];
+  // Só na criação: a produção nasce com cópia das cenas e do checklist.
+  templateId?: string;
 }) {
   const action = values.id ? updateProjectAction : createProjectAction;
   const [state, formAction, pending] = useActionState(action, initialState);
@@ -81,6 +84,9 @@ export function ProjectForm({
     <form action={formAction} className="flex flex-col gap-4">
       {values.id ? (
         <input type="hidden" name="projectId" value={values.id} />
+      ) : null}
+      {!values.id && templateId ? (
+        <input type="hidden" name="templateId" value={templateId} />
       ) : null}
       <Field id="project-title" label="Título" error={state?.fields?.title}>
         <input

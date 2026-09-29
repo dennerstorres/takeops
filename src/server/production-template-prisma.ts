@@ -172,4 +172,73 @@ export const prismaProductionTemplateRepository: ProductionTemplateRepository =
         return mapTemplate(row);
       });
     },
+
+    async applyToProject(workspaceId, templateId, projectId) {
+      return prisma.$transaction(async (tx) => {
+        const template = await tx.productionTemplate.findFirst({
+          where: { id: templateId, workspaceId },
+          include: {
+            scenes: { orderBy: { order: "asc" } },
+            checklistTemplate: {
+              include: { items: { orderBy: { order: "asc" } } },
+            },
+          },
+        });
+        const project = await tx.videoProject.findFirst({
+          where: { id: projectId, workspaceId, deletedAt: null },
+          select: { id: true },
+        });
+        if (!template || !project) return null;
+        // Checklist de outro workspace nunca entra, mesmo com FK apontando.
+        const items =
+          template.checklistTemplate?.workspaceId === workspaceId
+            ? template.checklistTemplate.items
+            : [];
+        const lastScene = await tx.scene.aggregate({
+          where: { videoProjectId: project.id },
+          _max: { order: true },
+        });
+        const lastItem = await tx.projectChecklistItem.aggregate({
+          where: { videoProjectId: project.id },
+          _max: { order: true },
+        });
+        const sceneStart = lastScene._max.order ?? 0;
+        const itemStart = lastItem._max.order ?? 0;
+        if (template.scenes.length > 0) {
+          await tx.scene.createMany({
+            data: template.scenes.map((scene, index) => ({
+              videoProjectId: project.id,
+              order: sceneStart + index + 1,
+              title: scene.title,
+              type: scene.type,
+              description: scene.description,
+            })),
+          });
+        }
+        if (items.length > 0) {
+          await tx.projectChecklistItem.createMany({
+            data: items.map((item, index) => ({
+              videoProjectId: project.id,
+              order: itemStart + index + 1,
+              text: item.text,
+            })),
+          });
+        }
+        return { scenes: template.scenes.length, checklistItems: items.length };
+      });
+    },
+
+    async projectChecklist(workspaceId, projectId) {
+      const rows = await prisma.projectChecklistItem.findMany({
+        where: {
+          videoProject: { id: projectId, workspaceId, deletedAt: null },
+        },
+        orderBy: { order: "asc" },
+      });
+      return rows.map((row) => ({
+        id: row.id,
+        order: row.order,
+        text: row.text,
+      }));
+    },
   };

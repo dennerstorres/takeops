@@ -664,6 +664,25 @@ A tela usa a mesma função para mostrar os botões. Aprovar externo (cliente) e
 
 ---
 
+# ADR-034 — Produção por template recebe cópias, inclusive do checklist
+
+**Status:** Accepted  
+**Data:** 2026-09-29
+
+## Contexto
+
+TEMPLATE-004: "duplicar estruturas, nunca compartilhar registros mutáveis". Cenas têm destino natural (`Scene`), mas a produção não tinha onde guardar checklist: checklist existe no catálogo (`ChecklistTemplate`) e por gravação (`ShootChecklistItem`).
+
+## Decisão
+
+Criar por template copia, numa transação, as cenas-modelo para `Scene` (PLANNED) e os itens do checklist ligado ao template para a nova tabela `ProjectChecklistItem`. A produção não guarda `templateId` nem aponta para o checklist do catálogo. O template é conferido antes de criar a produção.
+
+## Consequências
+
+Mudar ou excluir template e checklist depois não altera produções. A cópia aparece na aba Gravação; usar esses itens ao montar o checklist de uma gravação é a TEMPLATE-005. Criação e cópia são duas operações: se a cópia falhar depois de a produção existir, ela fica sem cenas (o template já foi validado antes, então só um apagamento simultâneo causa isso).
+
+---
+
 # Template para novas decisões
 
 ```md
