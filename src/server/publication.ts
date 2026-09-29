@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { NotFoundError, ValidationError } from "./errors.ts";
+import { externalUrl } from "./external-url.ts";
 import { instant } from "./instant.ts";
 import { getProject } from "./project.ts";
 import type { ProjectRepository } from "./project-repository.ts";
@@ -198,6 +199,58 @@ export async function schedulePublication(
       scheduledAt,
       status: scheduledAt ? "SCHEDULED" : "PENDING",
     },
+  );
+  if (!updated || updated.id !== current.id) throw new NotFoundError();
+  return updated;
+}
+
+const outcomeSchema = z.object({
+  status: z.enum(["PUBLISHED", "FAILED", "CANCELED"], {
+    error: "Escolha o resultado.",
+  }),
+  publishedAt: z.preprocess(
+    (value) => (typeof value === "string" ? value.trim() : ""),
+    z.string().max(40, "Informe data e hora válidas."),
+  ),
+  url: z.preprocess(
+    (value) => (typeof value === "string" ? value.trim() : ""),
+    z.string().max(2048, "O link passou de 2048 caracteres."),
+  ),
+});
+
+// A equipe publica na plataforma e registra aqui o resultado. Publicada
+// guarda quando (agora, se não informado) e o link; falha ou cancelamento
+// limpam os dois para não parecer que saiu.
+export async function recordPublicationOutcome(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  publicationId: string,
+  input: unknown,
+  deps: PublicationDeps,
+  now = new Date(),
+) {
+  await requireRole(userId, workspaceId, writers, deps.workspaces);
+  const data = parseInput(outcomeSchema, input);
+  const published = data.status === "PUBLISHED";
+  const publishedAt = published
+    ? data.publishedAt
+      ? instant(data.publishedAt, "publishedAt")
+      : now
+    : null;
+  const url = published && data.url ? externalUrl(data.url) : null;
+  const current = await getPublication(
+    userId,
+    workspaceId,
+    projectId,
+    publicationId,
+    deps,
+  );
+  const updated = await deps.publications.update(
+    workspaceId,
+    current.videoProjectId,
+    current.id,
+    { status: data.status, publishedAt, url },
   );
   if (!updated || updated.id !== current.id) throw new NotFoundError();
   return updated;

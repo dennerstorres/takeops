@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 15 — Publicação
+Fase 16 — Calendário
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PUB-003 — Agendamento manual
+PUB-004 — Marcar publicação realizada
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PUB-004 — Marcar publicação realizada
+CAL-001 — Modelo de eventos derivados
 ```
 
 ## Estado dos módulos
@@ -52,7 +52,7 @@ PUB-004 — Marcar publicação realizada
 | Edição | DONE |
 | Revisão | DONE |
 | Aprovação | DONE |
-| Publicação | IN_PROGRESS |
+| Publicação | DONE |
 | Calendário | NOT_STARTED |
 | Templates | NOT_STARTED |
 | Notificações | NOT_STARTED |

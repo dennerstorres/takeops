@@ -9,6 +9,7 @@ import { prismaProjectRepository } from "@/server/project-prisma";
 import {
   createPublication,
   deletePublication,
+  recordPublicationOutcome,
   schedulePublication,
   updatePublication,
   type PublicationDeps,
@@ -132,6 +133,39 @@ export async function schedulePublicationAction(
         projectId,
         String(formData.get("publicationId") ?? ""),
         { scheduledAt },
+        deps,
+      ),
+  );
+  if (!result.ok) return { message: result.message, fields: result.fields };
+  revalidatePath(page(projectId));
+  redirect(page(projectId));
+}
+
+export async function recordOutcomeAction(
+  _state: PublicationFormState,
+  formData: FormData,
+): Promise<PublicationFormState> {
+  const current = await currentWorkspace();
+  const projectId = String(formData.get("projectId") ?? "");
+  const raw = String(formData.get("publishedAt") ?? "").trim();
+  // Vazio deixa o serviço usar a hora do servidor.
+  const publishedAt = raw
+    ? (zonedLocalToUtc(raw, current.timezone)?.toISOString() ?? raw)
+    : "";
+  const result = await runAction(
+    current,
+    { operation: "record-outcome", entity: "Publication" },
+    () =>
+      recordPublicationOutcome(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        String(formData.get("publicationId") ?? ""),
+        {
+          status: formData.get("status"),
+          publishedAt,
+          url: formData.get("url"),
+        },
         deps,
       ),
   );

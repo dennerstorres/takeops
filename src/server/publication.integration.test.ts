@@ -8,6 +8,7 @@ import {
   deletePublication,
   getPublication,
   listPublications,
+  recordPublicationOutcome,
   schedulePublication,
   updatePublication,
   type PublicationDeps,
@@ -354,6 +355,98 @@ describe(
             deps,
           ),
           ValidationError,
+        );
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+
+    it("registra publicada com data e link, ou falha sem eles", async () => {
+      const ctx = await setup();
+      try {
+        const { prisma, deps, workspaceId, project } = ctx;
+        const shorts = await prisma.publication.create({
+          data: { videoProjectId: project.id, platform: "YOUTUBE_SHORTS" },
+        });
+        const now = new Date("2026-10-12T20:00:00.000Z");
+        const published = await recordPublicationOutcome(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          shorts.id,
+          { status: "PUBLISHED", url: "https://youtube.com/shorts/abc" },
+          deps,
+          now,
+        );
+        assert.equal(published.status, "PUBLISHED");
+        assert.equal(published.publishedAt?.toISOString(), now.toISOString());
+        assert.equal(published.url, "https://youtube.com/shorts/abc");
+
+        const dated = await recordPublicationOutcome(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          shorts.id,
+          { status: "PUBLISHED", publishedAt: "2026-10-12T09:15:00-03:00" },
+          deps,
+        );
+        assert.equal(
+          dated.publishedAt?.toISOString(),
+          "2026-10-12T12:15:00.000Z",
+        );
+        assert.equal(dated.url, null);
+
+        const failed = await recordPublicationOutcome(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          shorts.id,
+          { status: "FAILED", url: "https://youtube.com/shorts/abc" },
+          deps,
+        );
+        assert.equal(failed.status, "FAILED");
+        assert.equal(failed.publishedAt, null);
+        assert.equal(failed.url, null);
+
+        for (const input of [
+          { status: "SCHEDULED" },
+          { status: "PUBLISHED", url: "javascript:alert(1)" },
+          { status: "PUBLISHED", publishedAt: "12/10/2026" },
+        ]) {
+          await assert.rejects(
+            recordPublicationOutcome(
+              ctx.owner.id,
+              workspaceId,
+              project.id,
+              shorts.id,
+              input,
+              deps,
+            ),
+            ValidationError,
+            JSON.stringify(input),
+          );
+        }
+        await assert.rejects(
+          recordPublicationOutcome(
+            ctx.viewer.id,
+            workspaceId,
+            project.id,
+            shorts.id,
+            { status: "PUBLISHED" },
+            deps,
+          ),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          recordPublicationOutcome(
+            ctx.owner.id,
+            workspaceId,
+            ctx.sibling.id,
+            shorts.id,
+            { status: "PUBLISHED" },
+            deps,
+          ),
+          NotFoundError,
         );
       } finally {
         await ctx.cleanup();

@@ -1270,7 +1270,7 @@ Qualquer decisão durável deve ser registrada em `DECISIONS.md`.
 
 ## PUB-004 — Marcar publicação realizada
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PUB-002
 
@@ -1279,6 +1279,12 @@ Registrar:
 - publishedAt;
 - URL;
 - status.
+
+### Critérios
+
+- [x] publicada guarda data (informada ou agora) e link validado;
+- [x] falhou e cancelada limpam data e link;
+- [x] horário do formulário no fuso do workspace; leitor não registra.
 
 ---
 

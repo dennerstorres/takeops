@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — PUB-004 — Marcar publicação realizada
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Cada destino registra o resultado: publicada (data e link), falhou ou cancelada.
+
+### Implementação
+
+- `recordPublicationOutcome` (dono, admin, membro): PUBLISHED guarda `publishedAt` (informado com fuso, ou a hora do servidor) e link opcional validado por `externalUrl` (ADR-030); FAILED e CANCELED limpam data e link.
+- `recordOutcomeAction` converte o horário de parede do workspace (ADR-028).
+- Aba Publicação: "Registrar resultado" em cada destino (aberto quando está agendado), com botões Marcar como publicada, Falhou e Cancelar.
+
+### Arquivos principais
+
+- `src/server/publication.ts`, `publication-actions.ts`, `publication.integration.test.ts`
+- `src/components/publications/publication-outcome-form.tsx`
+- `src/app/(app)/producoes/[id]/publicacao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Resultado não muda o status da produção (a spec não define); mover para "Publicado" segue no kanban.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — PUB-003 — Agendamento manual
 
 **Status:** DONE  
