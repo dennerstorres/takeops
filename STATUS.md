@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 16 — Calendário
+Fase 17 — Templates de Produção
 ```
 
 ## Tarefa ativa
@@ -28,7 +28,7 @@ CAL-003 — Visualização semanal
 ## Próxima tarefa recomendada
 
 ```text
-TEMPLATE-001
+TEMPLATE-001 — ProductionTemplate
 ```
 
 ## Estado dos módulos
