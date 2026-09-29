@@ -26,7 +26,7 @@ function text(metadata: Metadata, key: string) {
     : null;
 }
 
-// Frase curta no tom da spec: "Denner adicionou a versão V2."
+// Frase curta no tom da spec: "Ana adicionou a versão V2."
 export function describeActivity(
   actor: string,
   action: ActivityAction,

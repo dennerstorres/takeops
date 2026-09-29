@@ -22,8 +22,8 @@ const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
 describe("frase da atividade", () => {
   it("fala como a spec", () => {
     assert.equal(
-      describeActivity("Denner", "VERSION_CREATED", { version: "V2" }),
-      "Denner adicionou a versão V2.",
+      describeActivity("Ana", "VERSION_CREATED", { version: "V2" }),
+      "Ana adicionou a versão V2.",
     );
     assert.equal(
       describeActivity("Daniel", "VERSION_APPROVED", { version: "V3" }),
@@ -198,7 +198,7 @@ describe(
       };
       const suffix = randomUUID();
       const owner = await prisma.user.create({
-        data: { email: `act-flow-${suffix}@example.com`, name: "Denner" },
+        data: { email: `act-flow-${suffix}@example.com`, name: "Ana" },
       });
       let workspaceId = "";
       try {
@@ -304,16 +304,16 @@ describe(
         const approved = rows.find((row) => row.action === "VERSION_APPROVED");
         assert.ok(approved);
         assert.equal(
-          describeActivity("Denner", approved.action, approved.metadata),
-          "Denner aprovou o vídeo da V1.",
+          describeActivity("Ana", approved.action, approved.metadata),
+          "Ana aprovou o vídeo da V1.",
         );
         const recorded = rows.find(
           (row) => row.action === "PUBLICATION_RECORDED",
         );
         assert.ok(recorded);
         assert.equal(
-          describeActivity("Denner", recorded.action, recorded.metadata),
-          "Denner registrou a publicação em TikTok.",
+          describeActivity("Ana", recorded.action, recorded.metadata),
+          "Ana registrou a publicação em TikTok.",
         );
       } finally {
         if (workspaceId) {

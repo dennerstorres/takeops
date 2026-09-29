@@ -1745,7 +1745,7 @@ Decisões: ADR-037 (Docker/Coolify), ADR-039 (AGPL-3.0), ADR-040 (login por e-ma
 
 ## OSS-001 — Licença e higiene do repositório
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** nenhuma
 

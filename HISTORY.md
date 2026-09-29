@@ -4479,3 +4479,22 @@ Resultado: PASS. No `next dev` com dados reais: gravação aparece; sem rolagem 
 ### Testes executados
 
 Resultado: 140 de 143. A falha é `take.integration.test.ts` (registro simultâneo), a mesma limitação do PGlite (ADR-031). Confirmar em Postgres real antes do release (MVP-004).
+
+---
+
+## 2026-09-29 — OSS-001 — Licença e higiene do repositório
+
+**Status:** DONE
+**Agente:** Claude
+
+### Resumo
+
+- `LICENSE` com o texto oficial da AGPL-3.0 (baixado de gnu.org) e `"license": "AGPL-3.0-only"` no `package.json` (ADR-039).
+- Licenças de produção (license-checker): MIT, ISC, Apache-2.0, BSD, BlueOak, Unlicense, 0BSD, CC-BY-4.0, Python-2.0, um Apache-2.0 AND LGPL-3.0-or-later. Única fora do permissivo: `elkjs` (EPL-2.0), puxada pelo Prisma Studio (ferramenta de dev, não vai no bundle). EPL-2.0 admite GPL como licença secundária.
+- Histórico do git varrido por padrões de segredo (chaves Google, GitHub, OpenAI, chave privada, AUTH_SECRET, URL de banco com senha): nada. `.env` nunca foi versionado.
+- Nome real em teste e comentário trocado por "Ana".
+
+### Pendências conhecidas
+
+- Commits antigos têm o e-mail pessoal do autor. Reescrever o histórico ou não é decisão do dono, antes de tornar o repositório público.
+- Domínio da instância do mantenedor aparece só em SPEC/PLAN/DECISIONS (docs de deploy), como previsto no ADR-037.

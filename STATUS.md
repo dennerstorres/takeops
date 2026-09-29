@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-HARDEN-007 — Build de produção
+OSS-001 — Licença e higiene do repositório
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-OSS-001 — Licença e higiene do repositório
+OSS-002 — Imagem Docker
 ```
 
 ## Estado dos módulos
