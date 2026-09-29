@@ -4384,3 +4384,27 @@ npm run lint, npm run typecheck, npm run build
 ```
 
 Resultado: PASS. Sem teste automático de UI (não há e2e). Conferir com leitor de tela e teclado fica na HARDEN-005, que precisa de login.
+
+---
+
+## 2026-09-29 — HARDEN-005 — Mobile QA
+
+**Status:** DONE
+**Agente:** Claude
+
+### Resumo
+
+Primeira conferência com login real (Google, `next dev`, Chrome). Janela do Chrome não desce de 500px, então cada tela foi carregada num iframe de 375, 390 e 430px e medida por script: largura do documento, elementos vazando sem contêiner com rolagem e controles com menos de 40px.
+
+Dados criados pela própria tela no workspace do usuário: produção de título longo, cena com fala, 2 shots, gravação.
+
+28 rotas × 3 larguras (lista, calendário mês/semana, dashboard, avisos, ideias, templates, equipe, configurações, formulários novos, todas as abas da produção, cena, gravação e Modo Gravação): nenhuma rolagem lateral, nenhum elemento vazando. Controles abaixo de 40px só as caixas "legenda" e "música" da Edição, que ficam dentro de `label` de 44px (alvo ok).
+
+### Arquivos principais
+
+- Nenhum código alterado.
+
+### Pendências conhecidas
+
+- Sem inspeção visual (captura de tela do iframe veio em branco). Vale uma olhada no aparelho no Modo Gravação.
+- Kanban com o novo "Mover para" (HARDEN-003) conferido só por medida.

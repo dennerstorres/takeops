@@ -1588,7 +1588,7 @@ Revisar endpoint/action por endpoint/action.
 
 ## HARDEN-005 — Mobile QA
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** RECORD-005
 

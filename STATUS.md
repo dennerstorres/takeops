@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-HARDEN-003 — Acessibilidade básica
+HARDEN-005 — Mobile QA
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-HARDEN-005 — Mobile QA
+HARDEN-004 — Estados vazios e erros
 ```
 
 ## Estado dos módulos
