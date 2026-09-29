@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-UI-001 — Estudo visual e tokens
+UI-002 — Shell e navegação
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-UI-002 — Shell e navegação
+UI-003 — Componentes base
 ```
 
 ## Estado dos módulos

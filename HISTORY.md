@@ -4643,3 +4643,23 @@ Contraste 48/48, lint, build.
 
 - Cores cruas do Tailwind (~42 usos) migram para os tokens nas UI-003..006.
 - Conferência visual das telas com a paleta nova fica para a UI-002 (shell).
+
+---
+
+## 2026-09-29 — UI-002 — Shell e navegação
+
+**Status:** DONE
+**Agente:** Claude
+
+- Sidebar fixa (`sticky`, 16rem) com marca, workspace, navegação e painel de conta no pé: iniciais, tema, idioma, sair.
+- Header mobile fixo: menu, workspace e sino de avisos com contador (44px). O menu mobile tem o mesmo painel de conta e fecha ao navegar.
+- `ThemeSwitcher` (claro/escuro/sistema, `radiogroup`, sem diferença de hidratação).
+- Botão fechar do `Sheet` com 44px e texto pelo catálogo; região do Toaster traduzida.
+
+### Testes
+
+Typecheck, lint, build, `i18n.test.ts`. No navegador (dev): 500px (menor janela do Chrome) e 1280px sem rolagem horizontal, todos os alvos do shell ≥ 44px, tema escuro aplica, menu fecha ao navegar, sem erro no overlay do Next.
+
+### Pendências
+
+- Não conferido em 375/390/430 reais (janela mínima do Chrome é 500px) nem por print; conferir num celular.

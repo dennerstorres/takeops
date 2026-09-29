@@ -36,10 +36,10 @@ export function ShellNav({ counts = {} }: { counts?: Record<string, number> }) {
               "focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
               current
                 ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                : "text-sidebar-foreground",
+                : "text-sidebar-foreground hover:bg-sidebar-accent/60",
             )}
           >
-            <Icon aria-hidden="true" />
+            <Icon className="size-5" aria-hidden="true" />
             {t(`nav.${item.labelKey}`)}
             {counts[item.href] ? (
               <span className="ml-auto rounded-full bg-primary px-2 text-xs text-primary-foreground tabular-nums">

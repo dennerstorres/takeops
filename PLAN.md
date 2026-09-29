@@ -1671,7 +1671,7 @@ Decisão: ADR-038. PanelUI é React Native/Expo; serve só de referência visual
 
 ## UI-002 — Shell e navegação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-001, OSS-008
 

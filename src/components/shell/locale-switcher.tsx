@@ -15,7 +15,7 @@ export function LocaleSwitcher() {
   const [pending, startTransition] = useTransition();
 
   return (
-    <div className="flex flex-col gap-1 px-3 pb-2">
+    <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-xs text-muted-foreground">
         {t("shell.language")}
       </label>

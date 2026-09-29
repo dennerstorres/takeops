@@ -6,7 +6,8 @@
     "noName": "No name",
     "account": "Account",
     "someone": "Someone",
-    "formerMember": "Former member"
+    "formerMember": "Former member",
+    "close": "Close"
   },
   "shell": {
     "skipToContent": "Skip to content",
@@ -24,7 +25,14 @@
       "templates": "Templates",
       "team": "Team",
       "settings": "Settings"
-    }
+    },
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "notificationsLink": "Notifications",
+    "notificationsUnread": "Notifications, {count} unread",
+    "toastRegion": "Notifications"
   },
   "locale": {
     "pt-BR": "Português (Brasil)",

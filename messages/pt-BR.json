@@ -6,7 +6,8 @@
     "noName": "Sem nome",
     "account": "Conta",
     "someone": "Alguém",
-    "formerMember": "Ex-membro"
+    "formerMember": "Ex-membro",
+    "close": "Fechar"
   },
   "shell": {
     "skipToContent": "Ir para o conteúdo",
@@ -24,7 +25,14 @@
       "templates": "Templates",
       "team": "Equipe",
       "settings": "Configurações"
-    }
+    },
+    "theme": "Tema",
+    "themeLight": "Claro",
+    "themeDark": "Escuro",
+    "themeSystem": "Sistema",
+    "notificationsLink": "Avisos",
+    "notificationsUnread": "Avisos, {count} não lidos",
+    "toastRegion": "Notificações"
   },
   "locale": {
     "pt-BR": "Português (Brasil)",
