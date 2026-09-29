@@ -759,3 +759,75 @@ Cada módulo lia `process.env` solto. Produção com `AUTH_SECRET` do exemplo ou
 ## Consequências
 
 Servidor com env inválido não sobe. Os módulos seguem lendo `process.env` direto; a validação é a porta de entrada. `npm run verify` roda lint, typecheck, testes e build.
+
+---
+
+# ADR-037 — Distribuição por imagem Docker; produção no Coolify
+
+**Status:** Accepted
+**Data:** 2026-09-29
+
+## Contexto
+
+Produção do dono roda numa VPS com Coolify; o repositório também será público para self-host.
+
+## Decisão
+
+Um `Dockerfile` do repositório é a forma oficial de rodar. O Coolify constrói por ele (não Nixpacks) e o self-host usa `docker-compose.yml` com Postgres. Migrations rodam no start (`prisma migrate deploy`). Produção do dono: `https://takeops.dennerstorres.dev`, Postgres como recurso do Coolify, env só no painel.
+
+## Consequências
+
+Uma imagem, dois caminhos de instalação. Nada específico da VPS do dono entra no código; o domínio aparece só em docs de deploy e no PLAN.
+
+---
+
+# ADR-038 — PanelUI como referência visual
+
+**Status:** Accepted
+**Data:** 2026-09-29
+
+## Contexto
+
+O dono quer refazer UI/UX inspirado em https://panelui.dev. PanelUI é biblioteca React Native/Expo; não roda no Next.js.
+
+## Decisão
+
+Usar só como referência de estilo (tokens, tipografia, densidade, padrões). Implementação segue Tailwind + shadcn/ui. Nenhum código, asset ou marca do PanelUI entra no repositório. App mobile nativo fica fora do MVP.
+
+## Consequências
+
+Fase 21 (UI-001..008). `DESIGN.md` vira a fonte dos tokens.
+
+---
+
+# ADR-039 — Licença AGPL-3.0
+
+**Status:** Accepted
+**Data:** 2026-09-29
+
+## Decisão
+
+Repositório público sob AGPL-3.0: livre para usar e hospedar; quem oferecer versão modificada como serviço precisa publicar o código.
+
+## Consequências
+
+`LICENSE` na raiz e `license` no `package.json` (OSS-001). Dependências precisam ser compatíveis.
+
+---
+
+# ADR-040 — Login por Google e por link de e-mail
+
+**Status:** Accepted
+**Data:** 2026-09-29
+
+## Contexto
+
+Só Google obriga cada self-hoster a criar app OAuth. Isso substitui a restrição "só Google no MVP" da spec §8.1.
+
+## Decisão
+
+Dois métodos, cada um liga se configurado: Google OAuth e link mágico por e-mail (SMTP). Produção exige ao menos um. Continua sem senha local.
+
+## Consequências
+
+OSS-005; validação de env (ADR-036) muda para "ao menos um provider". Tela de login mostra só os métodos ativos.

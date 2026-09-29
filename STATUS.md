@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 20 — Hardening
+Fase 20 — Hardening (restam HARDEN-006, 008, 009)
 ```
 
 ## Tarefa ativa
@@ -28,7 +28,7 @@ HARDEN-007 — Build de produção
 ## Próxima tarefa recomendada
 
 ```text
-MVP-001 — Fluxo completo E2E
+OSS-001 — Licença e higiene do repositório
 ```
 
 ## Estado dos módulos
@@ -80,3 +80,5 @@ UI: Tailwind CSS + shadcn/ui
 Login Google protegido por sessão. Sem `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET` o botão de entrar não aparece.
 
 A página da produção é a visão geral: dados, progresso, links e participantes. Editar ficou em `/producoes/[id]/editar`. Todas as abas da produção abrem módulo. `npm run test:e2e` ainda não existe. `npm run db:seed` monta o workspace demo. Pontos para o Hardening estão em `HANDOFF.md`.
+
+Rumo definido em 2026-09-29: produção na VPS do mantenedor via Coolify em `https://takeops.dennerstorres.dev`, imagem Docker (ADR-037); refactor de UI com PanelUI como referência visual (ADR-038); repositório público AGPL-3.0 (ADR-039); login Google + link por e-mail (ADR-040). Ordem sugerida: OSS-001 → OSS-002 → DEPLOY-001 (produção cedo) → OSS-005 → UI-001..008 → OSS-003/004/006/007 → MVP. Em aberto: OSS-008 (idioma).

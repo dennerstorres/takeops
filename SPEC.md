@@ -261,9 +261,10 @@ Não pode editar conteúdo operacional.
 
 ## 8.1 Login
 
-Método inicial:
+Métodos (ADR-040), cada um ativo só se configurado:
 
-- Google OAuth.
+- Google OAuth;
+- link mágico por e-mail (SMTP).
 
 Não haverá senha local no MVP.
 
@@ -273,13 +274,17 @@ Não haverá senha local no MVP.
 
 Ao autenticar:
 
-1. usuário faz login com Google;
+1. usuário faz login (Google ou link por e-mail);
 2. sistema identifica seu e-mail;
 3. se já pertencer a um Workspace, entra normalmente;
 4. se possuir convite pendente, entra no Workspace;
 5. caso contrário pode:
    - criar Workspace;
    - aguardar convite.
+
+## 8.3 Distribuição
+
+O produto é self-hosted e de código aberto (AGPL-3.0, ADR-039), rodando por imagem Docker (ADR-037). A instância do mantenedor fica em `https://takeops.dennerstorres.dev` (Coolify).
 
 ---
 

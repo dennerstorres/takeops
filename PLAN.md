@@ -1633,13 +1633,247 @@ Revisar:
 
 ---
 
-# Fase 21 — MVP Acceptance
+## HARDEN-008 — Um pedido de aprovação aberto por produção no banco
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** APPROVAL-001
+
+Hoje é regra só do serviço. Criar índice único parcial (`videoProjectId` onde `status = 'PENDING'`) por migration SQL e tratar o conflito no repositório.
+
+---
+
+## HARDEN-009 — Aviso de gravação próxima
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** NOTIFY-003, DEPLOY-001
+
+Spec §40. Rota `POST /api/cron/upcoming-shoots` protegida por `CRON_SECRET` (header), idempotente (não avisa duas vezes a mesma gravação). Agendada no Coolify (Scheduled Task) e documentada para self-host (cron do host chamando a rota).
+
+---
+
+# Fase 21 — UI/UX (referência PanelUI)
+
+Decisão: ADR-038. PanelUI é React Native/Expo; serve só de referência visual. Implementação continua Next.js + Tailwind + shadcn/ui. Nenhum código ou asset do PanelUI entra no repositório.
+
+## UI-001 — Estudo visual e tokens
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** nenhuma
+
+- Documentar em `DESIGN.md`: paleta (tokens semânticos claro/escuro), tipografia, raio, sombra, espaçamento, densidade, ícones, estados.
+- Traduzir para variáveis CSS em `globals.css` e tema do shadcn.
+- Critério: contraste AA nos pares texto/fundo; dark mode completo.
+
+---
+
+## UI-002 — Shell e navegação
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-001
+
+Sidebar, header mobile, troca de tema, avisos, usuário. Mobile-first, 44px de toque.
+
+---
+
+## UI-003 — Componentes base
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-001
+
+Botões, campos (substituir `<input>`/`<select>` crus por componentes), card, badge de status (texto + cor), lista, tabela, tabs, empty/error/loading, diálogo, toast.
+
+---
+
+## UI-004 — Dashboard, listas e kanban
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-002, UI-003
+
+Dashboard, Produções (filtros + kanban), Ideias, Calendário, Templates, Equipe, Configurações, Avisos.
+
+---
+
+## UI-005 — Produção e abas
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-004
+
+Visão geral, roteiro, cenas/shots, gravação, checklist, continuidade, arquivos, edição, revisão, publicação, atividade.
+
+---
+
+## UI-006 — Modo Gravação
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-003
+
+Redesenho mobile-first, uso com uma mão, alto contraste, sem regressão de fluxo de take.
+
+---
+
+## UI-007 — Login, onboarding e convite
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-003, OSS-005
+
+Login com Google e/ou e-mail (conforme env), criar workspace, aceitar convite.
+
+---
+
+## UI-008 — QA visual e acessibilidade
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-004..UI-007
+
+Repetir HARDEN-003 e HARDEN-005 (375/390/430 + desktop, claro e escuro) e conferir no celular real.
+
+---
+
+# Fase 22 — Self-hosted e código aberto
+
+Decisões: ADR-037 (Docker/Coolify), ADR-039 (AGPL-3.0), ADR-040 (login por e-mail).
+
+## OSS-001 — Licença e higiene do repositório
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** nenhuma
+
+- `LICENSE` AGPL-3.0 e campo `license` no `package.json`.
+- Conferir histórico e árvore sem segredo (`.env` nunca foi versionado — conferido em 2026-09-29).
+- Revisar dados pessoais/empresa em código e docs.
+
+---
+
+## OSS-002 — Imagem Docker
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** HARDEN-007
+
+- `output: "standalone"` no `next.config.ts`.
+- `Dockerfile` multi-stage (Node 22, usuário não-root) e `.dockerignore`.
+- Entrypoint roda `prisma migrate deploy` antes de subir (flag para desligar).
+- `GET /api/health` (checa banco) para healthcheck.
+
+---
+
+## OSS-003 — docker-compose para self-host
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** OSS-002
+
+`docker-compose.yml` com app + Postgres (volume), `.env.example` completo e comentado.
+
+---
+
+## OSS-004 — Documentação de instalação
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** OSS-003, OSS-005
+
+README público: o que é, prints, requisitos, docker-compose, Coolify, variáveis, OAuth Google (URIs), SMTP, backup, atualização. Separar notas internas do harness do README.
+
+---
+
+## OSS-005 — Login por link de e-mail
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** AUTH-001
+
+- Provider de e-mail do Auth.js via SMTP (`EMAIL_SERVER`, `EMAIL_FROM`).
+- Cada provider liga só se configurado; validação de env (ADR-036) exige ao menos um em produção.
+- Tela de login mostra os métodos ativos. Não logar token nem link.
+
+---
+
+## OSS-006 — Arquivos de comunidade
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** OSS-001
+
+`CONTRIBUTING.md`, `SECURITY.md` (como reportar vulnerabilidade), templates de issue/PR, `CODE_OF_CONDUCT.md`.
+
+---
+
+## OSS-007 — CI no GitHub Actions
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** OSS-001
+
+Lint, typecheck, testes com serviço Postgres real (resolve a pendência do teste de take no PGlite) e build da imagem Docker.
+
+---
+
+## OSS-008 — Idioma
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** decisão do dono
+
+Interface hoje só em pt-BR. Definir se o público do repositório exige inglês/i18n.
+
+---
+
+# Fase 23 — Deploy na VPS (Coolify)
+
+Produção: `https://takeops.dennerstorres.dev` (DNS já aponta para o Coolify).
+
+## DEPLOY-001 — Banco e app no Coolify
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** OSS-002
+
+- Postgres como recurso do Coolify, com backup agendado.
+- App pelo `Dockerfile` do repositório, domínio `takeops.dennerstorres.dev`, HTTPS.
+- Env de produção no Coolify (nunca no repositório): `DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL`, Google, SMTP, `CRON_SECRET`.
+
+---
+
+## DEPLOY-002 — OAuth e e-mail de produção
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** DEPLOY-001, OSS-005
+
+- Google Console: origem `https://takeops.dennerstorres.dev`, redirect `https://takeops.dennerstorres.dev/api/auth/callback/google`.
+- SMTP de produção e remetente.
+
+---
+
+## DEPLOY-003 — Smoke test de produção
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** DEPLOY-002
+
+Login, criar workspace, fluxo curto, `/api/health`, migrations aplicadas, redeploy sem perder dados, restauração de backup testada.
+
+---
+
+# Fase 24 — MVP Acceptance
 
 ## MVP-001 — Fluxo completo E2E
 
 **Status:** TODO  
 **Prioridade:** P0  
-**Dependências:** HARDEN-007
+**Dependências:** HARDEN-007, UI-008, OSS-007
 
 Executar:
 
@@ -1692,9 +1926,11 @@ Remover:
 
 **Status:** TODO  
 **Prioridade:** P0  
-**Dependências:** MVP-003
+**Dependências:** MVP-003, DEPLOY-003, OSS-004
 
-Registrar release no `HISTORY.md`.
+- Tag `v0.1.0` e release no GitHub com notas.
+- Repositório público.
+- Registrar release no `HISTORY.md`.
 
 ---
 
