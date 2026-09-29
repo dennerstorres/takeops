@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-HARDEN-001 — Auditoria de autorização
+HARDEN-002 — Testes cross-workspace
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-HARDEN-002 — Testes cross-workspace
+HARDEN-005 — Mobile QA
 ```
 
 ## Estado dos módulos

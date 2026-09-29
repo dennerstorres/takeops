@@ -1564,7 +1564,7 @@ Revisar endpoint/action por endpoint/action.
 
 ## HARDEN-002 — Testes cross-workspace
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** HARDEN-001
 

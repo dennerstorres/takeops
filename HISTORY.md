@@ -4331,3 +4331,28 @@ Resultado: 132 de 135. As 3 falhas são de `take.integration.test.ts` (registro 
 
 - Tela ainda mostra ações que o servidor recusa a membro (ADR-035) → HARDEN-004.
 - O ambiente local estava sem `node_modules`, sem `.env` e sem o servidor `prisma dev takeops`; foram recriados `node_modules`, o servidor e as migrations. `.env` não foi recriado (tem segredo do Google).
+
+---
+
+## 2026-09-29 — HARDEN-002 — Testes cross-workspace
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Novo `cross-workspace.integration.test.ts`, contra o banco real: o dono do workspace A tenta 22 operações (ler, alterar, excluir) sobre produção, cena, shot, take, gravação, versão, aprovação, publicação e papel de membro do workspace B. Cada uma roda duas vezes: com o workspace A e ids de B (IDOR) e com o workspace B (sem membership). Todas precisam dar NotFound ou Forbidden; no fim confere que nada de B mudou.
+
+Complementa os testes por módulo, que já cobriam outro workspace com repositório falso ou em parte.
+
+### Arquivos principais
+
+- `src/server/cross-workspace.integration.test.ts`, `package.json` (script `test`)
+
+### Testes executados
+
+```text
+npm test, npm run lint, npm run typecheck
+```
+
+Resultado: 133 de 136 passam. Falhas só em `take.integration.test.ts` (registro simultâneo em PGlite, ADR-031), iguais antes da tarefa.
