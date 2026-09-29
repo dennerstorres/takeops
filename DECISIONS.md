@@ -740,3 +740,22 @@ A HARDEN-001 achou três caminhos em que MEMBER ia além da spec §7: excluir pr
 ## Consequências
 
 A regra autoritativa está no serviço. Desde a HARDEN-004 a tela também esconde de membro o botão de excluir, a opção APPROVER e o destino "Aprovado" no kanban.
+
+---
+
+# ADR-036 — Env validado na subida do servidor
+
+**Status:** Accepted
+**Data:** 2026-09-29
+
+## Contexto
+
+Cada módulo lia `process.env` solto. Produção com `AUTH_SECRET` do exemplo ou sem Google subia e falhava só no uso.
+
+## Decisão
+
+`src/server/env.ts` valida com Zod e `src/instrumentation.ts` chama na subida (runtime Node). Produção exige `DATABASE_URL` Postgres, `AUTH_SECRET` com 32+ caracteres e diferente do exemplo, `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET`. Desenvolvimento exige só `DATABASE_URL`. A mensagem cita o nome da variável, nunca o valor.
+
+## Consequências
+
+Servidor com env inválido não sobe. Os módulos seguem lendo `process.env` direto; a validação é a porta de entrada. `npm run verify` roda lint, typecheck, testes e build.

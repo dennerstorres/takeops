@@ -1620,7 +1620,7 @@ Revisar:
 
 ## HARDEN-007 — Build de produção
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** módulos P0 completos
 

@@ -4461,3 +4461,21 @@ npm run lint, npm run typecheck, npm run build
 ```
 
 Resultado: PASS. No `next dev` com dados reais: gravação aparece; sem rolagem lateral em 375/390/430px.
+
+---
+
+## 2026-09-29 — HARDEN-007 — Build de produção
+
+**Status:** DONE
+**Agente:** Claude
+
+### Resumo
+
+- Validação de env na subida (ADR-036): `src/server/env.ts`, `src/instrumentation.ts`, `env.test.ts` (5 casos, inclusive "não vaza valor").
+- Script `npm run verify` (lint + typecheck + test + build).
+- Conferido: `prisma migrate status` com 31 migrations, schema em dia; lint; typecheck; build.
+- `next start` com `AUTH_SECRET` curto recusa subir com "AUTH_SECRET precisa ter ao menos 32 caracteres."; com o `.env` real sobe e `/login` responde 200.
+
+### Testes executados
+
+Resultado: 140 de 143. A falha é `take.integration.test.ts` (registro simultâneo), a mesma limitação do PGlite (ADR-031). Confirmar em Postgres real antes do release (MVP-004).

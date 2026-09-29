@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-DASH-001 — Dashboard inicial
+HARDEN-007 — Build de produção
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-HARDEN-007 — Build de produção
+MVP-001 — Fluxo completo E2E
 ```
 
 ## Estado dos módulos
