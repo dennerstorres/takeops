@@ -170,6 +170,9 @@ model VideoProject {
   plannedPublishDate        DateTime?
   sourceIdeaId              String?
   createdById               String
+  // Último número de EditVersion dado; o incremento na linha da produção
+  // serializa envios simultâneos (VERSION-002).
+  lastEditVersionNumber     Int                @default(0)
   deletedAt                 DateTime?
   createdAt                 DateTime           @default(now())
   updatedAt                 DateTime           @updatedAt

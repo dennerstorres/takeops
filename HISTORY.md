@@ -1315,6 +1315,52 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — VERSION-002 — Numeração sequencial
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O número da versão vem de um contador na produção, incrementado na mesma transação da criação (ADR-031).
+
+### Implementação
+
+- Coluna `VideoProject.lastEditVersionNumber` (default 0), com backfill pelo maior `versionNumber` existente.
+- `prismaEditVersionRepository.create`: `update ... increment` na produção, depois cria a versão com o valor devolvido. Sem retry: o `UPDATE` serializa os envios.
+- Tentativas descartadas no caminho: `SELECT ... FOR UPDATE` por `$queryRaw` e retry por P2002. As duas quebraram no banco local com envios paralelos.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928370000_edit_version_counter/`
+- `src/server/edit-version-prisma.ts`, `edit-version.integration.test.ts`
+- `DECISIONS.md` (ADR-031)
+
+### Decisões tomadas
+
+- ADR-031 — número de versão vem de contador na produção.
+
+### Banco / migrations
+
+- `20260928370000_edit_version_counter`: `ADD COLUMN "lastEditVersionNumber" INTEGER NOT NULL DEFAULT 0` + `UPDATE` de backfill. Rollback conceitual: dropar a coluna.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. O teste sequencial roda sempre; o simultâneo só com `PG_CONCURRENCY=1` em Postgres real.
+
+### Observações
+
+- O `prisma dev` (PGlite) roda numa sessão só: transações interativas em paralelo se misturam (erro `08P01` ou leitura vazia). O teste simultâneo de take (TAKE-002) passa nele por sorte de tempo; vale revisar na HARDEN-002 com Postgres real.
+
+---
+
 ## 2026-09-28 — VERSION-001 — EditVersion
 
 **Status:** DONE  

@@ -50,15 +50,19 @@ export const prismaEditVersionRepository: EditVersionRepository = {
         select: { id: true },
       });
       if (!project) return null;
-      const last = await tx.editVersion.aggregate({
-        where: { videoProjectId: project.id },
-        _max: { versionNumber: true },
+      // O incremento trava a linha da produção até o commit: um segundo
+      // envio simultâneo espera e recebe o número seguinte, sem conflito.
+      // Ler o máximo das versões deixaria dois envios com o mesmo número.
+      const counter = await tx.videoProject.update({
+        where: { id: project.id },
+        data: { lastEditVersionNumber: { increment: 1 } },
+        select: { lastEditVersionNumber: true },
       });
       return tx.editVersion.create({
         data: {
           ...input,
           videoProjectId: project.id,
-          versionNumber: (last._max.versionNumber ?? 0) + 1,
+          versionNumber: counter.lastEditVersionNumber,
         },
       });
     });

@@ -210,5 +210,77 @@ describe(
         });
       }
     });
+
+    it("segue a numeração depois de envios em sequência", async () => {
+      const { prisma } = await import("./db.ts");
+      const { prismaEditVersionRepository } =
+        await import("./edit-version-prisma.ts");
+      const { prismaIdeaRepository } = await import("./idea-prisma.ts");
+      const { prismaProjectRepository } = await import("./project-prisma.ts");
+      const { prismaWorkspaceRepository } =
+        await import("./workspace-prisma.ts");
+      const deps: EditVersionDeps = {
+        workspaces: prismaWorkspaceRepository,
+        projects: prismaProjectRepository,
+        versions: prismaEditVersionRepository,
+      };
+      const suffix = randomUUID();
+      const author = await prisma.user.create({
+        data: { email: `versao-seq-${suffix}@example.com`, name: "Autor" },
+      });
+      let workspaceId = "";
+
+      try {
+        const workspace = await createWorkspace(
+          author.id,
+          { name: `Sequência ${suffix}`, slug: `sequencia-${suffix}` },
+          prismaWorkspaceRepository,
+        );
+        workspaceId = workspace.workspace.id;
+        const project = await createProject(
+          author.id,
+          workspaceId,
+          { title: `Peça ${suffix}`, format: "DEMO" },
+          prismaWorkspaceRepository,
+          prismaIdeaRepository,
+          prismaProjectRepository,
+        );
+        const create = () =>
+          createEditVersion(
+            author.id,
+            workspaceId,
+            project.id,
+            { previewUrl: "https://vimeo.com/seq" },
+            deps,
+          );
+
+        const numbers = [];
+        for (let index = 0; index < 3; index += 1) {
+          numbers.push((await create()).versionNumber);
+        }
+        assert.deepEqual(numbers, [1, 2, 3]);
+        const stored = await prisma.videoProject.findUnique({
+          where: { id: project.id },
+          select: { lastEditVersionNumber: true },
+        });
+        assert.equal(stored?.lastEditVersionNumber, 3);
+
+        // Envios simultâneos precisam de Postgres de verdade: o banco local
+        // (prisma dev/PGlite) roda tudo numa sessão só e mistura as
+        // transações. Rode com PG_CONCURRENCY=1 num Postgres real.
+        if (process.env.PG_CONCURRENCY === "1") {
+          const together = await Promise.all([create(), create(), create()]);
+          assert.deepEqual(
+            together.map((version) => version.versionNumber).sort(),
+            [4, 5, 6],
+          );
+        }
+      } finally {
+        if (workspaceId) {
+          await prisma.workspace.deleteMany({ where: { id: workspaceId } });
+        }
+        await prisma.user.deleteMany({ where: { id: author.id } });
+      }
+    });
   },
 );

@@ -1051,11 +1051,18 @@ Validar URLs.
 
 ## VERSION-002 — Numeração sequencial
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** VERSION-001
 
 Evitar duplicidade em criação concorrente.
+
+### Critérios
+
+- [x] o número sai de um contador na produção, incrementado na transação da criação;
+- [x] envios simultâneos esperam a trava da linha e recebem números seguidos;
+- [x] produção que já tinha versões continua do maior número (backfill);
+- [x] teste simultâneo roda com PG_CONCURRENCY=1 em Postgres real.
 
 ---
 

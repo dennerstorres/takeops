@@ -607,6 +607,25 @@ Bloqueia `javascript:`/`data:` e evita senha exposta a quem só lê. Caminho de 
 
 ---
 
+# ADR-031 — Número de versão vem de contador na produção
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+VERSION-002 pede número sequencial sem duplicar em envios simultâneos. Ler o máximo das versões e somar 1 deixa dois envios com o mesmo número; o índice único recusaria um deles.
+
+## Decisão
+
+`VideoProject.lastEditVersionNumber` guarda o último número. A criação incrementa esse campo e usa o valor na mesma transação. O `UPDATE` trava a linha da produção até o commit, então o envio seguinte espera e recebe o próximo. O índice único `(videoProjectId, versionNumber)` fica como rede de segurança.
+
+## Consequências
+
+Criar versão atualiza `VideoProject.updatedAt` (nada lê esse campo hoje). Número nunca é reaproveitado. O teste simultâneo só roda com `PG_CONCURRENCY=1` em Postgres real: o `prisma dev` (PGlite) usa uma sessão só e mistura transações paralelas.
+
+---
+
 # Template para novas decisões
 
 ```md
