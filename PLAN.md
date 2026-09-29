@@ -1659,7 +1659,7 @@ Decisão: ADR-038. PanelUI é React Native/Expo; serve só de referência visual
 
 ## UI-001 — Estudo visual e tokens
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** nenhuma
 

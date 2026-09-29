@@ -4622,3 +4622,24 @@ Nota para self-host: servidor SMTP próprio em Docker pode ter o mesmo problema 
 
 - Texto fixo ainda nas demais telas, títulos do kanban/dashboard (`boardColumns`, `dashboardCounters`), mensagens específicas de erro e de validação: migram nas UI-002..007.
 - Rótulo do Toaster (sonner) em inglês fixo: UI-003.
+
+---
+
+## 2026-09-29 — UI-001 — Estudo visual e tokens
+
+**Status:** DONE
+**Agente:** Claude
+
+- `DESIGN.md`: princípios, cor (tokens semânticos e mapa de status), tema escuro, tipografia, forma, espaço, ícones, estados, movimento.
+- `globals.css`: neutros frios, primária índigo, novos tokens `success`, `warning`, `info` (sólido, `-foreground`, `-muted`), `destructive-foreground/-muted`, `record` (só Modo Gravação), sombras `shadow-sm/md`, raio 0.75rem; tudo com valor no `.dark`.
+- `scripts/check-contrast.mjs` + `npm run check:contrast` (no `verify`): 48 pares AA ok nos dois temas.
+- PanelUI não publica valores concretos; paleta própria no espírito dele (ADR-038).
+
+### Testes
+
+Contraste 48/48, lint, build.
+
+### Pendências
+
+- Cores cruas do Tailwind (~42 usos) migram para os tokens nas UI-003..006.
+- Conferência visual das telas com a paleta nova fica para a UI-002 (shell).
