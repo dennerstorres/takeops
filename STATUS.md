@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-CAL-002 — Visualização mensal
+CAL-003 — Visualização semanal
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-CAL-003 — Visualização semanal
+TEMPLATE-001
 ```
 
 ## Estado dos módulos
@@ -53,7 +53,7 @@ CAL-003 — Visualização semanal
 | Revisão | DONE |
 | Aprovação | DONE |
 | Publicação | DONE |
-| Calendário | IN_PROGRESS |
+| Calendário | DONE |
 | Templates | NOT_STARTED |
 | Notificações | NOT_STARTED |
 | Activity Log | NOT_STARTED |

@@ -3,8 +3,10 @@ import { describe, it } from "node:test";
 import {
   addDays,
   monthGrid,
+  parseDayParam,
   parseMonth,
   shiftMonth,
+  weekDays,
   weekStart,
 } from "./calendar-grid.ts";
 
@@ -29,6 +31,22 @@ describe("grade do calendário", () => {
     assert.equal(parseMonth("2026-10"), "2026-10");
     for (const value of ["2026-13", "2026-1", "abc", undefined, "1999-12"]) {
       assert.equal(parseMonth(value), null, String(value));
+    }
+  });
+
+  it("semana vai de domingo a sábado e o dia da URL é validado", () => {
+    assert.deepEqual(weekDays("2026-10-01"), [
+      "2026-09-27",
+      "2026-09-28",
+      "2026-09-29",
+      "2026-09-30",
+      "2026-10-01",
+      "2026-10-02",
+      "2026-10-03",
+    ]);
+    assert.equal(parseDayParam("2026-10-06"), "2026-10-06");
+    for (const value of ["2026-02-30", "2026-10-6", "x", undefined]) {
+      assert.equal(parseDayParam(value), null, String(value));
     }
   });
 });

@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — CAL-003 — Visualização semanal
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O calendário ganhou a visão de semana (`/calendario?semana=AAAA-MM-DD`), de domingo a sábado, com a mesma origem de eventos do mês.
+
+### Implementação
+
+- `weekDays` e `parseDayParam` (dia real, anos 2000–2100) em `calendar-grid.ts`.
+- A página decide a visão pela URL: `semana` válida abre a semana daquele dia; senão, o mês. Anterior/Hoje/Próximo andam 7 dias na semana e 1 mês no mês.
+- "Ver semana" / "Ver mês" mantém o período (semana de hoje ou do dia 1º; mês da semana aberta).
+- Semana usa colunas altas a partir de `md`; no celular, lista por dia como no mês.
+
+### Arquivos principais
+
+- `src/app/(app)/calendario/page.tsx`
+- `src/lib/calendar-grid.ts`, `src/lib/calendar-grid.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Visão de dia (opcional na spec) ficou de fora.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — CAL-002 — Visualização mensal
 
 **Status:** DONE  

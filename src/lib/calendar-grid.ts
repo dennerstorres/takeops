@@ -37,3 +37,20 @@ export function monthGrid(month: string) {
   const first = weekStart(`${month}-01`);
   return Array.from({ length: 42 }, (_, index) => addDays(first, index));
 }
+
+// "2026-10-06" válido ou null; o mesmo intervalo de anos do mês.
+export function parseDayParam(value: unknown) {
+  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return null;
+  }
+  const date = parseDay(value);
+  if (Number.isNaN(date.getTime())) return null;
+  if (date.toISOString().slice(0, 10) !== value) return null;
+  const year = date.getUTCFullYear();
+  return year < 2000 || year > 2100 ? null : value;
+}
+
+export function weekDays(day: string) {
+  const first = weekStart(day);
+  return Array.from({ length: 7 }, (_, index) => addDays(first, index));
+}

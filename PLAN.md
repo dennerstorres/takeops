@@ -1326,9 +1326,15 @@ Registrar decisão se escolher persistência própria.
 
 ## CAL-003 — Visualização semanal
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** CAL-002
+
+### Critérios
+
+- [x] semana de domingo a sábado pela URL, com os mesmos eventos do mês;
+- [x] anterior, hoje e próximo andam sete dias; troca entre mês e semana mantém o período;
+- [x] no celular vira lista por dia.
 
 ---
 

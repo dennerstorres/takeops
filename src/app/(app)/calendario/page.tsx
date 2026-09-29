@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
+  addDays,
   monthGrid,
+  parseDayParam,
   parseMonth,
   shiftMonth,
-  addDays,
+  weekDays,
 } from "@/lib/calendar-grid";
 import { utcToZonedLocal, zonedLocalToUtc } from "@/lib/zoned-time";
 import { openWorkspace } from "@/server/access";
@@ -24,7 +26,10 @@ const kindClass: Record<CalendarEvent["kind"], string> = {
 export default async function CalendarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ mes?: string | string[] }>;
+  searchParams: Promise<{
+    mes?: string | string[];
+    semana?: string | string[];
+  }>;
 }) {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
@@ -34,12 +39,17 @@ export default async function CalendarPage({
   const timezone = access.workspace.workspace.timezone;
 
   const today = utcToZonedLocal(new Date(), timezone).slice(0, 10);
-  const month = parseMonth((await searchParams).mes) ?? today.slice(0, 7);
-  const grid = monthGrid(month);
+  const query = await searchParams;
+  // ?semana=AAAA-MM-DD abre a semana daquele dia; senão, o mês.
+  const weekDay = parseDayParam(query.semana);
+  const view = weekDay ? "week" : "month";
+  const month = parseMonth(query.mes) ?? (weekDay ?? today).slice(0, 7);
+  const grid = weekDay ? weekDays(weekDay) : monthGrid(month);
+  const last = grid[grid.length - 1];
   // A grade vai de domingo a sábado no fuso do workspace; os limites viram
   // instantes UTC para a consulta.
   const from = zonedLocalToUtc(`${grid[0]}T00:00`, timezone);
-  const to = zonedLocalToUtc(`${addDays(grid[41], 1)}T00:00`, timezone);
+  const to = zonedLocalToUtc(`${addDays(last, 1)}T00:00`, timezone);
   if (!from || !to) throw new Error("Fuso do workspace inválido.");
 
   const events = await listCalendarEvents(
@@ -62,6 +72,35 @@ export default async function CalendarPage({
     month: "long",
     year: "numeric",
   }).format(new Date(`${month}-01T00:00:00.000Z`));
+  const shortDay = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: "UTC",
+    day: "2-digit",
+    month: "short",
+  });
+  const title =
+    view === "week"
+      ? `Semana de ${shortDay.format(new Date(`${grid[0]}T00:00:00.000Z`))} a ${shortDay.format(new Date(`${last}T00:00:00.000Z`))}`
+      : monthTitle;
+  const nav =
+    view === "week"
+      ? {
+          previous: `/calendario?semana=${addDays(grid[0], -7)}`,
+          today: `/calendario?semana=${today}`,
+          next: `/calendario?semana=${addDays(grid[0], 7)}`,
+        }
+      : {
+          previous: `/calendario?mes=${shiftMonth(month, -1)}`,
+          today: "/calendario",
+          next: `/calendario?mes=${shiftMonth(month, 1)}`,
+        };
+  // Trocar de visão mantém o período: a semana do dia 1º do mês ou o mês da
+  // semana aberta.
+  const switchHref =
+    view === "week"
+      ? `/calendario?mes=${month}`
+      : `/calendario?semana=${month === today.slice(0, 7) ? today : `${month}-01`}`;
+  const linkClass =
+    "inline-flex min-h-11 items-center rounded-lg border px-3 text-sm";
   const dayTitle = new Intl.DateTimeFormat("pt-BR", {
     timeZone: "UTC",
     weekday: "short",
@@ -75,7 +114,7 @@ export default async function CalendarPage({
     byDay.set(day, [...(byDay.get(day) ?? []), event]);
   }
   const daysWithEvents = grid.filter(
-    (day) => day.startsWith(month) && byDay.has(day),
+    (day) => (view === "week" || day.startsWith(month)) && byDay.has(day),
   );
 
   function renderEvent(event: CalendarEvent, compact: boolean) {
@@ -106,30 +145,26 @@ export default async function CalendarPage({
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="space-y-1">
           <h1 className="text-2xl font-medium tracking-tight">Calendário</h1>
-          <p className="text-sm text-muted-foreground capitalize">
-            {monthTitle}
+          <p className="text-sm text-muted-foreground first-letter:uppercase">
+            {title}
           </p>
         </div>
-        <nav aria-label="Mês" className="flex gap-2">
-          <Link
-            href={`/calendario?mes=${shiftMonth(month, -1)}`}
-            className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
-          >
-            Anterior
+        <div className="flex flex-wrap gap-2">
+          <nav aria-label="Período" className="flex gap-2">
+            <Link href={nav.previous} className={linkClass}>
+              Anterior
+            </Link>
+            <Link href={nav.today} className={linkClass}>
+              Hoje
+            </Link>
+            <Link href={nav.next} className={linkClass}>
+              Próximo
+            </Link>
+          </nav>
+          <Link href={switchHref} className={linkClass}>
+            {view === "week" ? "Ver mês" : "Ver semana"}
           </Link>
-          <Link
-            href="/calendario"
-            className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
-          >
-            Hoje
-          </Link>
-          <Link
-            href={`/calendario?mes=${shiftMonth(month, 1)}`}
-            className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
-          >
-            Próximo
-          </Link>
-        </nav>
+        </div>
       </header>
       <p className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
         <span className="border-l-4 border-l-sky-500 pl-1">Gravação</span>
@@ -153,8 +188,12 @@ export default async function CalendarPage({
           {grid.map((day) => (
             <li
               key={day}
-              className={`min-h-28 border-r border-b p-1 [&:nth-child(7n)]:border-r-0 ${
-                day.startsWith(month) ? "" : "bg-muted/30 text-muted-foreground"
+              className={`border-r border-b p-1 [&:nth-child(7n)]:border-r-0 ${
+                view === "week" ? "min-h-64" : "min-h-28"
+              } ${
+                view === "week" || day.startsWith(month)
+                  ? ""
+                  : "bg-muted/30 text-muted-foreground"
               }`}
             >
               <p
@@ -180,7 +219,9 @@ export default async function CalendarPage({
       <div className="md:hidden">
         {daysWithEvents.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Nada marcado neste mês.
+            {view === "week"
+              ? "Nada marcado nesta semana."
+              : "Nada marcado neste mês."}
           </p>
         ) : (
           <ol className="flex flex-col gap-4">
