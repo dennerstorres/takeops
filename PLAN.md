@@ -1499,7 +1499,7 @@ Cobrir:
 
 ## SEED-001 — Workspace e usuários demo
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** principais schemas concluídos
 
@@ -1509,6 +1509,12 @@ Criar:
 - Dev 1;
 - Dev 2;
 - Dev 3.
+
+### Critérios
+
+- [x] npm run db:seed cria Acme Software com Supervisor (dono) e Dev 1, 2 e 3 (membros);
+- [x] inclui o checklist recomendado de gravação;
+- [x] rodar de novo não duplica pessoas, workspace, membros nem checklist.
 
 ---
 

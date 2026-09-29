@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 18 — Activity Log e Notificações
+Fase 19 — Seed e Demo
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-NOTIFY-003 — Eventos essenciais
+SEED-001 — Workspace e usuários demo
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SEED-001
+SEED-002 — Projeto demo completo
 ```
 
 ## Estado dos módulos

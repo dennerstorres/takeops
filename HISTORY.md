@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-29 — SEED-001 — Workspace e usuários demo
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+`npm run db:seed` cria (ou completa) o workspace "Acme Software" com Supervisor (dono) e Dev 1, 2 e 3 (membros), mais o checklist recomendado de gravação. Rodar de novo não duplica.
+
+### Implementação
+
+- `seedDemoWorkspace` (`src/server/seed.ts`): upsert de pessoas por e-mail (`@acme.test`), workspace por slug `acme-software` via `createWorkspace`, upsert de membros, `createRecommendedChecklist` (ADR-029, já idempotente).
+- `scripts/seed.ts` + script `db:seed` no `package.json`.
+- Opções `slug` e `emailDomain` isolam o teste do dado de desenvolvimento.
+
+### Arquivos principais
+
+- `src/server/seed.ts`, `src/server/seed.integration.test.ts`, `scripts/seed.ts`, `package.json`
+
+### Decisões tomadas
+
+- Sem ADR. E-mails fictícios: o login continua Google; servem para dados e telas de desenvolvimento.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+npm run db:seed (duas vezes, mesmo workspace)
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-29 — NOTIFY-003 — Eventos essenciais
 
 **Status:** DONE  
