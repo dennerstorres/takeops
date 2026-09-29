@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — VERSION-003 — Histórico de versões
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+A aba Edição mostra as versões da produção, da mais nova para a mais antiga, e permite enviar a próxima.
+
+### Implementação
+
+- Seção "Versões" (`#versoes`) em `/producoes/[id]/edicao`: V{n} · título, data no fuso do workspace, autor, "o que mudou", links de preview e arquivo em nova aba.
+- "Nova versão" (dono, admin, membro) em `<details>`; o botão já diz o próximo número ("Enviar V3"). O número real vem do servidor (ADR-031).
+- `createEditVersionAction` volta para `#versoes`.
+
+### Arquivos principais
+
+- `src/app/(app)/producoes/[id]/edicao/page.tsx`
+- `src/components/editing/edit-version-form.tsx`
+- `src/server/edit-version-actions.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Versão não se edita nem se apaga: o histórico é o registro do que foi enviado.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Regras em `edit-version.integration.test.ts`. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — VERSION-002 — Numeração sequencial
 
 **Status:** DONE  

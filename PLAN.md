@@ -1068,9 +1068,15 @@ Evitar duplicidade em criação concorrente.
 
 ## VERSION-003 — Histórico de versões
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** VERSION-002
+
+### Critérios
+
+- [x] a aba Edição lista as versões da mais nova para a mais antiga, com título, data no fuso do workspace, autor, notas e links;
+- [x] dono, admin e membro enviam a próxima versão; leitor só vê;
+- [x] versão enviada não se edita nem se apaga.
 
 ---
 

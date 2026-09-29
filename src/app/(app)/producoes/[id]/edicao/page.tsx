@@ -1,8 +1,12 @@
 import { redirect } from "next/navigation";
+import { EditVersionForm } from "@/components/editing/edit-version-form";
 import { EditingForm } from "@/components/editing/editing-form";
+import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
+import { listEditVersions, versionLabel } from "@/server/edit-version";
+import { prismaEditVersionRepository } from "@/server/edit-version-prisma";
 import { getEditingInfo } from "@/server/editing";
 import { prismaEditingRepository } from "@/server/editing-prisma";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
@@ -30,11 +34,13 @@ export default async function EditingPage({
   const { id } = await params;
   const workspaceId = access.workspace.workspace.id;
   const canEdit = access.workspace.membership.role !== "VIEWER";
+  const timezone = access.workspace.workspace.timezone;
 
   let project;
   let info;
   let team;
   let participants;
+  let versions;
   try {
     project = await getProject(
       session.user.id,
@@ -43,7 +49,7 @@ export default async function EditingPage({
       prismaWorkspaceRepository,
       prismaProjectRepository,
     );
-    [info, team, participants] = await Promise.all([
+    [info, team, participants, versions] = await Promise.all([
       getEditingInfo(session.user.id, workspaceId, project.id, {
         workspaces: prismaWorkspaceRepository,
         projects: prismaProjectRepository,
@@ -58,6 +64,11 @@ export default async function EditingPage({
         prismaProjectRepository,
         prismaParticipantRepository,
       ),
+      listEditVersions(session.user.id, workspaceId, project.id, {
+        workspaces: prismaWorkspaceRepository,
+        projects: prismaProjectRepository,
+        versions: prismaEditVersionRepository,
+      }),
     ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect("/producoes");
@@ -83,6 +94,19 @@ export default async function EditingPage({
   const editorName = info?.editorId
     ? (people.find((person) => person.id === info.editorId)?.label ?? null)
     : null;
+
+  const names = new Map(
+    team.map((member) => [member.userId, personLabel(member)]),
+  );
+  const dateTime = new Intl.DateTimeFormat("pt-BR", {
+    timeZone: timezone,
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  const linkClass =
+    "inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4";
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
@@ -154,6 +178,74 @@ export default async function EditingPage({
           ) : null}
         </dl>
       )}
+      <section id="versoes" className="flex flex-col gap-3 border-t pt-6">
+        <h2 className="text-base font-medium">Versões</h2>
+        {canEdit ? (
+          <details className="rounded-xl border p-3">
+            <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
+              Nova versão
+            </summary>
+            <div className="mt-2">
+              <EditVersionForm
+                projectId={project.id}
+                nextLabel={versionLabel((versions[0]?.versionNumber ?? 0) + 1)}
+              />
+            </div>
+          </details>
+        ) : null}
+        {versions.length === 0 ? (
+          <EmptyState
+            title="Nenhuma versão"
+            description="Cada corte enviado para revisão aparece aqui, do mais novo ao mais antigo."
+          />
+        ) : (
+          <ol className="flex flex-col gap-3">
+            {versions.map((version) => (
+              <li key={version.id} className="rounded-xl border p-3">
+                <p className="text-sm font-medium">
+                  {versionLabel(version.versionNumber)}
+                  {version.title ? ` · ${version.title}` : null}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  <time dateTime={version.createdAt.toISOString()}>
+                    {dateTime.format(version.createdAt)}
+                  </time>
+                  {version.createdById && names.has(version.createdById)
+                    ? ` · ${names.get(version.createdById)}`
+                    : null}
+                </p>
+                {version.notes ? (
+                  <p className="mt-1 text-sm whitespace-pre-wrap">
+                    {version.notes}
+                  </p>
+                ) : null}
+                <div className="flex flex-wrap gap-x-4">
+                  {version.previewUrl ? (
+                    <a
+                      href={version.previewUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                    >
+                      Assistir preview
+                    </a>
+                  ) : null}
+                  {version.fileUrl ? (
+                    <a
+                      href={version.fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                    >
+                      Abrir arquivo
+                    </a>
+                  ) : null}
+                </div>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
     </div>
   );
 }

@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 12 — Edição
+Fase 13 — Revisão
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-VERSION-002 — Numeração sequencial
+VERSION-003 — Histórico de versões
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-VERSION-003 — Histórico de versões
+REVIEW-001 — ReviewComment
 ```
 
 ## Estado dos módulos
@@ -49,7 +49,7 @@ VERSION-003 — Histórico de versões
 | Modo Gravação | DONE |
 | Takes | DONE |
 | Assets | DONE |
-| Edição | IN_PROGRESS |
+| Edição | DONE |
 | Revisão | NOT_STARTED |
 | Aprovação | NOT_STARTED |
 | Publicação | NOT_STARTED |
