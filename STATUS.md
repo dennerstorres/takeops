@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 14 — Aprovação
+Fase 15 — Publicação
 ```
 
 ## Tarefa ativa
@@ -28,7 +28,7 @@ APPROVAL-004 — Permissões de aprovação
 ## Próxima tarefa recomendada
 
 ```text
-PUBLISH-001
+PUB-001 — Modelo Publication
 ```
 
 ## Estado dos módulos
