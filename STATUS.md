@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-APPROVAL-001 — Modelo e service
+APPROVAL-002 — Solicitar alterações
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-APPROVAL-002 — Solicitar alterações
+APPROVAL-003 — Aprovar
 ```
 
 ## Estado dos módulos

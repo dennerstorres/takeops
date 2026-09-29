@@ -1166,7 +1166,7 @@ Avaliar HH:MM:SS.
 
 ## APPROVAL-002 — Solicitar alterações
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** APPROVAL-001
 
@@ -1176,6 +1176,12 @@ Efeito:
 Approval = CHANGES_REQUESTED
 VideoProject = EDITING
 ```
+
+### Critérios
+
+- [x] pedido pendente vira CHANGES_REQUESTED e a produção vira EDITING na mesma transação;
+- [x] notas obrigatórias; quem e quando vêm da sessão e do servidor;
+- [x] pedido já decidido não se decide de novo; membro e leitor não decidem.
 
 ---
 

@@ -33,4 +33,18 @@ export type ApprovalRepository = {
     versionId: string,
     requestedById: string,
   ): Promise<ApprovalRequestResult>;
+  // Decide o pedido PENDING e muda o status da produção na mesma
+  // transação. null quando o pedido não existe ou já foi decidido.
+  decide(
+    workspaceId: string,
+    projectId: string,
+    approvalId: string,
+    input: {
+      status: Exclude<ApprovalStatus, "PENDING">;
+      projectStatus: "EDITING" | "APPROVED";
+      reviewedById: string;
+      notes: string | null;
+      at: Date;
+    },
+  ): Promise<ApprovalRecord | null>;
 };

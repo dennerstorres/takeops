@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import {
   listApprovals,
   requestApproval,
+  requestChanges,
   type ApprovalDeps,
 } from "./approval.ts";
 import { createEditVersion } from "./edit-version.ts";
@@ -175,6 +176,85 @@ describe(
           listApprovals(ctx.outsider.id, workspaceId, project.id, deps),
           ForbiddenError,
         );
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+
+    it("solicitar alterações devolve a produção para edição", async () => {
+      const ctx = await setup();
+      try {
+        const { deps, workspaceId, project, v1, v2, prisma } = ctx;
+        const pending = await requestApproval(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          v1.id,
+          deps,
+        );
+        await assert.rejects(
+          requestChanges(
+            ctx.member.id,
+            workspaceId,
+            project.id,
+            pending.id,
+            { notes: "trocar música" },
+            deps,
+          ),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          requestChanges(
+            ctx.admin.id,
+            workspaceId,
+            project.id,
+            pending.id,
+            { notes: " " },
+            deps,
+          ),
+          ValidationError,
+        );
+
+        const now = new Date("2026-10-02T15:00:00.000Z");
+        const decided = await requestChanges(
+          ctx.admin.id,
+          workspaceId,
+          project.id,
+          pending.id,
+          { notes: "trocar música" },
+          deps,
+          now,
+        );
+        assert.equal(decided.status, "CHANGES_REQUESTED");
+        assert.equal(decided.reviewedById, ctx.admin.id);
+        assert.equal(decided.reviewedAt?.toISOString(), now.toISOString());
+        assert.equal(decided.notes, "trocar música");
+        const stored = await prisma.videoProject.findUnique({
+          where: { id: project.id },
+          select: { status: true },
+        });
+        assert.equal(stored?.status, "EDITING");
+
+        // Decidido não se decide de novo; o próximo pedido pode sair.
+        await assert.rejects(
+          requestChanges(
+            ctx.owner.id,
+            workspaceId,
+            project.id,
+            pending.id,
+            { notes: "de novo" },
+            deps,
+          ),
+          NotFoundError,
+        );
+        const next = await requestApproval(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          v2.id,
+          deps,
+        );
+        assert.equal(next.status, "PENDING");
       } finally {
         await ctx.cleanup();
       }

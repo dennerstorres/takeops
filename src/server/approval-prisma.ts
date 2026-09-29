@@ -65,4 +65,36 @@ export const prismaApprovalRepository: ApprovalRepository = {
       return { kind: "created" as const, approval: mapApproval(created) };
     });
   },
+
+  async decide(workspaceId, projectId, approvalId, input) {
+    return prisma.$transaction(async (tx) => {
+      const where = {
+        id: approvalId,
+        status: "PENDING" as const,
+        videoProject: visibleProject(workspaceId, projectId),
+      };
+      const pending = await tx.approval.findFirst({
+        where,
+        select: { id: true, videoProjectId: true },
+      });
+      if (!pending) return null;
+      // O filtro por PENDING no update impede duas decisões no mesmo pedido.
+      const result = await tx.approval.updateMany({
+        where: { id: pending.id, status: "PENDING" },
+        data: {
+          status: input.status,
+          reviewedById: input.reviewedById,
+          reviewedAt: input.at,
+          notes: input.notes,
+        },
+      });
+      if (result.count !== 1) return null;
+      await tx.videoProject.update({
+        where: { id: pending.videoProjectId },
+        data: { status: input.projectStatus },
+      });
+      const row = await tx.approval.findUnique({ where: { id: pending.id } });
+      return row ? mapApproval(row) : null;
+    });
+  },
 };

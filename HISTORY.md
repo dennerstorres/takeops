@@ -1315,6 +1315,48 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — APPROVAL-002 — Solicitar alterações
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Quem decide pode solicitar alterações num pedido pendente: a aprovação vira CHANGES_REQUESTED e a produção volta para EDITING, na mesma transação.
+
+### Implementação
+
+- `ApprovalRepository.decide`: só pedido PENDING da produção visível; `updateMany` filtrado por PENDING evita decisão dupla; muda `VideoProject.status` na mesma transação.
+- `requestChanges` (dono e admin por enquanto; APPROVER entra na APPROVAL-004): notas obrigatórias, `reviewedById`/`reviewedAt` do servidor.
+- Aba Revisão: formulário "O que precisa mudar" + "Solicitar alterações" no pedido pendente. Revalida o layout da produção (kanban e visão geral mudam de etapa).
+
+### Arquivos principais
+
+- `src/server/approval.ts`, `approval-repository.ts`, `approval-prisma.ts`, `approval-actions.ts`, `approval.integration.test.ts`
+- `src/components/review/approval-panel.tsx`, `src/app/(app)/producoes/[id]/revisao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR nova. Quem decide segue a spec (§7: dono e admin "aprovam vídeos"); a regra final fica na APPROVAL-004.
+- Activity Log e Notification do fluxo da spec ficam para os módulos deles (NOT_STARTED).
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — APPROVAL-001 — Modelo e service
 
 **Status:** DONE  

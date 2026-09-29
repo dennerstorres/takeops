@@ -2,7 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
-import { RequestApprovalForm } from "@/components/review/approval-panel";
+import {
+  DecideApprovalForm,
+  RequestApprovalForm,
+} from "@/components/review/approval-panel";
 import { ReviewCommentForm } from "@/components/review/review-comment-form";
 import { formatTimestamp } from "@/lib/timestamp";
 import { openWorkspace } from "@/server/access";
@@ -40,7 +43,10 @@ export default async function ReviewPage({
   const { versao } = await searchParams;
   const workspaceId = access.workspace.workspace.id;
   const timezone = access.workspace.workspace.timezone;
-  const canEdit = access.workspace.membership.role !== "VIEWER";
+  const role = access.workspace.membership.role;
+  const canEdit = role !== "VIEWER";
+  // Mesma regra do serviço (requestChanges): dono e admin decidem.
+  const canDecide = role === "OWNER" || role === "ADMIN";
   const deps = {
     workspaces: prismaWorkspaceRepository,
     projects: prismaProjectRepository,
@@ -232,6 +238,13 @@ export default async function ReviewPage({
                 {versionLabel(pendingVersion.versionNumber)} está aguardando
                 aprovação.
               </p>
+            ) : null}
+            {canDecide && approval?.status === "PENDING" ? (
+              <DecideApprovalForm
+                projectId={project.id}
+                versionId={current.id}
+                approvalId={approval.id}
+              />
             ) : null}
             {canEdit && !pendingAny && approval?.status !== "APPROVED" ? (
               <RequestApprovalForm

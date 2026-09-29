@@ -3,7 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
-import { requestApproval, type ApprovalDeps } from "@/server/approval";
+import {
+  requestApproval,
+  requestChanges,
+  type ApprovalDeps,
+} from "@/server/approval";
 import { prismaApprovalRepository } from "@/server/approval-prisma";
 import { auth } from "@/server/auth";
 import { prismaEditVersionRepository } from "@/server/edit-version-prisma";
@@ -59,5 +63,31 @@ export async function requestApprovalAction(
   );
   if (!result.ok) return { message: result.message, fields: result.fields };
   revalidatePath(`/producoes/${projectId}/revisao`);
+  redirect(reviewPage(projectId, versionId));
+}
+
+export async function decideApprovalAction(
+  _state: ApprovalFormState,
+  formData: FormData,
+): Promise<ApprovalFormState> {
+  const current = await currentWorkspace();
+  const projectId = String(formData.get("projectId") ?? "");
+  const versionId = String(formData.get("versionId") ?? "");
+  const approvalId = String(formData.get("approvalId") ?? "");
+  const result = await runAction(
+    current,
+    { operation: "request-changes", entity: "Approval" },
+    () =>
+      requestChanges(
+        current.userId,
+        current.workspaceId,
+        projectId,
+        approvalId,
+        { notes: formData.get("notes") },
+        deps,
+      ),
+  );
+  if (!result.ok) return { message: result.message, fields: result.fields };
+  revalidatePath(`/producoes/${projectId}`, "layout");
   redirect(reviewPage(projectId, versionId));
 }
