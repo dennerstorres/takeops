@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-APPROVAL-004 — Permissões de aprovação
+PUB-001 — Modelo Publication
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PUB-001 — Modelo Publication
+PUB-002 — CRUD de destinos
 ```
 
 ## Estado dos módulos
@@ -52,7 +52,7 @@ PUB-001 — Modelo Publication
 | Edição | DONE |
 | Revisão | DONE |
 | Aprovação | DONE |
-| Publicação | NOT_STARTED |
+| Publicação | IN_PROGRESS |
 | Calendário | NOT_STARTED |
 | Templates | NOT_STARTED |
 | Notificações | NOT_STARTED |

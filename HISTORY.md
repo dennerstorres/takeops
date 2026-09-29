@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — PUB-001 — Modelo Publication
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Destinos de publicação por produção (spec §33): plataforma, status, agendamento, publicação, link, legenda e notas.
+
+### Implementação
+
+- Enums `Platform` e `PublicationStatus` e modelo `Publication` (status nasce PENDING).
+- Repositório com listar, achar, criar, atualizar (parcial) e remover, sempre pela produção visível no workspace.
+- Serviço de leitura (`listPublications`, `getPublication`); escrita vem na PUB-002..004. Rótulos em `publication-labels.ts`.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928400000_publication/`
+- `src/server/publication.ts`, `publication-repository.ts`, `publication-prisma.ts`, `publication-labels.ts`, `publication.integration.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Mais de um destino na mesma plataforma é permitido (ex.: duas contas, "Outra").
+
+### Banco / migrations
+
+- `20260928400000_publication`: enums, tabela `Publication`, índices `(videoProjectId, status)` e `scheduledAt` (calendário), FK cascade na produção. Rollback conceitual: dropar tabela e enums.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-28 — APPROVAL-004 — Permissões de aprovação
 
 **Status:** DONE  

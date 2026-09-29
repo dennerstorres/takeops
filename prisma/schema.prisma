@@ -193,6 +193,7 @@ model VideoProject {
   editingInfo               EditingInfo?
   editVersions              EditVersion[]
   approvals                 Approval[]
+  publications              Publication[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -652,4 +653,42 @@ model Approval {
 
   @@index([videoProjectId, status])
   @@index([editVersionId, createdAt])
+}
+
+enum Platform {
+  INSTAGRAM_REELS
+  TIKTOK
+  YOUTUBE_SHORTS
+  YOUTUBE
+  LINKEDIN
+  FACEBOOK
+  OTHER
+}
+
+enum PublicationStatus {
+  PENDING
+  SCHEDULED
+  PUBLISHED
+  FAILED
+  CANCELED
+}
+
+// Destino de publicação da produção. O sistema não publica (spec §33):
+// a equipe registra horário, link e status à mão.
+model Publication {
+  id             String            @id @default(uuid())
+  videoProjectId String
+  platform       Platform
+  status         PublicationStatus @default(PENDING)
+  scheduledAt    DateTime?
+  publishedAt    DateTime?
+  url            String?
+  caption        String?
+  notes          String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  videoProject   VideoProject      @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+
+  @@index([videoProjectId, status])
+  @@index([scheduledAt])
 }

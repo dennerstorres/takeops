@@ -1228,9 +1228,15 @@ Qualquer decisão durável deve ser registrada em `DECISIONS.md`.
 
 ## PUB-001 — Modelo Publication
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** PROJECT-002
+
+### Critérios
+
+- [x] publicação com plataforma, status, agendamento, publicação, link, legenda e notas, presa à produção;
+- [x] status nasce PENDING; plataformas e status da spec;
+- [x] leitura pela produção visível no workspace; outra produção não alcança.
 
 ---
 
