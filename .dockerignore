@@ -1,0 +1,13 @@
+.git
+.github
+.next
+node_modules
+coverage
+npm-debug.log*
+.env
+.env.*
+!.env.example
+*.pem
+.claude
+.codegraph
+HANDOFF.md

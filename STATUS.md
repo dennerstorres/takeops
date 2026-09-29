@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-OSS-001 — Licença e higiene do repositório
+OSS-002 — Imagem Docker
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-OSS-002 — Imagem Docker
+DEPLOY-001 — Banco e app no Coolify
 ```
 
 ## Estado dos módulos

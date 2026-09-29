@@ -6,6 +6,8 @@ const sessionCookies = new Set([
 export function isPublicPath(pathname: string) {
   return (
     pathname === "/login" ||
+    // Healthcheck do contêiner (Docker/Coolify), sem sessão.
+    pathname === "/api/health" ||
     pathname === "/api/auth" ||
     pathname.startsWith("/api/auth/")
   );

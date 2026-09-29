@@ -1757,7 +1757,7 @@ Decisões: ADR-037 (Docker/Coolify), ADR-039 (AGPL-3.0), ADR-040 (login por e-ma
 
 ## OSS-002 — Imagem Docker
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** HARDEN-007
 

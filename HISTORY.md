@@ -4498,3 +4498,27 @@ Resultado: 140 de 143. A falha é `take.integration.test.ts` (registro simultân
 
 - Commits antigos têm o e-mail pessoal do autor. Reescrever o histórico ou não é decisão do dono, antes de tornar o repositório público.
 - Domínio da instância do mantenedor aparece só em SPEC/PLAN/DECISIONS (docs de deploy), como previsto no ADR-037.
+
+---
+
+## 2026-09-29 — OSS-002 — Imagem Docker
+
+**Status:** DONE
+**Agente:** Claude
+
+### Resumo
+
+- `next.config.ts`: `output: "standalone"`.
+- `Dockerfile` multi-stage em `node:22-bookworm-slim`: deps (`npm ci`, com `DATABASE_URL` fictícia só para o `prisma generate`), build, migrator (CLI `prisma` na versão do lockfile, isolado em `/migrate`) e runner como usuário `node`, porta 3000, `HEALTHCHECK` em `/api/health`.
+- `docker/entrypoint.sh`: roda `prisma migrate deploy` antes de subir; `MIGRATE_ON_START=false` desliga.
+- `GET /api/health`: `SELECT 1`, 200 `{"status":"ok"}` ou 503 sem detalhe; rota pública no `proxy` (sem sessão).
+- `.dockerignore` (sem `.env`, `.git`, `node_modules`) e `.gitattributes` forçando LF em `*.sh` e `Dockerfile`.
+
+### Testes executados
+
+- Build standalone e `node server.js` com env de teste: `/api/health` 200, `/login` 200, página protegida redireciona; com banco fora do ar, health 503.
+- lint, typecheck, `auth.test.ts`.
+
+### Pendências conhecidas
+
+- Sem Docker nesta máquina: o `docker build` em si não foi executado. Primeira construção real fica na DEPLOY-001 (Coolify) ou na OSS-007 (CI).
