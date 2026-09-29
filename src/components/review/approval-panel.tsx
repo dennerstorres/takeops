@@ -68,7 +68,7 @@ export function DecideApprovalForm({
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        O que precisa mudar
+        Notas (obrigatórias para pedir alterações)
         <textarea
           name="notes"
           maxLength={4000}
@@ -79,6 +79,17 @@ export function DecideApprovalForm({
       <div className="flex flex-wrap gap-2">
         <Button
           type="submit"
+          name="decision"
+          value="approve"
+          disabled={pending}
+          className="min-h-11"
+        >
+          Aprovar versão
+        </Button>
+        <Button
+          type="submit"
+          name="decision"
+          value="changes"
           variant="outline"
           disabled={pending}
           className="min-h-11"

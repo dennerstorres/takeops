@@ -1187,7 +1187,7 @@ VideoProject = EDITING
 
 ## APPROVAL-003 — Aprovar
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** APPROVAL-001
 
@@ -1197,6 +1197,12 @@ Efeito:
 Approval = APPROVED
 VideoProject = APPROVED
 ```
+
+### Critérios
+
+- [x] pedido pendente vira APPROVED e a produção APPROVED na mesma transação;
+- [x] nota opcional; quem e quando vêm da sessão e do servidor;
+- [x] pedido decidido não se decide de novo; membro e leitor não aprovam.
 
 ---
 

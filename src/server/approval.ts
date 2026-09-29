@@ -73,6 +73,43 @@ const changesSchema = z.object({
     .max(4000, "As notas passaram de 4000 caracteres."),
 });
 
+const approveSchema = z.object({
+  notes: z.preprocess(
+    (value) => (typeof value === "string" ? value : ""),
+    z.string().trim().max(4000, "As notas passaram de 4000 caracteres."),
+  ),
+});
+
+async function decide(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  approvalId: string,
+  decision: {
+    status: "CHANGES_REQUESTED" | "APPROVED";
+    projectStatus: "EDITING" | "APPROVED";
+    notes: string | null;
+  },
+  deps: ApprovalDeps,
+  now: Date,
+) {
+  const project = await getProject(
+    userId,
+    workspaceId,
+    projectId,
+    deps.workspaces,
+    deps.projects,
+  );
+  const decided = await deps.approvals.decide(
+    project.workspaceId,
+    project.id,
+    approvalId,
+    { ...decision, reviewedById: userId, at: now },
+  );
+  if (!decided || decided.id !== approvalId) throw new NotFoundError();
+  return decided;
+}
+
 // Pedido de alteração devolve a produção para a edição (spec §32).
 export async function requestChanges(
   userId: string,
@@ -85,25 +122,36 @@ export async function requestChanges(
 ) {
   await requireRole(userId, workspaceId, deciders, deps.workspaces);
   const { notes } = parseInput(changesSchema, input);
-  const project = await getProject(
+  return decide(
     userId,
     workspaceId,
     projectId,
-    deps.workspaces,
-    deps.projects,
-  );
-  const decided = await deps.approvals.decide(
-    project.workspaceId,
-    project.id,
     approvalId,
-    {
-      status: "CHANGES_REQUESTED",
-      projectStatus: "EDITING",
-      reviewedById: userId,
-      notes,
-      at: now,
-    },
+    { status: "CHANGES_REQUESTED", projectStatus: "EDITING", notes },
+    deps,
+    now,
   );
-  if (!decided || decided.id !== approvalId) throw new NotFoundError();
-  return decided;
+}
+
+// Aprovar a versão aprova a produção (spec §32). Nota é opcional.
+export async function approveVersion(
+  userId: string,
+  workspaceId: string,
+  projectId: string,
+  approvalId: string,
+  input: unknown,
+  deps: ApprovalDeps,
+  now = new Date(),
+) {
+  await requireRole(userId, workspaceId, deciders, deps.workspaces);
+  const { notes } = parseInput(approveSchema, input);
+  return decide(
+    userId,
+    workspaceId,
+    projectId,
+    approvalId,
+    { status: "APPROVED", projectStatus: "APPROVED", notes: notes || null },
+    deps,
+    now,
+  );
 }

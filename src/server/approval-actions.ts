@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
 import {
+  approveVersion,
   requestApproval,
   requestChanges,
   type ApprovalDeps,
@@ -74,11 +75,17 @@ export async function decideApprovalAction(
   const projectId = String(formData.get("projectId") ?? "");
   const versionId = String(formData.get("versionId") ?? "");
   const approvalId = String(formData.get("approvalId") ?? "");
+  // O botão clicado diz a decisão; qualquer outro valor é pedido de mudança,
+  // que exige nota e nunca aprova por engano.
+  const approve = formData.get("decision") === "approve";
   const result = await runAction(
     current,
-    { operation: "request-changes", entity: "Approval" },
+    {
+      operation: approve ? "approve" : "request-changes",
+      entity: "Approval",
+    },
     () =>
-      requestChanges(
+      (approve ? approveVersion : requestChanges)(
         current.userId,
         current.workspaceId,
         projectId,

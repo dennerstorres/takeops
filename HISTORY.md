@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — APPROVAL-003 — Aprovar
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Quem decide aprova o pedido pendente: a aprovação vira APPROVED e a produção APPROVED, na mesma transação.
+
+### Implementação
+
+- `approveVersion` usa o mesmo `decide` interno de `requestChanges` (APPROVAL-002); nota opcional.
+- `decideApprovalAction` lê o botão clicado (`decision=approve`); qualquer outro valor cai em pedir alterações, que exige nota — nunca aprova por engano.
+- Aba Revisão: "Aprovar versão" ao lado de "Solicitar alterações". Depois de aprovada, o botão de pedir aprovação some para essa versão.
+
+### Arquivos principais
+
+- `src/server/approval.ts`, `approval-actions.ts`, `approval.integration.test.ts`
+- `src/components/review/approval-panel.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Pedido aprovado não volta a pendente; nova rodada exige nova versão.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — APPROVAL-002 — Solicitar alterações
 
 **Status:** DONE  

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import {
+  approveVersion,
   listApprovals,
   requestApproval,
   requestChanges,
@@ -255,6 +256,73 @@ describe(
           deps,
         );
         assert.equal(next.status, "PENDING");
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+
+    it("aprovar a versão aprova a produção", async () => {
+      const ctx = await setup();
+      try {
+        const { deps, workspaceId, project, v2, prisma } = ctx;
+        const pending = await requestApproval(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          v2.id,
+          deps,
+        );
+        await assert.rejects(
+          approveVersion(
+            ctx.member.id,
+            workspaceId,
+            project.id,
+            pending.id,
+            {},
+            deps,
+          ),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          approveVersion(
+            ctx.viewer.id,
+            workspaceId,
+            project.id,
+            pending.id,
+            {},
+            deps,
+          ),
+          ForbiddenError,
+        );
+
+        const approved = await approveVersion(
+          ctx.owner.id,
+          workspaceId,
+          project.id,
+          pending.id,
+          { notes: "" },
+          deps,
+        );
+        assert.equal(approved.status, "APPROVED");
+        assert.equal(approved.reviewedById, ctx.owner.id);
+        assert.equal(approved.notes, null);
+        const stored = await prisma.videoProject.findUnique({
+          where: { id: project.id },
+          select: { status: true },
+        });
+        assert.equal(stored?.status, "APPROVED");
+
+        await assert.rejects(
+          requestChanges(
+            ctx.admin.id,
+            workspaceId,
+            project.id,
+            pending.id,
+            { notes: "tarde demais" },
+            deps,
+          ),
+          NotFoundError,
+        );
       } finally {
         await ctx.cleanup();
       }
