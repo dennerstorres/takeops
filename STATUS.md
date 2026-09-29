@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-EDIT-001 — EditingInfo
+EDIT-002 — Tela de edição
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-EDIT-002 — Tela de edição
+VERSION-001 — EditVersion
 ```
 
 ## Estado dos módulos

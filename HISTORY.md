@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — EDIT-002 — Tela de edição
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+A aba Edição da produção abre o formulário de edição: editor, software, link do projeto, resolução, fps, proporção, legenda, música e notas.
+
+### Implementação
+
+- `/producoes/[id]/edicao`; a aba "Edição" em `ProductionTabs` passou a ser link.
+- Editor escolhido entre as pessoas do workspace; quem é participante com papel EDITOR (PROJECT-004) aparece primeiro e marcado.
+- `saveEditingAction` devolve `{ saved: true }` e a tela mostra "Salvo"; erro de campo aparece no topo do formulário.
+- Leitor vê os dados em lista, com o link do projeto abrindo em nova aba.
+
+### Arquivos principais
+
+- `src/app/(app)/producoes/[id]/edicao/page.tsx`
+- `src/components/editing/editing-form.tsx`
+- `src/server/editing-actions.ts`
+- `src/components/projects/production-tabs.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Salvar por botão, sem autosave: o formulário é curto e mexido poucas vezes.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Regras cobertas em `editing.integration.test.ts` (EDIT-001). Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — EDIT-001 — EditingInfo
 
 **Status:** DONE  

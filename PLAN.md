@@ -1021,9 +1021,16 @@ Validar URLs.
 
 ## EDIT-002 — Tela de edição
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** EDIT-001, PROJECT-004
+
+### Critérios
+
+- [x] a aba Edição abre o formulário com editor, software, link do projeto, formato, legenda, música e notas;
+- [x] editor da produção (participante EDITOR) aparece primeiro;
+- [x] salvar mostra Salvo; erro de campo aparece sem perder o que foi digitado;
+- [x] leitor vê os dados sem formulário.
 
 ---
 
