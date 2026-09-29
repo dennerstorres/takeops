@@ -1,8 +1,9 @@
 import { prisma } from "./db.ts";
-import type {
-  ShootChecklistItemRecord,
-  ShootChecklistRepository,
-  ShootChecklistScope,
+import {
+  PROJECT_CHECKLIST_SOURCE,
+  type ShootChecklistItemRecord,
+  type ShootChecklistRepository,
+  type ShootChecklistScope,
 } from "./shoot-checklist-repository.ts";
 
 const include = { completedBy: { select: { name: true, email: true } } };
@@ -57,14 +58,22 @@ export const prismaShootChecklistRepository: ShootChecklistRepository = {
     return prisma.$transaction(async (tx) => {
       const shoot = await tx.shoot.findFirst({
         where: visibleShoot(scope),
-        select: { id: true },
+        select: { id: true, videoProjectId: true },
       });
       if (!shoot) return null;
-      const template = await tx.checklistTemplate.findFirst({
-        where: { id: templateId, workspaceId: scope.workspaceId },
-        include: { items: { orderBy: { order: "asc" } } },
-      });
-      if (!template) return null;
+      const items =
+        templateId === PROJECT_CHECKLIST_SOURCE
+          ? await tx.projectChecklistItem.findMany({
+              where: { videoProjectId: shoot.videoProjectId },
+              orderBy: { order: "asc" },
+            })
+          : ((
+              await tx.checklistTemplate.findFirst({
+                where: { id: templateId, workspaceId: scope.workspaceId },
+                include: { items: { orderBy: { order: "asc" } } },
+              })
+            )?.items ?? null);
+      if (!items || items.length === 0) return null;
       const last = await tx.shootChecklistItem.aggregate({
         where: { shootId: shoot.id },
         _max: { order: true },
@@ -72,7 +81,7 @@ export const prismaShootChecklistRepository: ShootChecklistRepository = {
       const start = last._max.order ?? 0;
       // Copia o texto, não liga ao modelo: mudar o modelo depois não mexe aqui.
       await tx.shootChecklistItem.createMany({
-        data: template.items.map((item, index) => ({
+        data: items.map((item, index) => ({
           shootId: shoot.id,
           text: item.text,
           order: start + index + 1,

@@ -1400,11 +1400,17 @@ Operação deve duplicar estruturas, nunca compartilhar registros mutáveis.
 
 ## TEMPLATE-005 — Usar checklist da produção na gravação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** TEMPLATE-004, CHECK-003
 
 Na aba Gravação, oferecer "Checklist da produção" como origem ao montar o checklist de uma gravação, copiando `ProjectChecklistItem` para `ShootChecklistItem` (mesma regra da CHECK-003).
+
+### Critérios
+
+- [x] a aba Gravação oferece o checklist da produção como origem, em primeiro;
+- [x] copia os itens para a gravação na mesma transação e regra da CHECK-003;
+- [x] produção sem checklist copiado dá erro de campo em vez de copiar nada.
 
 ---
 

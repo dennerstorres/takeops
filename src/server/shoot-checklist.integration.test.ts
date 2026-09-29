@@ -17,6 +17,8 @@ import {
 } from "./shoot-checklist.ts";
 import { createWorkspace } from "./workspace.ts";
 
+import { PROJECT_CHECKLIST_SOURCE } from "./shoot-checklist-repository.ts";
+
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
 
 describe(
@@ -233,6 +235,37 @@ describe(
             deps,
           ),
           NotFoundError,
+        );
+
+        // Checklist da produção (copiado do template) também serve de origem.
+        await assert.rejects(
+          instantiateShootChecklist(
+            owner.id,
+            workspaceId,
+            project.id,
+            other.id,
+            { templateId: PROJECT_CHECKLIST_SOURCE },
+            deps,
+          ),
+          ValidationError,
+        );
+        await prisma.projectChecklistItem.createMany({
+          data: [
+            { videoProjectId: project.id, order: 1, text: "Luz ligada" },
+            { videoProjectId: project.id, order: 2, text: "Cenário limpo" },
+          ],
+        });
+        const fromProject = await instantiateShootChecklist(
+          member.id,
+          workspaceId,
+          project.id,
+          other.id,
+          { templateId: PROJECT_CHECKLIST_SOURCE },
+          deps,
+        );
+        assert.deepEqual(
+          fromProject.map((item) => item.text),
+          ["Luz ligada", "Cenário limpo"],
         );
       } finally {
         if (workspaceId) {

@@ -16,10 +16,16 @@ export type ShootChecklistScope = {
   shootId: string;
 };
 
+// Origem especial: os itens copiados do template para a produção
+// (ProjectChecklistItem, TEMPLATE-004/005), no lugar de um modelo do catálogo.
+export const PROJECT_CHECKLIST_SOURCE = "producao";
+
 export type ShootChecklistRepository = {
   list(scope: ShootChecklistScope): Promise<ShootChecklistItemRecord[]>;
   // Copia os textos do modelo para o fim da lista da gravação. O modelo precisa
-  // ser do mesmo workspace. Devolve null quando gravação ou modelo não batem.
+  // ser do mesmo workspace. Com PROJECT_CHECKLIST_SOURCE a origem é o
+  // checklist da produção da gravação. Devolve null quando gravação ou origem
+  // não batem.
   copyFromTemplate(
     scope: ShootChecklistScope,
     templateId: string,

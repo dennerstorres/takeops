@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TEMPLATE-004 — Criar projeto por template
+TEMPLATE-005 — Usar checklist da produção na gravação
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TEMPLATE-005 — Usar checklist da produção na gravação
+ACTIVITY-001
 ```
 
 ## Estado dos módulos
@@ -54,7 +54,7 @@ TEMPLATE-005 — Usar checklist da produção na gravação
 | Aprovação | DONE |
 | Publicação | DONE |
 | Calendário | DONE |
-| Templates | IN_PROGRESS |
+| Templates | DONE |
 | Notificações | NOT_STARTED |
 | Activity Log | NOT_STARTED |
 

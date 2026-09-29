@@ -22,6 +22,7 @@ import { prismaProjectRepository } from "@/server/project-prisma";
 import { listShoots } from "@/server/shoot";
 import { listShootChecklist } from "@/server/shoot-checklist";
 import { prismaShootChecklistRepository } from "@/server/shoot-checklist-prisma";
+import { PROJECT_CHECKLIST_SOURCE } from "@/server/shoot-checklist-repository";
 import { listShootEquipment } from "@/server/shoot-equipment";
 import { prismaShootEquipmentRepository } from "@/server/shoot-equipment-prisma";
 import { shootStatusLabel } from "@/server/shoot-labels";
@@ -110,12 +111,23 @@ export default async function ShootsPage({
       label: `${item.name} · ${equipmentCategoryLabel(item.category)}`,
     }));
 
-  const templateOptions = templates
-    .filter((template) => template.items.length > 0)
-    .map((template) => ({
-      id: template.id,
-      label: `${template.name} · ${template.items.length} itens`,
-    }));
+  const templateOptions = [
+    // O checklist copiado do template da produção vem primeiro.
+    ...(projectChecklist.length > 0
+      ? [
+          {
+            id: PROJECT_CHECKLIST_SOURCE,
+            label: `Checklist da produção · ${projectChecklist.length} itens`,
+          },
+        ]
+      : []),
+    ...templates
+      .filter((template) => template.items.length > 0)
+      .map((template) => ({
+        id: template.id,
+        label: `${template.name} · ${template.items.length} itens`,
+      })),
+  ];
 
   const dateTime = new Intl.DateTimeFormat("pt-BR", {
     timeZone: timezone,

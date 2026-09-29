@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-29 — TEMPLATE-005 — Usar checklist da produção na gravação
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Na aba Gravação, "Checklist da produção" (cópia vinda do template) aparece primeiro como origem ao montar o checklist de uma gravação.
+
+### Implementação
+
+- `PROJECT_CHECKLIST_SOURCE = "producao"` em `shoot-checklist-repository.ts`: com esse valor, `copyFromTemplate` copia os `ProjectChecklistItem` da produção da própria gravação para `ShootChecklistItem`, no mesmo fluxo e transação da CHECK-003.
+- Origem vazia (modelo sem item ou produção sem checklist) agora devolve null e vira erro de campo, em vez de copiar nada.
+- `instantiateShootChecklist` e a action não mudaram.
+
+### Arquivos principais
+
+- `src/server/shoot-checklist-repository.ts`, `shoot-checklist-prisma.ts`, `shoot-checklist.integration.test.ts`
+- `src/app/(app)/producoes/[id]/gravacao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR nova (segue ADR-034). Valor reservado em vez de nova action: a regra de cópia fica num lugar só.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-29 — TEMPLATE-004 — Criar projeto por template
 
 **Status:** DONE  
