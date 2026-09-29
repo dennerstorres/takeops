@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 19 — Seed e Demo
+Fase 20 — Hardening
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SEED-001 — Workspace e usuários demo
+SEED-002 — Projeto demo completo
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SEED-002 — Projeto demo completo
+HARDEN-001 — Auditoria de autorização
 ```
 
 ## Estado dos módulos

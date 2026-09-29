@@ -1315,6 +1315,46 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-29 — SEED-002 — Projeto demo completo
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+`npm run db:seed` também cria a produção "Conheça nosso novo Dashboard de Pedidos" (spec §60) no workspace Acme Software.
+
+### Implementação
+
+- `seedDemoProject`: numa transação cria produção (etapa Revisão), 2 participantes (apresentador e editor), checklist da produção (3 itens), 5 cenas (gancho, problema, demonstração em tela, benefício, chamada), shots com Câmera A e B e captura de tela, 3 takes (um preferido), uma gravação, V1 com 3 comentários com tempo e publicação pendente no Instagram Reels.
+- Identificada pelo slug `dashboard-de-pedidos`; se existe, não recria.
+
+### Arquivos principais
+
+- `src/server/seed.ts`, `src/server/seed.integration.test.ts`, `scripts/seed.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Seed grava direto pelo Prisma (dado de desenvolvimento, sem sessão); contador de versão já nasce em 1 (ADR-031).
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+npm run db:seed (duas vezes)
+```
+
+Resultado: PASS.
+
+---
+
 ## 2026-09-29 — SEED-001 — Workspace e usuários demo
 
 **Status:** DONE  

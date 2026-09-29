@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
-import { seedDemoWorkspace } from "./seed.ts";
+import { seedDemoProject, seedDemoWorkspace } from "./seed.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
 
@@ -41,6 +41,40 @@ describe(
         assert.equal(
           await prisma.checklistTemplate.count({ where: { workspaceId } }),
           1,
+        );
+
+        const projectId = await seedDemoProject(workspaceId, userIds);
+        assert.equal(await seedDemoProject(workspaceId, userIds), projectId);
+        const project = await prisma.videoProject.findUniqueOrThrow({
+          where: { id: projectId },
+          include: {
+            scenes: { include: { shots: { include: { takes: true } } } },
+            members: true,
+            checklistItems: true,
+            editVersions: { include: { comments: true } },
+            publications: true,
+          },
+        });
+        const shots = project.scenes.flatMap((scene) => scene.shots);
+        assert.equal(project.scenes.length, 5);
+        assert.ok(shots.some((shot) => shot.shotType === "SCREEN_CAPTURE"));
+        assert.deepEqual(
+          [
+            ...new Set(shots.map((shot) => shot.cameraLabel).filter(Boolean)),
+          ].sort(),
+          ["Câmera A", "Câmera B"],
+        );
+        assert.equal(shots.flatMap((shot) => shot.takes).length, 3);
+        assert.equal(project.members.length, 2);
+        assert.equal(project.checklistItems.length, 3);
+        assert.deepEqual(
+          project.editVersions.map((version) => version.versionNumber),
+          [1],
+        );
+        assert.equal(project.editVersions[0].comments.length, 3);
+        assert.deepEqual(
+          project.publications.map((row) => row.status),
+          ["PENDING"],
         );
       } finally {
         if (workspaceId) {

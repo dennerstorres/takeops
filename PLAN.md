@@ -1520,7 +1520,7 @@ Criar:
 
 ## SEED-002 — Projeto demo completo
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** VERSION-001, REVIEW-001, PUB-001
 
@@ -1542,6 +1542,11 @@ Incluir:
 - V1;
 - comentários;
 - publicação pendente.
+
+### Critérios
+
+- [x] produção demo com 5 cenas, shots em duas câmeras e tela, checklist, 2 participantes, 3 takes, V1, comentários e publicação pendente;
+- [x] rodar o seed de novo não duplica a produção.
 
 ---
 
