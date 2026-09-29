@@ -18,9 +18,9 @@ import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 const weekdays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 const kindClass: Record<CalendarEvent["kind"], string> = {
-  SHOOT: "border-l-sky-500",
-  PLANNED_PUBLISH: "border-l-amber-500",
-  PUBLICATION: "border-l-emerald-500",
+  SHOOT: "bg-sky-500",
+  PLANNED_PUBLISH: "bg-amber-500",
+  PUBLICATION: "bg-emerald-500",
 };
 
 export default async function CalendarPage({
@@ -122,15 +122,17 @@ export default async function CalendarPage({
       <li key={event.key}>
         <Link
           href={event.href}
-          className={`block rounded-md border-l-4 bg-muted/50 px-2 py-1 text-xs ${
-            kindClass[event.kind]
-          } ${event.canceled ? "line-through opacity-60" : ""} ${
+          className={`block rounded-md bg-muted/50 px-2 py-1 text-xs ${event.canceled ? "line-through opacity-60" : ""} ${
             compact ? "" : "min-h-11 py-2 text-sm"
           }`}
         >
           {event.at ? (
             <span className="tabular-nums">{time.format(event.at)} </span>
           ) : null}
+          <span
+            aria-hidden
+            className={`mr-1 inline-block size-2 rounded-full ${kindClass[event.kind]}`}
+          />
           <span className="font-medium">{event.label}</span>
           <span className="block truncate text-muted-foreground">
             {event.projectTitle}
@@ -167,11 +169,16 @@ export default async function CalendarPage({
         </div>
       </header>
       <p className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-        <span className="border-l-4 border-l-sky-500 pl-1">Gravação</span>
-        <span className="border-l-4 border-l-amber-500 pl-1">
+        <span className="inline-flex items-center gap-1">
+          <span aria-hidden className="size-2 rounded-full bg-sky-500" />
+          Gravação
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <span aria-hidden className="size-2 rounded-full bg-amber-500" />
           Publicação planejada
         </span>
-        <span className="border-l-4 border-l-emerald-500 pl-1">
+        <span className="inline-flex items-center gap-1">
+          <span aria-hidden className="size-2 rounded-full bg-emerald-500" />
           Publicação agendada ou feita
         </span>
       </p>
