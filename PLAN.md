@@ -1857,7 +1857,7 @@ Produção: `https://takeops.dennerstorres.dev` (DNS já aponta para o Coolify).
 
 ## DEPLOY-002 — OAuth e e-mail de produção
 
-**Status:** TODO  
+**Status:** IN_PROGRESS  
 **Prioridade:** P0  
 **Dependências:** DEPLOY-001, OSS-005
 

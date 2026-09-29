@@ -28,7 +28,7 @@ DEPLOY-001 — Banco e app no Coolify
 ## Próxima tarefa recomendada
 
 ```text
-DEPLOY-002 — OAuth e e-mail de produção (login real)
+OSS-005 — Login por link de e-mail (depois fecha DEPLOY-002)
 ```
 
 ## Estado dos módulos

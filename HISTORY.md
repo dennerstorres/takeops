@@ -4552,3 +4552,12 @@ Primeiro build falhou: `module-not-found` em `src/server/db.ts`. `src/generated`
 - Login real com Google em produção (DEPLOY-002/003) depende do dono testar.
 - O valor de `AUTH_SECRET` apareceu na árvore de acessibilidade lida pelo agente ao abrir o modal da variável. Recomendado gerar outro e trocar no Coolify.
 - Backup só local; configurar destino S3 para backup fora do servidor.
+
+---
+
+## 2026-09-29 — DEPLOY-002 — OAuth de produção (parcial)
+
+**Status:** IN_PROGRESS
+**Agente:** Claude
+
+Dono configurou no Google Console a origem e o redirect de `https://takeops.dennerstorres.dev` e entrou com Google em produção: login real funcionando. Falta a parte de e-mail (SMTP), que depende da OSS-005.
