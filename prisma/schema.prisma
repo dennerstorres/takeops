@@ -708,5 +708,23 @@ model ProductionTemplate {
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdBy   User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
+  scenes      ProductionTemplateScene[]
+
   @@index([workspaceId, name])
+}
+
+// Cena-modelo: só a estrutura (ordem, título, tipo, descrição). Vira Scene
+// de verdade quando a produção é criada pelo template.
+model ProductionTemplateScene {
+  id          String             @id @default(uuid())
+  templateId  String
+  order       Int
+  title       String
+  type        SceneType
+  description String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  template    ProductionTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@unique([templateId, order])
 }

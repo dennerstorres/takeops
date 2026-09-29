@@ -3,10 +3,14 @@ import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import {
+  addTemplateScene,
   createProductionTemplate,
   deleteProductionTemplate,
   getProductionTemplate,
   listProductionTemplates,
+  listTemplateScenes,
+  moveTemplateScene,
+  removeTemplateScene,
   updateProductionTemplate,
   type ProductionTemplateDeps,
 } from "./production-template.ts";
@@ -157,6 +161,134 @@ describe(
         assert.deepEqual(
           await listProductionTemplates(ctx.owner.id, workspaceId, deps),
           [],
+        );
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+
+    it("guarda cenas em ordem, move e remove renumerando", async () => {
+      const ctx = await templateSetup();
+      try {
+        const { deps, workspaceId } = ctx;
+        const template = await createProductionTemplate(
+          ctx.owner.id,
+          workspaceId,
+          { name: "Demo" },
+          deps,
+        );
+        for (const [title, type] of [
+          ["Hook", "HOOK"],
+          ["Problema", "TALKING_HEAD"],
+          ["Demonstração", "SCREEN_CAPTURE"],
+          ["CTA", "CTA"],
+        ]) {
+          await addTemplateScene(
+            ctx.admin.id,
+            workspaceId,
+            template.id,
+            { title, type, description: "" },
+            deps,
+          );
+        }
+        const titles = async () =>
+          (
+            await listTemplateScenes(
+              ctx.member.id,
+              workspaceId,
+              template.id,
+              deps,
+            )
+          ).map((scene) => `${scene.order}.${scene.title}`);
+        assert.deepEqual(await titles(), [
+          "1.Hook",
+          "2.Problema",
+          "3.Demonstração",
+          "4.CTA",
+        ]);
+
+        const scenes = await listTemplateScenes(
+          ctx.owner.id,
+          workspaceId,
+          template.id,
+          deps,
+        );
+        await moveTemplateScene(
+          ctx.owner.id,
+          workspaceId,
+          template.id,
+          scenes[3].id,
+          { direction: "up" },
+          deps,
+        );
+        await moveTemplateScene(
+          ctx.owner.id,
+          workspaceId,
+          template.id,
+          scenes[0].id,
+          { direction: "up" },
+          deps,
+        );
+        assert.deepEqual(await titles(), [
+          "1.Hook",
+          "2.Problema",
+          "3.CTA",
+          "4.Demonstração",
+        ]);
+        await removeTemplateScene(
+          ctx.owner.id,
+          workspaceId,
+          template.id,
+          scenes[1].id,
+          deps,
+        );
+        assert.deepEqual(await titles(), ["1.Hook", "2.CTA", "3.Demonstração"]);
+
+        await assert.rejects(
+          addTemplateScene(
+            ctx.member.id,
+            workspaceId,
+            template.id,
+            { title: "X", type: "OTHER" },
+            deps,
+          ),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          addTemplateScene(
+            ctx.owner.id,
+            workspaceId,
+            template.id,
+            { title: "X", type: "VLOG" },
+            deps,
+          ),
+          ValidationError,
+        );
+        const foreign = await createProductionTemplate(
+          ctx.outsider.id,
+          ctx.foreignId,
+          { name: "Alheio" },
+          deps,
+        );
+        await assert.rejects(
+          addTemplateScene(
+            ctx.owner.id,
+            workspaceId,
+            foreign.id,
+            { title: "X", type: "OTHER" },
+            deps,
+          ),
+          NotFoundError,
+        );
+        await assert.rejects(
+          removeTemplateScene(
+            ctx.owner.id,
+            workspaceId,
+            template.id,
+            "nao-existe",
+            deps,
+          ),
+          NotFoundError,
         );
       } finally {
         await ctx.cleanup();

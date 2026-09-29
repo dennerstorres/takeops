@@ -1,3 +1,5 @@
+import type { SceneType } from "./scene-labels.ts";
+
 export type ProductionTemplateRecord = {
   id: string;
   workspaceId: string;
@@ -13,7 +15,22 @@ export type ProductionTemplateWrite = Pick<
   "name" | "description"
 >;
 
-// Todo acesso filtra pelo workspace aberto.
+export type TemplateSceneRecord = {
+  id: string;
+  templateId: string;
+  order: number;
+  title: string;
+  type: SceneType;
+  description: string | null;
+};
+
+export type TemplateSceneWrite = Pick<
+  TemplateSceneRecord,
+  "title" | "type" | "description"
+>;
+
+// Todo acesso filtra pelo workspace aberto. As operações de cena devolvem a
+// lista inteira, já renumerada, ou null quando o template não é visível.
 export type ProductionTemplateRepository = {
   list(workspaceId: string): Promise<ProductionTemplateRecord[]>;
   find(
@@ -30,4 +47,24 @@ export type ProductionTemplateRepository = {
     input: ProductionTemplateWrite,
   ): Promise<ProductionTemplateRecord | null>;
   remove(workspaceId: string, templateId: string): Promise<boolean>;
+  listScenes(
+    workspaceId: string,
+    templateId: string,
+  ): Promise<TemplateSceneRecord[] | null>;
+  addScene(
+    workspaceId: string,
+    templateId: string,
+    input: TemplateSceneWrite,
+  ): Promise<TemplateSceneRecord[] | null>;
+  removeScene(
+    workspaceId: string,
+    templateId: string,
+    sceneId: string,
+  ): Promise<TemplateSceneRecord[] | null>;
+  moveScene(
+    workspaceId: string,
+    templateId: string,
+    sceneId: string,
+    direction: "up" | "down",
+  ): Promise<TemplateSceneRecord[] | null>;
 };

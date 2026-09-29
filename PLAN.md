@@ -1356,9 +1356,15 @@ Registrar decisão se escolher persistência própria.
 
 ## TEMPLATE-002 — Cenas no template
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** TEMPLATE-001
+
+### Critérios
+
+- [x] template guarda cenas-modelo em ordem com título, tipo e orientação;
+- [x] adicionar, subir, descer e remover em transação, sem ordem repetida;
+- [x] dono e admin mudam; membro e leitor veem; outro workspace não alcança.
 
 ---
 

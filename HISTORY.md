@@ -1315,6 +1315,49 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — TEMPLATE-002 — Cenas no template
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+O template guarda cenas-modelo em ordem (título, tipo de cena, orientação), com adicionar, subir, descer e remover.
+
+### Implementação
+
+- Modelo `ProductionTemplateScene` com único `(templateId, order)`.
+- Repositório: toda operação em transação, devolve a lista renumerada; troca de ordem passa por números negativos para não bater no índice (mesmo padrão do checklist).
+- Serviço: listar (qualquer membro); adicionar, mover, remover (dono e admin). Tipo validado contra `sceneTypes`.
+- Página do template: seção "Cenas" (`#cenas`) com botões de 44px e formulário de nova cena.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928420000_production_template_scene/`
+- `src/server/production-template.ts`, `production-template-repository.ts`, `production-template-prisma.ts`, `production-template-actions.ts`, `production-template.integration.test.ts`
+- `src/components/templates/template-scene-form.tsx`, `src/app/(app)/templates/[templateId]/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Cena-modelo guarda só estrutura; fala, câmera e status nascem na produção.
+
+### Banco / migrations
+
+- `20260928420000_production_template_scene`: tabela, único `(templateId, order)`, FK cascade no template. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — TEMPLATE-001 — ProductionTemplate
 
 **Status:** DONE  
