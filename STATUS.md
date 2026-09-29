@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 10 — Takes e Modo Gravação
+Fase 11 — Continuidade e Assets
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-RECORD-005 — Progresso da sessão
+CONT-001 — Notas de continuidade
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-CONT-001 — Notas de continuidade
+ASSET-001 — Referências externas
 ```
 
 ## Estado dos módulos

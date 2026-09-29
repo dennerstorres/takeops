@@ -1315,6 +1315,54 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — CONT-001 — Notas de continuidade
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Cada produção tem uma página de continuidade com notas de texto (título, categoria opcional, descrição), agrupadas por categoria.
+
+### Implementação
+
+- Modelo `ContinuityNote` (spec §25): produção, categoria?, título, descrição, quem criou, datas. Excluir apaga de verdade (a spec não prevê lixeira).
+- `continuity.ts`: listar (todos os papéis), criar/editar/excluir (dono, admin, membro). Tudo passa por `getProject` e o repositório filtra pela produção visível no workspace.
+- `groupContinuityNotes`: categorias em ordem alfabética; sem categoria por último.
+- Página `/producoes/[id]/continuidade`, aberta pelo botão "Continuidade" na aba Gravação. Categoria sugere as já usadas (`datalist`). Excluir pede confirmação.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928330000_continuity_note/`
+- `src/server/continuity.ts`, `continuity-repository.ts`, `continuity-prisma.ts`, `continuity-actions.ts`, `continuity.integration.test.ts`
+- `src/components/continuity/continuity-form.tsx`, `delete-continuity-button.tsx`
+- `src/app/(app)/producoes/[id]/continuidade/page.tsx`, `src/app/(app)/producoes/[id]/gravacao/page.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Categoria é texto livre (o exemplo da spec agrupa por pessoa, objeto e câmera). Não virou aba: as abas seguem a lista da spec.
+
+### Banco / migrations
+
+- `20260928330000_continuity_note`: tabela `ContinuityNote`, índice `(videoProjectId, category)`, FK cascade na produção e SET NULL no autor. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+### Pendências conhecidas
+
+- Mostrar a continuidade dentro do Modo Gravação não foi pedido; a cena já mostra suas notas de continuidade.
+
+---
+
 ## 2026-09-28 — RECORD-005 — Progresso da sessão
 
 **Status:** DONE  

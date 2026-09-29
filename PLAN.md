@@ -973,9 +973,16 @@ Exemplo:
 
 ## CONT-001 — Notas de continuidade
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** PROJECT-002
+
+### Critérios
+
+- [x] a produção tem página de continuidade, aberta pela aba Gravação;
+- [x] nota com título, categoria opcional e descrição, agrupada por categoria;
+- [x] membro cria, edita e exclui (com confirmação); leitor só vê;
+- [x] outra produção ou outro workspace não alcança a nota.
 
 ---
 

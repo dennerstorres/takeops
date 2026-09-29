@@ -25,6 +25,7 @@ model User {
   scenesSpoken    Scene[]           @relation("SceneSpeaker")
   completedChecklistItems ShootChecklistItem[]
   recordedTakes Take[]
+  continuityNotes ContinuityNote[]
 }
 
 enum WorkspaceRole {
@@ -177,6 +178,7 @@ model VideoProject {
   script                    Script?
   scenes                    Scene[]
   shoots                    Shoot[]
+  continuityNotes           ContinuityNote[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -499,4 +501,21 @@ model Take {
 
   @@unique([shotId, number])
   @@index([shotId, status])
+}
+
+// Continuidade é texto por produção no MVP: quem aparece com o quê, onde
+// fica cada objeto, como estava cada câmera. Fotos ficam para depois.
+model ContinuityNote {
+  id             String       @id @default(uuid())
+  videoProjectId String
+  category       String?
+  title          String
+  description    String
+  createdById    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  createdBy      User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([videoProjectId, category])
 }

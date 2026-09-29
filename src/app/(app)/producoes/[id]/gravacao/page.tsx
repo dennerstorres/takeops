@@ -129,6 +129,12 @@ export default async function ShootsPage({
         <h1 className="text-2xl font-medium tracking-tight">Gravação</h1>
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
+      <Link
+        href={`/producoes/${project.id}/continuidade`}
+        className="inline-flex min-h-11 w-fit items-center rounded-lg border px-3 text-sm"
+      >
+        Continuidade
+      </Link>
       {shoots.length === 0 ? (
         <EmptyState
           title="Nenhuma gravação agendada"
