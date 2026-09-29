@@ -1,7 +1,7 @@
 import { notify } from "./notification.ts";
 import type { NotificationRepository } from "./notification-repository.ts";
 import { z } from "zod";
-import { NotFoundError, ValidationError } from "./errors.ts";
+import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
 import { projectRoles } from "./participant-labels.ts";
 import type { ParticipantRepository } from "./participant-repository.ts";
 import { getProject } from "./project.ts";
@@ -11,6 +11,13 @@ import { requireRole } from "./workspace.ts";
 import type { WorkspaceRepository } from "./workspace-repository.ts";
 
 const writers = ["OWNER", "ADMIN", "MEMBER"] as const;
+
+// APPROVER dá poder de aprovar (ADR-033): só dono e admin mexem nele (ADR-035).
+function requireApproverManager(role: string, projectRole: string) {
+  if (projectRole === "APPROVER" && role === "MEMBER") {
+    throw new ForbiddenError("Só dono ou admin definem quem aprova.");
+  }
+}
 
 const assignmentSchema = z.object({
   userId: z.string().trim().min(1).max(80),
@@ -46,8 +53,14 @@ export async function addParticipant(
   participants: ParticipantRepository,
   notifications?: NotificationRepository,
 ) {
-  await requireRole(userId, workspaceId, writers, workspaces);
+  const membership = await requireRole(
+    userId,
+    workspaceId,
+    writers,
+    workspaces,
+  );
   const data = parseInput(assignmentSchema, input);
+  requireApproverManager(membership.role, data.role);
   const project = await getProject(
     userId,
     workspaceId,
@@ -104,8 +117,14 @@ export async function removeParticipant(
   projects: ProjectRepository,
   participants: ParticipantRepository,
 ) {
-  await requireRole(userId, workspaceId, writers, workspaces);
+  const membership = await requireRole(
+    userId,
+    workspaceId,
+    writers,
+    workspaces,
+  );
   const data = parseInput(assignmentSchema, input);
+  requireApproverManager(membership.role, data.role);
   const project = await getProject(
     userId,
     workspaceId,

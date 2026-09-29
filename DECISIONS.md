@@ -719,3 +719,24 @@ Mudar ou excluir template e checklist depois não altera produções. A cópia a
 
 ...
 ```
+
+---
+
+# ADR-035 — Papéis que só dono e admin exercem
+
+**Status:** Accepted  
+**Data:** 2026-09-29
+
+## Contexto
+
+A HARDEN-001 achou três caminhos em que MEMBER ia além da spec §7: excluir produção, mover para "Aprovado" no kanban e se marcar APPROVER na produção (o que dava poder de aprovar, ADR-033).
+
+## Decisão
+
+- Excluir produção: OWNER e ADMIN ("gerenciar produções").
+- Mudar a etapa para APPROVED à mão: OWNER e ADMIN. Membro aprovador chega lá pela aprovação da versão.
+- Adicionar ou remover o papel APPROVER na produção: OWNER e ADMIN. Os outros papéis continuam de membro.
+
+## Consequências
+
+A regra está só no serviço; a tela ainda mostra o botão de excluir, a coluna "Aprovado" e a opção APPROVER para membro, que recebe o erro. Esconder fica na HARDEN-004.

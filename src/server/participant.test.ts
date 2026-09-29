@@ -193,6 +193,51 @@ describe("participantes", () => {
     await assert.rejects(
       () =>
         addParticipant(
+          "camera",
+          "ws-a",
+          "proj-a",
+          { userId: "camera", role: "APPROVER" },
+          workspaces,
+          projectRepo,
+          participants,
+        ),
+      ForbiddenError,
+    );
+    await addParticipant(
+      "owner",
+      "ws-a",
+      "proj-a",
+      { userId: "camera", role: "APPROVER" },
+      workspaces,
+      projectRepo,
+      participants,
+    );
+    await assert.rejects(
+      () =>
+        removeParticipant(
+          "camera",
+          "ws-a",
+          "proj-a",
+          { userId: "camera", role: "APPROVER" },
+          workspaces,
+          projectRepo,
+          participants,
+        ),
+      ForbiddenError,
+    );
+    await removeParticipant(
+      "owner",
+      "ws-a",
+      "proj-a",
+      { userId: "camera", role: "APPROVER" },
+      workspaces,
+      projectRepo,
+      participants,
+    );
+
+    await assert.rejects(
+      () =>
+        addParticipant(
           "owner",
           "ws-a",
           "proj-a",

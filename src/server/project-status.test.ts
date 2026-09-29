@@ -137,6 +137,7 @@ describe("etapa da produção", () => {
     const { workspaces, ideas, projectRepo, join } = harness();
     join("owner", "ws-a", "OWNER");
     join("viewer", "ws-a", "VIEWER");
+    join("member", "ws-a", "MEMBER");
     const created = await createProject(
       "owner",
       "ws-a",
@@ -187,6 +188,45 @@ describe("etapa da produção", () => {
       projectRepo,
     );
     assert.equal(again, archived);
+
+    await assert.rejects(
+      () =>
+        changeVideoProjectStatus(
+          "member",
+          "ws-a",
+          created.id,
+          { status: "APPROVED" },
+          workspaces,
+          projectRepo,
+        ),
+      ForbiddenError,
+    );
+    const reviewing = await changeVideoProjectStatus(
+      "member",
+      "ws-a",
+      created.id,
+      { status: "REVIEW" },
+      workspaces,
+      projectRepo,
+    );
+    assert.equal(reviewing.status, "REVIEW");
+    const approved = await changeVideoProjectStatus(
+      "owner",
+      "ws-a",
+      created.id,
+      { status: "APPROVED" },
+      workspaces,
+      projectRepo,
+    );
+    assert.equal(approved.status, "APPROVED");
+    await changeVideoProjectStatus(
+      "owner",
+      "ws-a",
+      created.id,
+      { status: "ARCHIVED" },
+      workspaces,
+      projectRepo,
+    );
 
     await assert.rejects(
       () =>

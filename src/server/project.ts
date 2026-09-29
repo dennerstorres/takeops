@@ -18,6 +18,7 @@ import { requireMembership, requireRole } from "./workspace.ts";
 import type { WorkspaceRepository } from "./workspace-repository.ts";
 
 const writers = ["OWNER", "ADMIN", "MEMBER"] as const;
+const managers = ["OWNER", "ADMIN"] as const;
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const optionalText = (max: number, message: string) =>
@@ -289,8 +290,17 @@ export async function changeVideoProjectStatus(
   projects: ProjectRepository,
   activities?: ActivityRepository,
 ) {
-  await requireRole(userId, workspaceId, writers, workspaces);
+  const membership = await requireRole(
+    userId,
+    workspaceId,
+    writers,
+    workspaces,
+  );
   const data = parseInput(statusSchema, input);
+  // Membro só chega a "Aprovado" pela aprovação da versão (ADR-035).
+  if (data.status === "APPROVED" && membership.role === "MEMBER") {
+    throw new ForbiddenError("Só dono ou admin movem para Aprovado.");
+  }
   const current = await getProject(
     userId,
     workspaceId,
@@ -385,7 +395,7 @@ export async function deleteProject(
   projects: ProjectRepository,
   deletedAt = new Date(),
 ) {
-  await requireRole(userId, workspaceId, writers, workspaces);
+  await requireRole(userId, workspaceId, managers, workspaces);
   await getProject(userId, workspaceId, projectId, workspaces, projects);
   const removed = await projects.softDelete(workspaceId, projectId, deletedAt);
   if (!removed) throw new NotFoundError();

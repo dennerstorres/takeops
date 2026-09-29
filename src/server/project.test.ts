@@ -210,6 +210,7 @@ describe("produção", () => {
   it("nasce no início do pipeline e ignora status enviado pelo cliente", async () => {
     const { workspaces, ideaRepo, projectRepo, join, idea } = harness();
     join("member", "ws-a", "MEMBER");
+    join("admin", "ws-a", "ADMIN");
     join("viewer", "ws-a", "VIEWER");
     join("outsider", "ws-b", "OWNER");
     idea("idea-a", "ws-a");
@@ -379,7 +380,12 @@ describe("produção", () => {
       (error: unknown) => error instanceof ForbiddenError,
     );
 
-    await deleteProject("member", "ws-a", created.id, workspaces, projectRepo);
+    await assert.rejects(
+      () =>
+        deleteProject("member", "ws-a", created.id, workspaces, projectRepo),
+      ForbiddenError,
+    );
+    await deleteProject("admin", "ws-a", created.id, workspaces, projectRepo);
     const remaining = await listProjects(
       "member",
       "ws-a",

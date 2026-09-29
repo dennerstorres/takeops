@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SEED-002 — Projeto demo completo
+HARDEN-001 — Auditoria de autorização
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-HARDEN-001 — Auditoria de autorização
+HARDEN-002 — Testes cross-workspace
 ```
 
 ## Estado dos módulos

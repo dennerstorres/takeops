@@ -1554,7 +1554,7 @@ Incluir:
 
 ## HARDEN-001 — Auditoria de autorização
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** todos os módulos P0
 

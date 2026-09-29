@@ -4296,3 +4296,38 @@ Não há ferramenta de navegador nesta sessão. A checagem foi por HTTP no `next
 
 PROJECT-006 filtra a lista de produções. A visão geral já lê o projeto isolado pelo workspace.
 
+---
+
+## 2026-09-29 — HARDEN-001 — Auditoria de autorização
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Revisadas todas as funções exportadas dos serviços chamadas pelas 23 actions. Todas passam por sessão → membership → consulta filtrada por `workspaceId` (direto ou por `*Scope`). Único route handler é o do Auth.js. Três furos de papel corrigidos (ADR-035).
+
+### Implementação
+
+- `project.ts`: `deleteProject` exige OWNER/ADMIN; `changeVideoProjectStatus` recusa MEMBER indo para APPROVED.
+- `participant.ts`: adicionar/remover APPROVER exige OWNER/ADMIN.
+
+### Arquivos principais
+
+- `src/server/project.ts`, `src/server/participant.ts` e testes `project.test.ts`, `project-status.test.ts`, `participant.test.ts`
+
+### Testes executados
+
+```text
+npm test (DATABASE_URL do prisma dev takeops)
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: 132 de 135. As 3 falhas são de `take.integration.test.ts` (registro simultâneo) e acontecem igual sem esta mudança: PGlite mistura transações paralelas (ADR-031).
+
+### Pendências conhecidas
+
+- Tela ainda mostra ações que o servidor recusa a membro (ADR-035) → HARDEN-004.
+- O ambiente local estava sem `node_modules`, sem `.env` e sem o servidor `prisma dev takeops`; foram recriados `node_modules`, o servidor e as migrations. `.env` não foi recriado (tem segredo do Google).
