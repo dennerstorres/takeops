@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-RECORD-002 — Navegação entre cenas
+RECORD-003 — Takes dentro do Modo Gravação
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-RECORD-003 — Takes dentro do Modo Gravação
+RECORD-004 — Status de Scene durante gravação
 ```
 
 ## Estado dos módulos

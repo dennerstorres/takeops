@@ -918,9 +918,16 @@ Mobile-first.
 
 ## RECORD-003 — Takes dentro do Modo Gravação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** RECORD-002, TAKE-003
+
+### Critérios
+
+- [x] cada shot da cena mostra os takes e registra OK ou refazer com um toque, com observação opcional;
+- [x] marcar e tirar preferido e descartar voltam para a mesma cena;
+- [x] cena sem shot avisa que o take é por shot;
+- [x] leitor vê os takes sem botões.
 
 ---
 

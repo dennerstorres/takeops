@@ -118,6 +118,16 @@ export function TakeList({
       {canEdit ? (
         <form action={registerTakeAction} className="flex flex-wrap gap-2">
           <Hidden {...ids} />
+          <label className="w-full space-y-1 text-sm">
+            <span className="text-muted-foreground">
+              Observação do próximo take (opcional)
+            </span>
+            <input
+              name="notes"
+              maxLength={1000}
+              className="block min-h-11 w-full rounded-lg border bg-background px-3 text-base"
+            />
+          </label>
           <button
             type="submit"
             name="status"

@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — RECORD-003 — Takes dentro do Modo Gravação
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Cada shot da cena mostra os takes e registra OK/refazer, preferido, descarte e observação sem sair do Modo Gravação.
+
+### Implementação
+
+- A página reaproveita `TakeList` com `returnTo` = `.../modo?cena=N`; a ação volta para a mesma cena.
+- `back()` em `take-actions.ts` revalida só o caminho, sem `?` nem `#`.
+- `TakeList` ganhou campo opcional "Observação do próximo take" (vale também na página da cena). O serviço já aceitava `notes`.
+- Cena sem shot mostra aviso: o take pertence ao shot.
+- Leitor vê os takes sem botões.
+
+### Arquivos principais
+
+- `src/app/(record)/producoes/[id]/gravacao/[shootId]/modo/page.tsx`
+- `src/components/takes/take-list.tsx`
+- `src/server/take-actions.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Takes lidos por shot da cena atual (poucos shots), pela mesma checagem de escopo da página da cena.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — RECORD-002 — Navegação entre cenas
 
 **Status:** DONE  

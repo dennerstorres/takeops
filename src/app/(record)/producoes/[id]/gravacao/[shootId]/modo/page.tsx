@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { TakeList } from "@/components/takes/take-list";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
@@ -14,6 +15,8 @@ import { prismaShootRepository } from "@/server/shoot-prisma";
 import { listShotsByScene } from "@/server/shot";
 import { shotDisplayName, shotSummary } from "@/server/shot-labels";
 import { prismaShotRepository } from "@/server/shot-prisma";
+import { listTakes } from "@/server/take";
+import { prismaTakeRepository } from "@/server/take-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
@@ -40,7 +43,9 @@ export default async function RecordModePage({
     scenes: prismaSceneRepository,
     shots: prismaShotRepository,
     shoots: prismaShootRepository,
+    takes: prismaTakeRepository,
   };
+  const canEdit = access.workspace.membership.role !== "VIEWER";
 
   let shoot;
   let scenes;
@@ -77,6 +82,33 @@ export default async function RecordModePage({
   );
   const exit = `/producoes/${id}/gravacao`;
   const here = `/producoes/${id}/gravacao/${shoot.id}/modo`;
+
+  let takes = new Map<string, Awaited<ReturnType<typeof listTakes>>>();
+  if (view !== null) {
+    const sceneId = view.scene.id;
+    try {
+      takes = new Map(
+        await Promise.all(
+          view.shots.map(
+            async (shot) =>
+              [
+                shot.id,
+                await listTakes(
+                  session.user.id,
+                  workspaceId,
+                  { projectId: id, sceneId, shotId: shot.id },
+                  deps,
+                ),
+              ] as const,
+          ),
+        ),
+      );
+    } catch (error) {
+      if (error instanceof NotFoundError) redirect(here);
+      if (error instanceof ForbiddenError) redirect("/comecar");
+      throw error;
+    }
+  }
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col">
@@ -135,7 +167,7 @@ export default async function RecordModePage({
           ) : null}
           {view.shots.length > 0 ? (
             <section className="space-y-2">
-              <h2 className="text-sm font-medium">Shots</h2>
+              <h2 className="text-sm font-medium">Shots e takes</h2>
               <ul className="flex flex-col gap-2">
                 {view.shots.map((shot, index) => (
                   <li key={shot.id} className="rounded-xl border p-3">
@@ -149,7 +181,23 @@ export default async function RecordModePage({
                       <p className="mt-1 text-sm whitespace-pre-wrap">
                         {shot.description}
                       </p>
-                    ) : null}
+                    ) : (
+                      <p className="rounded-xl border p-3 text-sm text-muted-foreground">
+                        Esta cena ainda não tem shot. O take é registrado por
+                        shot: crie um na edição da cena.
+                      </p>
+                    )}
+                    <div className="mt-3 border-t pt-3">
+                      <TakeList
+                        projectId={id}
+                        sceneId={view.scene.id}
+                        shotId={shot.id}
+                        takes={takes.get(shot.id) ?? []}
+                        requiredTakes={shot.requiredTakes}
+                        canEdit={canEdit}
+                        returnTo={`${here}?cena=${view.position}`}
+                      />
+                    </div>
                   </li>
                 ))}
               </ul>

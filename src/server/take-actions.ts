@@ -48,7 +48,8 @@ function target(formData: FormData) {
 function back(formData: FormData, fallback: string): never {
   const returnTo = String(formData.get("returnTo") ?? "");
   const path = returnTo.startsWith("/producoes/") ? returnTo : fallback;
-  revalidatePath(path.split("#")[0]);
+  // O Modo Gravação volta com ?cena=N; a revalidação é da página, sem query.
+  revalidatePath(path.split(/[?#]/)[0]);
   redirect(path);
 }
 
