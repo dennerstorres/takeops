@@ -1,38 +1,29 @@
-# HANDOFF — 2026-09-28
+# HANDOFF — 2026-09-29
 
-Sessão encerrada por limite de contexto (regra: parar perto de 45–50%). Nada ficou pela metade.
+Sessão encerrada perto do limite de 5h. Nada ficou pela metade; cada tarefa tem commit próprio.
 
-## Feito nesta sessão (um commit por tarefa)
+## Feito nesta sessão
 
-SCENE-005, SCRIPT-002, SHOT-001..004, SHOOT-001..002, EQUIP-001..002 (+ correção de permissão da EQUIP-001), CHECK-001..004, TAKE-001..003.
+RECORD-001..005, CONT-001, ASSET-001, EDIT-001..002, VERSION-001..003, REVIEW-001..004, APPROVAL-001..004, PUB-001..004, CAL-001..003, TEMPLATE-001..005 (005 criada nesta sessão), ACTIVITY-001..002, NOTIFY-001..003, SEED-001..002.
 
-Detalhes de cada uma: `HISTORY.md`. Decisões novas: ADR-027 (Shot), ADR-028 (datas da gravação em UTC com fuso do workspace), ADR-029 (checklist recomendado sob pedido).
+Detalhes: `HISTORY.md`. Decisões novas: ADR-030 (link externo só http(s), sem credencial), ADR-031 (número de versão por contador na produção), ADR-032 (leitor não comenta revisão), ADR-033 (quem decide aprovação), ADR-034 (produção por template recebe cópias).
 
 ## Estado atual
 
-- Fase 10 — Takes e Modo Gravação. Takes prontos; Modo Gravação não começou.
-- `npm test` (93), `lint`, `typecheck` e `build` passando no último commit.
-- Git limpo em `main`.
+- Fase 20 — Hardening. Próxima: `HARDEN-001 — Auditoria de autorização`.
+- `npm test` (135), `lint`, `typecheck` e `build` passando no último commit. Git limpo em `main`.
+- `npm run db:seed` cria Acme Software + produção demo (idempotente).
 
-## Próximo passo
+## Pontos para o Hardening
 
-`RECORD-001 — Layout do Modo Gravação`, depois RECORD-002..005. Mobile-first (375/390/430px), sem hover.
-
-Peças prontas para reaproveitar no Modo Gravação:
-
-- `TakeList` (`src/components/takes/take-list.tsx`) e `take-actions.ts` aceitam `returnTo` dentro de `/producoes/`.
-- `ShootChecklist` (`src/components/shoots/shoot-checklist.tsx`) já é a lista de toque com `useOptimistic`.
-- `listShotsByScene` (`src/server/shot.ts`) traz os shots da produção numa consulta.
-- `useFormAutosave` (`src/components/feedback/form-autosave.tsx`) para notas.
+- Kanban deixa membro mover a produção para "Aprovado" sem passar pela aprovação (ADR-033).
+- "Um pedido de aprovação aberto por produção" é regra de serviço, sem índice parcial.
+- `prisma dev` (PGlite) mistura transações paralelas: testes simultâneos (take, versão) só valem de verdade em Postgres real (`PG_CONCURRENCY=1`, ADR-031).
+- Aviso de "gravação próxima" (spec §40) precisa de rotina agendada; não existe.
+- Nenhuma tela foi clicada (login só Google): conferir no aparelho em 375/390/430px, principalmente Modo Gravação e calendário.
 
 ## Ambiente
 
-- Banco local: `npx prisma dev start takeops` antes dos testes de integração (Docker não sobe nesta máquina).
-- `prisma migrate dev` trava sem terminal interativo. Use `migrate dev --create-only`, renomeie a pasta para o próximo carimbo da sequência (`20260928330000_...`) e aplique com `prisma migrate deploy`.
-- Rode `prettier --write` só nos arquivos alterados.
-- Não houve navegador logado (login só Google). Nenhuma tela foi clicada; conferir no aparelho na HARDEN-005.
-
-## Pendências conhecidas
-
-- DASH-001 (Fase 2) continua TODO.
-- STATUS marca Workspace como IN_PROGRESS, mas as tarefas dele estão DONE.
+- Banco local: `npx prisma dev start takeops`.
+- Migration: `migrate dev --create-only`, renomear para o próximo carimbo (`20260928470000_...`), `migrate deploy`. Não rode `prisma format` (reformata o schema inteiro).
+- Rode `prettier --write` só nos arquivos da tarefa.
