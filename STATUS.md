@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-VERSION-003 — Histórico de versões
+REVIEW-001 — ReviewComment
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-REVIEW-001 — ReviewComment
+REVIEW-002 — Parser de timestamp
 ```
 
 ## Estado dos módulos
@@ -50,7 +50,7 @@ REVIEW-001 — ReviewComment
 | Takes | DONE |
 | Assets | DONE |
 | Edição | DONE |
-| Revisão | NOT_STARTED |
+| Revisão | IN_PROGRESS |
 | Aprovação | NOT_STARTED |
 | Publicação | NOT_STARTED |
 | Calendário | NOT_STARTED |

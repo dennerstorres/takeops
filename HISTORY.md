@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — REVIEW-001 — ReviewComment
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Comentários de revisão por versão (spec §30): autor, tempo no vídeo em segundos, texto, resolvido, quem resolveu e quando.
+
+### Implementação
+
+- Modelo `ReviewComment`, índice `(editVersionId, resolved)`.
+- `createReviewComment` (dono, admin, membro — ADR-032) e `listReviewComments` (todos), sempre pela versão visível na produção do workspace (`getEditVersion`).
+- Tempo em segundos inteiros de 0 a 23:59:59; sem tempo é comentário geral. Lista ordena por tempo, gerais no fim.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928380000_review_comment/`
+- `src/server/review.ts`, `review-repository.ts`, `review-prisma.ts`, `review.integration.test.ts`
+
+### Decisões tomadas
+
+- ADR-032 — leitor não comenta revisão no MVP.
+
+### Banco / migrations
+
+- `20260928380000_review_comment`: tabela `ReviewComment`, FK cascade na versão, SET NULL em autor e em quem resolveu. Rollback conceitual: dropar a tabela.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Parser MM:SS na REVIEW-002; resolver na REVIEW-003.
+
+---
+
 ## 2026-09-28 — VERSION-003 — Histórico de versões
 
 **Status:** DONE  

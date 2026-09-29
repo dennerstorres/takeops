@@ -29,6 +29,8 @@ model User {
   assetsCreated   Asset[]
   editingAssigned EditingInfo[]
   editVersions    EditVersion[]
+  reviewComments  ReviewComment[] @relation("ReviewCommentAuthor")
+  reviewResolved  ReviewComment[] @relation("ReviewCommentResolver")
 }
 
 enum WorkspaceRole {
@@ -596,6 +598,27 @@ model EditVersion {
   createdAt      DateTime     @default(now())
   videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
   createdBy      User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  comments       ReviewComment[]
 
   @@unique([videoProjectId, versionNumber])
+}
+
+// Comentário de revisão pertence a uma versão. O tempo no vídeo fica em
+// segundos; a tela mostra MM:SS.
+model ReviewComment {
+  id               String      @id @default(uuid())
+  editVersionId    String
+  authorId         String?
+  timestampSeconds Int?
+  text             String
+  resolved         Boolean     @default(false)
+  resolvedById     String?
+  resolvedAt       DateTime?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  editVersion      EditVersion @relation(fields: [editVersionId], references: [id], onDelete: Cascade)
+  author           User?       @relation("ReviewCommentAuthor", fields: [authorId], references: [id], onDelete: SetNull)
+  resolvedBy       User?       @relation("ReviewCommentResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@index([editVersionId, resolved])
 }

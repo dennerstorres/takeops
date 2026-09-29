@@ -1084,9 +1084,16 @@ Evitar duplicidade em criação concorrente.
 
 ## REVIEW-001 — ReviewComment
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** VERSION-001
+
+### Critérios
+
+- [x] comentário pertence à versão, com autor, tempo em segundos, texto e estado resolvido;
+- [x] lista por tempo, comentários gerais no fim;
+- [x] dono, admin e membro comentam; leitor só lê (ADR-032);
+- [x] versão de outra produção ou workspace não é alcançada.
 
 ---
 

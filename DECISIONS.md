@@ -626,6 +626,25 @@ Criar versão atualiza `VideoProject.updatedAt` (nada lê esse campo hoje). Núm
 
 ---
 
+# ADR-032 — Leitor não comenta revisão no MVP
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+A spec (§7, VIEWER) diz "comentar, se permitido pela configuração". Não existe essa configuração no workspace.
+
+## Decisão
+
+Comentário de revisão é de dono, admin e membro. Leitor vê versões e comentários, mas não comenta nem resolve.
+
+## Consequências
+
+Cliente externo que só revisa entra como membro. Quando a configuração existir, a regra muda em `review.ts` (`reviewers`) e ganha nova ADR.
+
+---
+
 # Template para novas decisões
 
 ```md
