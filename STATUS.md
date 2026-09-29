@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-CAL-001 — Modelo de eventos derivados
+CAL-002 — Visualização mensal
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-CAL-002 — Visualização mensal
+CAL-003 — Visualização semanal
 ```
 
 ## Estado dos módulos

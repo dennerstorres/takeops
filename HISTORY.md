@@ -1315,6 +1315,47 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — CAL-002 — Visualização mensal
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+`/calendario` mostra o mês com gravações, publicações planejadas e publicações agendadas ou feitas, no fuso do workspace.
+
+### Implementação
+
+- `src/lib/calendar-grid.ts`: grade de 6 semanas começando no domingo, em dias de parede; mês da URL (`?mes=AAAA-MM`) validado; anterior/próximo.
+- Limites da grade viram instantes UTC com `zonedLocalToUtc` e vão para `listCalendarEvents` (CAL-001).
+- Tela: grade de 7 colunas a partir de `md`; no celular, lista por dia só com dias que têm evento (nada depende de hover). Cor por tipo com legenda, hora no fuso do workspace, cancelado riscado, hoje destacado. Cada evento leva à aba da produção.
+
+### Arquivos principais
+
+- `src/app/(app)/calendario/page.tsx`
+- `src/lib/calendar-grid.ts`, `src/lib/calendar-grid.test.ts`
+
+### Decisões tomadas
+
+- Sem ADR. Semana começa no domingo (calendário brasileiro).
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — CAL-001 — Modelo de eventos derivados
 
 **Status:** DONE  

@@ -1312,9 +1312,15 @@ Registrar decisão se escolher persistência própria.
 
 ## CAL-002 — Visualização mensal
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** CAL-001
+
+### Critérios
+
+- [x] mês com gravações, publicações planejadas e agendadas/feitas, no fuso do workspace;
+- [x] anterior, hoje e próximo pela URL; mês inválido cai no atual;
+- [x] grade a partir de md e lista por dia no celular, sem hover.
 
 ---
 
