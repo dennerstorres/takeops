@@ -1135,9 +1135,15 @@ Avaliar HH:MM:SS.
 
 ## REVIEW-004 — Tela de revisão
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** REVIEW-002, REVIEW-003, VERSION-003
+
+### Critérios
+
+- [x] a aba Revisão mostra a versão atual ou escolhida, link do vídeo, comentários abertos e resolvidos, autor, tempo e histórico;
+- [x] comentar com tempo MM:SS e resolver/reabrir sem sair da tela;
+- [x] leitor vê sem formulário nem botões.
 
 ---
 

@@ -1315,6 +1315,51 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — REVIEW-004 — Tela de revisão
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+A aba Revisão mostra a versão (atual ou escolhida), link para o vídeo, comentários abertos e resolvidos com autor e tempo, e o histórico de versões.
+
+### Implementação
+
+- `/producoes/[id]/revisao?versao=<id>`; sem `versao` (ou com id de outra produção) abre a mais nova. A aba "Revisão" em `ProductionTabs` virou link.
+- Comentário com tempo opcional ("00:18") e texto; erro de campo aparece no formulário. Exibe "00:18 — texto" como na spec.
+- Abertos em lista; resolvidos recolhidos em `<details>`. Botão "Resolver"/"Reabrir" por comentário (dono, admin, membro).
+- Histórico de versões troca a versão pela URL. Datas no fuso do workspace.
+- Leitor vê tudo sem formulário nem botões (ADR-032).
+
+### Arquivos principais
+
+- `src/app/(app)/producoes/[id]/revisao/page.tsx`
+- `src/components/review/review-comment-form.tsx`
+- `src/server/review-actions.ts`
+- `src/components/projects/production-tabs.tsx`
+
+### Decisões tomadas
+
+- Sem ADR. Vídeo abre no serviço externo em nova aba; a spec dispensa player sincronizado no MVP.
+
+### Banco / migrations
+
+- Nenhuma.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Regras em `review.integration.test.ts`. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — REVIEW-003 — Resolver comentário
 
 **Status:** DONE  

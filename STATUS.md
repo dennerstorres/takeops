@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 13 — Revisão
+Fase 14 — Aprovação
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-REVIEW-003 — Resolver comentário
+REVIEW-004 — Tela de revisão
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-REVIEW-004 — Tela de revisão
+APPROVAL-001 — Modelo e service
 ```
 
 ## Estado dos módulos
@@ -50,7 +50,7 @@ REVIEW-004 — Tela de revisão
 | Takes | DONE |
 | Assets | DONE |
 | Edição | DONE |
-| Revisão | IN_PROGRESS |
+| Revisão | DONE |
 | Aprovação | NOT_STARTED |
 | Publicação | NOT_STARTED |
 | Calendário | NOT_STARTED |

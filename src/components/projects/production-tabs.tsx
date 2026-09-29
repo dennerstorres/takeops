@@ -7,6 +7,7 @@ const links: Record<string, (projectId: string) => string> = {
   Cenas: (projectId) => `/producoes/${projectId}/cenas`,
   Gravação: (projectId) => `/producoes/${projectId}/gravacao`,
   Edição: (projectId) => `/producoes/${projectId}/edicao`,
+  Revisão: (projectId) => `/producoes/${projectId}/revisao`,
 };
 
 export function ProductionTabs({
@@ -14,7 +15,8 @@ export function ProductionTabs({
   active = "Visão Geral",
 }: {
   projectId: string;
-  active?: "Visão Geral" | "Roteiro" | "Cenas" | "Gravação" | "Edição";
+  active?:
+    "Visão Geral" | "Roteiro" | "Cenas" | "Gravação" | "Edição" | "Revisão";
 }) {
   return (
     <nav aria-label="Seções da produção" className="flex gap-1 overflow-x-auto">
