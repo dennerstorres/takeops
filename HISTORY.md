@@ -1315,6 +1315,50 @@ PROJECT-005 mostra a produção com os participantes que esta tarefa gravou.
 
 ---
 
+## 2026-09-28 — ASSET-001 — Referências externas
+
+**Status:** DONE  
+**Agente:** Claude
+
+### Resumo
+
+Cada produção tem "Arquivos e referências": links externos com tipo, título e descrição. A mídia continua fora (ADR-006).
+
+### Implementação
+
+- Modelo `Asset` e enum `AssetType` da spec §27 (+ `updatedAt`). Excluir apaga só o link.
+- `asset.ts`: listar (todos), criar/editar/excluir (dono, admin, membro), sempre pela produção visível no workspace.
+- `externalUrl`: só http(s) com host, sem usuário/senha no link (ADR-030).
+- Página `/producoes/[id]/arquivos`, aberta pelo botão na seção Links da Visão Geral. Link abre em nova aba com `noopener noreferrer`. Excluir pede confirmação.
+
+### Arquivos principais
+
+- `prisma/schema.prisma`, `prisma/migrations/20260928340000_asset/`
+- `src/server/asset.ts`, `asset-labels.ts`, `asset-repository.ts`, `asset-prisma.ts`, `asset-actions.ts`, `asset.integration.test.ts`
+- `src/components/assets/asset-form.tsx`, `delete-asset-button.tsx`
+- `src/app/(app)/producoes/[id]/arquivos/page.tsx`, `src/app/(app)/producoes/[id]/page.tsx`
+
+### Decisões tomadas
+
+- ADR-030 — link externo só em http(s), sem credencial.
+
+### Banco / migrations
+
+- `20260928340000_asset`: enum `AssetType`, tabela `Asset`, índices `(videoProjectId, type)` e `(videoProjectId, createdAt)`, FK cascade na produção e SET NULL no autor. Rollback conceitual: dropar tabela e enum.
+
+### Testes executados
+
+```text
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
+
+Resultado: PASS. Sem navegador logado; a tela não foi clicada.
+
+---
+
 ## 2026-09-28 — CONT-001 — Notas de continuidade
 
 **Status:** DONE  

@@ -588,6 +588,25 @@ Workspace novo começa sem checklist. A oferta some quando já há um checklist 
 
 ---
 
+# ADR-030 — Link externo só em http(s), sem credencial
+
+**Status:** Accepted  
+**Data:** 2026-09-28
+
+## Contexto
+
+Asset (e depois EditVersion) guarda links para Drive, Dropbox, NAS, Frame.io. O link vira `<a href>` para toda a equipe do workspace.
+
+## Decisão
+
+`externalUrl` (`src/server/asset.ts`) aceita só `http:`/`https:` com host e recusa usuário/senha embutidos no link. `file://`, `smb://`, `ftp://` ficam de fora: NAS entra pelo link web de compartilhamento. O link abre em nova aba com `noopener noreferrer`.
+
+## Consequências
+
+Bloqueia `javascript:`/`data:` e evita senha exposta a quem só lê. Caminho de rede local (`\nas\pasta`) precisa virar link web ou ir na descrição.
+
+---
+
 # Template para novas decisões
 
 ```md

@@ -988,11 +988,18 @@ Exemplo:
 
 ## ASSET-001 — Referências externas
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** PROJECT-002
 
 Validar URLs.
+
+### Critérios
+
+- [x] a produção guarda links externos com tipo da spec, título e descrição;
+- [x] link só http(s), sem usuário e senha embutidos; javascript:, data: e file: são recusados;
+- [x] membro cria, edita e exclui (com confirmação); leitor só vê;
+- [x] outra produção ou outro workspace não alcança o link.
 
 ---
 

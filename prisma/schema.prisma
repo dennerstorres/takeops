@@ -26,6 +26,7 @@ model User {
   completedChecklistItems ShootChecklistItem[]
   recordedTakes Take[]
   continuityNotes ContinuityNote[]
+  assetsCreated   Asset[]
 }
 
 enum WorkspaceRole {
@@ -179,6 +180,7 @@ model VideoProject {
   scenes                    Scene[]
   shoots                    Shoot[]
   continuityNotes           ContinuityNote[]
+  assets                    Asset[]
 
   @@unique([workspaceId, slug])
   @@index([workspaceId, status])
@@ -518,4 +520,35 @@ model ContinuityNote {
   createdBy      User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   @@index([videoProjectId, category])
+}
+
+enum AssetType {
+  RAW_FOOTAGE
+  SCREEN_RECORDING
+  REFERENCE
+  AUDIO
+  IMAGE
+  PROJECT_FILE
+  FINAL_EXPORT
+  FOLDER
+  OTHER
+}
+
+// Mídia pesada fica fora (ADR-006): o asset é só a referência para onde ela
+// está (Drive, Dropbox, NAS, Frame.io...).
+model Asset {
+  id             String       @id @default(uuid())
+  videoProjectId String
+  type           AssetType
+  title          String
+  url            String
+  description    String?
+  createdById    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  videoProject   VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  createdBy      User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([videoProjectId, type])
+  @@index([videoProjectId, createdAt])
 }

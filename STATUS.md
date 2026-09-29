@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 11 — Continuidade e Assets
+Fase 12 — Edição
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-CONT-001 — Notas de continuidade
+ASSET-001 — Referências externas
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-ASSET-001 — Referências externas
+EDIT-001 — EditingInfo
 ```
 
 ## Estado dos módulos
@@ -48,7 +48,7 @@ ASSET-001 — Referências externas
 | Checklist | DONE |
 | Modo Gravação | DONE |
 | Takes | DONE |
-| Assets | NOT_STARTED |
+| Assets | DONE |
 | Edição | NOT_STARTED |
 | Revisão | NOT_STARTED |
 | Aprovação | NOT_STARTED |

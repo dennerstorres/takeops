@@ -123,9 +123,13 @@ export default async function ProductionPage({
       </dl>
       <section className="flex flex-col gap-2">
         <h2 className="text-base font-medium">Links</h2>
-        {overview.links.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Nenhum link.</p>
-        ) : (
+        <Link
+          href={`/producoes/${project.id}/arquivos`}
+          className="inline-flex min-h-11 w-fit items-center rounded-lg border px-3 text-sm"
+        >
+          Arquivos e referências
+        </Link>
+        {overview.links.length === 0 ? null : (
           <ul className="flex flex-col gap-2">
             {overview.links.map((link) => (
               <li key={link.href}>
