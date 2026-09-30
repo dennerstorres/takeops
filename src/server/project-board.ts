@@ -40,6 +40,19 @@ export function projectAlerts(
   return [];
 }
 
+// Ponta da tira no quadro (ADR-045): pendência quando há alerta; parada
+// quando a produção está arquivada ou pronta para gravar sem data marcada.
+export function projectTip(
+  status: VideoProjectStatus,
+  alerts: readonly string[],
+  plannedShootDate: Date | null,
+): "ok" | "pending" | "idle" {
+  if (alerts.length > 0) return "pending";
+  if (status === "ARCHIVED") return "idle";
+  if (status === "READY_TO_RECORD" && !plannedShootDate) return "idle";
+  return "ok";
+}
+
 function personLabel(
   t: Translate,
   person: { name: string | null; email: string | null } | undefined,
@@ -90,6 +103,11 @@ export function buildProjectBoard(
         for (const participant of byProject.get(project.id) ?? []) {
           add(participant.userId);
         }
+        const alerts = projectAlerts(
+          t,
+          project.status,
+          stats.readyScenes?.[project.id] ?? 0,
+        );
         return {
           id: project.id,
           title: project.title,
@@ -97,11 +115,8 @@ export function buildProjectBoard(
           people: names,
           shootDate: calendarDate(project.plannedShootDate),
           priority: priorityLabel(t, project.priority),
-          alerts: projectAlerts(
-            t,
-            project.status,
-            stats.readyScenes?.[project.id] ?? 0,
-          ),
+          alerts,
+          tip: projectTip(project.status, alerts, project.plannedShootDate),
           checklist: stats.checklists?.[project.id] ?? null,
         };
       }),

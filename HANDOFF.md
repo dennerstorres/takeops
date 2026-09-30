@@ -22,7 +22,7 @@ HARDEN-006, 008, 009; OSS-003, 004, 006, 007; MVP-001, 002, 003; TEAM-004; WORKS
 
 ## Atualização (sessão 4)
 
-UI-010 feita (ver HISTORY.md). Próxima: UI-011. Contrato de direção está no `src/app/layout.tsx`.
+UI-010 e UI-011 feitas (ver HISTORY.md). Próxima: UI-012. Contrato de direção está no `src/app/layout.tsx`.
 
 ## Próximos passos exatos
 

@@ -216,13 +216,25 @@
       "code title title title tip"
       "code owner meta date tip";
   }
+  [data-act] .strip-grid {
+    grid-template-columns: 2.75rem minmax(0, 1fr) auto auto auto 0.5rem;
+    grid-template-areas:
+      "code title title title act tip"
+      "code owner meta date act tip";
+  }
   @media (width >= 40rem) {
     .strip-grid {
       min-height: var(--strip-h);
       grid-template-columns:
-        2.75rem 2.5rem minmax(0, 1fr)
+        2.75rem 4rem minmax(0, 1fr)
         9rem 6rem 4.5rem 0.5rem;
       grid-template-areas: "code num title owner date meta tip";
+    }
+    [data-act] .strip-grid {
+      grid-template-columns:
+        2.75rem 4rem minmax(0, 1fr)
+        9rem 6rem 4.5rem 8.5rem 0.5rem;
+      grid-template-areas: "code num title owner date meta act tip";
     }
   }
 }

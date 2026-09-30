@@ -2018,7 +2018,7 @@ Novos tokens em `globals.css` (cores das tiras por etapa, moldura, divisória, t
 
 ## UI-011 — Redesign: produções (quadro e lista)
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-010
 

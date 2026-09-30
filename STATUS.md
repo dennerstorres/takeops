@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-UI-010 — Redesign: tokens e shell do Quadro de tiras
+UI-011 — Redesign: produções (quadro e lista)
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-UI-011 — Redesign: produções (quadro e lista), com `Strip` de `src/components/ui/strip.tsx`
+UI-012 — Redesign: dashboard (tiras com `StripBoard`/`StripGroup`/`Strip`)
 ```
 
 ## Estado dos módulos

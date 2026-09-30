@@ -522,7 +522,6 @@
     "one": "Produção",
     "create": "Nova produção",
     "edit": "Editar produção",
-    "ofWorkspace": "Produções de {name}.",
     "filters": "Filtros das produções",
     "search": "Busca",
     "all": "Todos",
@@ -575,6 +574,14 @@
     "checklistProgress": "Checklist {done}/{total}",
     "alerts": {
       "noReadyScenes": "Não há cenas prontas."
+    },
+    "board": {
+      "people": "Equipe",
+      "shoot": "Gravação",
+      "checklist": "Checklist",
+      "stage": "Etapa",
+      "searchPlaceholder": "Buscar por título",
+      "moreFilters": "Filtros"
     }
   },
   "scenes": {

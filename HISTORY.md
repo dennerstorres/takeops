@@ -5070,3 +5070,12 @@ Testes: `check:contrast` passa (inclui os pares novos), lint ok, `strip-phase` e
 Pendências: telas ainda usam o layout antigo por dentro (cards arredondados) até as UI-011..014; `DESIGN.md` reescrito na UI-015.
 Observações: `Strip` ainda sem uso em tela; a primeira é `/producoes` (UI-011).
 
+## 2026-09-30 — UI-011 — Redesign: produções (quadro e lista)
+
+Status: DONE
+Arquivos: `src/app/(app)/producoes/page.tsx`, `src/components/projects/production-board.tsx`, `src/components/ui/strip.tsx`, `src/app/globals.css`, `src/server/project-board.ts` (+ teste), `messages/*.json`.
+Resumo: `/producoes` deixou de ser kanban de cards e virou um quadro de tiras único, agrupado pelas onze etapas com divisórias pretas (contagem por etapa; grupos vazios somem quando há filtro). Colunas fixas: fase, prioridade, título (+ alerta), equipe, gravação, checklist, etapa. Barra do quadro em alumínio: título com total, busca sempre à vista, painel `details` com os demais filtros e contador de filtros ligados, Filtrar/Limpar e Nova produção. Mover etapa: arrastar a tira até outra divisória (com contorno no grupo alvo) ou pelo seletor da própria tira; no celular o seletor vira botão-ícone de 44px para não tirar espaço do título.
+Decisões: `Strip` ganhou `action` (controle acima do link esticado, sem aninhar em `<a>`) e `flag` (pendência que não é cortada); `StripDivider` virou `StripGroup` (`<li>` com `<h2>` e lista, recebe arraste). Ponta da tira por `projectTip`: pendência com alerta; parada se arquivada ou pronta para gravar sem data; senão em dia. Chave `projects.ofWorkspace` removida (sem uso).
+Testes: `project-board` (novo caso de `projectTip`), lint, `check:contrast`, detector do impeccable sem achados; `npm test` 119/120 sem banco local (só `seed.integration`). Prévia estática (render do servidor com dados falsos) em claro, escuro e 375px.
+Pendências: miniatura da produção saiu do quadro (continua na página da produção).
+

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { StripPhase, StripTip } from "@/components/ui/strip-phase";
 
@@ -30,6 +30,8 @@ export type StripColumns = {
   owner: string;
   date: string;
   meta: string;
+  // Presente quando as tiras têm controle próprio (coluna `act`).
+  action?: string;
 };
 
 // Moldura do quadro. O cabeçalho impresso usa a mesma grade das tiras,
@@ -48,6 +50,7 @@ function StripBoard({
   return (
     <div
       data-slot="strip-board"
+      data-act={columns?.action !== undefined ? "" : undefined}
       className={cn("rounded-md bg-frame p-1 text-strip-ink", className)}
     >
       {columns ? (
@@ -61,6 +64,9 @@ function StripBoard({
           <span className="[grid-area:owner]">{columns.owner}</span>
           <span className="[grid-area:date]">{columns.date}</span>
           <span className="[grid-area:meta]">{columns.meta}</span>
+          {columns.action !== undefined ? (
+            <span className="[grid-area:act]">{columns.action}</span>
+          ) : null}
         </div>
       ) : null}
       <ul aria-label={label} className="flex flex-col gap-px">
@@ -70,29 +76,41 @@ function StripBoard({
   );
 }
 
-// Tira preta entre grupos, como a divisória de fim de dia no stripboard.
-function StripDivider({
-  children,
+// Grupo do quadro: a tira preta de cima é a divisória, como a de fim de
+// dia no stripboard, e recebe arraste quando a tela permite mover tiras.
+function StripGroup({
+  label,
   count,
-}: {
-  children: ReactNode;
+  children,
+  className,
+  ...props
+}: Omit<ComponentProps<"li">, "children"> & {
+  label: string;
   count?: number;
+  children?: ReactNode;
 }) {
   return (
     <li
-      data-slot="strip-divider"
-      className="flex h-6 items-center justify-between gap-3 rounded-[2px] bg-divider px-2 font-condensed text-xs font-semibold tracking-wider text-divider-foreground uppercase"
+      data-slot="strip-group"
+      className={cn("flex flex-col gap-px", className)}
+      {...props}
     >
-      <span className="truncate">{children}</span>
-      {count !== undefined ? (
-        <span className="tabular-nums">{count}</span>
-      ) : null}
+      <h2 className="flex h-6 items-center justify-between gap-3 rounded-[2px] bg-divider px-2 font-condensed text-xs font-semibold tracking-wider text-divider-foreground uppercase">
+        <span className="truncate">{label}</span>
+        {count !== undefined ? (
+          <span className="tabular-nums">{count}</span>
+        ) : null}
+      </h2>
+      <ul aria-label={label} className="flex flex-col gap-px">
+        {children}
+      </ul>
     </li>
   );
 }
 
 // Uma tira: etiqueta fixa (fase, nº, título, dono, data, meta) e ponta de
-// estado. Sem `href` é só leitura.
+// estado. O link cobre a tira toda; `action` fica por cima dele, então um
+// controle (como mudar a etapa) não quebra a grade nem aninha em <a>.
 function Strip({
   phase,
   stageLabel,
@@ -103,6 +121,9 @@ function Strip({
   meta,
   tip,
   href,
+  linkProps,
+  action,
+  flag,
 }: {
   phase: StripPhase;
   stageLabel: string;
@@ -113,13 +134,36 @@ function Strip({
   meta?: ReactNode;
   tip: StripTip;
   href?: string;
+  linkProps?: Omit<ComponentProps<typeof Link>, "href" | "className">;
+  action?: ReactNode;
+  // Pendência ao lado do título; nunca é cortada, o título encolhe antes.
+  flag?: ReactNode;
 }) {
   const t = useTranslations("strip");
-  const body = (
+  const titleClass =
+    "flex min-w-0 items-center gap-2 text-sm font-medium [grid-area:title]";
+  const titleBody = (
     <>
+      <span className="min-w-0 truncate">{title}</span>
+      {flag ? <span className="shrink-0">{flag}</span> : null}
+    </>
+  );
+
+  return (
+    <li
+      data-slot="strip"
+      data-phase={phase}
+      data-tip={tip}
+      className={cn(
+        "strip-grid relative rounded-[2px] py-1 pr-1.5 pl-2 sm:py-0",
+        phaseClass[phase],
+        href &&
+          "transition-[filter] duration-150 hover:brightness-[0.96] dark:hover:brightness-125",
+      )}
+    >
       <span
         title={stageLabel}
-        className="self-stretch border-r border-strip-ink/15 font-condensed text-xs flex items-center font-semibold tracking-wider uppercase [grid-area:code]"
+        className="flex items-center self-stretch border-r border-strip-ink/15 font-condensed text-xs font-semibold tracking-wider uppercase [grid-area:code]"
       >
         <span aria-hidden="true">{t(`phase.${phase}`)}</span>
         <span className="sr-only">{stageLabel}</span>
@@ -127,12 +171,26 @@ function Strip({
       <span className={cn(cellMeta, "hidden [grid-area:num] sm:block")}>
         {number}
       </span>
-      <span className="min-w-0 truncate text-sm font-medium [grid-area:title]">
-        {title}
-      </span>
+      {href ? (
+        <Link
+          href={href}
+          {...linkProps}
+          className={cn(
+            titleClass,
+            "outline-none after:absolute after:inset-0 after:rounded-[2px] focus-visible:after:outline-2 focus-visible:after:-outline-offset-2 focus-visible:after:outline-ring",
+          )}
+        >
+          {titleBody}
+        </Link>
+      ) : (
+        <span className={titleClass}>{titleBody}</span>
+      )}
       <span className={cn(cellMeta, "[grid-area:owner]")}>{owner}</span>
       <span className={cn(cellMeta, "[grid-area:date]")}>{date}</span>
       <span className={cn(cellMeta, "[grid-area:meta]")}>{meta}</span>
+      {action ? (
+        <span className="relative z-10 [grid-area:act]">{action}</span>
+      ) : null}
       <span
         className={cn(
           "h-4 w-2 justify-self-end [grid-area:tip]",
@@ -141,30 +199,8 @@ function Strip({
       >
         <span className="sr-only">{t(`tip.${tip}`)}</span>
       </span>
-    </>
-  );
-  const rowClass = cn(
-    "strip-grid rounded-[2px] py-1 pr-1.5 pl-2 sm:py-0",
-    phaseClass[phase],
-  );
-
-  return (
-    <li data-slot="strip" data-phase={phase} data-tip={tip}>
-      {href ? (
-        <Link
-          href={href}
-          className={cn(
-            rowClass,
-            "transition-[filter] duration-150 hover:brightness-[0.96] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring dark:hover:brightness-125",
-          )}
-        >
-          {body}
-        </Link>
-      ) : (
-        <div className={rowClass}>{body}</div>
-      )}
     </li>
   );
 }
 
-export { Strip, StripBoard, StripDivider };
+export { Strip, StripBoard, StripGroup };

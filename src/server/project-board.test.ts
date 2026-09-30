@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { buildProjectBoard, boardColumns } from "./project-board.ts";
+import {
+  buildProjectBoard,
+  boardColumns,
+  projectTip,
+} from "./project-board.ts";
 import type { ProjectRecord } from "./project-repository.ts";
 import { testTranslator } from "../i18n/test-translator.ts";
 
@@ -116,6 +120,7 @@ describe("quadro de produções", () => {
         shootDate: "02/10/2026",
         priority: "Alta",
         alerts: [],
+        tip: "ok",
         checklist: null,
       },
     ]);
@@ -191,5 +196,14 @@ describe("quadro de produções", () => {
       idea.find((column) => column.status === "IDEA")?.cards[0]?.alerts,
       [],
     );
+  });
+
+  it("marca a ponta da tira por alerta, arquivo e falta de data", () => {
+    const date = new Date("2026-10-02T00:00:00Z");
+    assert.equal(projectTip("SCRIPTING", [], null), "ok");
+    assert.equal(projectTip("READY_TO_RECORD", ["x"], date), "pending");
+    assert.equal(projectTip("READY_TO_RECORD", [], null), "idle");
+    assert.equal(projectTip("READY_TO_RECORD", [], date), "ok");
+    assert.equal(projectTip("ARCHIVED", [], date), "idle");
   });
 });
