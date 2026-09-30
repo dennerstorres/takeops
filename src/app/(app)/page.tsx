@@ -13,9 +13,7 @@ import { auth } from "@/server/auth";
 import { prismaCalendarRepository } from "@/server/calendar-prisma";
 import { loadDashboard, upcomingDays } from "@/server/dashboard";
 import { prismaDashboardRepository } from "@/server/dashboard-prisma";
-import { prismaIdeaRepository } from "@/server/idea-prisma";
 import { prismaParticipantRepository } from "@/server/participant-prisma";
-import { prismaProjectRepository } from "@/server/project-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
@@ -130,8 +128,6 @@ export default async function Home() {
     team,
     {
       workspaces: prismaWorkspaceRepository,
-      projects: prismaProjectRepository,
-      ideas: prismaIdeaRepository,
       participants: prismaParticipantRepository,
       calendar: prismaCalendarRepository,
       dashboard: prismaDashboardRepository,

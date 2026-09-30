@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 21 — UI/UX (UI-008 feita)
+Fase 20 — Hardening (HARDEN-006 feita)
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-UI-008 — QA visual e acessibilidade
+HARDEN-006 — Performance básica
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-HARDEN-006 — Performance básica
+HARDEN-008 — Um pedido de aprovação aberto por produção no banco
 ```
 
 ## Estado dos módulos

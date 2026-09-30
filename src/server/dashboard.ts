@@ -1,8 +1,8 @@
 import type { Translate } from "../i18n/translate.ts";
 import type { CalendarEvent } from "./calendar.ts";
 import { listCalendarEvents, type CalendarDeps } from "./calendar.ts";
-import type { IdeaRecord, IdeaRepository } from "./idea-repository.ts";
-import { listIdeas } from "./idea.ts";
+import type { IdeaStatus } from "./idea-labels.ts";
+import type { IdeaRecord } from "./idea-repository.ts";
 import { buildProjectBoard } from "./project-board.ts";
 import {
   projectStatusLabel,
@@ -12,25 +12,40 @@ import type {
   ParticipantRecord,
   ParticipantRepository,
 } from "./participant-repository.ts";
-import { listProjects } from "./project.ts";
-import type { ProjectRecord, ProjectRepository } from "./project-repository.ts";
+import type { ProjectRecord } from "./project-repository.ts";
 import { requireMembership } from "./workspace.ts";
 import type { WorkspaceRepository } from "./workspace-repository.ts";
 
-// Aprovação pendente é por produção; o dashboard só precisa saber quais.
+// O dashboard lê só o que mostra: produções em andamento (ou com aprovação
+// pendente), contagem por status e as ideias abertas mais recentes. Assim o
+// custo não cresce com o histórico de publicadas e arquivadas (HARDEN-006).
 export type DashboardRepository = {
   pendingApprovalProjectIds(workspaceId: string): Promise<string[]>;
+  activeProjects(workspaceId: string): Promise<ProjectRecord[]>;
+  projectStatusCounts(
+    workspaceId: string,
+  ): Promise<Partial<Record<VideoProjectStatus, number>>>;
+  openIdeas(
+    workspaceId: string,
+    limit: number,
+  ): Promise<{ total: number; recent: IdeaRecord[] }>;
 };
 
 export type DashboardDeps = CalendarDeps & {
   workspaces: WorkspaceRepository;
-  projects: ProjectRepository;
-  ideas: IdeaRepository;
   participants: ParticipantRepository;
   dashboard: DashboardRepository;
 };
 
-const idle: readonly VideoProjectStatus[] = ["IDEA", "PUBLISHED", "ARCHIVED"];
+export const idleStatuses: readonly VideoProjectStatus[] = [
+  "IDEA",
+  "PUBLISHED",
+  "ARCHIVED",
+];
+export const openIdeaExcluded: readonly IdeaStatus[] = [
+  "CONVERTED",
+  "DISCARDED",
+];
 
 // Próximo passo de cada etapa (spec §10, "próxima ação").
 const nextAction: Record<VideoProjectStatus, string> = {
@@ -64,6 +79,8 @@ const listSize = 5;
 export function buildDashboard(input: {
   projects: readonly ProjectRecord[];
   ideas: readonly IdeaRecord[];
+  openIdeaCount: number;
+  statusCounts: Partial<Record<VideoProjectStatus, number>>;
   shoots: readonly CalendarEvent[];
   participants: readonly Pick<
     ParticipantRecord,
@@ -99,9 +116,9 @@ export function buildDashboard(input: {
 
   const pending = new Set(input.pendingApprovalProjectIds);
   const count = (status: VideoProjectStatus) =>
-    input.projects.filter((project) => project.status === status).length;
+    input.statusCounts[status] ?? 0;
   const openIdeas = input.ideas.filter(
-    (idea) => idea.status !== "CONVERTED" && idea.status !== "DISCARDED",
+    (idea) => !openIdeaExcluded.includes(idea.status),
   );
 
   return {
@@ -117,7 +134,7 @@ export function buildDashboard(input: {
         statusCode: byId.get(event.projectId)?.status ?? null,
       })),
     inProgress: input.projects
-      .filter((project) => !idle.includes(project.status))
+      .filter((project) => !idleStatuses.includes(project.status))
       .sort(recent)
       .slice(0, listSize)
       .map(card),
@@ -133,7 +150,7 @@ export function buildDashboard(input: {
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, listSize),
     counters: [
-      { label: "Ideias", value: openIdeas.length },
+      { label: "Ideias", value: input.openIdeaCount },
       ...dashboardCounters.map((item) => ({
         label: item.label,
         value: count(item.status),
@@ -156,9 +173,10 @@ export async function loadDashboard(
 ) {
   await requireMembership(userId, workspaceId, deps.workspaces);
   const to = new Date(range.now.getTime() + upcomingDays * 86_400_000);
-  const [projects, ideas, events, pendingIds] = await Promise.all([
-    listProjects(userId, workspaceId, deps.workspaces, deps.projects),
-    listIdeas(userId, workspaceId, deps.workspaces, deps.ideas),
+  const [projects, statusCounts, ideas, events, pendingIds] = await Promise.all([
+    deps.dashboard.activeProjects(workspaceId),
+    deps.dashboard.projectStatusCounts(workspaceId),
+    deps.dashboard.openIdeas(workspaceId, listSize),
     listCalendarEvents(
       userId,
       workspaceId,
@@ -173,7 +191,9 @@ export async function loadDashboard(
   );
   return buildDashboard({
     projects,
-    ideas,
+    ideas: ideas.recent,
+    openIdeaCount: ideas.total,
+    statusCounts,
     shoots: events,
     participants,
     people,

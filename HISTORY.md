@@ -4770,3 +4770,20 @@ Lint. `i18n.test.ts`, `dashboard.test.ts`, `status-tone.test.ts`. `check:contras
 
 - Sem navegador nem celular: 375/390/430, claro/escuro na tela e pt-BR/en renderizados não foram vistos.
 - Mensagens de validação do servidor (Zod) ainda saem em português. O ADR-042 deixa isso para migrar por tela.
+
+## 2026-09-29 — HARDEN-006 — Performance básica
+
+**Status:** DONE
+**Agente:** Claude
+
+- Revisão: sem N+1 (nenhum `await` em loop nos serviços; participantes vêm em lote por `listByProjectIds`). Índices compostos cobrem as consultas frequentes; nenhuma migration nova.
+- Dashboard deixou de carregar todas as produções e ideias do workspace. Agora `DashboardRepository` busca produções fora de IDEA/PUBLISHED/ARCHIVED ou com aprovação pendente, contagem por status via `groupBy` e as 5 ideias abertas mais recentes com `count`. O custo não cresce com o histórico.
+- `/producoes` e `/ideias` continuam sem paginação: no tamanho de equipe do MVP é aceitável. Registrado como PERF-001.
+
+### Testes
+
+`npm test` completo em Postgres local (`prisma dev`): 155 passam. `cross-workspace.integration.test.ts` cobre isolamento dos três métodos novos. Lint ok. `tsc --noEmit` só com `LayoutProps` (SWC nativo não carrega neste Windows); build não rodou pelo mesmo motivo.
+
+### Pendências
+
+- PERF-001 (paginação), quando o volume pedir.

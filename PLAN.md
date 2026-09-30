@@ -1604,7 +1604,7 @@ Resoluções:
 
 ## HARDEN-006 — Performance básica
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** aplicação funcional
 
@@ -1650,6 +1650,22 @@ Hoje é regra só do serviço. Criar índice único parcial (`videoProjectId` on
 **Dependências:** NOTIFY-003, DEPLOY-001
 
 Spec §40. Rota `POST /api/cron/upcoming-shoots` protegida por `CRON_SECRET` (header), idempotente (não avisa duas vezes a mesma gravação). Agendada no Coolify (Scheduled Task) e documentada para self-host (cron do host chamando a rota).
+
+---
+
+## PERF-001 — Paginação de produções e ideias
+
+**Status:** TODO  
+**Prioridade:** P2  
+**Dependências:** HARDEN-006
+
+Achado da HARDEN-006. `/producoes` e `/ideias` carregam todas as linhas do workspace, inclusive arquivadas, e filtram em memória. O seletor de ideia em `producoes/nova` e `producoes/[id]/editar` traz a ideia inteira só para mostrar o título.
+
+Fazer quando um workspace passar de algumas centenas de produções:
+
+- filtros da busca de produções no `where` do Prisma;
+- paginação por cursor na lista (o kanban segue sem paginar, só colunas ativas);
+- seletor de ideia com `select` de id e título.
 
 ---
 

@@ -98,6 +98,8 @@ describe("dashboard", () => {
         idea("virou", "CONVERTED", "2026-09-20"),
         idea("fora", "DISCARDED", "2026-09-21"),
       ],
+      openIdeaCount: 7,
+      statusCounts: { PRE_PRODUCTION: 1, RECORDING: 1, REVIEW: 1, PUBLISHED: 4 },
       shoots: [
         shoot("s1", "rec"),
         shoot("s2", "rec", true),
@@ -143,12 +145,12 @@ describe("dashboard", () => {
     assert.deepEqual(
       Object.fromEntries(data.counters.map((item) => [item.label, item.value])),
       {
-        Ideias: 2,
+        Ideias: 7,
         "Pré-produção": 1,
         Gravação: 1,
         Edição: 0,
         Revisão: 1,
-        Publicados: 1,
+        Publicados: 4,
       },
     );
   });
@@ -157,6 +159,8 @@ describe("dashboard", () => {
     const data = buildDashboard({
       projects: [project("a", "EDITING")],
       ideas: [],
+      openIdeaCount: 0,
+      statusCounts: {},
       shoots: [],
       participants: [],
       people: [],

@@ -2,7 +2,7 @@ import { prisma } from "./db.ts";
 import type { IdeaFormat, IdeaStatus } from "./idea-labels.ts";
 import type { IdeaRecord, IdeaRepository } from "./idea-repository.ts";
 
-function mapIdea(row: {
+export function mapIdea(row: {
   id: string;
   workspaceId: string;
   title: string;

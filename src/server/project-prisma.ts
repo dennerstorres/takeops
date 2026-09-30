@@ -9,7 +9,7 @@ import type {
 } from "./project-labels.ts";
 import type { ProjectRecord, ProjectRepository } from "./project-repository.ts";
 
-function mapProject(row: {
+export function mapProject(row: {
   id: string;
   workspaceId: string;
   title: string;
