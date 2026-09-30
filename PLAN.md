@@ -1645,7 +1645,7 @@ Hoje é regra só do serviço. Criar índice único parcial (`videoProjectId` on
 
 ## HARDEN-009 — Aviso de gravação próxima
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** NOTIFY-003, DEPLOY-001
 

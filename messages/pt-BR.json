@@ -75,7 +75,8 @@
       "VERSION_CREATED": "Nova versão{hasVersion, select, yes { {version}} other {}}{hasProject, select, yes { em {project}} other {}} disponível.",
       "REVIEW_COMMENT_CREATED": "{actor} comentou{hasVersion, select, yes { a {version}} other {}}{hasProject, select, yes { em {project}} other {}}.",
       "CHANGES_REQUESTED": "{actor} solicitou alterações{hasVersion, select, yes { na {version}} other {}}{hasProject, select, yes { em {project}} other {}}.",
-      "VERSION_APPROVED": "{actor} aprovou o vídeo{hasProject, select, yes { em {project}} other {}}."
+      "VERSION_APPROVED": "{actor} aprovou o vídeo{hasProject, select, yes { em {project}} other {}}.",
+      "SHOOT_UPCOMING": "Gravação{hasShoot, select, yes { \"{shoot}\"} other {}}{hasProject, select, yes { de {project}} other {}} nas próximas 24 horas."
     }
   },
   "activity": {

@@ -58,6 +58,10 @@ function loginProblems(env: Env, production: boolean) {
   if (filled(env, "EMAIL_FROM") && !sender.test(env.EMAIL_FROM!.trim())) {
     problems.push("EMAIL_FROM precisa ser um e-mail, como Nome <eu@dominio>.");
   }
+  // Rota de cron (HARDEN-009): opcional; se vier, precisa ser segredo forte.
+  if (filled(env, "CRON_SECRET") && env.CRON_SECRET!.trim().length < 32) {
+    problems.push("CRON_SECRET precisa ter ao menos 32 caracteres.");
+  }
   const methods = loginMethods(env);
   if (production && !methods.google && !methods.email) {
     problems.push(

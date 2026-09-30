@@ -64,14 +64,21 @@ export const prismaShootRepository: ShootRepository = {
         select: { id: true },
       });
       if (!project) return null;
+      const where = { id: shootId, videoProjectId: project.id, deletedAt: null };
+      const current = await tx.shoot.findFirst({
+        where,
+        select: { scheduledAt: true },
+      });
+      if (!current) return null;
+      // Remarcada: o aviso de gravação próxima vale para a data nova.
+      const moved =
+        current.scheduledAt.getTime() !== input.scheduledAt.getTime();
       const result = await tx.shoot.updateMany({
-        where: { id: shootId, videoProjectId: project.id, deletedAt: null },
-        data: input,
+        where,
+        data: moved ? { ...input, upcomingNotifiedAt: null } : input,
       });
       if (result.count !== 1) return null;
-      return tx.shoot.findFirst({
-        where: { id: shootId, videoProjectId: project.id, deletedAt: null },
-      });
+      return tx.shoot.findFirst({ where });
     });
     return updated ? mapShoot(updated) : null;
   },

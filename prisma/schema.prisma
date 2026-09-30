@@ -407,6 +407,9 @@ model Shoot {
   location       String?
   status         ShootStatus  @default(PLANNED)
   notes          String?
+  // Quando o aviso de gravação próxima saiu (HARDEN-009). Volta a null se a
+  // data mudar, para avisar de novo na data nova.
+  upcomingNotifiedAt DateTime?
   deletedAt      DateTime?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -416,6 +419,7 @@ model Shoot {
 
   @@index([videoProjectId, scheduledAt])
   @@index([videoProjectId, status])
+  @@index([scheduledAt])
 }
 
 enum EquipmentCategory {

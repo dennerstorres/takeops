@@ -7,6 +7,7 @@ export const notificationTypes = [
   "REVIEW_COMMENT_CREATED",
   "CHANGES_REQUESTED",
   "VERSION_APPROVED",
+  "SHOOT_UPCOMING",
 ] as const;
 
 export type NotificationType = (typeof notificationTypes)[number];
@@ -32,11 +33,14 @@ export function describeNotification(
   metadata: Metadata,
 ) {
   const version = text(metadata, "version");
+  const shoot = text(metadata, "shoot");
   return t(`notifications.types.${type}`, {
     actor,
     hasProject: projectTitle ? "yes" : "no",
     project: projectTitle ?? "",
     hasVersion: version ? "yes" : "no",
     version: version ?? "",
+    hasShoot: shoot ? "yes" : "no",
+    shoot: shoot ?? "",
   });
 }

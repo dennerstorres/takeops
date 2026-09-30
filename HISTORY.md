@@ -4804,3 +4804,23 @@ Lint. `i18n.test.ts`, `dashboard.test.ts`, `status-tone.test.ts`. `check:contras
 ### Observações
 
 `migrate dev --create-only` falhou porque o banco local foi migrado em `template1` e o shadow herda as tabelas. A migration saiu de `prisma migrate diff --from-config-datasource --to-schema`.
+
+## 2026-09-29 — HARDEN-009 — Aviso de gravação próxima
+
+**Status:** DONE
+**Agente:** Claude
+
+- Rota `POST /api/cron/upcoming-shoots`, liberada no proxy e autenticada por `Authorization: Bearer <CRON_SECRET>` (comparação por hash em tempo constante). Sem `CRON_SECRET` responde 404. Variável opcional, validada em `env.ts` (32+ caracteres) e comentada no `.env.example` com o `curl` do cron.
+- `notifyUpcomingShoots` (`upcoming-shoot.ts`): gravações PLANNED/READY nas próximas 24 h, de produção não publicada/arquivada. Aviso `SHOOT_UPCOMING` para responsável e participantes (quem saiu do workspace fica de fora pelo `notify`). Participantes em lote, sem N+1.
+- Idempotência: coluna `Shoot.upcomingNotifiedAt` (migration `20260929120000_shoot_upcoming_notice`, com índice em `scheduledAt`). O repositório marca e devolve num único `updateManyAndReturn`, então execuções simultâneas não repetem aviso. Remarcar a data zera a marca e avisa de novo.
+- Aviso leva à aba Gravação da produção. Textos nos catálogos pt-BR e en.
+
+### Testes
+
+`npm test` em Postgres local: 158 passam. Novo `upcoming-shoot.integration.test.ts` (janela, cancelada fora, ex-membro fora, segunda execução sem aviso, remarcação avisa de novo). Casos de `CRON_SECRET` em `env.test.ts` e rota pública em `auth.test.ts`. Lint ok; `tsc` só com `LayoutProps` (SWC).
+
+### Pendências
+
+- Dono: definir `CRON_SECRET` no Coolify e criar a Scheduled Task de hora em hora com o `curl` do `.env.example`.
+- Execuções simultâneas não foram testadas: o `prisma dev` (PGlite) quebra com queries parametrizadas em paralelo fora de transação. Fica para o CI com Postgres real (OSS-007).
+- Guia de self-host (OSS-004) deve citar o cron.

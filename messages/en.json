@@ -75,7 +75,8 @@
       "VERSION_CREATED": "New version{hasVersion, select, yes { {version}} other {}} available{hasProject, select, yes { in {project}} other {}}.",
       "REVIEW_COMMENT_CREATED": "{actor} commented{hasVersion, select, yes { on {version}} other {}}{hasProject, select, yes { in {project}} other {}}.",
       "CHANGES_REQUESTED": "{actor} requested changes{hasVersion, select, yes { on {version}} other {}}{hasProject, select, yes { in {project}} other {}}.",
-      "VERSION_APPROVED": "{actor} approved the video{hasProject, select, yes { in {project}} other {}}."
+      "VERSION_APPROVED": "{actor} approved the video{hasProject, select, yes { in {project}} other {}}.",
+      "SHOOT_UPCOMING": "Shoot{hasShoot, select, yes { \"{shoot}\"} other {}}{hasProject, select, yes { for {project}} other {}} in the next 24 hours."
     }
   },
   "activity": {

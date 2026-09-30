@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 20 — Hardening (HARDEN-006 e 008 feitas)
+Fase 20 — Hardening (HARDEN-006, 008 e 009 feitas)
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-HARDEN-008 — Um pedido de aprovação aberto por produção no banco
+HARDEN-009 — Aviso de gravação próxima
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-HARDEN-009 — Aviso de gravação próxima
+OSS-003 — docker-compose para self-host
 ```
 
 ## Estado dos módulos

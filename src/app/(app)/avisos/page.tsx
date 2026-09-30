@@ -19,9 +19,9 @@ import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 // Para onde o aviso leva: versão e revisão abrem a aba Revisão.
 function target(type: NotificationType, projectId: string | null) {
   if (!projectId) return null;
-  return type === "PROJECT_MEMBER_ADDED"
-    ? `/producoes/${projectId}`
-    : `/producoes/${projectId}/revisao`;
+  if (type === "PROJECT_MEMBER_ADDED") return `/producoes/${projectId}`;
+  if (type === "SHOOT_UPCOMING") return `/producoes/${projectId}/gravacao`;
+  return `/producoes/${projectId}/revisao`;
 }
 
 export default async function NotificationsPage() {

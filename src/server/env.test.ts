@@ -57,6 +57,17 @@ describe("variáveis de ambiente", () => {
     assert.match(text, /EMAIL_FROM precisa/);
   });
 
+  it("CRON_SECRET é opcional, mas curto é recusado", () => {
+    assert.deepEqual(
+      checkServerEnv({ ...production, CRON_SECRET: "c".repeat(32) }),
+      { ok: true },
+    );
+    const check = checkServerEnv({ ...production, CRON_SECRET: "curto" });
+    assert.equal(check.ok, false);
+    if (check.ok) return;
+    assert.match(check.problems.join(" "), /CRON_SECRET/);
+  });
+
   it("recusa banco que não é Postgres", () => {
     const check = checkServerEnv({ ...production, DATABASE_URL: "mysql://x" });
     assert.equal(check.ok, false);

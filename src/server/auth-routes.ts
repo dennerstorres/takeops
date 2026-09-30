@@ -9,6 +9,8 @@ export function isPublicPath(pathname: string) {
     pathname === "/login/verificar" ||
     // Healthcheck do contêiner (Docker/Coolify), sem sessão.
     pathname === "/api/health" ||
+    // Cron sem sessão; a própria rota exige CRON_SECRET (HARDEN-009).
+    pathname === "/api/cron/upcoming-shoots" ||
     pathname === "/api/auth" ||
     pathname.startsWith("/api/auth/")
   );
