@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-DEPLOY-003 — Smoke test de produção
+UI-010 — Redesign: tokens e shell do Quadro de tiras
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-UI-010 — Redesign: tokens e shell do Quadro de tiras (ver HANDOFF.md)
+UI-011 — Redesign: produções (quadro e lista), com `Strip` de `src/components/ui/strip.tsx`
 ```
 
 ## Estado dos módulos
@@ -83,4 +83,4 @@ A página da produção é a visão geral: dados, progresso, links e participant
 
 Rumo definido em 2026-09-29: produção na VPS do mantenedor via Coolify em `https://takeops.dennerstorres.dev`, imagem Docker (ADR-037); refactor de UI com PanelUI como referência visual (ADR-038); repositório público AGPL-3.0 (ADR-039); login Google + link por e-mail (ADR-040). Ordem sugerida: OSS-001 → OSS-002 → DEPLOY-001 (produção cedo) → OSS-005 → OSS-008 → UI-001..008 → OSS-003/004/006/007 → MVP. Idiomas: pt-BR e en (ADR-041, ADR-042). OSS-008 feita: shell e Avisos traduzidos, rótulos de enum pelo catálogo; o resto do texto das telas migra nas UI-002..007.
 
-Tokens visuais em `DESIGN.md` (UI-001); `npm run check:contrast` entra no `verify`.
+Tokens do Quadro de tiras em `src/app/globals.css` (UI-010); `DESIGN.md` está desatualizado até a UI-015. `npm run check:contrast` entra no `verify`.

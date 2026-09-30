@@ -5059,3 +5059,14 @@ Novo caso em `publication.integration.test.ts` (falha não move, publicar move e
 
 - `POST /api/cron/upcoming-shoots` ainda responde 404: `CRON_SECRET` não está definido no Coolify, então o aviso de gravação próxima não roda. Definir a variável e a Scheduled Task (comando no README).
 - Backup automático segue sem destino S3 (pendência antiga do dono).
+
+## 2026-09-30 — UI-010 — Redesign: tokens e shell do Quadro de tiras
+
+Status: DONE
+Arquivos: `src/app/globals.css`, `src/app/layout.tsx`, `src/components/shell/app-shell.tsx`, `src/components/shell/shell-nav.tsx`, `src/components/ui/strip.tsx`, `src/components/ui/strip-phase.ts` (+ teste), `scripts/check-contrast.mjs`, `messages/*.json`, `package.json`.
+Resumo: tokens novos claro/escuro (moldura, divisória, cinco cartolinas `strip-*`, tinta da tira, `--strip-h` 28px, raio 4px, primária azul de marcador); IBM Plex Sans + Plex Sans Condensed (`font-condensed`) no lugar da Geist; seleção, cursor e scrollbar pela paleta. Shell sem sidebar: barra do quadro em alumínio com marca TakeOps, navegação impressa (desktop ≥ lg), avisos e conta num painel à direita; menu lateral no celular. `StripBoard`, `StripDivider` e `Strip` com grade fixa (`.strip-grid`: uma linha de 28px no desktop, duas linhas de 44px no celular) e ponta de estado contínua/riscada/vazada com texto para leitor de tela. Contrato de direção (ADR-045) como comentário HTML no início do `body`.
+Decisões: onze etapas em cinco cartolinas (`stripPhase`): plan (ideia, pré, roteiro), set (pronto, gravando), post (edição, revisão), done (aprovado, agendado, publicado), shelf (arquivado); código de fase em texto (PRÉ/SET/PÓS/FIM/ARQ) evita depender da cor. Tokens `sidebar-*` removidos.
+Testes: `check:contrast` passa (inclui os pares novos), lint ok, `strip-phase` e i18n ok; `npm test` 118/119 sem banco local (falha só `seed.integration`, que precisa de Postgres). `tsc` só acusa o `LayoutProps` conhecido. Dev e build não rodam neste Windows (SWC nativo bloqueado por ACL da pasta de cache); a prévia visual foi feita renderizando o shell e o quadro com `react-dom/server` + Tailwind compilado, em claro, escuro e 375px.
+Pendências: telas ainda usam o layout antigo por dentro (cards arredondados) até as UI-011..014; `DESIGN.md` reescrito na UI-015.
+Observações: `Strip` ainda sem uso em tela; a primeira é `/producoes` (UI-011).
+

@@ -63,9 +63,12 @@ const text = [
   ["info-foreground", "info"],
   ["info", "info-muted"],
   ["record-foreground", "record"],
-  ["sidebar-foreground", "sidebar"],
-  ["sidebar-accent-foreground", "sidebar-accent"],
-  ["sidebar-primary-foreground", "sidebar-primary"],
+  ["frame-foreground", "frame"],
+  ["divider-foreground", "divider"],
+  ...["plan", "set", "post", "done", "shelf"].flatMap((phase) => [
+    ["strip-ink", `strip-${phase}`],
+    ["strip-ink-muted", `strip-${phase}`],
+  ]),
 ];
 const focus = [["ring", "background"]];
 

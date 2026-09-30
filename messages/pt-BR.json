@@ -52,7 +52,8 @@
     "themeSystem": "Sistema",
     "notificationsLink": "Avisos",
     "notificationsUnread": "Avisos, {count} não lidos",
-    "toastRegion": "Notificações"
+    "toastRegion": "Notificações",
+    "account": "Conta"
   },
   "locale": {
     "pt-BR": "Português (Brasil)",
@@ -797,5 +798,19 @@
     "cancel": "Cancelar",
     "deleteTitle": "Excluir este destino?",
     "deleteDescription": "O registro sai da produção. Nada muda na plataforma."
+  },
+  "strip": {
+    "phase": {
+      "plan": "PRÉ",
+      "set": "SET",
+      "post": "PÓS",
+      "done": "FIM",
+      "shelf": "ARQ"
+    },
+    "tip": {
+      "ok": "Em dia",
+      "pending": "Com pendência",
+      "idle": "Parada"
+    }
   }
 }

@@ -20,6 +20,10 @@ HARDEN-006, 008, 009; OSS-003, 004, 006, 007; MVP-001, 002, 003; TEAM-004; WORKS
 - Rodada de direções feita; escolhido **Quadro de tiras** (ADR-045: thesis, own-world, first viewport e os três raises). Build code-led (sem geração de imagem nesta máquina).
 - Plano: UI-010 (tokens, shell, componente `Strip`) → UI-011 produções → UI-012 dashboard → UI-013 produção/cenas → UI-014 Modo Gravação e demais telas → UI-015 revisão final e DESIGN.md novo.
 
+## Atualização (sessão 4)
+
+UI-010 feita (ver HISTORY.md). Próxima: UI-011. Contrato de direção está no `src/app/layout.tsx`.
+
 ## Próximos passos exatos
 
 1. Nova sessão: ler `AGENTS.md`, `STATUS.md`, `PRODUCT.md`, ADR-045.

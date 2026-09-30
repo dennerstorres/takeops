@@ -2008,7 +2008,7 @@ ADR-044. VIEWER cria comentário na revisão; resolver comentário continua com 
 
 ## UI-010 — Redesign: tokens e shell do Quadro de tiras
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** ADR-045
 

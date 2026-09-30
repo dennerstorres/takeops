@@ -52,7 +52,8 @@
     "themeSystem": "System",
     "notificationsLink": "Notifications",
     "notificationsUnread": "Notifications, {count} unread",
-    "toastRegion": "Notifications"
+    "toastRegion": "Notifications",
+    "account": "Account"
   },
   "locale": {
     "pt-BR": "Português (Brasil)",
@@ -797,5 +798,19 @@
     "cancel": "Cancel",
     "deleteTitle": "Delete this destination?",
     "deleteDescription": "The record is removed from the production. Nothing changes on the platform."
+  },
+  "strip": {
+    "phase": {
+      "plan": "PRE",
+      "set": "SET",
+      "post": "POST",
+      "done": "DONE",
+      "shelf": "ARCH"
+    },
+    "tip": {
+      "ok": "On track",
+      "pending": "Needs attention",
+      "idle": "Stalled"
+    }
   }
 }
