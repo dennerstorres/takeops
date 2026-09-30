@@ -23,8 +23,11 @@ import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 import { Input, Select } from "@/components/ui/input";
 
-function personLabel(member: { name: string | null; email: string | null }) {
-  return member.name || member.email || "Sem nome";
+function personLabel(
+  member: { name: string | null; email: string | null },
+  fallback: string,
+) {
+  return member.name || member.email || fallback;
 }
 
 export default async function ProductionsPage({
@@ -71,14 +74,16 @@ export default async function ProductionsPage({
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">Produções</h1>
+          <h1 className="text-2xl font-medium tracking-tight">
+            {t("projects.title")}
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Produções de {workspace.name}.
+            {t("projects.ofWorkspace", { name: workspace.name })}
           </p>
         </div>
         {canEdit ? (
           <Link href="/producoes/nova" className={buttonVariants()}>
-            Nova produção
+            {t("projects.create")}
           </Link>
         ) : null}
       </header>
@@ -86,16 +91,20 @@ export default async function ProductionsPage({
         <form
           method="get"
           className="grid gap-3 sm:grid-cols-2"
-          aria-label="Filtros das produções"
+          aria-label={t("projects.filters")}
         >
           <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-            Busca
-            <Input name="q" defaultValue={query.text} placeholder="Título" />
+            {t("projects.search")}
+            <Input
+              name="q"
+              defaultValue={query.text}
+              placeholder={t("common.title")}
+            />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Status
+            {t("common.status")}
             <Select name="status" defaultValue={query.status}>
-              <option value="">Todos</option>
+              <option value="">{t("projects.all")}</option>
               {videoProjectStatuses.map((status) => (
                 <option key={status} value={status}>
                   {projectStatusLabel(t, status)}
@@ -104,9 +113,9 @@ export default async function ProductionsPage({
             </Select>
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Prioridade
+            {t("projects.priority")}
             <Select name="priority" defaultValue={query.priority}>
-              <option value="">Todas</option>
+              <option value="">{t("projects.allFeminine")}</option>
               {projectPriorities.map((priority) => (
                 <option key={priority} value={priority}>
                   {priorityLabel(t, priority)}
@@ -115,33 +124,33 @@ export default async function ProductionsPage({
             </Select>
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Responsável
+            {t("projects.owner")}
             <Select name="ownerId" defaultValue={query.ownerId}>
-              <option value="">Todos</option>
+              <option value="">{t("projects.all")}</option>
               {team.map((member) => (
                 <option key={member.userId} value={member.userId}>
-                  {personLabel(member)}
+                  {personLabel(member, t("common.noName"))}
                 </option>
               ))}
             </Select>
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Participante
+            {t("projects.participant")}
             <Select name="participantId" defaultValue={query.participantId}>
-              <option value="">Todos</option>
+              <option value="">{t("projects.all")}</option>
               {team.map((member) => (
                 <option key={member.userId} value={member.userId}>
-                  {personLabel(member)}
+                  {personLabel(member, t("common.noName"))}
                 </option>
               ))}
             </Select>
           </label>
           <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-            Produto
+            {t("projects.product")}
             <Input name="product" defaultValue={query.product} />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Gravação de
+            {t("projects.shootFrom")}
             <Input
               type="date"
               name="shootFrom"
@@ -149,11 +158,11 @@ export default async function ProductionsPage({
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Gravação até
+            {t("projects.shootTo")}
             <Input type="date" name="shootTo" defaultValue={query.shootTo} />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Publicação de
+            {t("projects.publishFrom")}
             <Input
               type="date"
               name="publishFrom"
@@ -161,7 +170,7 @@ export default async function ProductionsPage({
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Publicação até
+            {t("projects.publishTo")}
             <Input
               type="date"
               name="publishTo"
@@ -169,23 +178,21 @@ export default async function ProductionsPage({
             />
           </label>
           <div className="flex flex-wrap gap-2 sm:col-span-2">
-            <Button type="submit">Filtrar</Button>
+            <Button type="submit">{t("projects.filter")}</Button>
             <Link
               href="/producoes"
               className={buttonVariants({ variant: "outline" })}
             >
-              Limpar
+              {t("projects.clear")}
             </Link>
           </div>
         </form>
       </Card>
       {projects.length === 0 ? (
         <EmptyState
-          title={filtering ? "Nenhuma produção encontrada" : "Nenhuma produção"}
+          title={filtering ? t("projects.noneFound") : t("projects.emptyTitle")}
           description={
-            filtering
-              ? "Nenhuma produção combina com esses filtros."
-              : "As produções da equipe aparecem aqui."
+            filtering ? t("projects.noneMatch") : t("projects.emptyDescription")
           }
         />
       ) : null}

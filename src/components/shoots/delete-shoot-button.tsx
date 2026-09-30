@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ConfirmDialog } from "@/components/feedback/confirm-dialog";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ export function DeleteShootButton({
   projectId: string;
   shootId: string;
 }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const formId = `excluir-gravacao-${shootId}`;
 
@@ -23,14 +25,14 @@ export function DeleteShootButton({
         className="min-h-11"
         onClick={() => setOpen(true)}
       >
-        Excluir
+        {t("common.delete")}
       </Button>
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Excluir esta gravação?"
-        description="Ela sai da lista. O registro permanece guardado."
-        confirmLabel="Excluir"
+        title={t("record.deleteTitle")}
+        description={t("common.removedKept")}
+        confirmLabel={t("common.delete")}
         destructive
         onConfirm={() => {
           const form = document.getElementById(

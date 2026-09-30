@@ -1,3 +1,4 @@
+import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { ItemList, ItemListRow } from "@/components/ui/item-list";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -9,14 +10,18 @@ import { auth } from "@/server/auth";
 import { ForbiddenError } from "@/server/errors";
 import { invitableRoles, listInvites } from "@/server/invite";
 import { prismaInviteRepository } from "@/server/invite-prisma";
-import { listTeam, manageableRoles, roleLabel } from "@/server/team";
+import { listTeam, manageableRoles } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-function displayName(name: string | null, email: string | null) {
+function displayName(
+  name: string | null,
+  email: string | null,
+  fallback: string,
+) {
   const trimmed = name?.trim();
   if (trimmed) return trimmed;
   if (email) return email;
-  return "Sem nome";
+  return fallback;
 }
 
 function initials(label: string) {
@@ -30,6 +35,8 @@ function initials(label: string) {
 }
 
 export default async function TeamPage() {
+  const t = await getTranslations();
+  const locale = await getLocale();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
 
@@ -60,7 +67,7 @@ export default async function TeamPage() {
   }
 
   const timezone = access.workspace.workspace.timezone;
-  const expires = new Intl.DateTimeFormat("pt-BR", {
+  const expires = new Intl.DateTimeFormat(locale, {
     dateStyle: "short",
     timeZone: timezone,
   });
@@ -68,14 +75,22 @@ export default async function TeamPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Equipe</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("team.title")}
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Pessoas com acesso a {access.workspace.workspace.name}.
+          {t("team.description", {
+            workspace: access.workspace.workspace.name,
+          })}
         </p>
       </header>
       <ItemList>
         {members.map((member) => {
-          const name = displayName(member.name, member.email);
+          const name = displayName(
+            member.name,
+            member.email,
+            t("common.noName"),
+          );
           const options = manageableRoles(
             access.workspace.membership.role,
             member.role,
@@ -101,7 +116,7 @@ export default async function TeamPage() {
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium">{name}</p>
                 <p className="truncate text-sm text-muted-foreground">
-                  {member.email ?? "E-mail não informado"}
+                  {member.email ?? t("team.emailMissing")}
                 </p>
               </div>
               {options.length > 0 && member.userId !== session.user.id ? (
@@ -111,7 +126,9 @@ export default async function TeamPage() {
                   roles={options}
                 />
               ) : (
-                <p className="shrink-0 text-sm">{roleLabel(member.role)}</p>
+                <p className="shrink-0 text-sm">
+                  {t(`team.roles.${member.role}`)}
+                </p>
               )}
             </ItemListRow>
           );
@@ -120,10 +137,9 @@ export default async function TeamPage() {
       {roles.length > 0 ? (
         <section className="flex flex-col gap-4">
           <header className="space-y-1">
-            <h2 className="text-base font-medium">Convidar</h2>
+            <h2 className="text-base font-medium">{t("team.invite")}</h2>
             <p className="text-sm text-muted-foreground">
-              O link não é enviado por e-mail. Ele vale 7 dias e só entra quem
-              fizer login com o Google desse endereço.
+              {t("team.inviteHelp")}
             </p>
           </header>
           <InviteForm roles={roles} />
@@ -136,11 +152,13 @@ export default async function TeamPage() {
                       {invite.email}
                     </p>
                     <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                      {roleLabel(invite.role)}
+                      {t(`team.roles.${invite.role}`)}
                       <StatusBadge status={invite.status}>
-                        {invite.status === "EXPIRED" ? "Expirado" : "Pendente"}
+                        {t("team.inviteStatus", { status: invite.status })}
                       </StatusBadge>
-                      até {expires.format(invite.expiresAt)}
+                      {t("team.until", {
+                        date: expires.format(invite.expiresAt),
+                      })}
                     </p>
                   </div>
                   <RevokeInviteButton inviteId={invite.id} />

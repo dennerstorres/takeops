@@ -123,7 +123,9 @@ export default async function ShootsPage({
       ? [
           {
             id: PROJECT_CHECKLIST_SOURCE,
-            label: `Checklist da produção · ${projectChecklist.length} itens`,
+            label: t("projects.productionChecklistCount", {
+              count: projectChecklist.length,
+            }),
           },
         ]
       : []),
@@ -131,7 +133,10 @@ export default async function ShootsPage({
       .filter((template) => template.items.length > 0)
       .map((template) => ({
         id: template.id,
-        label: `${template.name} · ${template.items.length} itens`,
+        label: t("projects.templateItemCount", {
+          name: template.name,
+          count: template.items.length,
+        }),
       })),
   ];
 
@@ -153,16 +158,20 @@ export default async function ShootsPage({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <ProductionTabs projectId={project.id} active="Gravação" />
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Gravação</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("tabs.recording")}
+        </h1>
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
       {projectChecklist.length > 0 ? (
         <details className={cn(surfaceClass, "p-3")}>
           <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
-            Checklist da produção · {projectChecklist.length} itens
+            {t("projects.productionChecklistCount", {
+              count: projectChecklist.length,
+            })}
           </summary>
           <p className="text-sm text-muted-foreground">
-            Veio do template na criação da produção.
+            {t("projects.checklistFromTemplate")}
           </p>
           <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm">
             {projectChecklist.map((item) => (
@@ -175,12 +184,12 @@ export default async function ShootsPage({
         href={`/producoes/${project.id}/continuidade`}
         className={cn(buttonVariants({ variant: "outline" }), "w-fit")}
       >
-        Continuidade
+        {t("continuity.title")}
       </Link>
       {shoots.length === 0 ? (
         <EmptyState
-          title="Nenhuma gravação agendada"
-          description="As sessões de gravação desta produção aparecem aqui."
+          title={t("record.emptyScheduled")}
+          description={t("record.emptyScheduledDescription")}
         />
       ) : (
         <ol className="flex flex-col gap-3">
@@ -188,7 +197,7 @@ export default async function ShootsPage({
             <li key={shoot.id} className={cn(surfaceClass, "p-3")}>
               <div className="min-w-0 space-y-1">
                 <p className="text-sm font-medium">
-                  {shoot.title || "Sessão de gravação"}
+                  {shoot.title || t("record.session")}
                 </p>
                 <p className="text-sm">
                   <time dateTime={shoot.scheduledAt.toISOString()}>
@@ -217,7 +226,7 @@ export default async function ShootsPage({
                 href={`/producoes/${project.id}/gravacao/${shoot.id}/modo`}
                 className={cn(buttonVariants(), "mt-3 w-full")}
               >
-                Abrir Modo Gravação
+                {t("record.open")}
               </Link>
               <div className="mt-3 border-t pt-3">
                 <ShootEquipment
@@ -230,29 +239,27 @@ export default async function ShootsPage({
               </div>
               <section className="mt-3 space-y-2 border-t pt-3">
                 <h3 className="text-sm font-medium">
-                  Checklist
+                  {t("record.checklist")}
                   {checklists[index].length > 0 ? (
                     <span className="font-normal text-muted-foreground">
-                      {" "}
-                      ·{" "}
-                      {
-                        checklists[index].filter((item) => item.completed)
-                          .length
-                      }{" "}
-                      de {checklists[index].length} feitos
+                      {t("record.checklistProgress", {
+                        done: checklists[index].filter((item) => item.completed)
+                          .length,
+                        total: checklists[index].length,
+                      })}
                     </span>
                   ) : null}
                 </h3>
                 {checklists[index].length === 0 ? (
                   <p className="text-sm text-muted-foreground">
-                    Nenhum checklist nesta gravação.
+                    {t("record.noChecklist")}
                   </p>
                 ) : (
                   <Link
                     href={`/producoes/${project.id}/gravacao/${shoot.id}/checklist`}
                     className={buttonVariants({ variant: "outline" })}
                   >
-                    Abrir checklist
+                    {t("record.openChecklist")}
                   </Link>
                 )}
                 {canEdit && templateOptions.length > 0 ? (
@@ -271,7 +278,7 @@ export default async function ShootsPage({
                   />
                   <details>
                     <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm">
-                      Editar gravação
+                      {t("record.edit")}
                     </summary>
                     <div className="pt-3">
                       <ShootForm
@@ -302,7 +309,7 @@ export default async function ShootsPage({
       )}
       {canEdit ? (
         <section className="space-y-3">
-          <h2 className="text-base font-medium">Agendar gravação</h2>
+          <h2 className="text-base font-medium">{t("record.schedule")}</h2>
           <ShootForm
             timezone={timezone}
             values={{

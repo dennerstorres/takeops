@@ -1,18 +1,12 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import {
   createAutosave,
   type AutosaveActionResult,
   type AutosaveStatus,
 } from "@/lib/autosave";
-
-const autosaveLabel: Record<AutosaveStatus, string> = {
-  idle: "",
-  saving: "Salvando...",
-  saved: "Salvo",
-  error: "Erro ao salvar",
-};
 
 export function useFormAutosave(
   enabled: boolean,
@@ -73,6 +67,15 @@ export function AutosaveStatusText({
   status: AutosaveStatus;
   message?: string;
 }) {
+  const t = useTranslations();
+  const label =
+    status === "saving"
+      ? t("autosave.saving")
+      : status === "saved"
+        ? t("autosave.saved")
+        : status === "error"
+          ? t("autosave.error")
+          : "";
   return (
     <p
       aria-live="polite"
@@ -82,7 +85,7 @@ export function AutosaveStatusText({
           : "text-sm text-muted-foreground"
       }
     >
-      {autosaveLabel[status]}
+      {label}
       {status === "error" && message ? `. ${message}` : null}
     </p>
   );

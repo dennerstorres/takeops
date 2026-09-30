@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { AddShootEquipmentForm } from "@/components/shoots/add-shoot-equipment-form";
 import {
   removeShootEquipmentAction,
@@ -8,7 +8,7 @@ import { equipmentCategoryLabel } from "@/server/equipment-labels";
 import type { ShootEquipmentRecord } from "@/server/shoot-equipment-repository";
 import { Button } from "@/components/ui/button";
 
-export function ShootEquipment({
+export async function ShootEquipment({
   projectId,
   shootId,
   rows,
@@ -21,7 +21,7 @@ export function ShootEquipment({
   catalog: { id: string; label: string }[];
   canEdit: boolean;
 }) {
-  const t = useTranslations();
+  const t = await getTranslations();
   const used = new Set(rows.map((row) => row.equipmentItemId));
   const options = catalog.filter((item) => !used.has(item.id));
   const checked = rows.filter((row) => row.checked).length;
@@ -29,16 +29,20 @@ export function ShootEquipment({
   return (
     <section className="space-y-2">
       <h3 className="text-sm font-medium">
-        Equipamentos
+        {t("record.equipment")}
         {rows.length > 0 ? (
           <span className="font-normal text-muted-foreground">
-            {" "}
-            · {checked} de {rows.length} conferidos
+            {t("record.equipmentProgress", {
+              done: checked,
+              total: rows.length,
+            })}
           </span>
         ) : null}
       </h3>
       {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Nenhum equipamento.</p>
+        <p className="text-sm text-muted-foreground">
+          {t("record.noEquipment")}
+        </p>
       ) : (
         <ul className="flex flex-col gap-2">
           {rows.map((row) => (
@@ -53,7 +57,7 @@ export function ShootEquipment({
                 <span className="text-muted-foreground">
                   {" "}
                   · {equipmentCategoryLabel(t, row.item.category)}
-                  {row.required ? "" : " · opcional"}
+                  {row.required ? "" : t("record.optionalMark")}
                   {row.notes ? ` · ${row.notes}` : ""}
                 </span>
               </p>
@@ -75,7 +79,7 @@ export function ShootEquipment({
                       variant="outline"
                       aria-pressed={row.checked}
                     >
-                      {row.checked ? "Desmarcar" : "Conferir"}
+                      {row.checked ? t("record.uncheck") : t("record.check")}
                     </Button>
                   </form>
                   <form action={removeShootEquipmentAction}>
@@ -83,13 +87,13 @@ export function ShootEquipment({
                     <input type="hidden" name="shootId" value={shootId} />
                     <input type="hidden" name="rowId" value={row.id} />
                     <Button type="submit" variant="outline">
-                      Tirar
+                      {t("record.remove")}
                     </Button>
                   </form>
                 </div>
               ) : (
                 <span className="text-sm text-muted-foreground">
-                  {row.checked ? "Conferido" : "A conferir"}
+                  {row.checked ? t("record.checked") : t("record.toCheck")}
                 </span>
               )}
             </li>

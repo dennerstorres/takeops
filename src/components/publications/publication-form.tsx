@@ -47,7 +47,7 @@ export function PublicationForm({ values }: { values: PublicationFormValues }) {
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Plataforma
+        {t("publication.platform")}
         <Select name="platform" defaultValue={values.platform}>
           {platforms.map((platform) => (
             <option key={platform} value={platform}>
@@ -57,7 +57,7 @@ export function PublicationForm({ values }: { values: PublicationFormValues }) {
         </Select>
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Legenda (opcional)
+        {t("publication.caption")}
         <Textarea
           name="caption"
           maxLength={5000}
@@ -67,11 +67,11 @@ export function PublicationForm({ values }: { values: PublicationFormValues }) {
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Notas (opcional)
+        {t("publication.notes")}
         <Input name="notes" maxLength={2000} defaultValue={values.notes} />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        {values.publicationId ? "Salvar destino" : "Adicionar destino"}
+        {values.publicationId ? t("publication.save") : t("publication.add")}
       </Button>
     </form>
   );

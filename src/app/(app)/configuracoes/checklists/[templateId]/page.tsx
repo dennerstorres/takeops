@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -24,6 +25,7 @@ export default async function ChecklistTemplatePage({
 }: {
   params: Promise<{ templateId: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -53,12 +55,12 @@ export default async function ChecklistTemplatePage({
         href="/configuracoes/checklists"
         className="inline-flex min-h-11 items-center text-sm text-muted-foreground"
       >
-        Voltar aos checklists
+        {t("checklists.back")}
       </Link>
       <header className="space-y-1">
         <h1 className="text-2xl font-medium tracking-tight">{template.name}</h1>
         <p className="text-sm text-muted-foreground">
-          Mudar este modelo não altera checklists já copiados para gravações.
+          {t("checklists.unchangedCopies")}
         </p>
       </header>
       {canEdit ? (
@@ -71,9 +73,11 @@ export default async function ChecklistTemplatePage({
         />
       ) : null}
       <section className="space-y-3">
-        <h2 className="text-base font-medium">Itens</h2>
+        <h2 className="text-base font-medium">{t("checklists.items")}</h2>
         {template.items.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Nenhum item.</p>
+          <p className="text-sm text-muted-foreground">
+            {t("checklists.noItems")}
+          </p>
         ) : (
           <ol className="flex flex-col gap-3">
             {template.items.map((item, index) => (
@@ -103,7 +107,7 @@ export default async function ChecklistTemplatePage({
                           disabled={index === 0}
                           className={buttonClass}
                         >
-                          Subir
+                          {t("checklists.moveUp")}
                         </button>
                         <button
                           type="submit"
@@ -112,7 +116,7 @@ export default async function ChecklistTemplatePage({
                           disabled={index === template.items.length - 1}
                           className={buttonClass}
                         >
-                          Descer
+                          {t("checklists.moveDown")}
                         </button>
                       </form>
                       <form action={removeChecklistItemAction}>
@@ -123,7 +127,7 @@ export default async function ChecklistTemplatePage({
                         />
                         <input type="hidden" name="itemId" value={item.id} />
                         <button type="submit" className={buttonClass}>
-                          Tirar
+                          {t("checklists.remove")}
                         </button>
                       </form>
                     </div>

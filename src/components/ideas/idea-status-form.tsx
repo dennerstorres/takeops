@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { changeIdeaStatusAction } from "@/server/idea-actions";
@@ -21,7 +23,7 @@ export function IdeaStatusForm({
     >
       <input type="hidden" name="ideaId" value={ideaId} />
       <label className="sr-only" htmlFor={`status-${ideaId}`}>
-        Status
+        {t("ideas.status")}
       </label>
       <Select id={`status-${ideaId}`} name="status" defaultValue={status}>
         {editableIdeaStatuses.map((item) => (
@@ -31,7 +33,7 @@ export function IdeaStatusForm({
         ))}
       </Select>
       <Button type="submit" variant="outline" className="min-h-11">
-        Salvar status
+        {t("ideas.saveStatus")}
       </Button>
     </form>
   );

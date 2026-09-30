@@ -22,15 +22,18 @@ import { buildScriptView } from "@/server/script-view";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-function personLabel(member: { name: string | null; email: string | null }) {
-  return member.name || member.email || "Sem nome";
+function personLabel(
+  member: { name: string | null; email: string | null },
+  fallback: string,
+) {
+  return member.name || member.email || fallback;
 }
 
 const scriptLabels = [
-  ["hook", "Gancho"],
-  ["mainMessage", "Mensagem principal"],
-  ["cta", "Chamada para ação"],
-  ["notes", "Notas"],
+  ["hook", "script.hook"],
+  ["mainMessage", "script.mainMessage"],
+  ["cta", "script.cta"],
+  ["notes", "common.notes"],
 ] as const;
 
 export default async function ScriptPage({
@@ -86,7 +89,10 @@ export default async function ScriptPage({
 
   const view = buildScriptView(
     scenes,
-    team.map((member) => ({ id: member.userId, label: personLabel(member) })),
+    team.map((member) => ({
+      id: member.userId,
+      label: personLabel(member, t("common.noName")),
+    })),
   );
   const values = {
     hook: script?.hook ?? "",
@@ -99,7 +105,9 @@ export default async function ScriptPage({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <ProductionTabs projectId={project.id} active="Roteiro" />
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Roteiro</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("tabs.script")}
+        </h1>
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
 
@@ -109,7 +117,7 @@ export default async function ScriptPage({
         <dl className="grid gap-3">
           {scriptLabels.map(([key, label]) => (
             <div key={key} className={cn(surfaceClass, "space-y-1 p-3")}>
-              <dt className="text-sm text-muted-foreground">{label}</dt>
+              <dt className="text-sm text-muted-foreground">{t(label)}</dt>
               <dd className="text-sm whitespace-pre-wrap">
                 {values[key] || "—"}
               </dd>
@@ -120,18 +128,18 @@ export default async function ScriptPage({
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="text-base font-medium">Cenas</h2>
+          <h2 className="text-base font-medium">{t("tabs.scenes")}</h2>
           <p className="text-sm text-muted-foreground">
-            Total estimado {view.total}
+            {t("script.estimatedTotal", { total: view.total })}
             {view.withoutDuration > 0
-              ? ` · ${view.withoutDuration} sem duração`
+              ? t("script.withoutDuration", { count: view.withoutDuration })
               : null}
           </p>
         </div>
         {view.rows.length === 0 ? (
           <EmptyState
-            title="Nenhuma cena"
-            description="O roteiro é montado pelas cenas desta produção."
+            title={t("scenes.emptyTitle")}
+            description={t("script.emptyScenes")}
           />
         ) : (
           <ol className="flex flex-col gap-4">
@@ -169,7 +177,7 @@ export default async function ScriptPage({
             href={`/producoes/${project.id}/cenas`}
             className={cn(buttonVariants({ variant: "outline" }), "w-fit")}
           >
-            Editar cenas
+            {t("script.editScenes")}
           </Link>
         ) : null}
       </section>

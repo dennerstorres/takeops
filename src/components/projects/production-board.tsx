@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useActionState, useRef } from "react";
 import {
@@ -36,6 +37,7 @@ export function ProductionBoard({
   canEdit: boolean;
   canApprove: boolean;
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     moveProjectStatusAction,
     null as ProjectFormState,
@@ -134,7 +136,7 @@ export function ProductionBoard({
                   {canEdit ? (
                     // Arrastar não funciona por teclado nem no toque.
                     <Select
-                      aria-label={`Mover ${card.title} para`}
+                      aria-label={t("projects.moveCard", { title: card.title })}
                       value={column.status}
                       disabled={pending}
                       onChange={(event) => move(card.id, event.target.value)}

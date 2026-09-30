@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ConfirmDialog } from "@/components/feedback/confirm-dialog";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ export function DeleteAssetButton({
   projectId: string;
   assetId: string;
 }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const formId = `excluir-asset-${assetId}`;
 
@@ -23,14 +25,14 @@ export function DeleteAssetButton({
         className="min-h-11"
         onClick={() => setOpen(true)}
       >
-        Excluir
+        {t("common.delete")}
       </Button>
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Excluir este link?"
-        description="O link sai da produção. O arquivo continua onde está."
-        confirmLabel="Excluir"
+        title={t("assets.deleteTitle")}
+        description={t("assets.deleteDescription")}
+        confirmLabel={t("common.delete")}
         destructive
         onConfirm={() => {
           const form = document.getElementById(

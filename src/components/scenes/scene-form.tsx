@@ -74,7 +74,7 @@ export function SceneForm({
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Título
+        {t("common.title")}
         <Input
           name="title"
           required
@@ -83,7 +83,7 @@ export function SceneForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Tipo
+        {t("common.type")}
         <Select name="type" defaultValue={values.type}>
           {sceneTypes.map((type) => (
             <option key={type} value={type}>
@@ -94,7 +94,7 @@ export function SceneForm({
       </label>
       {editing ? (
         <label className="flex flex-col gap-1 text-sm">
-          Status
+          {t("common.status")}
           <Select name="status" defaultValue={values.status}>
             {sceneStatuses.map((status) => (
               <option key={status} value={status}>
@@ -105,9 +105,9 @@ export function SceneForm({
         </label>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Quem fala
+        {t("scenes.speaker")}
         <Select name="speakerId" defaultValue={values.speakerId}>
-          <option value="">Ninguém</option>
+          <option value="">{t("scenes.nobody")}</option>
           {people.map((person) => (
             <option key={person.id} value={person.id}>
               {person.label}
@@ -116,7 +116,7 @@ export function SceneForm({
         </Select>
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Fala
+        {t("scenes.dialogue")}
         <Textarea
           name="dialogue"
           rows={3}
@@ -126,7 +126,7 @@ export function SceneForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Descrição
+        {t("common.description")}
         <Textarea
           name="description"
           rows={2}
@@ -136,11 +136,11 @@ export function SceneForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Ação
+        {t("scenes.action")}
         <Input name="action" maxLength={2000} defaultValue={values.action} />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Duração em segundos
+        {t("projects.durationSeconds")}
         <Input
           name="estimatedDurationSeconds"
           inputMode="numeric"
@@ -148,7 +148,7 @@ export function SceneForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Câmera
+        {t("scenes.camera")}
         <Input
           name="cameraInstructions"
           maxLength={2000}
@@ -156,7 +156,7 @@ export function SceneForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Edição
+        {t("tabs.editing")}
         <Input
           name="editingInstructions"
           maxLength={2000}
@@ -164,7 +164,7 @@ export function SceneForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Continuidade
+        {t("continuity.title")}
         <Input
           name="continuityNotes"
           maxLength={2000}
@@ -173,7 +173,7 @@ export function SceneForm({
       </label>
       <div className="flex flex-wrap items-center gap-3">
         <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-          {editing ? "Salvar cena" : "Adicionar cena"}
+          {editing ? t("scenes.save") : t("scenes.add")}
         </Button>
         {editing ? (
           <AutosaveStatusText

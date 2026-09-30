@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Check } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
 import { surfaceClass } from "@/components/ui/card";
@@ -26,6 +27,7 @@ export function ShootChecklist({
   items: Item[];
   canEdit: boolean;
 }) {
+  const t = useTranslations();
   const [optimistic, setOptimistic] = useOptimistic(
     items,
     (current, change: { id: string; completed: boolean }) =>
@@ -51,7 +53,7 @@ export function ShootChecklist({
         const result = await toggleShootChecklistItemAction(formData);
         if (!result.ok) setError(result.message);
       } catch {
-        setError("Não foi possível salvar. Tente novamente.");
+        setError(t("common.saveFailed"));
       }
     });
   }
@@ -61,7 +63,7 @@ export function ShootChecklist({
       <div
         className="h-2 overflow-hidden rounded-full bg-muted"
         role="progressbar"
-        aria-label="Itens feitos"
+        aria-label={t("record.itemsDone")}
         aria-valuemin={0}
         aria-valuemax={optimistic.length}
         aria-valuenow={done}
@@ -74,7 +76,10 @@ export function ShootChecklist({
         />
       </div>
       <p className="text-sm text-muted-foreground" aria-live="polite">
-        {done} de {optimistic.length} feitos
+        {t("record.itemsProgress", {
+          done,
+          total: optimistic.length,
+        })}
       </p>
       {error ? (
         <p role="alert" className="text-sm text-destructive">

@@ -53,15 +53,15 @@ export default async function ProductionPage({
   if (!project) {
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
-        <h1 className="text-2xl font-medium tracking-tight">Produção</h1>
-        <p className="text-sm text-muted-foreground">
-          Esta produção não está na lista.
-        </p>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("projects.one")}
+        </h1>
+        <p className="text-sm text-muted-foreground">{t("projects.missing")}</p>
         <Link
           href="/producoes"
           className={buttonVariants({ variant: "outline" })}
         >
-          Voltar para a lista
+          {t("projects.backToList")}
         </Link>
       </div>
     );
@@ -86,22 +86,22 @@ export default async function ProductionPage({
   const owner = people.find((person) => person.userId === project.ownerId);
   const overview = buildProjectOverview({
     project,
-    ownerName: owner ? (owner.name ?? owner.email ?? "Sem nome") : null,
+    ownerName: owner ? (owner.name ?? owner.email ?? t("common.noName")) : null,
     participants,
     t,
   });
   const facts = [
-    ["Objetivo", overview.objective],
-    ["Produto", overview.product],
-    ["Público", overview.audience],
-    ["Formato", overview.format],
-    ["Proporção", overview.aspectRatio],
-    ["Duração", overview.duration],
-    ["Status", overview.status],
-    ["Prioridade", overview.priority],
-    ["Gravação", overview.shootDate],
-    ["Publicação", overview.publishDate],
-    ["Responsável", overview.ownerName],
+    ["objective", t("projects.objective"), overview.objective],
+    ["product", t("projects.product"), overview.product],
+    ["audience", t("projects.audience"), overview.audience],
+    ["format", t("projects.format"), overview.format],
+    ["aspect", t("projects.aspectRatio"), overview.aspectRatio],
+    ["duration", t("projects.duration"), overview.duration],
+    ["status", t("common.status"), overview.status],
+    ["priority", t("projects.priority"), overview.priority],
+    ["shoot", t("tabs.recording"), overview.shootDate],
+    ["publish", t("tabs.publication"), overview.publishDate],
+    ["owner", t("projects.owner"), overview.ownerName],
   ] as const;
 
   return (
@@ -112,7 +112,7 @@ export default async function ProductionPage({
             {overview.title}
           </h1>
           <p className="text-sm text-muted-foreground">
-            Progresso {overview.progress}
+            {t("projects.progress", { progress: overview.progress })}
           </p>
         </div>
         {canEdit ? (
@@ -120,34 +120,34 @@ export default async function ProductionPage({
             href={`/producoes/${project.id}/editar`}
             className={buttonVariants({ variant: "outline" })}
           >
-            Editar
+            {t("common.edit")}
           </Link>
         ) : null}
       </header>
       <ProductionTabs projectId={project.id} />
       <dl className="grid gap-3 sm:grid-cols-2">
-        {facts.map(([label, value]) => (
-          <div key={label} className={cn(surfaceClass, "p-3")}>
+        {facts.map(([id, label, value]) => (
+          <div key={id} className={cn(surfaceClass, "p-3")}>
             <dt className="text-sm text-muted-foreground">{label}</dt>
             <dd className="text-sm font-medium">
-              {label === "Status" ? (
+              {id === "status" ? (
                 <StatusBadge status={project.status}>
-                  {value ?? "Não informado"}
+                  {value ?? t("common.notSet")}
                 </StatusBadge>
               ) : (
-                (value ?? "Não informado")
+                (value ?? t("common.notSet"))
               )}
             </dd>
           </div>
         ))}
       </dl>
       <section className="flex flex-col gap-2">
-        <h2 className="text-lg font-medium">Links</h2>
+        <h2 className="text-lg font-medium">{t("projects.links")}</h2>
         <Link
           href={`/producoes/${project.id}/arquivos`}
           className={buttonVariants({ variant: "outline" })}
         >
-          Arquivos e referências
+          {t("assets.title")}
         </Link>
         {overview.links.length === 0 ? null : (
           <ul className="flex flex-col gap-2">
@@ -174,10 +174,10 @@ export default async function ProductionPage({
         )}
       </section>
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-medium">Participantes</h2>
+        <h2 className="text-lg font-medium">{t("projects.participants")}</h2>
         {overview.participants.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Ninguém foi adicionado ainda.
+            {t("projects.noParticipants")}
           </p>
         ) : (
           <ItemList>
@@ -185,7 +185,7 @@ export default async function ProductionPage({
               <ItemListRow key={person.id} className="flex-wrap">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">
-                    {person.name ?? person.email ?? "Sem nome"}
+                    {person.name ?? person.email ?? t("common.noName")}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     <StatusBadge tone="muted">
@@ -211,7 +211,7 @@ export default async function ProductionPage({
             projectId={project.id}
             people={people.map((person) => ({
               id: person.userId,
-              label: person.name ?? person.email ?? "Sem nome",
+              label: person.name ?? person.email ?? t("common.noName"),
             }))}
           />
         ) : null}
@@ -220,7 +220,7 @@ export default async function ProductionPage({
         href="/producoes"
         className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
-        Voltar para a lista
+        {t("projects.backToList")}
       </Link>
     </div>
   );

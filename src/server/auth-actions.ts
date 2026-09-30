@@ -23,7 +23,7 @@ export async function loginWithEmail(
       .trim()
       .toLowerCase(),
   );
-  if (!parsed.success) return { message: "Digite um e-mail válido." };
+  if (!parsed.success) return { message: "login.invalidEmail" };
   const nextPath = safeNextPath(formData.get("callbackUrl"));
   try {
     // Sucesso redireciona para /login/verificar (lança o redirect do Next).
@@ -33,7 +33,7 @@ export async function loginWithEmail(
     });
   } catch (error) {
     if (error instanceof AuthError) {
-      return { message: "Não foi possível enviar o link. Tente novamente." };
+      return { message: "login.sendFailed" };
     }
     throw error;
   }

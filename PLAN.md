@@ -1731,7 +1731,7 @@ Login com Google e/ou e-mail (conforme env), criar workspace, aceitar convite.
 
 ## UI-008 — QA visual e acessibilidade
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-004..UI-007
 

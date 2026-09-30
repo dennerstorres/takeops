@@ -55,16 +55,16 @@ export function ShootForm({
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-        Título
+        {t("common.title")}
         <Input
           name="title"
           maxLength={120}
           defaultValue={values.title}
-          placeholder="Sessão no estúdio"
+          placeholder={t("record.studioPlaceholder")}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Início
+        {t("record.start")}
         <Input
           name="scheduledAt"
           type="datetime-local"
@@ -73,19 +73,19 @@ export function ShootForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Fim
+        {t("record.end")}
         <Input name="endAt" type="datetime-local" defaultValue={values.endAt} />
       </label>
       <p className="text-xs text-muted-foreground sm:col-span-2">
-        Horário de {timezone}.
+        {t("record.timezone", { timezone })}
       </p>
       <label className="flex flex-col gap-1 text-sm">
-        Local
+        {t("record.location")}
         <Input name="location" maxLength={200} defaultValue={values.location} />
       </label>
       {editing ? (
         <label className="flex flex-col gap-1 text-sm">
-          Status
+          {t("common.status")}
           <Select name="status" defaultValue={values.status}>
             {shootStatuses.map((status) => (
               <option key={status} value={status}>
@@ -96,7 +96,7 @@ export function ShootForm({
         </label>
       ) : null}
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-        Notas
+        {t("common.notes")}
         <Textarea
           name="notes"
           rows={2}
@@ -106,7 +106,7 @@ export function ShootForm({
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        {editing ? "Salvar gravação" : "Agendar gravação"}
+        {editing ? t("record.save") : t("record.schedule")}
       </Button>
     </form>
   );

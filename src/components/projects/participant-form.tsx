@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +30,7 @@ export function ParticipantForm({
     >
       <input type="hidden" name="projectId" value={projectId} />
       <label className="sr-only" htmlFor={`pessoa-${projectId}`}>
-        Pessoa
+        {t("projects.person")}
       </label>
       <Select
         id={`pessoa-${projectId}`}
@@ -43,7 +45,7 @@ export function ParticipantForm({
         ))}
       </Select>
       <label className="sr-only" htmlFor={`funcao-${projectId}`}>
-        Função
+        {t("projects.role")}
       </label>
       <Select id={`funcao-${projectId}`} name="role" defaultValue="PRODUCER">
         {projectRoles
@@ -55,7 +57,7 @@ export function ParticipantForm({
           ))}
       </Select>
       <Button type="submit" className="min-h-11">
-        Adicionar
+        {t("common.add")}
       </Button>
     </form>
   );
@@ -70,13 +72,14 @@ export function RemoveParticipantButton({
   userId: string;
   role: ProjectRole;
 }) {
+  const t = useTranslations();
   return (
     <form action={removeParticipantAction}>
       <input type="hidden" name="projectId" value={projectId} />
       <input type="hidden" name="userId" value={userId} />
       <input type="hidden" name="role" value={role} />
       <Button type="submit" variant="outline" className="min-h-11">
-        Remover
+        {t("projects.remove")}
       </Button>
     </form>
   );

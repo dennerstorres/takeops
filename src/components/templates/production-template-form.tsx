@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState, useState } from "react";
 import { ConfirmDialog } from "@/components/feedback/confirm-dialog";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ export function ProductionTemplateForm({
 }: {
   values: { templateId?: string; name: string; description: string };
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     saveProductionTemplateAction,
     null as ProductionTemplateFormState,
@@ -33,17 +35,17 @@ export function ProductionTemplateForm({
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Nome
+        {t("templates.name")}
         <Input
           name="name"
           required
           maxLength={120}
           defaultValue={values.name}
-          placeholder="Demonstração de Feature"
+          placeholder={t("templates.namePlaceholder")}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Descrição (opcional)
+        {t("templates.descriptionOptional")}
         <Textarea
           name="description"
           maxLength={2000}
@@ -53,7 +55,7 @@ export function ProductionTemplateForm({
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        {values.templateId ? "Salvar template" : "Criar template"}
+        {values.templateId ? t("templates.save") : t("templates.create")}
       </Button>
     </form>
   );
@@ -64,6 +66,7 @@ export function DeleteProductionTemplateButton({
 }: {
   templateId: string;
 }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const formId = `excluir-template-${templateId}`;
 
@@ -75,14 +78,14 @@ export function DeleteProductionTemplateButton({
         className="min-h-11"
         onClick={() => setOpen(true)}
       >
-        Excluir template
+        {t("templates.delete")}
       </Button>
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Excluir este template?"
-        description="As produções já criadas com ele não mudam."
-        confirmLabel="Excluir"
+        title={t("templates.deleteTitle")}
+        description={t("templates.deleteDescription")}
+        confirmLabel={t("templates.deleteConfirm")}
         destructive
         onConfirm={() => {
           const form = document.getElementById(

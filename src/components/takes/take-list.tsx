@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import {
   favoriteTakeAction,
   registerTakeAction,
@@ -7,12 +8,6 @@ import type { TakeRecord, TakeStatus } from "@/server/take-repository";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatusBadge } from "@/components/ui/status-badge";
-
-export const takeStatusLabel: Record<TakeStatus, string> = {
-  OK: "OK",
-  RETAKE: "Refazer",
-  DISCARDED: "Descartado",
-};
 
 function Hidden({
   projectId,
@@ -36,7 +31,7 @@ function Hidden({
 }
 
 // Registro rápido: um toque grava o próximo take com o status escolhido.
-export function TakeList({
+export async function TakeList({
   projectId,
   sceneId,
   shotId,
@@ -56,13 +51,23 @@ export function TakeList({
   // No set o registro é a ação frequente: botões largos, OK em destaque.
   record?: boolean;
 }) {
+  const t = await getTranslations();
+  const statusLabel: Record<TakeStatus, string> = {
+    OK: t("takes.statusOk"),
+    RETAKE: t("takes.statusRetake"),
+    DISCARDED: t("takes.statusDiscarded"),
+  };
   const ok = takes.filter((take) => take.status === "OK").length;
   const ids = { projectId, sceneId, shotId, returnTo };
 
   return (
     <div className="space-y-2">
       <p className="text-sm text-muted-foreground">
-        Takes: {takes.length} · {ok} OK de {requiredTakes} pedidos
+        {t("takes.summary", {
+          count: takes.length,
+          ok,
+          required: requiredTakes,
+        })}
       </p>
       {takes.length > 0 ? (
         <ol className="flex flex-col gap-1">
@@ -72,12 +77,14 @@ export function TakeList({
               className="flex flex-wrap items-center justify-between gap-2 text-sm"
             >
               <span>
-                <span className="font-medium">Take {take.number}</span>
+                <span className="font-medium">
+                  {t("takes.number", { number: take.number })}
+                </span>
                 {" · "}
                 <StatusBadge status={take.status}>
-                  {takeStatusLabel[take.status]}
+                  {statusLabel[take.status]}
                 </StatusBadge>
-                {take.favorite ? " · ★ Preferido" : ""}
+                {take.favorite ? t("takes.favoriteMark") : ""}
                 {take.notes ? (
                   <span className="text-muted-foreground"> · {take.notes}</span>
                 ) : null}
@@ -95,7 +102,9 @@ export function TakeList({
                         variant="outline"
                         aria-pressed={take.favorite}
                       >
-                        {take.favorite ? "Tirar preferido" : "Preferido"}
+                        {take.favorite
+                          ? t("takes.unfavorite")
+                          : t("takes.favorite")}
                       </Button>
                     </form>
                   ) : null}
@@ -110,7 +119,7 @@ export function TakeList({
                       />
                       <input type="hidden" name="status" value="DISCARDED" />
                       <Button type="submit" variant="outline">
-                        Descartar
+                        {t("takes.discard")}
                       </Button>
                     </form>
                   ) : null}
@@ -127,9 +136,7 @@ export function TakeList({
         >
           <Hidden {...ids} />
           <label className="w-full space-y-1 text-sm">
-            <span className="text-muted-foreground">
-              Observação do próximo take (opcional)
-            </span>
+            <span className="text-muted-foreground">{t("takes.nextNote")}</span>
             <Input name="notes" maxLength={1000} />
           </label>
           <Button
@@ -139,7 +146,7 @@ export function TakeList({
             variant={record ? "default" : "outline"}
             className={record ? "w-full" : undefined}
           >
-            Take OK
+            {t("takes.ok")}
           </Button>
           <Button
             type="submit"
@@ -148,7 +155,7 @@ export function TakeList({
             variant="outline"
             className={record ? "w-full" : undefined}
           >
-            Take para refazer
+            {t("takes.retake")}
           </Button>
         </form>
       ) : null}

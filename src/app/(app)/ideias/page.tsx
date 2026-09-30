@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -16,6 +16,7 @@ import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
 export default async function IdeasPage() {
   const t = await getTranslations();
+  const locale = await getLocale();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -36,7 +37,7 @@ export default async function IdeasPage() {
     throw error;
   }
 
-  const when = new Intl.DateTimeFormat("pt-BR", {
+  const when = new Intl.DateTimeFormat(locale, {
     dateStyle: "short",
     timeZone: workspace.timezone,
   });
@@ -45,9 +46,11 @@ export default async function IdeasPage() {
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">Ideias</h1>
+          <h1 className="text-2xl font-medium tracking-tight">
+            {t("ideas.title")}
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Ideias de {workspace.name}.
+            {t("ideas.workspace", { workspace: workspace.name })}
           </p>
         </div>
         {canEdit ? (
@@ -55,15 +58,15 @@ export default async function IdeasPage() {
             href="/ideias/nova"
             className={buttonVariants({ variant: "outline" })}
           >
-            Completar campos
+            {t("ideas.fillIn")}
           </Link>
         ) : null}
       </header>
       {canEdit ? <CaptureIdeaForm /> : null}
       {ideas.length === 0 ? (
         <EmptyState
-          title="Nenhuma ideia"
-          description="As ideias da equipe aparecem aqui."
+          title={t("ideas.emptyTitle")}
+          description={t("ideas.emptyDescription")}
         />
       ) : (
         <ItemList>

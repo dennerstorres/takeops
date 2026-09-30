@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ export function TemplateChecklistForm({
   current: string;
   options: { id: string; label: string }[];
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     setTemplateChecklistAction,
     null as ProductionTemplateFormState,
@@ -33,13 +35,13 @@ export function TemplateChecklistForm({
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Checklist de gravação
+        {t("templates.shootChecklist")}
         <Select
           name="checklistTemplateId"
           defaultValue={current}
           className="sm:w-80"
         >
-          <option value="">Nenhum</option>
+          <option value="">{t("templates.none")}</option>
           {options.map((option) => (
             <option key={option.id} value={option.id}>
               {option.label}
@@ -48,7 +50,7 @@ export function TemplateChecklistForm({
         </Select>
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        Salvar checklist
+        {t("templates.saveChecklist")}
       </Button>
     </form>
   );

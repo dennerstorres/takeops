@@ -1,11 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ConfirmDialog } from "@/components/feedback/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { deleteIdeaAction } from "@/server/idea-actions";
 
 export function DeleteIdeaButton({ ideaId }: { ideaId: string }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,14 +18,14 @@ export function DeleteIdeaButton({ ideaId }: { ideaId: string }) {
         className="min-h-11"
         onClick={() => setOpen(true)}
       >
-        Excluir
+        {t("ideas.delete")}
       </Button>
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Excluir esta ideia?"
-        description="Ela sai da lista. O registro permanece guardado."
-        confirmLabel="Excluir"
+        title={t("ideas.deleteTitle")}
+        description={t("ideas.deleteDescription")}
+        confirmLabel={t("ideas.delete")}
         destructive
         onConfirm={() => {
           const form = document.getElementById(

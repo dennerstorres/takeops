@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { TemplateForm } from "@/components/checklists/checklist-forms";
@@ -13,6 +14,7 @@ import { prismaChecklistRepository } from "@/server/checklist-prisma";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
 export default async function ChecklistsPage() {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -32,18 +34,20 @@ export default async function ChecklistsPage() {
         href="/configuracoes"
         className="inline-flex min-h-11 items-center text-sm text-muted-foreground"
       >
-        Voltar às configurações
+        {t("settings.back")}
       </Link>
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Checklists</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("checklists.title")}
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Modelos copiados para cada gravação.
+          {t("checklists.description")}
         </p>
       </header>
       {templates.length === 0 ? (
         <EmptyState
-          title="Nenhum checklist"
-          description="Os modelos de checklist do workspace aparecem aqui."
+          title={t("checklists.emptyTitle")}
+          description={t("checklists.emptyDescription")}
         />
       ) : (
         <ItemList>
@@ -55,8 +59,10 @@ export default async function ChecklistsPage() {
               >
                 <span className="text-sm font-medium">{template.name}</span>
                 <span className="text-sm text-muted-foreground">
-                  {template.type === "SHOOT" ? "Gravação" : "Outro"} ·{" "}
-                  {template.items.length} itens
+                  {t("checklists.summary", {
+                    type: template.type,
+                    count: template.items.length,
+                  })}
                 </span>
               </Link>
             </ItemListRow>
@@ -66,19 +72,16 @@ export default async function ChecklistsPage() {
       {canEdit && !templates.some((template) => template.type === "SHOOT") ? (
         <Card className="space-y-2">
           <form action={createRecommendedChecklistAction} className="space-y-2">
-            <p className="text-sm">
-              Comece pelo checklist recomendado: equipamentos e preparação, 22
-              itens.
-            </p>
+            <p className="text-sm">{t("checklists.recommended")}</p>
             <Button type="submit" variant="outline">
-              Criar checklist recomendado
+              {t("checklists.createRecommended")}
             </Button>
           </form>
         </Card>
       ) : null}
       {canEdit ? (
         <section className="space-y-3">
-          <h2 className="text-base font-medium">Novo checklist</h2>
+          <h2 className="text-base font-medium">{t("checklists.new")}</h2>
           <TemplateForm values={{ name: "", type: "SHOOT" }} />
         </section>
       ) : null}

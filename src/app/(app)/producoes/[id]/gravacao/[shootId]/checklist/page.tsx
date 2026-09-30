@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -17,6 +18,7 @@ export default async function ShootChecklistPage({
 }: {
   params: Promise<{ id: string; shootId: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -54,18 +56,20 @@ export default async function ShootChecklistPage({
         href={`/producoes/${id}/gravacao`}
         className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
-        Voltar à gravação
+        {t("record.back")}
       </Link>
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Checklist</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("record.checklist")}
+        </h1>
         <p className="text-sm text-muted-foreground">
-          {shoot.title || "Sessão de gravação"}
+          {shoot.title || t("record.session")}
         </p>
       </header>
       {items.length === 0 ? (
         <EmptyState
-          title="Sem checklist"
-          description="Escolha um modelo na aba Gravação para começar."
+          title={t("record.noChecklistTitle")}
+          description={t("record.pickTemplate")}
         />
       ) : (
         <ShootChecklist

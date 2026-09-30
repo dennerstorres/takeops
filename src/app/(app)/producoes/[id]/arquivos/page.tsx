@@ -58,20 +58,19 @@ export default async function AssetsPage({
         href={`/producoes/${project.id}`}
         className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
-        Voltar à produção
+        {t("projects.backToProduction")}
       </Link>
       <header className="space-y-1">
         <h1 className="text-2xl font-medium tracking-tight">
-          Arquivos e referências
+          {t("assets.title")}
         </h1>
         <p className="text-sm text-muted-foreground">
-          {project.title} · os arquivos ficam no Drive, Dropbox, NAS ou onde a
-          equipe guarda; aqui ficam os links.
+          {t("assets.intro", { title: project.title })}
         </p>
       </header>
       {canEdit ? (
         <section className={cn(surfaceClass, "space-y-3 p-3")}>
-          <h2 className="text-sm font-medium">Novo link</h2>
+          <h2 className="text-sm font-medium">{t("assets.newLink")}</h2>
           <AssetForm
             values={{
               projectId: project.id,
@@ -85,8 +84,8 @@ export default async function AssetsPage({
       ) : null}
       {assets.length === 0 ? (
         <EmptyState
-          title="Nenhum link"
-          description="Brutos, referências, projeto de edição e exportação final aparecem aqui."
+          title={t("assets.emptyTitle")}
+          description={t("assets.emptyDescription")}
         />
       ) : (
         <ul className="flex flex-col gap-3">
@@ -113,7 +112,7 @@ export default async function AssetsPage({
               {canEdit ? (
                 <details className="mt-3 border-t pt-3">
                   <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm">
-                    Editar
+                    {t("common.edit")}
                   </summary>
                   <div className="mt-2 space-y-3">
                     <AssetForm

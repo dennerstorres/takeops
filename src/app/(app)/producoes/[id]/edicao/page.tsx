@@ -21,8 +21,11 @@ import { prismaProjectRepository } from "@/server/project-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-function personLabel(member: { name: string | null; email: string | null }) {
-  return member.name || member.email || "Sem nome";
+function personLabel(
+  member: { name: string | null; email: string | null },
+  fallback: string,
+) {
+  return member.name || member.email || fallback;
 }
 
 export default async function EditingPage({
@@ -90,8 +93,10 @@ export default async function EditingPage({
     .map((member) => ({
       id: member.userId,
       label: editors.has(member.userId)
-        ? `${personLabel(member)} · editor da produção`
-        : personLabel(member),
+        ? t("editing.productionEditor", {
+            name: personLabel(member, t("common.noName")),
+          })
+        : personLabel(member, t("common.noName")),
       editor: editors.has(member.userId),
     }))
     .sort((left, right) => Number(right.editor) - Number(left.editor));
@@ -100,7 +105,10 @@ export default async function EditingPage({
     : null;
 
   const names = new Map(
-    team.map((member) => [member.userId, personLabel(member)]),
+    team.map((member) => [
+      member.userId,
+      personLabel(member, t("common.noName")),
+    ]),
   );
   const dateTime = new Intl.DateTimeFormat("pt-BR", {
     timeZone: timezone,
@@ -116,7 +124,9 @@ export default async function EditingPage({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <ProductionTabs projectId={project.id} active="Edição" />
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Edição</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("tabs.editing")}
+        </h1>
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
       {canEdit ? (
@@ -141,27 +151,43 @@ export default async function EditingPage({
       ) : (
         <dl className="grid gap-3 sm:grid-cols-2">
           {[
-            ["Editor", editorName],
-            ["Software", info?.software],
-            ["Resolução", info?.targetResolution],
-            ["FPS", info?.targetFps?.toString()],
+            [t("editing.editor"), editorName],
+            [t("editing.software"), info?.software],
+            [t("editing.resolution"), info?.targetResolution],
+            [t("editing.fps"), info?.targetFps?.toString()],
             [
-              "Proporção",
+              t("projects.aspectRatio"),
               info?.aspectRatio ? aspectLabel(t, info.aspectRatio) : null,
             ],
-            ["Legenda", info ? (info.captionsRequired ? "Sim" : "Não") : null],
-            ["Música", info ? (info.musicRequired ? "Sim" : "Não") : null],
+            [
+              t("editing.captions"),
+              info
+                ? info.captionsRequired
+                  ? t("common.yes")
+                  : t("common.no")
+                : null,
+            ],
+            [
+              t("editing.music"),
+              info
+                ? info.musicRequired
+                  ? t("common.yes")
+                  : t("common.no")
+                : null,
+            ],
           ].map(([label, value]) => (
             <div key={label} className={cn(surfaceClass, "space-y-1 p-3")}>
               <dt className="text-sm text-muted-foreground">{label}</dt>
               <dd className="text-sm font-medium">
-                {value ?? "Não informado"}
+                {value ?? t("common.notSet")}
               </dd>
             </div>
           ))}
           {info?.projectFileUrl ? (
             <div className={cn(surfaceClass, "space-y-1 p-3 sm:col-span-2")}>
-              <dt className="text-sm text-muted-foreground">Projeto</dt>
+              <dt className="text-sm text-muted-foreground">
+                {t("editing.projectFile")}
+              </dt>
               <dd>
                 <a
                   href={info.projectFileUrl}
@@ -169,25 +195,27 @@ export default async function EditingPage({
                   rel="noopener noreferrer"
                   className="inline-flex min-h-11 items-center text-sm font-medium break-all text-primary underline-offset-4 hover:underline"
                 >
-                  Abrir projeto de edição
+                  {t("editing.openProject")}
                 </a>
               </dd>
             </div>
           ) : null}
           {info?.notes ? (
             <div className={cn(surfaceClass, "space-y-1 p-3 sm:col-span-2")}>
-              <dt className="text-sm text-muted-foreground">Notas</dt>
+              <dt className="text-sm text-muted-foreground">
+                {t("common.notes")}
+              </dt>
               <dd className="text-sm whitespace-pre-wrap">{info.notes}</dd>
             </div>
           ) : null}
         </dl>
       )}
       <section id="versoes" className="flex flex-col gap-3 border-t pt-6">
-        <h2 className="text-base font-medium">Versões</h2>
+        <h2 className="text-base font-medium">{t("editing.versions")}</h2>
         {canEdit ? (
           <details className={cn(surfaceClass, "p-3")}>
             <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
-              Nova versão
+              {t("editing.newVersion")}
             </summary>
             <div className="mt-2">
               <EditVersionForm
@@ -199,8 +227,8 @@ export default async function EditingPage({
         ) : null}
         {versions.length === 0 ? (
           <EmptyState
-            title="Nenhuma versão"
-            description="Cada corte enviado para revisão aparece aqui, do mais novo ao mais antigo."
+            title={t("editing.emptyTitle")}
+            description={t("editing.emptyDescription")}
           />
         ) : (
           <ol className="flex flex-col gap-3">
@@ -231,7 +259,7 @@ export default async function EditingPage({
                       rel="noopener noreferrer"
                       className={linkClass}
                     >
-                      Assistir preview
+                      {t("editing.watchPreview")}
                     </a>
                   ) : null}
                   {version.fileUrl ? (
@@ -241,7 +269,7 @@ export default async function EditingPage({
                       rel="noopener noreferrer"
                       className={linkClass}
                     >
-                      Abrir arquivo
+                      {t("editing.openFile")}
                     </a>
                   ) : null}
                 </div>

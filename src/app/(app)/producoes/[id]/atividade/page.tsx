@@ -14,8 +14,11 @@ import { prismaProjectRepository } from "@/server/project-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-function personLabel(member: { name: string | null; email: string | null }) {
-  return member.name || member.email || "Sem nome";
+function personLabel(
+  member: { name: string | null; email: string | null },
+  fallback: string,
+) {
+  return member.name || member.email || fallback;
 }
 
 export default async function ActivityPage({
@@ -59,7 +62,10 @@ export default async function ActivityPage({
   }
 
   const names = new Map(
-    team.map((member) => [member.userId, personLabel(member)]),
+    team.map((member) => [
+      member.userId,
+      personLabel(member, t("common.noName")),
+    ]),
   );
   const dateTime = new Intl.DateTimeFormat("pt-BR", {
     timeZone: timezone,
@@ -73,13 +79,15 @@ export default async function ActivityPage({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <ProductionTabs projectId={project.id} active="Atividade" />
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Atividade</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("tabs.activity")}
+        </h1>
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
       {rows.length === 0 ? (
         <EmptyState
-          title="Nenhuma atividade"
-          description="Criação, mudanças de etapa, versões, aprovações e publicações aparecem aqui."
+          title={t("activity.emptyTitle")}
+          description={t("activity.emptyDescription")}
         />
       ) : (
         <ItemList>
@@ -92,8 +100,8 @@ export default async function ActivityPage({
                 {describeActivity(
                   t,
                   row.userId
-                    ? (names.get(row.userId) ?? "Ex-membro")
-                    : "Alguém",
+                    ? (names.get(row.userId) ?? t("common.formerMember"))
+                    : t("common.someone"),
                   row.action,
                   row.metadata,
                 )}

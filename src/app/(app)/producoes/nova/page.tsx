@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ProjectForm } from "@/components/projects/project-form";
@@ -15,6 +16,7 @@ export default async function NewProductionPage({
 }: {
   searchParams: Promise<{ template?: string | string[] }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -42,14 +44,16 @@ export default async function NewProductionPage({
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Nova produção</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("projects.create")}
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Ela começa na etapa Ideia. A etapa muda no quadro.
+          {t("projects.startsAsIdea")}
         </p>
       </header>
       {templates.length > 0 ? (
         <section className="space-y-2">
-          <h2 className="text-sm font-medium">Começar de um template</h2>
+          <h2 className="text-sm font-medium">{t("projects.fromTemplate")}</h2>
           <div className="flex flex-wrap gap-2">
             <Link
               href="/producoes/nova"
@@ -58,7 +62,7 @@ export default async function NewProductionPage({
                 chosen ? "" : "bg-muted font-medium"
               }`}
             >
-              Em branco
+              {t("projects.blank")}
             </Link>
             {templates.map((template) => (
               <Link
@@ -75,8 +79,7 @@ export default async function NewProductionPage({
           </div>
           {chosen ? (
             <p className="text-sm text-muted-foreground">
-              A produção nasce com cópia das cenas e do checklist de{" "}
-              {chosen.name}.
+              {t("projects.templateCopy", { name: chosen.name })}
             </p>
           ) : null}
         </section>
@@ -86,7 +89,7 @@ export default async function NewProductionPage({
         canEdit
         people={people.map((person) => ({
           id: person.userId,
-          label: person.name ?? person.email ?? "Sem nome",
+          label: person.name ?? person.email ?? t("common.noName"),
         }))}
         ideas={ideas.map((idea) => ({ id: idea.id, label: idea.title }))}
         values={{

@@ -29,11 +29,16 @@ export function TemplateSceneForm({ templateId }: { templateId: string }) {
       ) : null}
       <div className="grid gap-3 sm:grid-cols-[1fr_12rem]">
         <label className="flex flex-col gap-1 text-sm">
-          Título da cena
-          <Input name="title" required maxLength={120} placeholder="Hook" />
+          {t("templates.sceneTitle")}
+          <Input
+            name="title"
+            required
+            maxLength={120}
+            placeholder={t("templates.sceneTitlePlaceholder")}
+          />
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          Tipo
+          {t("templates.type")}
           <Select name="type" defaultValue="OTHER">
             {sceneTypes.map((type) => (
               <option key={type} value={type}>
@@ -44,11 +49,11 @@ export function TemplateSceneForm({ templateId }: { templateId: string }) {
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
-        Orientação (opcional)
+        {t("templates.direction")}
         <Input name="description" maxLength={2000} />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        Adicionar cena
+        {t("templates.addScene")}
       </Button>
     </form>
   );

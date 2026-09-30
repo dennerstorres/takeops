@@ -30,8 +30,11 @@ import { prismaReviewRepository } from "@/server/review-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-function personLabel(member: { name: string | null; email: string | null }) {
-  return member.name || member.email || "Sem nome";
+function personLabel(
+  member: { name: string | null; email: string | null },
+  fallback: string,
+) {
+  return member.name || member.email || fallback;
 }
 
 export default async function ReviewPage({
@@ -109,7 +112,10 @@ export default async function ReviewPage({
     : undefined;
   const resolved = comments.filter((comment) => comment.resolved);
   const names = new Map(
-    team.map((member) => [member.userId, personLabel(member)]),
+    team.map((member) => [
+      member.userId,
+      personLabel(member, t("common.noName")),
+    ]),
   );
   const dateTime = new Intl.DateTimeFormat("pt-BR", {
     timeZone: timezone,
@@ -134,14 +140,17 @@ export default async function ReviewPage({
         </p>
         <p className="text-xs text-muted-foreground">
           {comment.authorId
-            ? (names.get(comment.authorId) ?? "Ex-membro")
-            : "Ex-membro"}
+            ? (names.get(comment.authorId) ?? t("common.formerMember"))
+            : t("common.formerMember")}
           {" · "}
           <time dateTime={comment.createdAt.toISOString()}>
             {dateTime.format(comment.createdAt)}
           </time>
           {comment.resolved && comment.resolvedById
-            ? ` · resolvido por ${names.get(comment.resolvedById) ?? "ex-membro"}`
+            ? t("review.resolvedBy", {
+                name:
+                  names.get(comment.resolvedById) ?? t("common.formerMember"),
+              })
             : null}
         </p>
         {canEdit && current ? (
@@ -155,7 +164,7 @@ export default async function ReviewPage({
               value={comment.resolved ? "false" : "true"}
             />
             <Button type="submit" variant="outline">
-              {comment.resolved ? "Reabrir" : "Resolver"}
+              {comment.resolved ? t("review.reopen") : t("review.resolve")}
             </Button>
           </form>
         ) : null}
@@ -167,21 +176,23 @@ export default async function ReviewPage({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <ProductionTabs projectId={project.id} active="Revisão" />
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Revisão</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("tabs.review")}
+        </h1>
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
       {current === null ? (
         <EmptyState
-          title="Nenhuma versão para revisar"
-          description="Envie a primeira versão na aba Edição."
+          title={t("review.emptyTitle")}
+          description={t("review.emptyDescription")}
         />
       ) : (
         <>
           <section className={cn(surfaceClass, "space-y-2 p-3")}>
             <p className="text-sm text-muted-foreground">
               {current.id === versions[0].id
-                ? "Versão atual"
-                : "Versão anterior"}
+                ? t("review.currentVersion")
+                : t("review.previousVersion")}
             </p>
             <h2 className="text-lg font-medium">
               {versionLabel(current.versionNumber)}
@@ -198,7 +209,7 @@ export default async function ReviewPage({
                   rel="noopener noreferrer"
                   className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
                 >
-                  Assistir vídeo
+                  {t("review.watch")}
                 </a>
               ) : null}
               {current.fileUrl ? (
@@ -208,27 +219,28 @@ export default async function ReviewPage({
                   rel="noopener noreferrer"
                   className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
                 >
-                  Abrir arquivo
+                  {t("editing.openFile")}
                 </a>
               ) : null}
             </div>
           </section>
           <section className={cn(surfaceClass, "space-y-2 p-3")}>
-            <h2 className="text-base font-medium">Aprovação</h2>
+            <h2 className="text-base font-medium">{t("review.approval")}</h2>
             <p className="flex flex-wrap items-center gap-2 text-sm">
               {approval ? (
                 <StatusBadge status={approval.status}>
                   {approvalStatusLabel(t, approval.status)}
                 </StatusBadge>
               ) : (
-                "Aprovação ainda não pedida."
+                t("review.notRequested")
               )}
               {approval?.reviewedAt ? (
                 <span className="text-muted-foreground">
                   {" · "}
                   {approval.reviewedById
-                    ? (names.get(approval.reviewedById) ?? "ex-membro")
-                    : "ex-membro"}
+                    ? (names.get(approval.reviewedById) ??
+                      t("common.formerMember"))
+                    : t("common.formerMember")}
                   {" · "}
                   <time dateTime={approval.reviewedAt.toISOString()}>
                     {dateTime.format(approval.reviewedAt)}
@@ -243,8 +255,9 @@ export default async function ReviewPage({
             pendingVersion &&
             pendingAny.editVersionId !== current.id ? (
               <p className="text-sm text-muted-foreground">
-                {versionLabel(pendingVersion.versionNumber)} está aguardando
-                aprovação.
+                {t("review.waiting", {
+                  version: versionLabel(pendingVersion.versionNumber),
+                })}
               </p>
             ) : null}
             {canDecide && approval?.status === "PENDING" ? (
@@ -266,7 +279,7 @@ export default async function ReviewPage({
           ) : null}
           <section className="space-y-2">
             <h2 className="text-base font-medium">
-              Comentários abertos
+              {t("review.openComments")}
               <span className="font-normal text-muted-foreground">
                 {" "}
                 · {open.length}
@@ -274,7 +287,7 @@ export default async function ReviewPage({
             </h2>
             {open.length === 0 ? (
               <p className="text-sm text-muted-foreground">
-                Nenhum comentário aberto.
+                {t("review.noOpenComments")}
               </p>
             ) : (
               <ul className="flex flex-col gap-2">
@@ -285,7 +298,7 @@ export default async function ReviewPage({
           {resolved.length > 0 ? (
             <details className="space-y-2">
               <summary className="inline-flex min-h-11 cursor-pointer items-center text-base font-medium">
-                Resolvidos · {resolved.length}
+                {t("review.resolvedCount", { count: resolved.length })}
               </summary>
               <ul className="mt-2 flex flex-col gap-2">
                 {resolved.map((comment) => renderComment(comment))}
@@ -293,7 +306,7 @@ export default async function ReviewPage({
             </details>
           ) : null}
           <section className="space-y-2 border-t pt-6">
-            <h2 className="text-base font-medium">Histórico de versões</h2>
+            <h2 className="text-base font-medium">{t("review.history")}</h2>
             <ol className="flex flex-col gap-1">
               {versions.map((version) => (
                 <li key={version.id}>

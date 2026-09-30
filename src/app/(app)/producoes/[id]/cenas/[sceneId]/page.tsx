@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { SceneForm } from "@/components/scenes/scene-form";
@@ -16,8 +17,11 @@ import { prismaTakeRepository } from "@/server/take-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-function personLabel(member: { name: string | null; email: string | null }) {
-  return member.name || member.email || "Sem nome";
+function personLabel(
+  member: { name: string | null; email: string | null },
+  fallback: string,
+) {
+  return member.name || member.email || fallback;
 }
 
 export default async function EditScenePage({
@@ -25,6 +29,7 @@ export default async function EditScenePage({
 }: {
   params: Promise<{ id: string; sceneId: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -109,10 +114,12 @@ export default async function EditScenePage({
         href={`/producoes/${project.id}/cenas`}
         className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
-        Voltar às cenas
+        {t("scenes.back")}
       </Link>
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Editar cena</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("scenes.edit")}
+        </h1>
         <p className="text-sm text-muted-foreground">
           {scene.order}. {project.title}
         </p>
@@ -121,7 +128,7 @@ export default async function EditScenePage({
         editing
         people={team.map((member) => ({
           id: member.userId,
-          label: personLabel(member),
+          label: personLabel(member, t("common.noName")),
         }))}
         values={{
           projectId: project.id,

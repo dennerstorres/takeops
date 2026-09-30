@@ -115,7 +115,7 @@ export async function updateProjectAction(
   if (!result.ok) return { message: result.message, fields: result.fields };
   revalidatePath(`/producoes/${projectId}`);
   revalidatePath("/producoes");
-  return { message: "Produção salva." };
+  return { message: "projects.saved" };
 }
 
 export async function moveProjectStatusAction(

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   AutosaveStatusText,
   useFormAutosave,
@@ -9,10 +10,10 @@ import { autosaveScriptAction } from "@/server/script-actions";
 import { Textarea } from "@/components/ui/input";
 
 const fields = [
-  { name: "hook", label: "Gancho", max: 2000, rows: 2 },
-  { name: "mainMessage", label: "Mensagem principal", max: 2000, rows: 2 },
-  { name: "cta", label: "Chamada para ação", max: 2000, rows: 2 },
-  { name: "notes", label: "Notas", max: 4000, rows: 4 },
+  { name: "hook", label: "script.hook", max: 2000, rows: 2 },
+  { name: "mainMessage", label: "script.mainMessage", max: 2000, rows: 2 },
+  { name: "cta", label: "script.cta", max: 2000, rows: 2 },
+  { name: "notes", label: "common.notes", max: 4000, rows: 4 },
 ] as const;
 
 export type ScriptFormValues = Record<(typeof fields)[number]["name"], string>;
@@ -24,6 +25,7 @@ export function ScriptForm({
   projectId: string;
   values: ScriptFormValues;
 }) {
+  const t = useTranslations();
   const autosave = useFormAutosave(true, autosaveScriptAction);
 
   return (
@@ -40,7 +42,7 @@ export function ScriptForm({
       <input type="hidden" name="projectId" value={projectId} />
       {fields.map((field) => (
         <label key={field.name} className="flex flex-col gap-1 text-sm">
-          {field.label}
+          {t(field.label)}
           <Textarea
             name={field.name}
             rows={field.rows}
@@ -56,7 +58,7 @@ export function ScriptForm({
           disabled={autosave.status === "saving"}
           className="min-h-11 w-fit"
         >
-          Salvar roteiro
+          {t("script.save")}
         </Button>
         <AutosaveStatusText
           status={autosave.status}

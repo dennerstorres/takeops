@@ -4752,3 +4752,21 @@ Lint. `tsc --noEmit` continua só com `LayoutProps`, porque o SWC nativo não ca
 
 - Textos fixos em português ficam na UI-008.
 - Textos fixos em português ficam na UI-008.
+
+## 2026-09-29 — UI-008 — QA visual e acessibilidade
+
+**Status:** DONE
+**Agente:** Grok
+
+- O texto visível das telas (login, workspace, convite, listas, produção e Modo Gravação) foi para `messages/pt-BR.json` e `messages/en.json`. `html lang` já segue o idioma da sessão.
+- Contraste dos tokens no claro e no escuro passou em `npm run check:contrast`. Sucesso de salvar ideia, produção e erro de login por e-mail também saem do catálogo.
+- Abas da produção continuam identificadas pelo nome em pt-BR no código; o que aparece na tela é a chave traduzida.
+
+### Testes
+
+Lint. `i18n.test.ts`, `dashboard.test.ts`, `status-tone.test.ts`. `check:contrast`. `tsc --noEmit` continua só com `LayoutProps`, porque o SWC nativo não carrega neste Windows.
+
+### Pendências
+
+- Sem navegador nem celular: 375/390/430, claro/escuro na tela e pt-BR/en renderizados não foram vistos.
+- Mensagens de validação do servidor (Zod) ainda saem em português. O ADR-042 deixa isso para migrar por tela.

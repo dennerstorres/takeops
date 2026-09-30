@@ -26,8 +26,11 @@ import { prismaTakeRepository } from "@/server/take-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-function personLabel(member: { name: string | null; email: string | null }) {
-  return member.name || member.email || "Sem nome";
+function personLabel(
+  member: { name: string | null; email: string | null },
+  fallback: string,
+) {
+  return member.name || member.email || fallback;
 }
 
 export default async function RecordModePage({
@@ -83,7 +86,7 @@ export default async function RecordModePage({
     shotsByScene,
     team.map((member) => ({
       id: member.userId,
-      label: personLabel(member),
+      label: personLabel(member, t("common.noName")),
     })),
     clampPosition((await searchParams).cena, scenes.length),
   );
@@ -126,42 +129,41 @@ export default async function RecordModePage({
               aria-hidden
               className="size-2 shrink-0 rounded-full bg-record"
             />
-            Gravação
+            {t("tabs.recording")}
           </p>
           <p className="truncate text-sm">
-            {shoot.title || "Sessão de gravação"}
+            {shoot.title || t("record.session")}
           </p>
         </div>
         <Link
           href={exit}
           className={cn(buttonVariants({ variant: "outline" }), "shrink-0")}
         >
-          Sair
+          {t("record.exit")}
         </Link>
       </header>
       {view === null ? (
         <div className="p-4">
           <EmptyState
-            title="Nenhuma cena para gravar"
-            description="Crie cenas na aba Cenas para usar o Modo Gravação."
+            title={t("record.emptyTitle")}
+            description={t("record.emptyDescription")}
           />
         </div>
       ) : (
         <main className="flex flex-1 flex-col gap-5 px-4 py-4">
           <div className="space-y-1">
             <p className="text-sm font-medium">
-              {view.done} / {view.total} cenas concluídas
+              {t("record.scenesDone", { done: view.done, total: view.total })}
               {view.retakes > 0 ? (
                 <span className="font-normal text-warning">
-                  {" "}
-                  · {view.retakes} para refazer
+                  {t("record.retakes", { count: view.retakes })}
                 </span>
               ) : null}
             </p>
             <div
               className="h-2 overflow-hidden rounded-full bg-muted"
               role="progressbar"
-              aria-label="Cenas concluídas"
+              aria-label={t("record.doneLabel")}
               aria-valuemin={0}
               aria-valuemax={view.total}
               aria-valuenow={view.done}
@@ -175,7 +177,10 @@ export default async function RecordModePage({
           <div className="space-y-1">
             <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
               <span>
-                Cena {view.position} de {view.total}
+                {t("record.scenePosition", {
+                  position: view.position,
+                  total: view.total,
+                })}
               </span>
               <StatusBadge status={view.scene.status}>
                 {sceneStatusLabel(t, view.scene.status)}
@@ -204,7 +209,9 @@ export default async function RecordModePage({
           ) : null}
           {view.shots.length > 0 ? (
             <section className="space-y-2">
-              <h2 className="text-sm font-medium">Shots e takes</h2>
+              <h2 className="text-sm font-medium">
+                {t("record.shotsAndTakes")}
+              </h2>
               <ul className="flex flex-col gap-2">
                 {view.shots.map((shot, index) => (
                   <li key={shot.id} className={cn(surfaceClass, "p-3")}>
@@ -239,13 +246,12 @@ export default async function RecordModePage({
             <p
               className={cn(surfaceClass, "p-3 text-sm text-muted-foreground")}
             >
-              Esta cena ainda não tem shot. O take é registrado por shot: crie
-              um na edição da cena.
+              {t("record.noShot")}
             </p>
           )}
           {view.scene.cameraInstructions ? (
             <section className="space-y-1">
-              <h2 className="text-sm font-medium">Câmera</h2>
+              <h2 className="text-sm font-medium">{t("scenes.camera")}</h2>
               <p className="text-base whitespace-pre-wrap">
                 {view.scene.cameraInstructions}
               </p>
@@ -253,7 +259,7 @@ export default async function RecordModePage({
           ) : null}
           {view.scene.editingInstructions ? (
             <section className="space-y-1">
-              <h2 className="text-sm font-medium">Edição</h2>
+              <h2 className="text-sm font-medium">{t("tabs.editing")}</h2>
               <p className="text-base whitespace-pre-wrap">
                 {view.scene.editingInstructions}
               </p>
@@ -267,7 +273,7 @@ export default async function RecordModePage({
                 "space-y-1 border-warning/40 bg-warning-muted p-3 text-warning",
               )}
             >
-              <h2 className="text-sm font-medium">Atenção</h2>
+              <h2 className="text-sm font-medium">{t("record.attention")}</h2>
               <p className="text-base whitespace-pre-wrap">
                 {view.scene.continuityNotes}
               </p>
@@ -303,7 +309,7 @@ export default async function RecordModePage({
                   aria-pressed={view.scene.status === "NEEDS_RETAKE"}
                   className="w-full"
                 >
-                  Precisa refazer
+                  {t("record.needsRetake")}
                 </Button>
                 <Button
                   type="submit"
@@ -313,19 +319,22 @@ export default async function RecordModePage({
                   className="w-full"
                 >
                   {view.next !== null
-                    ? "✓ Cena concluída e próxima"
-                    : "✓ Cena concluída"}
+                    ? t("record.doneAndNext")
+                    : t("record.done")}
                 </Button>
               </form>
             ) : null}
             {view.total > 1 ? (
-              <nav aria-label="Cenas" className="grid grid-cols-2 gap-2">
+              <nav
+                aria-label={t("tabs.scenes")}
+                className="grid grid-cols-2 gap-2"
+              >
                 {view.previous !== null ? (
                   <Link
                     href={`${here}?cena=${view.previous}`}
                     className={buttonVariants({ variant: "outline" })}
                   >
-                    Anterior
+                    {t("record.previous")}
                   </Link>
                 ) : (
                   <span aria-hidden />
@@ -335,7 +344,7 @@ export default async function RecordModePage({
                     href={`${here}?cena=${view.next}`}
                     className={buttonVariants({ variant: "outline" })}
                   >
-                    Próxima
+                    {t("record.next")}
                   </Link>
                 ) : (
                   <span aria-hidden />

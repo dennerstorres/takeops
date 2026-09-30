@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { LogoutButton } from "@/components/shell/logout-button";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import {
 const initialState: CreateWorkspaceState = null;
 
 export function CreateWorkspaceForm({ email }: { email: string | null }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     createFirstWorkspace,
     initialState,
@@ -25,11 +27,10 @@ export function CreateWorkspaceForm({ email }: { email: string | null }) {
       <section className={cn(surfaceClass, "flex flex-col gap-6 p-6")}>
         <div className="space-y-1">
           <h1 className="text-2xl font-medium tracking-tight">
-            Criar workspace
+            {t("workspace.create")}
           </h1>
           <p className="text-sm text-muted-foreground">
-            Você ainda não participa de uma equipe. Crie a sua ou aguarde um
-            convite no e-mail desta conta.
+            {t("workspace.description")}
           </p>
           {email ? (
             <p className="text-sm text-muted-foreground">{email}</p>
@@ -38,7 +39,7 @@ export function CreateWorkspaceForm({ email }: { email: string | null }) {
         <form action={action} className="flex flex-col gap-4">
           <Field
             id="workspace-name"
-            label="Nome"
+            label={t("workspace.name")}
             error={state?.fields?.name ?? state?.fields?.slug}
             errorId="workspace-name-error"
           >
@@ -65,7 +66,7 @@ export function CreateWorkspaceForm({ email }: { email: string | null }) {
             </p>
           ) : null}
           <Button type="submit" className="w-full" disabled={pending}>
-            {pending ? "Salvando…" : "Criar workspace"}
+            {pending ? t("workspace.saving") : t("workspace.create")}
           </Button>
         </form>
         <LogoutButton className="w-full justify-center" />

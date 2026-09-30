@@ -78,7 +78,7 @@ export default async function TemplatePage({
         href="/templates"
         className="inline-flex min-h-11 items-center text-sm text-muted-foreground"
       >
-        Voltar aos templates
+        {t("templates.back")}
       </Link>
       <header className="space-y-1">
         <h1 className="text-2xl font-medium tracking-tight">{template.name}</h1>
@@ -90,7 +90,7 @@ export default async function TemplatePage({
       </header>
       {canManage ? (
         <section className="space-y-3 rounded-xl border p-3">
-          <h2 className="text-sm font-medium">Dados do template</h2>
+          <h2 className="text-sm font-medium">{t("templates.details")}</h2>
           <ProductionTemplateForm
             values={{
               templateId: template.id,
@@ -102,10 +102,10 @@ export default async function TemplatePage({
         </section>
       ) : null}
       <section id="cenas" className="space-y-3">
-        <h2 className="text-base font-medium">Cenas</h2>
+        <h2 className="text-base font-medium">{t("templates.scenes")}</h2>
         {scenes.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Nenhuma cena no template.
+            {t("templates.noScenes")}
           </p>
         ) : (
           <ol className="flex flex-col gap-2">
@@ -136,7 +136,7 @@ export default async function TemplatePage({
                       disabled={index === 0}
                       className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm disabled:opacity-40"
                     >
-                      Subir
+                      {t("templates.moveUp")}
                     </button>
                     <button
                       type="submit"
@@ -145,7 +145,7 @@ export default async function TemplatePage({
                       disabled={index === scenes.length - 1}
                       className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm disabled:opacity-40"
                     >
-                      Descer
+                      {t("templates.moveDown")}
                     </button>
                     <button
                       type="submit"
@@ -153,7 +153,7 @@ export default async function TemplatePage({
                       value="remove"
                       className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
                     >
-                      Remover
+                      {t("templates.remove")}
                     </button>
                   </form>
                 ) : null}
@@ -168,11 +168,14 @@ export default async function TemplatePage({
         ) : null}
       </section>
       <section id="checklist" className="space-y-3">
-        <h2 className="text-base font-medium">Checklist</h2>
+        <h2 className="text-base font-medium">{t("templates.checklist")}</h2>
         <p className="text-sm text-muted-foreground">
           {linkedChecklist
-            ? `${linkedChecklist.name} · ${linkedChecklist.items.length} itens. A produção criada recebe uma cópia.`
-            : "Nenhum checklist ligado ao template."}
+            ? t("templates.linkedChecklist", {
+                name: linkedChecklist.name,
+                count: linkedChecklist.items.length,
+              })
+            : t("templates.noLinkedChecklist")}
         </p>
         {canManage ? (
           <div className="rounded-xl border p-3">
@@ -183,7 +186,10 @@ export default async function TemplatePage({
                 .filter((item) => item.type === "SHOOT")
                 .map((item) => ({
                   id: item.id,
-                  label: `${item.name} · ${item.items.length} itens`,
+                  label: t("templates.checklistOption", {
+                    name: item.name,
+                    count: item.items.length,
+                  }),
                 }))}
             />
           </div>

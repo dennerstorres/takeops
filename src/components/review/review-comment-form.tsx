@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +16,7 @@ export function ReviewCommentForm({
   projectId: string;
   versionId: string;
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     createReviewCommentAction,
     null as ReviewCommentFormState,
@@ -33,7 +35,7 @@ export function ReviewCommentForm({
       ) : null}
       <div className="grid gap-3 sm:grid-cols-[8rem_1fr]">
         <label className="flex flex-col gap-1 text-sm">
-          Tempo
+          {t("review.time")}
           <Input
             name="timestamp"
             inputMode="numeric"
@@ -42,23 +44,23 @@ export function ReviewCommentForm({
             aria-describedby="tempo-ajuda"
           />
           <span id="tempo-ajuda" className="text-xs text-muted-foreground">
-            Vazio para comentário geral
+            {t("review.timeHelp")}
           </span>
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          Comentário
+          {t("review.comment")}
           <Textarea
             name="text"
             required
             maxLength={2000}
             rows={2}
-            placeholder="cortar essa pausa"
+            placeholder={t("review.commentPlaceholder")}
             className="py-2"
           />
         </label>
       </div>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        Comentar
+        {t("review.post")}
       </Button>
     </form>
   );

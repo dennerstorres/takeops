@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -11,6 +12,7 @@ import { prismaProductionTemplateRepository } from "@/server/production-template
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
 export default async function TemplatesPage() {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -29,16 +31,18 @@ export default async function TemplatesPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Templates</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("templates.title")}
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Modelos de produção com cenas e checklist prontos para copiar.
+          {t("templates.description")}
         </p>
       </header>
       {canManage ? (
         <Card>
           <details>
             <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
-              Novo template
+              {t("templates.new")}
             </summary>
             <div className="mt-2">
               <ProductionTemplateForm values={{ name: "", description: "" }} />
@@ -48,8 +52,8 @@ export default async function TemplatesPage() {
       ) : null}
       {templates.length === 0 ? (
         <EmptyState
-          title="Nenhum template"
-          description="Os modelos de produção do workspace aparecem aqui."
+          title={t("templates.emptyTitle")}
+          description={t("templates.emptyDescription")}
         />
       ) : (
         <ItemList>

@@ -47,7 +47,7 @@ export function AssetForm({ values }: { values: AssetFormValues }) {
       ) : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
-          Título
+          {t("common.title")}
           <Input
             name="title"
             required
@@ -56,7 +56,7 @@ export function AssetForm({ values }: { values: AssetFormValues }) {
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          Tipo
+          {t("common.type")}
           <Select name="type" defaultValue={values.type}>
             {assetTypes.map((type) => (
               <option key={type} value={type}>
@@ -67,7 +67,7 @@ export function AssetForm({ values }: { values: AssetFormValues }) {
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
-        Link
+        {t("assets.link")}
         <Input
           name="url"
           type="url"
@@ -79,7 +79,7 @@ export function AssetForm({ values }: { values: AssetFormValues }) {
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Descrição (opcional)
+        {t("assets.description")}
         <Input
           name="description"
           maxLength={1000}
@@ -87,7 +87,7 @@ export function AssetForm({ values }: { values: AssetFormValues }) {
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        {editing ? "Salvar link" : "Adicionar link"}
+        {editing ? t("assets.save") : t("assets.add")}
       </Button>
     </form>
   );

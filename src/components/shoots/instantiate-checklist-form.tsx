@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ export function InstantiateChecklistForm({
   shootId: string;
   templates: { id: string; label: string }[];
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     instantiateShootChecklistAction,
     null as ShootFormState,
@@ -34,7 +36,7 @@ export function InstantiateChecklistForm({
         </p>
       ) : null}
       <label className="sr-only" htmlFor={`checklist-${shootId}`}>
-        Modelo de checklist
+        {t("record.checklistTemplate")}
       </label>
       <Select id={`checklist-${shootId}`} name="templateId">
         {templates.map((template) => (
@@ -44,7 +46,7 @@ export function InstantiateChecklistForm({
         ))}
       </Select>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        Usar checklist
+        {t("record.useChecklist")}
       </Button>
     </form>
   );

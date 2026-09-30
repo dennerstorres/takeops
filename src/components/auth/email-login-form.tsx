@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
@@ -7,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { loginWithEmail, type EmailLoginState } from "@/server/auth-actions";
 
 export function EmailLoginForm({ callbackUrl }: { callbackUrl?: string }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     loginWithEmail,
     null as EmailLoginState,
@@ -16,7 +18,16 @@ export function EmailLoginForm({ callbackUrl }: { callbackUrl?: string }) {
       {callbackUrl ? (
         <input type="hidden" name="callbackUrl" value={callbackUrl} />
       ) : null}
-      <Field id="login-email" label="E-mail" error={state?.message}>
+      <Field
+        id="login-email"
+        label={t("login.email")}
+        error={
+          state?.message === "login.invalidEmail" ||
+          state?.message === "login.sendFailed"
+            ? t(state.message)
+            : state?.message
+        }
+      >
         <Input
           id="login-email"
           name="email"
@@ -24,7 +35,7 @@ export function EmailLoginForm({ callbackUrl }: { callbackUrl?: string }) {
           required
           autoComplete="email"
           inputMode="email"
-          placeholder="voce@empresa.com"
+          placeholder={t("login.emailPlaceholder")}
           aria-invalid={state?.message ? true : undefined}
         />
       </Field>
@@ -34,7 +45,7 @@ export function EmailLoginForm({ callbackUrl }: { callbackUrl?: string }) {
         className="w-full"
         disabled={pending}
       >
-        {pending ? "Enviando…" : "Receber link por e-mail"}
+        {pending ? t("login.sending") : t("login.emailLink")}
       </Button>
     </form>
   );

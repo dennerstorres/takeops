@@ -78,16 +78,17 @@ export default async function PublicationsPage({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <ProductionTabs projectId={project.id} active="Publicação" />
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Publicação</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("tabs.publication")}
+        </h1>
         <p className="text-sm text-muted-foreground">
-          {project.title} · a publicação é feita na plataforma; aqui fica o
-          registro.
+          {t("publication.intro", { title: project.title })}
         </p>
       </header>
       {canEdit ? (
         <details className={cn(surfaceClass, "p-3")}>
           <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
-            Novo destino
+            {t("publication.newDestination")}
           </summary>
           <div className="mt-2">
             <PublicationForm
@@ -103,8 +104,8 @@ export default async function PublicationsPage({
       ) : null}
       {publications.length === 0 ? (
         <EmptyState
-          title="Nenhum destino"
-          description="Cada plataforma onde o vídeo vai sair aparece aqui."
+          title={t("publication.emptyTitle")}
+          description={t("publication.emptyDescription")}
         />
       ) : (
         <ul className="flex flex-col gap-3">
@@ -118,7 +119,7 @@ export default async function PublicationsPage({
               </p>
               {publication.scheduledAt ? (
                 <p className="text-sm text-muted-foreground">
-                  Agendada para{" "}
+                  {t("publication.scheduledFor")}{" "}
                   <time dateTime={publication.scheduledAt.toISOString()}>
                     {dateTime.format(publication.scheduledAt)}
                   </time>
@@ -126,7 +127,7 @@ export default async function PublicationsPage({
               ) : null}
               {publication.publishedAt ? (
                 <p className="text-sm text-muted-foreground">
-                  Publicada em{" "}
+                  {t("publication.publishedAt")}{" "}
                   <time dateTime={publication.publishedAt.toISOString()}>
                     {dateTime.format(publication.publishedAt)}
                   </time>
@@ -139,7 +140,7 @@ export default async function PublicationsPage({
                   rel="noopener noreferrer"
                   className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
                 >
-                  Ver publicação
+                  {t("publication.view")}
                 </a>
               ) : null}
               {publication.caption ? (
@@ -171,7 +172,7 @@ export default async function PublicationsPage({
                   open={publication.status === "SCHEDULED"}
                 >
                   <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm">
-                    Registrar resultado
+                    {t("publication.recordOutcome")}
                   </summary>
                   <div className="mt-2">
                     <PublicationOutcomeForm
@@ -190,7 +191,7 @@ export default async function PublicationsPage({
               {canEdit ? (
                 <details className="mt-3 border-t pt-3">
                   <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm">
-                    Editar destino
+                    {t("publication.editDestination")}
                   </summary>
                   <div className="mt-2 space-y-3">
                     <PublicationForm

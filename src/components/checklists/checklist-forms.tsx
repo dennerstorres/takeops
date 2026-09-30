@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,7 @@ import {
 } from "@/server/checklist-actions";
 import { Input, Select } from "@/components/ui/input";
 
-const typeLabels = { SHOOT: "Gravação", OTHER: "Outro" } as const;
+const checklistTypes = ["SHOOT", "OTHER"] as const;
 
 function Alert({ state }: { state: ChecklistFormState }) {
   if (!state?.message) return null;
@@ -29,6 +30,7 @@ export function TemplateForm({
 }: {
   values: { templateId?: string; name: string; type: "SHOOT" | "OTHER" };
 }) {
+  const t = useTranslations();
   const editing = Boolean(values.templateId);
   const [state, action, pending] = useActionState(
     editing ? updateChecklistTemplateAction : createChecklistTemplateAction,
@@ -41,7 +43,7 @@ export function TemplateForm({
       ) : null}
       <Alert state={state} />
       <label className="flex flex-col gap-1 text-sm">
-        Nome
+        {t("checklists.name")}
         <Input
           name="name"
           required
@@ -50,11 +52,11 @@ export function TemplateForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Tipo
+        {t("checklists.type")}
         <Select name="type" defaultValue={values.type}>
-          {Object.entries(typeLabels).map(([value, label]) => (
+          {checklistTypes.map((value) => (
             <option key={value} value={value}>
-              {label}
+              {t(`checklists.types.${value}`)}
             </option>
           ))}
         </Select>
@@ -64,7 +66,7 @@ export function TemplateForm({
         disabled={pending}
         className="min-h-11 w-fit self-end"
       >
-        {editing ? "Salvar" : "Criar checklist"}
+        {editing ? t("checklists.save") : t("checklists.create")}
       </Button>
     </form>
   );
@@ -79,6 +81,7 @@ export function ItemForm({
   itemId?: string;
   text: string;
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     itemId ? updateChecklistItemAction : addChecklistItemAction,
     null as ChecklistFormState,
@@ -89,7 +92,7 @@ export function ItemForm({
       {itemId ? <input type="hidden" name="itemId" value={itemId} /> : null}
       <Alert state={state} />
       <label className="sr-only" htmlFor={`item-${itemId ?? "novo"}`}>
-        Item
+        {t("checklists.item")}
       </label>
       <Input
         id={`item-${itemId ?? "novo"}`}
@@ -97,10 +100,10 @@ export function ItemForm({
         required
         maxLength={200}
         defaultValue={text}
-        placeholder={itemId ? undefined : "Novo item"}
+        placeholder={itemId ? undefined : t("checklists.itemPlaceholder")}
       />
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        {itemId ? "Salvar" : "Adicionar"}
+        {itemId ? t("checklists.save") : t("checklists.add")}
       </Button>
     </form>
   );

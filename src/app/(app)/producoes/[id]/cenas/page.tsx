@@ -24,8 +24,11 @@ import { prismaShotRepository } from "@/server/shot-prisma";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-function personLabel(member: { name: string | null; email: string | null }) {
-  return member.name || member.email || "Sem nome";
+function personLabel(
+  member: { name: string | null; email: string | null },
+  fallback: string,
+) {
+  return member.name || member.email || fallback;
 }
 
 export default async function ScenesPage({
@@ -79,20 +82,22 @@ export default async function ScenesPage({
 
   const people = team.map((member) => ({
     id: member.userId,
-    label: personLabel(member),
+    label: personLabel(member, t("common.noName")),
   }));
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <ProductionTabs projectId={project.id} active="Cenas" />
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Cenas</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("tabs.scenes")}
+        </h1>
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
       {scenes.length === 0 ? (
         <EmptyState
-          title="Nenhuma cena"
-          description="As cenas desta produção aparecem aqui."
+          title={t("scenes.emptyTitle")}
+          description={t("scenes.emptyDescription")}
         />
       ) : (
         <ul className="flex flex-col gap-3">
@@ -126,7 +131,7 @@ export default async function ScenesPage({
                         variant="outline"
                         disabled={index === 0}
                       >
-                        Subir
+                        {t("common.moveUp")}
                       </Button>
                       <Button
                         type="submit"
@@ -135,7 +140,7 @@ export default async function ScenesPage({
                         variant="outline"
                         disabled={index === scenes.length - 1}
                       >
-                        Descer
+                        {t("common.moveDown")}
                       </Button>
                     </form>
                     <form action={duplicateSceneAction}>
@@ -146,14 +151,14 @@ export default async function ScenesPage({
                       />
                       <input type="hidden" name="sceneId" value={scene.id} />
                       <Button type="submit" variant="outline">
-                        Duplicar
+                        {t("scenes.duplicate")}
                       </Button>
                     </form>
                     <Link
                       href={`/producoes/${project.id}/cenas/${scene.id}`}
                       className={buttonVariants({ variant: "outline" })}
                     >
-                      Editar e shots
+                      {t("scenes.editAndShots")}
                     </Link>
                     <DeleteSceneButton
                       projectId={project.id}
@@ -182,7 +187,7 @@ export default async function ScenesPage({
       )}
       {canEdit ? (
         <section className={cn(surfaceClass, "space-y-3 p-3")}>
-          <h2 className="text-base font-medium">Nova cena</h2>
+          <h2 className="text-base font-medium">{t("scenes.new")}</h2>
           <SceneForm
             editing={false}
             people={people}

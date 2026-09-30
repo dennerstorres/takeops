@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { EmailLoginForm } from "@/components/auth/email-login-form";
 import { loginWithGoogle } from "@/server/auth-actions";
@@ -13,6 +14,7 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{ callbackUrl?: string | string[] }>;
 }) {
+  const t = await getTranslations();
   const params = await searchParams;
   const raw = Array.isArray(params.callbackUrl)
     ? params.callbackUrl[0]
@@ -27,9 +29,11 @@ export default async function LoginPage({
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-8">
       <section className={cn(surfaceClass, "flex flex-col gap-6 p-6")}>
         <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">Entrar</h1>
+          <h1 className="text-2xl font-medium tracking-tight">
+            {t("login.title")}
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Entre com a sua conta para acessar a produção.
+            {t("login.description")}
           </p>
         </div>
         {methods.google ? (
@@ -38,14 +42,14 @@ export default async function LoginPage({
               <input type="hidden" name="callbackUrl" value={nextPath} />
             ) : null}
             <Button type="submit" className="w-full">
-              Continuar com Google
+              {t("login.google")}
             </Button>
           </form>
         ) : null}
         {methods.google && methods.email ? (
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <span className="h-px flex-1 bg-border" />
-            ou
+            {t("login.or")}
             <span className="h-px flex-1 bg-border" />
           </div>
         ) : null}
@@ -53,9 +57,7 @@ export default async function LoginPage({
           <EmailLoginForm callbackUrl={nextPath ?? undefined} />
         ) : null}
         {!methods.google && !methods.email ? (
-          <p className="text-sm text-muted-foreground">
-            Nenhum método de login está configurado.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("login.none")}</p>
         ) : null}
       </section>
     </main>

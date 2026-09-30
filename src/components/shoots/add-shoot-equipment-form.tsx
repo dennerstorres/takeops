@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ export function AddShootEquipmentForm({
   shootId: string;
   options: { id: string; label: string }[];
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     addShootEquipmentAction,
     null as ShootFormState,
@@ -34,7 +36,7 @@ export function AddShootEquipmentForm({
         </p>
       ) : null}
       <label className="sr-only" htmlFor={`kit-${shootId}`}>
-        Equipamento
+        {t("record.equipmentItem")}
       </label>
       <Select id={`kit-${shootId}`} name="equipmentItemId">
         {options.map((option) => (
@@ -50,10 +52,10 @@ export function AddShootEquipmentForm({
           defaultChecked
           className="size-5"
         />
-        Obrigatório
+        {t("record.required")}
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        Adicionar
+        {t("common.add")}
       </Button>
     </form>
   );

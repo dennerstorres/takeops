@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,6 +16,7 @@ export function EditVersionForm({
   projectId: string;
   nextLabel: string;
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     createEditVersionAction,
     null as EditVersionFormState,
@@ -31,12 +33,16 @@ export function EditVersionForm({
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Título (opcional)
-        <Input name="title" maxLength={120} placeholder="Primeiro corte" />
+        {t("editing.optionalTitle")}
+        <Input
+          name="title"
+          maxLength={120}
+          placeholder={t("editing.firstCut")}
+        />
       </label>
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
-          Link de preview
+          {t("editing.previewLink")}
           <Input
             name="previewUrl"
             type="url"
@@ -46,7 +52,7 @@ export function EditVersionForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          Link do arquivo
+          {t("editing.fileLink")}
           <Input
             name="fileUrl"
             type="url"
@@ -57,11 +63,11 @@ export function EditVersionForm({
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
-        O que mudou (opcional)
+        {t("editing.whatChanged")}
         <Textarea name="notes" maxLength={4000} rows={3} className="py-2" />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        Enviar {nextLabel}
+        {t("editing.send", { label: nextLabel })}
       </Button>
     </form>
   );

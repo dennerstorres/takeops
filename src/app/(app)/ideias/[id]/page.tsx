@@ -45,15 +45,17 @@ export default async function IdeaPage({
   if (!idea) {
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
-        <h1 className="text-2xl font-medium tracking-tight">Ideia</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("ideas.missingTitle")}
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Esta ideia não está na lista.
+          {t("ideas.missingDescription")}
         </p>
         <Link
           href="/ideias"
           className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
         >
-          Voltar para a lista
+          {t("ideas.backToList")}
         </Link>
       </div>
     );
@@ -81,7 +83,7 @@ export default async function IdeaPage({
             <StatusBadge status={idea.status}>
               {statusLabel(t, idea.status)}
             </StatusBadge>
-            {idea.authorName ?? "Sem nome"}
+            {idea.authorName ?? t("common.noName")}
           </p>
           {canEdit && idea.status !== "CONVERTED" ? (
             <IdeaStatusForm ideaId={idea.id} status={idea.status} />
@@ -94,7 +96,7 @@ export default async function IdeaPage({
               href={`/producoes/${production.id}`}
               className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
             >
-              Ver produção
+              {t("ideas.viewProduction")}
             </Link>
           ) : null}
         </div>
@@ -118,7 +120,7 @@ export default async function IdeaPage({
         href="/ideias"
         className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
       >
-        Voltar para a lista
+        {t("ideas.backToList")}
       </Link>
     </div>
   );

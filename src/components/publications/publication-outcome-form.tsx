@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,7 @@ export function PublicationOutcomeForm({
   publishedLocal: string;
   url: string;
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     recordOutcomeAction,
     null as PublicationFormState,
@@ -37,7 +39,7 @@ export function PublicationOutcomeForm({
       ) : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
-          Link da publicação
+          {t("publication.link")}
           <Input
             name="url"
             type="url"
@@ -48,7 +50,7 @@ export function PublicationOutcomeForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          Publicada em (vazio = agora)
+          {t("publication.publishedAtOptional")}
           <Input
             type="datetime-local"
             name="publishedAt"
@@ -64,7 +66,7 @@ export function PublicationOutcomeForm({
           disabled={pending}
           className="min-h-11"
         >
-          Marcar como publicada
+          {t("publication.markPublished")}
         </Button>
         <Button
           type="submit"
@@ -74,7 +76,7 @@ export function PublicationOutcomeForm({
           disabled={pending}
           className="min-h-11"
         >
-          Falhou
+          {t("publication.failed")}
         </Button>
         <Button
           type="submit"
@@ -84,7 +86,7 @@ export function PublicationOutcomeForm({
           disabled={pending}
           className="min-h-11"
         >
-          Cancelar
+          {t("publication.cancel")}
         </Button>
       </div>
     </form>

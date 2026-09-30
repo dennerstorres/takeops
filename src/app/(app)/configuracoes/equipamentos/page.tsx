@@ -33,18 +33,20 @@ export default async function EquipmentPage() {
         href="/configuracoes"
         className="inline-flex min-h-11 items-center text-sm text-muted-foreground"
       >
-        Voltar às configurações
+        {t("settings.back")}
       </Link>
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Equipamentos</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("equipment.title")}
+        </h1>
         <p className="text-sm text-muted-foreground">
-          O que a equipe tem para usar nas gravações.
+          {t("equipment.description")}
         </p>
       </header>
       {items.length === 0 ? (
         <EmptyState
-          title="Nenhum equipamento"
-          description="Câmeras, microfones e o resto do kit aparecem aqui."
+          title={t("equipment.emptyTitle")}
+          description={t("equipment.emptyDescription")}
         />
       ) : (
         <ItemList>
@@ -56,7 +58,9 @@ export default async function EquipmentPage() {
                 {item.active ? null : (
                   <>
                     {" · "}
-                    <StatusBadge tone="muted">Fora de uso</StatusBadge>
+                    <StatusBadge tone="muted">
+                      {t("equipment.inactive")}
+                    </StatusBadge>
                   </>
                 )}
                 {item.notes ? ` · ${item.notes}` : null}
@@ -64,7 +68,7 @@ export default async function EquipmentPage() {
               {canEdit ? (
                 <details className="mt-2">
                   <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm">
-                    Editar
+                    {t("equipment.edit")}
                   </summary>
                   <div className="pt-3">
                     <EquipmentForm
@@ -85,7 +89,7 @@ export default async function EquipmentPage() {
       )}
       {canEdit ? (
         <section className="space-y-3">
-          <h2 className="text-base font-medium">Novo equipamento</h2>
+          <h2 className="text-base font-medium">{t("equipment.new")}</h2>
           <EquipmentForm
             values={{ name: "", category: "CAMERA", notes: "", active: true }}
           />

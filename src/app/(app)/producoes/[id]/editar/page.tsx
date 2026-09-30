@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { DeleteProjectButton } from "@/components/projects/delete-project-button";
@@ -21,6 +22,7 @@ export default async function EditProductionPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -61,7 +63,7 @@ export default async function EditProductionPage({
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <h1 className="text-2xl font-medium tracking-tight">
-            Editar produção
+            {t("projects.edit")}
           </h1>
           <p className="text-sm text-muted-foreground">{project.title}</p>
         </div>
@@ -73,7 +75,7 @@ export default async function EditProductionPage({
         canEdit
         people={people.map((person) => ({
           id: person.userId,
-          label: person.name ?? person.email ?? "Sem nome",
+          label: person.name ?? person.email ?? t("common.noName"),
         }))}
         ideas={ideas.map((idea) => ({ id: idea.id, label: idea.title }))}
         values={{
@@ -100,7 +102,7 @@ export default async function EditProductionPage({
         href={`/producoes/${project.id}`}
         className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
       >
-        Voltar para a visão geral
+        {t("projects.backToOverview")}
       </Link>
     </div>
   );

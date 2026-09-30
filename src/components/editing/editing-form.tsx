@@ -53,9 +53,9 @@ export function EditingForm({
       ) : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
-          Editor
+          {t("editing.editor")}
           <Select name="editorId" defaultValue={values.editorId}>
-            <option value="">Ninguém definido</option>
+            <option value="">{t("editing.noEditor")}</option>
             {people.map((person) => (
               <option key={person.id} value={person.id}>
                 {person.label}
@@ -64,17 +64,17 @@ export function EditingForm({
           </Select>
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          Software
+          {t("editing.software")}
           <Input
             name="software"
             maxLength={80}
             defaultValue={values.software}
-            placeholder="Premiere Pro, DaVinci Resolve"
+            placeholder={t("editing.softwarePlaceholder")}
           />
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
-        Link do projeto de edição
+        {t("editing.projectLink")}
         <Input
           name="projectFileUrl"
           type="url"
@@ -86,7 +86,7 @@ export function EditingForm({
       </label>
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="flex flex-col gap-1 text-sm">
-          Resolução
+          {t("editing.resolution")}
           <Input
             name="targetResolution"
             maxLength={40}
@@ -95,7 +95,7 @@ export function EditingForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          FPS
+          {t("editing.fps")}
           <Input
             name="targetFps"
             inputMode="decimal"
@@ -105,9 +105,9 @@ export function EditingForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          Proporção
+          {t("projects.aspectRatio")}
           <Select name="aspectRatio" defaultValue={values.aspectRatio}>
-            <option value="">Não definida</option>
+            <option value="">{t("editing.aspectUnset")}</option>
             {aspectRatios.map((ratio) => (
               <option key={ratio} value={ratio}>
                 {aspectLabel(t, ratio)}
@@ -124,7 +124,7 @@ export function EditingForm({
             defaultChecked={values.captionsRequired}
             className="size-5"
           />
-          Precisa de legenda
+          {t("editing.captionsRequired")}
         </label>
         <label className="flex min-h-11 items-center gap-2 text-sm">
           <Checkbox
@@ -133,11 +133,11 @@ export function EditingForm({
             defaultChecked={values.musicRequired}
             className="size-5"
           />
-          Precisa de música
+          {t("editing.musicRequired")}
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
-        Notas para a edição
+        {t("editing.notes")}
         <Textarea
           name="notes"
           maxLength={4000}
@@ -148,10 +148,10 @@ export function EditingForm({
       </label>
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-          Salvar edição
+          {t("editing.save")}
         </Button>
         <p className="text-sm text-muted-foreground" aria-live="polite">
-          {pending ? "Salvando..." : state?.saved ? "Salvo" : ""}
+          {pending ? t("common.saving") : state?.saved ? t("common.saved") : ""}
         </p>
       </div>
     </form>

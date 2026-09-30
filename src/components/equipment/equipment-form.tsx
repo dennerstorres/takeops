@@ -44,7 +44,7 @@ export function EquipmentForm({ values }: { values: EquipmentFormValues }) {
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Nome
+        {t("equipment.name")}
         <Input
           name="name"
           required
@@ -53,7 +53,7 @@ export function EquipmentForm({ values }: { values: EquipmentFormValues }) {
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Categoria
+        {t("equipment.category")}
         <Select name="category" defaultValue={values.category}>
           {equipmentCategories.map((category) => (
             <option key={category} value={category}>
@@ -63,7 +63,7 @@ export function EquipmentForm({ values }: { values: EquipmentFormValues }) {
         </Select>
       </label>
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-        Notas
+        {t("equipment.notes")}
         <Input name="notes" maxLength={1000} defaultValue={values.notes} />
       </label>
       {editing ? (
@@ -74,11 +74,11 @@ export function EquipmentForm({ values }: { values: EquipmentFormValues }) {
             defaultChecked={values.active}
             className="size-5"
           />
-          Disponível para novas gravações
+          {t("equipment.available")}
         </label>
       ) : null}
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        {editing ? "Salvar equipamento" : "Adicionar equipamento"}
+        {editing ? t("equipment.save") : t("equipment.add")}
       </Button>
     </form>
   );

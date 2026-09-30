@@ -105,7 +105,7 @@ export async function updateIdeaAction(
   if (!result.ok) return { message: result.message, fields: result.fields };
   revalidatePath(`/ideias/${ideaId}`);
   revalidatePath("/ideias");
-  return { message: "Ideia salva." };
+  return { message: "ideas.saved" };
 }
 
 export async function changeIdeaStatusAction(formData: FormData) {

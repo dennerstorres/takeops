@@ -37,10 +37,10 @@ export type ShotFormValues = {
 };
 
 const textFields = [
-  ["cameraLabel", "Câmera", 80],
-  ["angle", "Ângulo", 80],
-  ["subject", "Assunto", 120],
-  ["movement", "Movimento", 80],
+  ["cameraLabel", "scenes.camera", 80],
+  ["angle", "shots.angle", 80],
+  ["subject", "shots.subject", 120],
+  ["movement", "shots.movement", 80],
 ] as const;
 
 export function ShotForm({ values }: { values: ShotFormValues }) {
@@ -67,16 +67,16 @@ export function ShotForm({ values }: { values: ShotFormValues }) {
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Nome
+        {t("shots.name")}
         <Input
           name="name"
           maxLength={120}
           defaultValue={values.name}
-          placeholder="Shot A"
+          placeholder={t("shots.namePlaceholder")}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Tipo
+        {t("common.type")}
         <Select name="shotType" defaultValue={values.shotType}>
           {shotTypes.map((type) => (
             <option key={type} value={type}>
@@ -86,7 +86,7 @@ export function ShotForm({ values }: { values: ShotFormValues }) {
         </Select>
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Enquadramento
+        {t("shots.framing")}
         <Input
           name="framing"
           maxLength={80}
@@ -100,7 +100,7 @@ export function ShotForm({ values }: { values: ShotFormValues }) {
         </datalist>
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Takes necessários
+        {t("shots.requiredTakes")}
         <Input
           name="requiredTakes"
           type="number"
@@ -112,13 +112,13 @@ export function ShotForm({ values }: { values: ShotFormValues }) {
       </label>
       {textFields.map(([name, label, max]) => (
         <label key={name} className="flex flex-col gap-1 text-sm">
-          {label}
+          {t(label)}
           <Input name={name} maxLength={max} defaultValue={values[name]} />
         </label>
       ))}
       {editing ? (
         <label className="flex flex-col gap-1 text-sm">
-          Status
+          {t("common.status")}
           <Select name="status" defaultValue={values.status}>
             {shotStatuses.map((status) => (
               <option key={status} value={status}>
@@ -129,7 +129,7 @@ export function ShotForm({ values }: { values: ShotFormValues }) {
         </label>
       ) : null}
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-        Descrição
+        {t("common.description")}
         <Textarea
           name="description"
           rows={2}
@@ -139,7 +139,7 @@ export function ShotForm({ values }: { values: ShotFormValues }) {
         />
       </label>
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-        Notas
+        {t("common.notes")}
         <Textarea
           name="notes"
           rows={2}
@@ -149,7 +149,7 @@ export function ShotForm({ values }: { values: ShotFormValues }) {
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        {editing ? "Salvar shot" : "Adicionar shot"}
+        {editing ? t("shots.save") : t("shots.add")}
       </Button>
     </form>
   );

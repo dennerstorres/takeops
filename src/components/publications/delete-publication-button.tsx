@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ConfirmDialog } from "@/components/feedback/confirm-dialog";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ export function DeletePublicationButton({
   projectId: string;
   publicationId: string;
 }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const formId = `excluir-publicacao-${publicationId}`;
 
@@ -23,14 +25,14 @@ export function DeletePublicationButton({
         className="min-h-11"
         onClick={() => setOpen(true)}
       >
-        Excluir
+        {t("common.delete")}
       </Button>
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Excluir este destino?"
-        description="O registro sai da produção. Nada muda na plataforma."
-        confirmLabel="Excluir"
+        title={t("publication.deleteTitle")}
+        description={t("publication.deleteDescription")}
+        confirmLabel={t("common.delete")}
         destructive
         onConfirm={() => {
           const form = document.getElementById(

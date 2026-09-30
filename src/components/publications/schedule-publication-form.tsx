@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +19,7 @@ export function SchedulePublicationForm({
   // Horário de parede no fuso do workspace, no formato do datetime-local.
   scheduledLocal: string;
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     schedulePublicationAction,
     null as PublicationFormState,
@@ -35,7 +37,7 @@ export function SchedulePublicationForm({
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Data e hora da publicação
+        {t("publication.when")}
         <Input
           type="datetime-local"
           name="scheduledAt"
@@ -51,7 +53,9 @@ export function SchedulePublicationForm({
           disabled={pending}
           className="min-h-11"
         >
-          {scheduledLocal ? "Reagendar" : "Agendar"}
+          {scheduledLocal
+            ? t("publication.reschedule")
+            : t("publication.schedule")}
         </Button>
         {scheduledLocal ? (
           <Button
@@ -62,7 +66,7 @@ export function SchedulePublicationForm({
             disabled={pending}
             className="min-h-11"
           >
-            Tirar agendamento
+            {t("publication.clearSchedule")}
           </Button>
         ) : null}
       </div>

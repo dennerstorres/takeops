@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +17,7 @@ export function RequestApprovalForm({
   projectId: string;
   versionId: string;
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     requestApprovalAction,
     null as ApprovalFormState,
@@ -33,7 +35,7 @@ export function RequestApprovalForm({
         </p>
       ) : null}
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        Pedir aprovação desta versão
+        {t("review.request")}
       </Button>
     </form>
   );
@@ -48,6 +50,7 @@ export function DecideApprovalForm({
   versionId: string;
   approvalId: string;
 }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     decideApprovalAction,
     null as ApprovalFormState,
@@ -66,7 +69,7 @@ export function DecideApprovalForm({
         </p>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
-        Notas (obrigatórias para pedir alterações)
+        {t("review.decisionNotes")}
         <Textarea name="notes" maxLength={4000} rows={3} />
       </label>
       <div className="flex flex-wrap gap-2">
@@ -77,7 +80,7 @@ export function DecideApprovalForm({
           disabled={pending}
           className="min-h-11"
         >
-          Aprovar versão
+          {t("review.approve")}
         </Button>
         <Button
           type="submit"
@@ -87,7 +90,7 @@ export function DecideApprovalForm({
           disabled={pending}
           className="min-h-11"
         >
-          Solicitar alterações
+          {t("review.requestChanges")}
         </Button>
       </div>
     </form>

@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { TabLink, TabNav } from "@/components/ui/tabs";
 import { productionTabs } from "@/server/project-overview";
 
@@ -12,15 +13,28 @@ const links: Record<string, (projectId: string) => string> = {
   Atividade: (projectId) => `/producoes/${projectId}/atividade`,
 };
 
-export function ProductionTabs({
+const tabKey: Record<(typeof productionTabs)[number], string> = {
+  "Visão Geral": "tabs.overview",
+  Roteiro: "tabs.script",
+  Cenas: "tabs.scenes",
+  Gravação: "tabs.recording",
+  Edição: "tabs.editing",
+  Revisão: "tabs.review",
+  Publicação: "tabs.publication",
+  Atividade: "tabs.activity",
+};
+
+export async function ProductionTabs({
   projectId,
   active = "Visão Geral",
 }: {
   projectId: string;
   active?: (typeof productionTabs)[number];
 }) {
+  const t = await getTranslations();
+
   return (
-    <TabNav label="Seções da produção">
+    <TabNav label={t("tabs.label")}>
       {productionTabs.map((label) =>
         links[label] ? (
           <TabLink
@@ -28,14 +42,14 @@ export function ProductionTabs({
             href={links[label](projectId)}
             current={label === active}
           >
-            {label}
+            {t(tabKey[label])}
           </TabLink>
         ) : (
           <span
             key={label}
             className="inline-flex min-h-11 shrink-0 items-center px-3 text-sm text-muted-foreground"
           >
-            {label}
+            {t(tabKey[label])}
           </span>
         ),
       )}

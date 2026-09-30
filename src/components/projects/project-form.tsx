@@ -68,7 +68,11 @@ export function ProjectForm({
       {!values.id && templateId ? (
         <input type="hidden" name="templateId" value={templateId} />
       ) : null}
-      <Field id="project-title" label="Título" error={state?.fields?.title}>
+      <Field
+        id="project-title"
+        label={t("common.title")}
+        error={state?.fields?.title}
+      >
         <Input
           id="project-title"
           name="title"
@@ -78,7 +82,11 @@ export function ProjectForm({
           disabled={disabled}
         />
       </Field>
-      <Field id="project-format" label="Formato" error={state?.fields?.format}>
+      <Field
+        id="project-format"
+        label={t("projects.format")}
+        error={state?.fields?.format}
+      >
         <Select
           id="project-format"
           name="format"
@@ -94,7 +102,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-aspect"
-        label="Proporção"
+        label={t("projects.aspectRatio")}
         error={state?.fields?.aspectRatio}
       >
         <Select
@@ -112,7 +120,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-priority"
-        label="Prioridade"
+        label={t("projects.priority")}
         error={state?.fields?.priority}
       >
         <Select
@@ -130,7 +138,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-slug"
-        label="Identificador"
+        label={t("projects.slug")}
         error={state?.fields?.slug}
       >
         <Input
@@ -143,7 +151,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-description"
-        label="Descrição"
+        label={t("common.description")}
         error={state?.fields?.description}
       >
         <Textarea
@@ -158,7 +166,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-objective"
-        label="Objetivo"
+        label={t("projects.objective")}
         error={state?.fields?.objective}
       >
         <Input
@@ -171,7 +179,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-audience"
-        label="Público"
+        label={t("projects.audience")}
         error={state?.fields?.audience}
       >
         <Input
@@ -184,7 +192,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-product"
-        label="Produto"
+        label={t("projects.product")}
         error={state?.fields?.product}
       >
         <Input
@@ -197,7 +205,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-duration"
-        label="Duração em segundos"
+        label={t("projects.durationSeconds")}
         error={state?.fields?.estimatedDurationSeconds}
       >
         <Input
@@ -210,7 +218,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-thumb"
-        label="Thumbnail"
+        label={t("projects.thumbnail")}
         error={state?.fields?.thumbnailUrl}
       >
         <Input
@@ -224,7 +232,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-owner"
-        label="Responsável"
+        label={t("projects.owner")}
         error={state?.fields?.ownerId}
       >
         <Select
@@ -233,7 +241,7 @@ export function ProjectForm({
           defaultValue={values.ownerId}
           disabled={disabled}
         >
-          <option value="">Sem responsável</option>
+          <option value="">{t("projects.noOwner")}</option>
           {people.map((person) => (
             <option key={person.id} value={person.id}>
               {person.label}
@@ -243,7 +251,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-shoot"
-        label="Gravação"
+        label={t("tabs.recording")}
         error={state?.fields?.plannedShootDate}
       >
         <Input
@@ -256,7 +264,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-publish"
-        label="Publicação"
+        label={t("tabs.publication")}
         error={state?.fields?.plannedPublishDate}
       >
         <Input
@@ -269,7 +277,7 @@ export function ProjectForm({
       </Field>
       <Field
         id="project-idea"
-        label="Ideia de origem"
+        label={t("projects.sourceIdea")}
         error={state?.fields?.sourceIdeaId}
       >
         <Select
@@ -278,7 +286,7 @@ export function ProjectForm({
           defaultValue={values.sourceIdeaId}
           disabled={disabled}
         >
-          <option value="">Nenhuma</option>
+          <option value="">{t("projects.none")}</option>
           {ideas.map((idea) => (
             <option key={idea.id} value={idea.id}>
               {idea.label}
@@ -289,13 +297,15 @@ export function ProjectForm({
       {state && !state.fields ? (
         <p
           className={
-            state.message === "Produção salva."
+            state.message === "projects.saved"
               ? "text-sm text-muted-foreground"
               : "text-sm text-destructive"
           }
           role="status"
         >
-          {state.message}
+          {state.message === "projects.saved"
+            ? t("projects.saved")
+            : state.message}
         </p>
       ) : null}
       {canEdit ? (
@@ -304,7 +314,11 @@ export function ProjectForm({
           className="min-h-11 w-full sm:w-auto"
           disabled={pending}
         >
-          {pending ? "Salvando…" : values.id ? "Salvar" : "Criar produção"}
+          {pending
+            ? t("common.saving")
+            : values.id
+              ? t("common.save")
+              : t("projects.create")}
         </Button>
       ) : null}
     </form>

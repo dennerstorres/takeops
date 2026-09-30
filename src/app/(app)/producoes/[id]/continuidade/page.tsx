@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ContinuityForm } from "@/components/continuity/continuity-form";
@@ -19,6 +20,7 @@ export default async function ContinuityPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -64,15 +66,17 @@ export default async function ContinuityPage({
         href={`/producoes/${project.id}/gravacao`}
         className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
-        Voltar à gravação
+        {t("record.back")}
       </Link>
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Continuidade</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("continuity.title")}
+        </h1>
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
       {canEdit ? (
         <section className={cn(surfaceClass, "space-y-3 p-3")}>
-          <h2 className="text-sm font-medium">Nova nota</h2>
+          <h2 className="text-sm font-medium">{t("continuity.new")}</h2>
           <ContinuityForm
             categories={categories}
             values={{
@@ -86,14 +90,14 @@ export default async function ContinuityPage({
       ) : null}
       {groups.length === 0 ? (
         <EmptyState
-          title="Nenhuma nota de continuidade"
-          description="Roupa, posição de objetos e câmeras ficam anotadas aqui."
+          title={t("continuity.emptyTitle")}
+          description={t("continuity.emptyDescription")}
         />
       ) : (
         groups.map((group) => (
           <section key={group.category ?? ""} className="space-y-2">
             <h2 className="text-sm font-medium text-muted-foreground">
-              {group.category ?? "Sem categoria"}
+              {group.category ?? t("continuity.uncategorized")}
             </h2>
             <ul className="flex flex-col gap-3">
               {group.items.map((note) => (
@@ -105,7 +109,7 @@ export default async function ContinuityPage({
                   {canEdit ? (
                     <details className="mt-3 border-t pt-3">
                       <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm">
-                        Editar
+                        {t("common.edit")}
                       </summary>
                       <div className="mt-2 space-y-3">
                         <ContinuityForm

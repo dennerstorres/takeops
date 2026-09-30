@@ -1,18 +1,19 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   createTeamInvite,
   type CreateInviteState,
 } from "@/server/invite-actions";
-import { roleLabel } from "@/server/team";
 import type { WorkspaceRole } from "@/server/workspace-repository";
 import { Input, Select } from "@/components/ui/input";
 
 const initialState: CreateInviteState | null = null;
 
 export function InviteForm({ roles }: { roles: WorkspaceRole[] }) {
+  const t = useTranslations();
   const [state, action, pending] = useActionState(
     createTeamInvite,
     initialState,
@@ -25,7 +26,7 @@ export function InviteForm({ roles }: { roles: WorkspaceRole[] }) {
     <form action={action} className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
         <label htmlFor="invite-email" className="text-sm font-medium">
-          E-mail
+          {t("team.email")}
         </label>
         <Input
           id="invite-email"
@@ -43,7 +44,7 @@ export function InviteForm({ roles }: { roles: WorkspaceRole[] }) {
       </div>
       <div className="flex flex-col gap-2">
         <label htmlFor="invite-role" className="text-sm font-medium">
-          Papel
+          {t("team.role")}
         </label>
         <Select
           id="invite-role"
@@ -53,7 +54,7 @@ export function InviteForm({ roles }: { roles: WorkspaceRole[] }) {
         >
           {roles.map((role) => (
             <option key={role} value={role}>
-              {roleLabel(role)}
+              {t(`team.roles.${role}`)}
             </option>
           ))}
         </Select>
@@ -71,19 +72,16 @@ export function InviteForm({ roles }: { roles: WorkspaceRole[] }) {
         className="min-h-11 w-full sm:w-auto"
         disabled={pending}
       >
-        {pending ? "Criando…" : "Criar link"}
+        {pending ? t("team.creating") : t("team.createLink")}
       </Button>
       {link ? (
         <div className="flex flex-col gap-2">
-          <p className="text-sm">
-            Copie o link agora. Ele não fica salvo para mostrar de novo.
-          </p>
+          <p className="text-sm">{t("team.copyLink")}</p>
           <Input
             readOnly
             suppressHydrationWarning
             value={link ?? ""}
-            aria-label="Link do convite"
-
+            aria-label={t("team.linkLabel")}
             onFocus={(event) => event.currentTarget.select()}
           />
         </div>

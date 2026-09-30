@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { DeleteShotButton } from "@/components/shots/delete-shot-button";
 import { ShotForm } from "@/components/shots/shot-form";
 import { TakeList } from "@/components/takes/take-list";
@@ -15,7 +15,7 @@ import {
 import type { ShotRecord } from "@/server/shot-repository";
 import type { TakeRecord } from "@/server/take-repository";
 
-export function ShotSection({
+export async function ShotSection({
   projectId,
   sceneId,
   shots,
@@ -28,12 +28,12 @@ export function ShotSection({
   takes: Map<string, TakeRecord[]>;
   canEdit: boolean;
 }) {
-  const t = useTranslations();
+  const t = await getTranslations();
   return (
     <section id="shots" className="space-y-3">
-      <h2 className="text-base font-medium">Shots</h2>
+      <h2 className="text-base font-medium">{t("shots.title")}</h2>
       {shots.length === 0 ? (
-        <p className="text-sm text-muted-foreground">Nenhum shot nesta cena.</p>
+        <p className="text-sm text-muted-foreground">{t("shots.empty")}</p>
       ) : (
         <ol className="flex flex-col gap-3">
           {shots.map((shot, index) => (
@@ -79,7 +79,7 @@ export function ShotSection({
                         variant="outline"
                         disabled={index === 0}
                       >
-                        Subir
+                        {t("common.moveUp")}
                       </Button>
                       <Button
                         type="submit"
@@ -88,7 +88,7 @@ export function ShotSection({
                         variant="outline"
                         disabled={index === shots.length - 1}
                       >
-                        Descer
+                        {t("common.moveDown")}
                       </Button>
                     </form>
                     <DeleteShotButton
@@ -99,7 +99,7 @@ export function ShotSection({
                   </div>
                   <details>
                     <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm">
-                      Editar shot
+                      {t("shots.edit")}
                     </summary>
                     <div className="pt-3">
                       <ShotForm
@@ -131,7 +131,7 @@ export function ShotSection({
       {canEdit ? (
         <details className={cn(surfaceClass, "p-3")}>
           <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
-            Novo shot
+            {t("shots.new")}
           </summary>
           <div className="pt-3">
             <ShotForm

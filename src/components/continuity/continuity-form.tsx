@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +25,7 @@ export function ContinuityForm({
   values: ContinuityFormValues;
   categories: string[];
 }) {
+  const t = useTranslations();
   const editing = Boolean(values.noteId);
   const [state, action, pending] = useActionState(
     editing ? updateContinuityAction : createContinuityAction,
@@ -46,23 +48,23 @@ export function ContinuityForm({
       ) : null}
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
-          Título
+          {t("common.title")}
           <Input
             name="title"
             required
             maxLength={120}
             defaultValue={values.title}
-            placeholder="João, Mesa, Câmera A"
+            placeholder={t("continuity.titlePlaceholder")}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          Categoria (opcional)
+          {t("continuity.category")}
           <Input
             name="category"
             maxLength={60}
             list={listId}
             defaultValue={values.category}
-            placeholder="Pessoas, Cenário, Câmera"
+            placeholder={t("continuity.categoryPlaceholder")}
           />
           <datalist id={listId}>
             {categories.map((category) => (
@@ -72,19 +74,19 @@ export function ContinuityForm({
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
-        Como deve estar
+        {t("continuity.howItShouldBe")}
         <Textarea
           name="description"
           required
           maxLength={2000}
           rows={3}
           defaultValue={values.description}
-          placeholder={"camiseta preta\ncadeira esquerda"}
+          placeholder={t("continuity.descriptionPlaceholder")}
           className="py-2"
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
-        {editing ? "Salvar nota" : "Adicionar nota"}
+        {editing ? t("continuity.save") : t("continuity.add")}
       </Button>
     </form>
   );

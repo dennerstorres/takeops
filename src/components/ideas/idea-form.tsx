@@ -43,7 +43,11 @@ export function IdeaForm({
       {values.id ? (
         <input type="hidden" name="ideaId" value={values.id} />
       ) : null}
-      <Field id="idea-title" label="Título" error={state?.fields?.title}>
+      <Field
+        id="idea-title"
+        label={t("ideas.titleField")}
+        error={state?.fields?.title}
+      >
         <Input
           id="idea-title"
           name="title"
@@ -56,7 +60,7 @@ export function IdeaForm({
       </Field>
       <Field
         id="idea-description"
-        label="Descrição"
+        label={t("ideas.description")}
         error={state?.fields?.description}
       >
         <Textarea
@@ -69,14 +73,18 @@ export function IdeaForm({
           className="min-h-24 py-2"
         />
       </Field>
-      <Field id="idea-format" label="Formato" error={state?.fields?.format}>
+      <Field
+        id="idea-format"
+        label={t("ideas.format")}
+        error={state?.fields?.format}
+      >
         <Select
           id="idea-format"
           name="format"
           defaultValue={values.format}
           disabled={disabled}
         >
-          <option value="">Sem formato</option>
+          <option value="">{t("ideas.noFormat")}</option>
           {ideaFormats.map((format) => (
             <option key={format} value={format}>
               {formatLabel(t, format)}
@@ -86,7 +94,7 @@ export function IdeaForm({
       </Field>
       <Field
         id="idea-objective"
-        label="Objetivo"
+        label={t("ideas.objective")}
         error={state?.fields?.objective}
       >
         <Input
@@ -97,7 +105,11 @@ export function IdeaForm({
           disabled={disabled}
         />
       </Field>
-      <Field id="idea-product" label="Produto" error={state?.fields?.product}>
+      <Field
+        id="idea-product"
+        label={t("ideas.product")}
+        error={state?.fields?.product}
+      >
         <Input
           id="idea-product"
           name="product"
@@ -106,7 +118,11 @@ export function IdeaForm({
           disabled={disabled}
         />
       </Field>
-      <Field id="idea-audience" label="Público" error={state?.fields?.audience}>
+      <Field
+        id="idea-audience"
+        label={t("ideas.audience")}
+        error={state?.fields?.audience}
+      >
         <Input
           id="idea-audience"
           name="audience"
@@ -117,7 +133,7 @@ export function IdeaForm({
       </Field>
       <Field
         id="idea-reference"
-        label="Referência"
+        label={t("ideas.reference")}
         error={state?.fields?.referenceUrl}
       >
         <Input
@@ -129,7 +145,11 @@ export function IdeaForm({
           disabled={disabled}
         />
       </Field>
-      <Field id="idea-notes" label="Notas" error={state?.fields?.notes}>
+      <Field
+        id="idea-notes"
+        label={t("ideas.notes")}
+        error={state?.fields?.notes}
+      >
         <Textarea
           id="idea-notes"
           name="notes"
@@ -143,13 +163,13 @@ export function IdeaForm({
       {state && !state.fields ? (
         <p
           className={
-            state.message === "Ideia salva."
+            state.message === "ideas.saved"
               ? "text-sm text-muted-foreground"
               : "text-sm text-destructive"
           }
           role="status"
         >
-          {state.message}
+          {state.message === "ideas.saved" ? t("ideas.saved") : state.message}
         </p>
       ) : null}
       {canEdit ? (
@@ -158,7 +178,11 @@ export function IdeaForm({
           className="min-h-11 w-full sm:w-auto"
           disabled={pending}
         >
-          {pending ? "Salvando…" : values.id ? "Salvar" : "Criar ideia"}
+          {pending
+            ? t("ideas.saving")
+            : values.id
+              ? t("ideas.save")
+              : t("ideas.create")}
         </Button>
       ) : null}
     </form>

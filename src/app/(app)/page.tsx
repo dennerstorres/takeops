@@ -1,7 +1,8 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import type { Translate } from "@/i18n/translate";
 import { buttonVariants } from "@/components/ui/button";
 import { surfaceClass, surfaceLinkClass } from "@/components/ui/card";
 import { ItemList, ItemListRow } from "@/components/ui/item-list";
@@ -53,7 +54,16 @@ function Section({
   );
 }
 
-function ProjectList({ cards }: { cards: ProjectCard[] }) {
+const counterKeys = [
+  "dashboard.counters.ideas",
+  "dashboard.counters.preProduction",
+  "dashboard.counters.recording",
+  "dashboard.counters.editing",
+  "dashboard.counters.review",
+  "dashboard.counters.published",
+] as const;
+
+function ProjectList({ cards, t }: { cards: ProjectCard[]; t: Translate }) {
   return (
     <ul className="grid gap-2 sm:grid-cols-2">
       {cards.map((card) => (
@@ -77,14 +87,20 @@ function ProjectList({ cards }: { cards: ProjectCard[] }) {
                 <StatusBadge status={card.statusCode}>
                   {card.status}
                 </StatusBadge>
-                {card.shootDate ? `gravação ${card.shootDate}` : null}
+                {card.shootDate
+                  ? t("dashboard.shootOn", { date: card.shootDate })
+                  : null}
               </span>
               {card.people.length > 0 ? (
                 <span className="truncate text-sm text-muted-foreground">
                   {card.people.join(", ")}
                 </span>
               ) : null}
-              <span className="text-sm">Próximo: {card.nextAction}</span>
+              <span className="text-sm">
+                {t("dashboard.next", {
+                  action: t(`dashboard.nextAction.${card.statusCode}`),
+                })}
+              </span>
             </span>
           </Link>
         </li>
@@ -95,6 +111,7 @@ function ProjectList({ cards }: { cards: ProjectCard[] }) {
 
 export default async function Home() {
   const t = await getTranslations();
+  const locale = await getLocale();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -122,7 +139,7 @@ export default async function Home() {
     t,
   );
 
-  const when = new Intl.DateTimeFormat("pt-BR", {
+  const when = new Intl.DateTimeFormat(locale, {
     timeZone: workspace.timezone,
     weekday: "short",
     day: "2-digit",
@@ -134,26 +151,30 @@ export default async function Home() {
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-medium tracking-tight">
+          {t("dashboard.title")}
+        </h1>
         <p className="text-sm text-muted-foreground">
-          Como anda a produção de {workspace.name}.
+          {t("dashboard.subtitle", { workspace: workspace.name })}
         </p>
       </header>
 
       <dl className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-        {data.counters.map((item) => (
+        {data.counters.map((item, index) => (
           <div key={item.label} className={cn(surfaceClass, "p-3")}>
-            <dt className="text-xs text-muted-foreground">{item.label}</dt>
+            <dt className="text-xs text-muted-foreground">
+              {counterKeys[index] ? t(counterKeys[index]) : item.label}
+            </dt>
             <dd className="text-2xl font-medium tabular-nums">{item.value}</dd>
           </div>
         ))}
       </dl>
 
-      <Section title="Próximas gravações">
+      <Section title={t("dashboard.shoots")}>
         {data.shoots.length === 0 ? (
           <EmptyState
-            title="Nenhuma gravação marcada"
-            description={`As gravações dos próximos ${upcomingDays} dias aparecem aqui.`}
+            title={t("dashboard.shootsEmptyTitle")}
+            description={t("dashboard.shootsEmpty", { days: upcomingDays })}
           />
         ) : (
           <ul className="flex flex-col gap-2">
@@ -188,56 +209,56 @@ export default async function Home() {
         )}
       </Section>
 
-      <Section title="Aguardando aprovação" count={data.approval.length}>
+      <Section title={t("dashboard.approval")} count={data.approval.length}>
         {data.approval.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Nenhum pedido de aprovação aberto.
+            {t("dashboard.approvalEmpty")}
           </p>
         ) : (
-          <ProjectList cards={data.approval} />
+          <ProjectList cards={data.approval} t={t} />
         )}
       </Section>
 
-      <Section title="Aguardando revisão" count={data.review.length}>
+      <Section title={t("dashboard.review")} count={data.review.length}>
         {data.review.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Nenhuma produção em revisão.
+            {t("dashboard.reviewEmpty")}
           </p>
         ) : (
-          <ProjectList cards={data.review} />
+          <ProjectList cards={data.review} t={t} />
         )}
       </Section>
 
-      <Section title="Produções em andamento">
+      <Section title={t("dashboard.inProgress")}>
         {data.inProgress.length === 0 ? (
           <EmptyState
-            title="Nenhuma produção em andamento"
-            description="Produções entre a pré-produção e o agendamento aparecem aqui."
+            title={t("dashboard.inProgressEmptyTitle")}
+            description={t("dashboard.inProgressEmpty")}
             action={
               <Link
                 href="/producoes"
                 className={buttonVariants({ variant: "outline" })}
               >
-                Ver produções
+                {t("dashboard.viewProductions")}
               </Link>
             }
           />
         ) : (
-          <ProjectList cards={data.inProgress} />
+          <ProjectList cards={data.inProgress} t={t} />
         )}
       </Section>
 
-      <Section title="Ideias recentes">
+      <Section title={t("dashboard.recentIdeas")}>
         {data.ideas.length === 0 ? (
           <EmptyState
-            title="Nenhuma ideia aberta"
-            description="As ideias novas da equipe aparecem aqui."
+            title={t("dashboard.ideasEmptyTitle")}
+            description={t("dashboard.ideasEmpty")}
             action={
               <Link
                 href="/ideias"
                 className={buttonVariants({ variant: "outline" })}
               >
-                Anotar ideia
+                {t("dashboard.addIdea")}
               </Link>
             }
           />

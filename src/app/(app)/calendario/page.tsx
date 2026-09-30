@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import {
@@ -17,7 +17,7 @@ import { listCalendarEvents, type CalendarEvent } from "@/server/calendar";
 import { prismaCalendarRepository } from "@/server/calendar-prisma";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
-const weekdays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const weekdayKeys = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
 
 const kindClass: Record<CalendarEvent["kind"], string> = {
   SHOOT: "bg-info",
@@ -34,6 +34,7 @@ export default async function CalendarPage({
   }>;
 }) {
   const t = await getTranslations();
+  const locale = await getLocale();
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
   const access = await openWorkspace(session.user.id);
@@ -66,24 +67,27 @@ export default async function CalendarPage({
     t,
   );
 
-  const time = new Intl.DateTimeFormat("pt-BR", {
+  const time = new Intl.DateTimeFormat(locale, {
     timeZone: timezone,
     hour: "2-digit",
     minute: "2-digit",
   });
-  const monthTitle = new Intl.DateTimeFormat("pt-BR", {
+  const monthTitle = new Intl.DateTimeFormat(locale, {
     timeZone: "UTC",
     month: "long",
     year: "numeric",
   }).format(new Date(`${month}-01T00:00:00.000Z`));
-  const shortDay = new Intl.DateTimeFormat("pt-BR", {
+  const shortDay = new Intl.DateTimeFormat(locale, {
     timeZone: "UTC",
     day: "2-digit",
     month: "short",
   });
   const title =
     view === "week"
-      ? `Semana de ${shortDay.format(new Date(`${grid[0]}T00:00:00.000Z`))} a ${shortDay.format(new Date(`${last}T00:00:00.000Z`))}`
+      ? t("calendar.weekRange", {
+          from: shortDay.format(new Date(`${grid[0]}T00:00:00.000Z`)),
+          to: shortDay.format(new Date(`${last}T00:00:00.000Z`)),
+        })
       : monthTitle;
   const nav =
     view === "week"
@@ -104,7 +108,7 @@ export default async function CalendarPage({
       ? `/calendario?mes=${month}`
       : `/calendario?semana=${month === today.slice(0, 7) ? today : `${month}-01`}`;
   const linkClass = buttonVariants({ variant: "outline" });
-  const dayTitle = new Intl.DateTimeFormat("pt-BR", {
+  const dayTitle = new Intl.DateTimeFormat(locale, {
     timeZone: "UTC",
     weekday: "short",
     day: "2-digit",
@@ -138,7 +142,7 @@ export default async function CalendarPage({
           />
           <span className="font-medium">{event.label}</span>
           {event.canceled ? (
-            <span className="sr-only"> (cancelada)</span>
+            <span className="sr-only">{t("calendar.canceled")}</span>
           ) : null}
           <span className="block truncate text-muted-foreground">
             {event.projectTitle}
@@ -152,48 +156,50 @@ export default async function CalendarPage({
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-4">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">Calendário</h1>
+          <h1 className="text-2xl font-medium tracking-tight">
+            {t("calendar.title")}
+          </h1>
           <p className="text-sm text-muted-foreground first-letter:uppercase">
             {title}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <nav aria-label="Período" className="flex gap-2">
+          <nav aria-label={t("calendar.period")} className="flex gap-2">
             <Link href={nav.previous} className={linkClass}>
-              Anterior
+              {t("calendar.previous")}
             </Link>
             <Link href={nav.today} className={linkClass}>
-              Hoje
+              {t("calendar.today")}
             </Link>
             <Link href={nav.next} className={linkClass}>
-              Próximo
+              {t("calendar.next")}
             </Link>
           </nav>
           <Link href={switchHref} className={linkClass}>
-            {view === "week" ? "Ver mês" : "Ver semana"}
+            {t("calendar.switchView", { view })}
           </Link>
         </div>
       </header>
       <p className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1">
           <span aria-hidden className="size-2 rounded-full bg-info" />
-          Gravação
+          {t("calendar.shoot")}
         </span>
         <span className="inline-flex items-center gap-1">
           <span aria-hidden className="size-2 rounded-full bg-warning" />
-          Publicação planejada
+          {t("calendar.plannedPublication")}
         </span>
         <span className="inline-flex items-center gap-1">
           <span aria-hidden className="size-2 rounded-full bg-success" />
-          Publicação agendada ou feita
+          {t("calendar.publication")}
         </span>
       </p>
 
       <div className="hidden overflow-hidden rounded-xl border bg-card shadow-sm md:block">
         <div className="grid grid-cols-7 border-b bg-muted/40 text-xs text-muted-foreground">
-          {weekdays.map((name) => (
-            <div key={name} className="px-2 py-1">
-              {name}
+          {weekdayKeys.map((key) => (
+            <div key={key} className="px-2 py-1">
+              {t(`calendar.weekdays.${key}`)}
             </div>
           ))}
         </div>
@@ -221,7 +227,7 @@ export default async function CalendarPage({
                   {Number(day.slice(8))}
                 </time>
                 {day === today ? (
-                  <span className="sr-only"> (hoje)</span>
+                  <span className="sr-only">{t("calendar.todayMark")}</span>
                 ) : null}
               </p>
               <ul className="flex flex-col gap-1">
@@ -237,9 +243,7 @@ export default async function CalendarPage({
       <div className="md:hidden">
         {daysWithEvents.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            {view === "week"
-              ? "Nada marcado nesta semana."
-              : "Nada marcado neste mês."}
+            {t("calendar.empty", { view })}
           </p>
         ) : (
           <ol className="flex flex-col gap-4">
@@ -249,7 +253,7 @@ export default async function CalendarPage({
                   <time dateTime={day}>
                     {dayTitle.format(new Date(`${day}T00:00:00.000Z`))}
                   </time>
-                  {day === today ? " · hoje" : null}
+                  {day === today ? t("calendar.todayInline") : null}
                 </h2>
                 <ul className="flex flex-col gap-2">
                   {(byDay.get(day) ?? []).map((event) =>

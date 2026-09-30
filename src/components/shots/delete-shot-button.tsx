@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ConfirmDialog } from "@/components/feedback/confirm-dialog";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ export function DeleteShotButton({
   sceneId: string;
   shotId: string;
 }) {
+  const t = useTranslations();
   const [open, setOpen] = useState(false);
   const formId = `excluir-shot-${shotId}`;
 
@@ -25,14 +27,14 @@ export function DeleteShotButton({
         className="min-h-11"
         onClick={() => setOpen(true)}
       >
-        Excluir
+        {t("common.delete")}
       </Button>
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Excluir este shot?"
-        description="Ele sai da lista. O registro permanece guardado."
-        confirmLabel="Excluir"
+        title={t("shots.deleteTitle")}
+        description={t("common.removedKeptHe")}
+        confirmLabel={t("common.delete")}
         destructive
         onConfirm={() => {
           const form = document.getElementById(
