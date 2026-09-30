@@ -5025,3 +5025,24 @@ Novo caso em `publication.integration.test.ts` (falha não move, publicar move e
 ### Testes
 
 `project-board.test.ts` (colunas, alerta, checklist), `dashboard.test.ts` (contadores por chave), `mvp-flow` (números do card no banco), `cross-workspace` (números não vazam), `seed.integration.test.ts` (exemplos idempotentes). `npm test`: 164 passam. Lint ok; `tsc` só com `LayoutProps`.
+
+## 2026-09-30 — MVP-003 — Limpeza final
+
+**Status:** DONE
+**Agente:** Claude
+
+- Sem `TODO`/`FIXME`, mocks ou dados falsos fora de teste. Logs que ficam são intencionais: `console.warn` redigido do Auth.js e a saída do `db:seed`.
+- `knip` (via npx, sem virar dependência) apontou arquivos e dependências sem uso:
+  - removidos `ErrorState` (o `RouteError` já cobre) e `ui/table.tsx` (nenhuma tela é grade), com as chaves `common.loadFailed`/`tryAgain`;
+  - `LoadingState` e `Skeleton` passaram a ser usados: `loading.tsx` em `(app)` e `(record)` dá retorno imediato na navegação (spec §56);
+  - `pg` e `@types/pg` saíram do `package.json`: vêm como dependência do `@prisma/adapter-pg`.
+- Exports que o knip lista como "não usados" são usados dentro do próprio arquivo (listas de enum, escopos, primitivos shadcn); ficam.
+- DESIGN.md atualizado (sem `Table`; onde ficam erro e carregando).
+
+### Testes
+
+`npm test`: 164 passam. Lint ok; `tsc` só com `LayoutProps`. knip sem arquivos nem dependências sem uso.
+
+### Pendências
+
+- O build roda só no CI (SWC nesta máquina); conferir o CI depois do push, por causa da remoção de `pg` e dos `loading.tsx`.

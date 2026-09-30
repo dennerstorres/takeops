@@ -2008,7 +2008,7 @@ ADR-044. VIEWER cria comentário na revisão; resolver comentário continua com 
 
 ## MVP-003 — Limpeza final
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** MVP-002, TEAM-004, WORKSPACE-003
 

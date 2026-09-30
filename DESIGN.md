@@ -104,7 +104,7 @@ Pesos só `font-normal` e `font-medium`; `font-semibold` para destaque raro.
 
 ## Componentes
 
-Em `src/components/ui`: `Button` (altura 44px no tamanho padrão), `Input`, `Textarea`, `Select`, `Checkbox`, `Field`, `Card`, `StatusBadge` (tom por `statusTone`), `ItemList`, `Table`, `TabNav`/`TabLink`, `Dialog`. Vazio, erro e carregando ficam em `src/components/feedback`. Toast é o Sonner do layout.
+Em `src/components/ui`: `Button` (altura 44px no tamanho padrão), `Input`, `Textarea`, `Select`, `Checkbox`, `Field`, `Card`, `StatusBadge` (tom por `statusTone`), `ItemList`, `TabNav`/`TabLink`, `Dialog`. Vazio, erro (`RouteError`) e carregando (`LoadingState`, usado nos `loading.tsx`) ficam em `src/components/feedback`. Toast é o Sonner do layout.
 
 ## Movimento
 

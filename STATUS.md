@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 24 — MVP Acceptance (MVP-001 e 002 feitas)
+Fase 24 — MVP Acceptance (MVP-001..003 feitas)
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-UI-009 — Textos fixos restantes e ajustes da revisão
+MVP-003 — Limpeza final
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-MVP-003 — Limpeza final
+MVP-004 — Release MVP (depende de DEPLOY-003; ver PLAN)
 ```
 
 ## Estado dos módulos
