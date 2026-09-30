@@ -1711,7 +1711,7 @@ Visão geral, roteiro, cenas/shots, gravação, checklist, continuidade, arquivo
 
 ## UI-006 — Modo Gravação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-003
 

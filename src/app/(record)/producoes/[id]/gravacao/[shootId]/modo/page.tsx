@@ -3,6 +3,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { TakeList } from "@/components/takes/take-list";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { surfaceClass } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
@@ -117,7 +121,11 @@ export default async function RecordModePage({
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col">
       <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b bg-background px-4 py-2">
         <div className="min-w-0">
-          <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+          <p className="flex items-center gap-2 text-xs font-medium tracking-wide uppercase">
+            <span
+              aria-hidden
+              className="size-2 shrink-0 rounded-full bg-record"
+            />
             Gravação
           </p>
           <p className="truncate text-sm">
@@ -126,7 +134,7 @@ export default async function RecordModePage({
         </div>
         <Link
           href={exit}
-          className="inline-flex min-h-11 shrink-0 items-center rounded-lg border px-3 text-sm"
+          className={cn(buttonVariants({ variant: "outline" }), "shrink-0")}
         >
           Sair
         </Link>
@@ -144,7 +152,7 @@ export default async function RecordModePage({
             <p className="text-sm font-medium">
               {view.done} / {view.total} cenas concluídas
               {view.retakes > 0 ? (
-                <span className="font-normal text-muted-foreground">
+                <span className="font-normal text-warning">
                   {" "}
                   · {view.retakes} para refazer
                 </span>
@@ -165,11 +173,15 @@ export default async function RecordModePage({
             </div>
           </div>
           <div className="space-y-1">
-            <p className="text-sm text-muted-foreground">
-              Cena {view.position} de {view.total} ·{" "}
-              {sceneStatusLabel(t, view.scene.status)}
+            <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              <span>
+                Cena {view.position} de {view.total}
+              </span>
+              <StatusBadge status={view.scene.status}>
+                {sceneStatusLabel(t, view.scene.status)}
+              </StatusBadge>
             </p>
-            <h1 className="text-xl font-medium tracking-tight">
+            <h1 className="text-2xl font-medium tracking-tight">
               {view.scene.title}
             </h1>
           </div>
@@ -181,39 +193,32 @@ export default async function RecordModePage({
                 </p>
               ) : null}
               {view.scene.dialogue ? (
-                <p className="text-lg leading-relaxed whitespace-pre-wrap">
+                <p className="text-xl leading-relaxed whitespace-pre-wrap">
                   {view.scene.dialogue}
                 </p>
               ) : null}
             </section>
           ) : null}
           {view.scene.action ? (
-            <p className="text-sm whitespace-pre-wrap text-muted-foreground">
-              {view.scene.action}
-            </p>
+            <p className="text-base whitespace-pre-wrap">{view.scene.action}</p>
           ) : null}
           {view.shots.length > 0 ? (
             <section className="space-y-2">
               <h2 className="text-sm font-medium">Shots e takes</h2>
               <ul className="flex flex-col gap-2">
                 {view.shots.map((shot, index) => (
-                  <li key={shot.id} className="rounded-xl border p-3">
-                    <p className="text-sm font-medium">
+                  <li key={shot.id} className={cn(surfaceClass, "p-3")}>
+                    <p className="text-base font-medium">
                       {shotDisplayName(t, shot.name, index)}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {shotSummary(t, shot)}
                     </p>
                     {shot.description ? (
-                      <p className="mt-1 text-sm whitespace-pre-wrap">
+                      <p className="mt-1 text-base whitespace-pre-wrap">
                         {shot.description}
                       </p>
-                    ) : (
-                      <p className="rounded-xl border p-3 text-sm text-muted-foreground">
-                        Esta cena ainda não tem shot. O take é registrado por
-                        shot: crie um na edição da cena.
-                      </p>
-                    )}
+                    ) : null}
                     <div className="mt-3 border-t pt-3">
                       <TakeList
                         projectId={id}
@@ -223,17 +228,25 @@ export default async function RecordModePage({
                         requiredTakes={shot.requiredTakes}
                         canEdit={canEdit}
                         returnTo={`${here}?cena=${view.position}`}
+                        record
                       />
                     </div>
                   </li>
                 ))}
               </ul>
             </section>
-          ) : null}
+          ) : (
+            <p
+              className={cn(surfaceClass, "p-3 text-sm text-muted-foreground")}
+            >
+              Esta cena ainda não tem shot. O take é registrado por shot: crie
+              um na edição da cena.
+            </p>
+          )}
           {view.scene.cameraInstructions ? (
             <section className="space-y-1">
               <h2 className="text-sm font-medium">Câmera</h2>
-              <p className="text-sm whitespace-pre-wrap">
+              <p className="text-base whitespace-pre-wrap">
                 {view.scene.cameraInstructions}
               </p>
             </section>
@@ -241,7 +254,7 @@ export default async function RecordModePage({
           {view.scene.editingInstructions ? (
             <section className="space-y-1">
               <h2 className="text-sm font-medium">Edição</h2>
-              <p className="text-sm whitespace-pre-wrap">
+              <p className="text-base whitespace-pre-wrap">
                 {view.scene.editingInstructions}
               </p>
             </section>
@@ -249,81 +262,88 @@ export default async function RecordModePage({
           {view.scene.continuityNotes ? (
             <section
               role="note"
-              className="space-y-1 rounded-xl border border-amber-500/50 bg-amber-500/10 p-3"
+              className={cn(
+                surfaceClass,
+                "space-y-1 border-warning/40 bg-warning-muted p-3 text-warning",
+              )}
             >
               <h2 className="text-sm font-medium">Atenção</h2>
-              <p className="text-sm whitespace-pre-wrap">
+              <p className="text-base whitespace-pre-wrap">
                 {view.scene.continuityNotes}
               </p>
             </section>
           ) : null}
-          {canEdit ? (
-            <form
-              action={recordSceneStatusAction}
-              className="grid grid-cols-1 gap-2 border-t pt-4"
-            >
-              <input type="hidden" name="projectId" value={id} />
-              <input type="hidden" name="sceneId" value={view.scene.id} />
-              <input
-                type="hidden"
-                name="returnTo"
-                value={`${here}?cena=${view.position}`}
-              />
-              <input
-                type="hidden"
-                name="nextTo"
-                value={view.next !== null ? `${here}?cena=${view.next}` : ""}
-              />
-              <button
-                type="submit"
-                name="status"
-                value="RECORDED"
-                aria-pressed={view.scene.status === "RECORDED"}
-                className="inline-flex min-h-12 items-center justify-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground"
-              >
-                {view.next !== null
-                  ? "✓ Cena concluída e próxima"
-                  : "✓ Cena concluída"}
-              </button>
-              <button
-                type="submit"
-                name="status"
-                value="NEEDS_RETAKE"
-                aria-pressed={view.scene.status === "NEEDS_RETAKE"}
-                className="inline-flex min-h-12 items-center justify-center rounded-lg border px-3 text-sm font-medium"
-              >
-                Precisa refazer
-              </button>
-            </form>
-          ) : null}
         </main>
       )}
-      {view !== null && view.total > 1 ? (
-        <nav
-          aria-label="Cenas"
-          className="sticky bottom-0 grid grid-cols-2 gap-3 border-t bg-background px-4 py-3"
-        >
-          {view.previous !== null ? (
-            <Link
-              href={`${here}?cena=${view.previous}`}
-              className="inline-flex min-h-12 items-center justify-center rounded-lg border px-3 text-sm font-medium"
-            >
-              Anterior
-            </Link>
-          ) : (
-            <span aria-hidden />
-          )}
-          {view.next !== null ? (
-            <Link
-              href={`${here}?cena=${view.next}`}
-              className="inline-flex min-h-12 items-center justify-center rounded-lg border px-3 text-sm font-medium"
-            >
-              Próxima
-            </Link>
-          ) : (
-            <span aria-hidden />
-          )}
-        </nav>
+      {view !== null && (canEdit || view.total > 1) ? (
+        <footer className="sticky bottom-0 z-10 border-t bg-background px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+          <div className="mx-auto flex w-full max-w-xl flex-col gap-2">
+            {canEdit ? (
+              <form
+                action={recordSceneStatusAction}
+                className="flex flex-col gap-2"
+              >
+                <input type="hidden" name="projectId" value={id} />
+                <input type="hidden" name="sceneId" value={view.scene.id} />
+                <input
+                  type="hidden"
+                  name="returnTo"
+                  value={`${here}?cena=${view.position}`}
+                />
+                <input
+                  type="hidden"
+                  name="nextTo"
+                  value={view.next !== null ? `${here}?cena=${view.next}` : ""}
+                />
+                <Button
+                  type="submit"
+                  name="status"
+                  value="NEEDS_RETAKE"
+                  variant="outline"
+                  aria-pressed={view.scene.status === "NEEDS_RETAKE"}
+                  className="w-full"
+                >
+                  Precisa refazer
+                </Button>
+                <Button
+                  type="submit"
+                  name="status"
+                  value="RECORDED"
+                  aria-pressed={view.scene.status === "RECORDED"}
+                  className="w-full"
+                >
+                  {view.next !== null
+                    ? "✓ Cena concluída e próxima"
+                    : "✓ Cena concluída"}
+                </Button>
+              </form>
+            ) : null}
+            {view.total > 1 ? (
+              <nav aria-label="Cenas" className="grid grid-cols-2 gap-2">
+                {view.previous !== null ? (
+                  <Link
+                    href={`${here}?cena=${view.previous}`}
+                    className={buttonVariants({ variant: "outline" })}
+                  >
+                    Anterior
+                  </Link>
+                ) : (
+                  <span aria-hidden />
+                )}
+                {view.next !== null ? (
+                  <Link
+                    href={`${here}?cena=${view.next}`}
+                    className={buttonVariants({ variant: "outline" })}
+                  >
+                    Próxima
+                  </Link>
+                ) : (
+                  <span aria-hidden />
+                )}
+              </nav>
+            ) : null}
+          </div>
+        </footer>
       ) : null}
     </div>
   );

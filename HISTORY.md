@@ -4717,4 +4717,22 @@ Lint. `tsc --noEmit` continua só com `LayoutProps`, porque o SWC nativo não ca
 ### Pendências
 
 - Modo Gravação (âmbar, uma mão) fica na UI-006.
+
+## 2026-09-29 — UI-006 — Modo Gravação
+
+**Status:** DONE
+**Agente:** Grok
+
+- A tela do set ganhou o ponto `record`, badge de status da cena, cards de shot e a faixa de atenção em `warning` no lugar do âmbar.
+- Concluir, refazer e trocar de cena ficam num rodapé fixo, com área segura. No set, Take OK e refazer ocupam a largura da tela; na edição da cena os botões continuam compactos.
+- A mensagem de cena sem shot saiu do lugar errado: antes aparecia quando o shot existia e não tinha descrição.
+
+### Testes
+
+Lint. `record-view.test.ts` (5). `tsc --noEmit` continua só com `LayoutProps`, porque o SWC nativo não carrega neste Windows. Dev server e navegador não abriram por isso.
+
+### Pendências
+
+- Textos fixos em português ficam na UI-008.
+- Sem inspeção no aparelho (375/390/430).
 - Textos fixos em português ficam na UI-008.

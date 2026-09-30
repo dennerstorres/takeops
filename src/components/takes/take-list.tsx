@@ -44,6 +44,7 @@ export function TakeList({
   requiredTakes,
   canEdit,
   returnTo,
+  record = false,
 }: {
   projectId: string;
   sceneId: string;
@@ -52,6 +53,8 @@ export function TakeList({
   requiredTakes: number;
   canEdit: boolean;
   returnTo: string;
+  // No set o registro é a ação frequente: botões largos, OK em destaque.
+  record?: boolean;
 }) {
   const ok = takes.filter((take) => take.status === "OK").length;
   const ids = { projectId, sceneId, shotId, returnTo };
@@ -118,7 +121,10 @@ export function TakeList({
         </ol>
       ) : null}
       {canEdit ? (
-        <form action={registerTakeAction} className="flex flex-wrap gap-2">
+        <form
+          action={registerTakeAction}
+          className={record ? "flex flex-col gap-2" : "flex flex-wrap gap-2"}
+        >
           <Hidden {...ids} />
           <label className="w-full space-y-1 text-sm">
             <span className="text-muted-foreground">
@@ -126,10 +132,22 @@ export function TakeList({
             </span>
             <Input name="notes" maxLength={1000} />
           </label>
-          <Button type="submit" name="status" value="OK" variant="outline">
+          <Button
+            type="submit"
+            name="status"
+            value="OK"
+            variant={record ? "default" : "outline"}
+            className={record ? "w-full" : undefined}
+          >
             Take OK
           </Button>
-          <Button type="submit" name="status" value="RETAKE" variant="outline">
+          <Button
+            type="submit"
+            name="status"
+            value="RETAKE"
+            variant="outline"
+            className={record ? "w-full" : undefined}
+          >
             Take para refazer
           </Button>
         </form>
