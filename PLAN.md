@@ -1988,7 +1988,7 @@ Achados menores da MVP-002:
 
 ## PUB-005 — Publicação registrada publica a produção
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** PUB-004
 

@@ -452,5 +452,91 @@ describe(
         await ctx.cleanup();
       }
     });
+
+    it("publicar move a produção para Publicado; falha e arquivada não", async () => {
+      const ctx = await setup();
+      try {
+        const { prisma, workspaceId, project } = ctx;
+        const { prismaActivityRepository } =
+          await import("./activity-prisma.ts");
+        const deps = { ...ctx.deps, activities: prismaActivityRepository };
+        const reels = await prisma.publication.create({
+          data: { videoProjectId: project.id, platform: "INSTAGRAM_REELS" },
+        });
+        const status = async () =>
+          (await prisma.videoProject.findUnique({ where: { id: project.id } }))
+            ?.status;
+        await prisma.videoProject.update({
+          where: { id: project.id },
+          data: { status: "SCHEDULED" },
+        });
+
+        await recordPublicationOutcome(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          reels.id,
+          { status: "FAILED" },
+          deps,
+        );
+        assert.equal(await status(), "SCHEDULED");
+
+        await recordPublicationOutcome(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          reels.id,
+          { status: "PUBLISHED" },
+          deps,
+        );
+        assert.equal(await status(), "PUBLISHED");
+        const moves = await prisma.activityLog.findMany({
+          where: {
+            videoProjectId: project.id,
+            action: "PROJECT_STATUS_CHANGED",
+          },
+        });
+        assert.equal(moves.length, 1);
+        assert.deepEqual(moves[0].metadata, {
+          from: "SCHEDULED",
+          to: "PUBLISHED",
+        });
+
+        // Segunda publicação da mesma produção não repete a mudança.
+        await recordPublicationOutcome(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          reels.id,
+          { status: "PUBLISHED" },
+          deps,
+        );
+        assert.equal(
+          await prisma.activityLog.count({
+            where: {
+              videoProjectId: project.id,
+              action: "PROJECT_STATUS_CHANGED",
+            },
+          }),
+          1,
+        );
+
+        await prisma.videoProject.update({
+          where: { id: project.id },
+          data: { status: "ARCHIVED" },
+        });
+        await recordPublicationOutcome(
+          ctx.member.id,
+          workspaceId,
+          project.id,
+          reels.id,
+          { status: "PUBLISHED" },
+          deps,
+        );
+        assert.equal(await status(), "ARCHIVED");
+      } finally {
+        await ctx.cleanup();
+      }
+    });
   },
 );

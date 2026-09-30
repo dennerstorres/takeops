@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-WORKSPACE-003 — Configurações do workspace
+PUB-005 — Publicação registrada publica a produção
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PUB-005 — Publicação registrada publica a produção (depois REVIEW-005, UI-009, MVP-003)
+REVIEW-005 — Leitor comenta na revisão (depois UI-009, MVP-003)
 ```
 
 ## Estado dos módulos

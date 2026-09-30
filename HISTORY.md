@@ -4984,3 +4984,16 @@ Revisão de leitura; nenhuma alteração de código nesta tarefa.
 ### Observações
 
 - O primeiro acesso cria o workspace com o fuso padrão `America/Cuiaba` sem perguntar. Agora dá para corrigir depois; perguntar na criação fica para quando fizer falta.
+
+## 2026-09-30 — PUB-005 — Publicação registrada publica a produção
+
+**Status:** DONE
+**Agente:** Claude
+
+- `PublicationRepository.recordOutcome`: numa transação grava o resultado e, se PUBLISHED, move a produção para PUBLISHED (condicionado à etapa lida, para não sobrescrever mudança concorrente). ARCHIVED e já PUBLISHED não mudam. Devolve de qual etapa saiu.
+- `recordPublicationOutcome` usa esse método e grava `PROJECT_STATUS_CHANGED` (from → PUBLISHED) além do `PUBLICATION_RECORDED`. Segunda publicação da mesma produção não repete a atividade.
+- `mvp-flow` agora confere a mudança automática em vez de mover à mão; `activity.integration.test.ts` espera a atividade a mais.
+
+### Testes
+
+Novo caso em `publication.integration.test.ts` (falha não move, publicar move e registra atividade uma vez, arquivada fica). `npm test`: 164 passam. Lint ok; `tsc` só com `LayoutProps`.

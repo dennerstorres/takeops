@@ -299,6 +299,8 @@ describe(
           "CHANGES_REQUESTED",
           "PROJECT_CREATED",
           "PROJECT_STATUS_CHANGED",
+          // Publicar move a produção para Publicado (ADR-044).
+          "PROJECT_STATUS_CHANGED",
           "PUBLICATION_RECORDED",
           "PUBLICATION_SCHEDULED",
           "VERSION_APPROVED",

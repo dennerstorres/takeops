@@ -263,13 +263,16 @@ export async function recordPublicationOutcome(
     publicationId,
     deps,
   );
-  const updated = await deps.publications.update(
+  const result = await deps.publications.recordOutcome(
     workspaceId,
     current.videoProjectId,
     current.id,
     { status: data.status, publishedAt, url },
   );
-  if (!updated || updated.id !== current.id) throw new NotFoundError();
+  if (!result || result.publication.id !== current.id) {
+    throw new NotFoundError();
+  }
+  const updated = result.publication;
   await recordActivity(deps.activities, {
     workspaceId,
     videoProjectId: current.videoProjectId,
@@ -282,5 +285,16 @@ export async function recordPublicationOutcome(
       status: data.status,
     },
   });
+  if (result.moved) {
+    await recordActivity(deps.activities, {
+      workspaceId,
+      videoProjectId: current.videoProjectId,
+      userId,
+      action: "PROJECT_STATUS_CHANGED",
+      entityType: "VideoProject",
+      entityId: current.videoProjectId,
+      metadata: { from: result.moved.from, to: "PUBLISHED" },
+    });
+  }
   return updated;
 }

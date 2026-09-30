@@ -69,6 +69,38 @@ export const prismaPublicationRepository: PublicationRepository = {
     return this.find(workspaceId, projectId, publicationId);
   },
 
+  async recordOutcome(workspaceId, projectId, publicationId, input) {
+    return prisma.$transaction(async (tx) => {
+      const project = await tx.videoProject.findFirst({
+        where: visibleProject(workspaceId, projectId),
+        select: { id: true, status: true },
+      });
+      if (!project) return null;
+      const result = await tx.publication.updateMany({
+        where: { id: publicationId, videoProjectId: project.id },
+        data: input,
+      });
+      if (result.count !== 1) return null;
+      let moved: { from: typeof project.status } | null = null;
+      // Arquivada fica arquivada; já publicada não muda.
+      if (
+        input.status === "PUBLISHED" &&
+        project.status !== "PUBLISHED" &&
+        project.status !== "ARCHIVED"
+      ) {
+        const changed = await tx.videoProject.updateMany({
+          where: { id: project.id, status: project.status },
+          data: { status: "PUBLISHED" },
+        });
+        if (changed.count === 1) moved = { from: project.status };
+      }
+      const row = await tx.publication.findUnique({
+        where: { id: publicationId },
+      });
+      return row ? { publication: mapPublication(row), moved } : null;
+    });
+  },
+
   async remove(workspaceId, projectId, publicationId) {
     const result = await prisma.publication.deleteMany({
       where: {

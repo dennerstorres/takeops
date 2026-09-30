@@ -319,7 +319,12 @@ describe(
           repos,
         );
         assert.equal(published.status, "PUBLISHED");
-        await stage(project.id, "PUBLISHED");
+        // Publicação registrada publica a produção (ADR-044).
+        assert.equal(
+          (await getProject(owner.id, ws, project.id, workspaces, projects))
+            .status,
+          "PUBLISHED",
+        );
 
         // Rastro do fluxo: atividade e avisos para quem acompanha.
         const actions = (

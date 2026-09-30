@@ -1,3 +1,4 @@
+import type { VideoProjectStatus } from "./project-labels.ts";
 import type { Platform, PublicationStatus } from "./publication-labels.ts";
 
 export type PublicationRecord = {
@@ -37,6 +38,17 @@ export type PublicationRepository = {
     publicationId: string,
     input: PublicationWrite,
   ): Promise<PublicationRecord | null>;
+  // Registra o resultado e, se publicado, move a produção para PUBLISHED na
+  // mesma transação (ADR-044). `moved` diz de qual etapa saiu, se saiu.
+  recordOutcome(
+    workspaceId: string,
+    projectId: string,
+    publicationId: string,
+    input: PublicationWrite,
+  ): Promise<{
+    publication: PublicationRecord;
+    moved: { from: VideoProjectStatus } | null;
+  } | null>;
   remove(
     workspaceId: string,
     projectId: string,
