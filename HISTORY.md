@@ -4921,3 +4921,35 @@ Workflow validado contra o schema do GitHub Actions (`@action-validator/cli`). N
 - Primeira execução do CI: imagem Docker, lint, contraste e typecheck passaram; `npm test` falhou em `take.integration.test.ts`. Dois `it` estavam dentro do corpo do primeiro (chave fora do lugar), sem `await`, e eram cancelados pelo pai. Era a "falha no PGlite" registrada desde a ADR-031: problema do teste, não do banco.
 - Blocos desaninhados; os 3 testes rodam e passam no Postgres local.
 - Nenhum outro arquivo de teste tem `it` aninhado.
+
+## 2026-09-29 — MVP-002 — Revisão contra SPEC
+
+**Status:** DONE
+**Agente:** Claude
+
+Revisão dos módulos P0 (spec §85) e dos critérios de aceite §61–§79 contra serviços, schema, telas e testes.
+
+### Atende
+
+- Auth (Google, e-mail, logout, rotas protegidas), ideias (CRUD, status, conversão), produções (CRUD, status, kanban com arraste, busca, filtros), roteiro/cenas (criar, editar, reordenar, duplicar, excluir, fala, instruções), shots (câmera, framing, requiredTakes, reordenar), gravação (sessões, checklist por template, equipamentos), Modo Gravação (navegar, takes, preferido, observação, RECORDED/NEEDS_RETAKE, avança para a próxima, progresso), edição, versões com número automático, revisão com timestamp e resolução, aprovação com efeito no status, publicação manual (plataforma, agenda, URL, status), calendário.
+- Enums do schema idênticos aos da spec. Soft delete nas entidades da §42. Confirmação nas exclusões (`ConfirmDialog`). Log técnico com userId, workspaceId, entidade, operação e stack (`service.ts`). Seed com Acme Software e projeto demo completo. Fluxo §83 coberto pela MVP-001.
+
+### Lacunas (viraram tarefas)
+
+- TEAM-004 (P0): não dá para remover membro do workspace (§7.1, §71, §75).
+- WORKSPACE-003 (P0): nome, fuso e logo não são editáveis depois da criação (§9, §71).
+- UI-009 (P1): textos pt-BR fixos em `project-board.ts`/`dashboard.ts`; card do kanban sem status de checklist (§14); seed sem os três projetos de exemplo (§59).
+
+### Decisões em aberto (para o dono)
+
+- Registrar publicação como PUBLISHED não move a produção para PUBLISHED (hoje é manual).
+- Não existe excluir versão de edição; a §75 cita confirmação para isso. Manter o histórico imutável parece melhor.
+- VIEWER não comenta; a §7.1 diz "se permitido pela configuração", e não há essa configuração.
+
+### Não verificado
+
+- Mobile 375/390/430 (§72) e empty states (§74) na tela: sem navegador nesta máquina.
+
+### Testes
+
+Revisão de leitura; nenhuma alteração de código nesta tarefa.

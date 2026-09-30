@@ -1936,7 +1936,7 @@ Idea
 
 ## MVP-002 — Revisão contra SPEC
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** MVP-001
 
@@ -1944,11 +1944,53 @@ Revisar cada requisito P0 do SPEC.
 
 ---
 
+## TEAM-004 — Remover membro do workspace
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** TEAM-003
+
+Achado da MVP-002 (spec §7.1, §71, §75). Hoje só dá para mudar papel.
+
+- OWNER remove qualquer membro, menos o último OWNER; ADMIN remove só MEMBER e VIEWER;
+- confirmação na tela; a pessoa perde acesso na hora;
+- produções, takes, versões e comentários dela ficam (autoria continua, como "ex-membro");
+- teste de autorização e de isolamento.
+
+---
+
+## WORKSPACE-003 — Configurações do workspace
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** WORKSPACE-001
+
+Achado da MVP-002 (spec §9 "timezone deve ser configurável", §71). Nome, fuso e logo só são definidos na criação.
+
+- OWNER (e ADMIN, se a spec §7.1 "configurações operacionais" valer) edita nome, fuso e `logoUrl` em `/configuracoes`;
+- fuso validado como na criação; mudar o fuso não altera datas gravadas (UTC), só a exibição.
+
+---
+
+## UI-009 — Textos fixos restantes e ajustes da revisão
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** MVP-002
+
+Achados menores da MVP-002:
+
+- textos em pt-BR montados no servidor e mostrados em inglês também: colunas do kanban e "Não há cenas prontas." (`project-board.ts`), "Sem nome", rótulos de contadores e `nextAction` sem uso em `dashboard.ts` → catálogo (ADR-041);
+- card do kanban sem "status de checklist" (spec §14);
+- seed sem os três projetos de exemplo da spec §59 (estoque, WhatsApp, dashboard financeiro).
+
+---
+
 ## MVP-003 — Limpeza final
 
 **Status:** TODO  
 **Prioridade:** P0  
-**Dependências:** MVP-002
+**Dependências:** MVP-002, TEAM-004, WORKSPACE-003
 
 Remover:
 

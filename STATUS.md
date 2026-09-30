@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 24 — MVP Acceptance (MVP-001 feita)
+Fase 24 — MVP Acceptance (MVP-001 e 002 feitas)
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-MVP-001 — Fluxo completo E2E
+MVP-002 — Revisão contra SPEC
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-MVP-002 — Revisão contra SPEC (antes: push e conferir a primeira execução do CI)
+TEAM-004 — Remover membro do workspace (depois WORKSPACE-003, UI-009, MVP-003)
 ```
 
 ## Estado dos módulos
