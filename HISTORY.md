@@ -5046,3 +5046,16 @@ Novo caso em `publication.integration.test.ts` (falha não move, publicar move e
 ### Pendências
 
 - O build roda só no CI (SWC nesta máquina); conferir o CI depois do push, por causa da remoção de `pg` e dos `loading.tsx`.
+
+## 2026-09-30 — DEPLOY-003 — Smoke test de produção
+
+**Status:** DONE
+**Agente:** Claude (roteiro e checagens HTTP) + dono (passos com conta e Coolify)
+
+- Agente: `GET /api/health` → `{"status":"ok"}` HTTP 200 (antes e depois dos testes do dono); `/login` HTTP 200.
+- Dono confirmou ok: login real, fluxo curto (ideia → produção → cena → take), telas de Configurações e Equipe abrindo (migrations novas aplicadas), redeploy no Coolify sem perda de dados, backup manual do `takeops-db` restaurado em banco de teste.
+
+### Pendências
+
+- `POST /api/cron/upcoming-shoots` ainda responde 404: `CRON_SECRET` não está definido no Coolify, então o aviso de gravação próxima não roda. Definir a variável e a Scheduled Task (comando no README).
+- Backup automático segue sem destino S3 (pendência antiga do dono).

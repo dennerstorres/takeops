@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-MVP-003 — Limpeza final
+DEPLOY-003 — Smoke test de produção
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-MVP-004 — Release MVP (depende de DEPLOY-003; ver PLAN)
+MVP-004 — Release MVP (tag v0.1.0, repositório público)
 ```
 
 ## Estado dos módulos

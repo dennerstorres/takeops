@@ -1897,7 +1897,7 @@ Produção: `https://takeops.dennerstorres.dev` (DNS já aponta para o Coolify).
 
 ## DEPLOY-003 — Smoke test de produção
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** DEPLOY-002
 
