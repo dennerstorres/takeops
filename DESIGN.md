@@ -50,6 +50,11 @@ typography:
     fontSize: "0.875rem"
     fontWeight: 600
     letterSpacing: "0.05em"
+  nav:
+    fontFamily: "IBM Plex Sans Condensed, sans-serif"
+    fontSize: "0.8125rem"
+    fontWeight: 600
+    letterSpacing: "0.05em"
   body:
     fontFamily: "IBM Plex Sans, sans-serif"
     fontSize: "0.875rem"
