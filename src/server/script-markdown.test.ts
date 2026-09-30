@@ -13,7 +13,7 @@ import { scriptTemplate } from "./script-template.ts";
 // misturados, quebra de linha markdown com dois espaços, seções de direção).
 // O texto é inventado: o repositório é público.
 const external = [
-  "# PADARIA — “CADÊ O GERENTE?”",
+  "# OFICINA — “ONDE ESTÁ A CHAVE?”",
   "",
   "**Formato:** Vertical 9:16  ",
   "**Plataformas:** Reels e Shorts  ",
@@ -23,37 +23,37 @@ const external = [
   "",
   "# PERSONAGENS",
   "",
-  "## ATOR 1 — CAIXA",
-  "Quem atende o cliente.",
+  "## ATOR 1 — MECÂNICO",
+  "Quem conserta a bicicleta.",
   "",
   "---",
   "",
-  "# CENA 1 — O TROCO",
+  "# CENA 1 — A PORCA",
   "",
   "**Tempo:** 0:00 – 0:12  ",
   "**Purpose:** problem",
   "",
-  "## Shot 1.1 — Caixa atendendo",
+  "## Shot 1.1 — Mecânico na bancada",
   "**Enquadramento:** Plano médio  ",
   "**Tipo:** dialogue  ",
-  "**Subject:** Caixa",
+  "**Subject:** Mecânico",
   "",
-  "Caixa conta o dinheiro.",
+  "Mecânico procura a chave.",
   "",
-  "**CAIXA:**  ",
+  "**MECÂNICO:**  ",
   "Só um minutinho.",
   "",
   "## Shot 1.2 — Tela",
   "**Tipo:** insert",
   "",
-  "> SEM TROCO",
+  "> CHAVE 10 MM",
   "",
   "# CENA 2 — A QUEBRA",
   "",
   "**ATOR 3 — OFF:**  ",
-  "Tem um jeito melhor.",
+  "Está na gaveta.",
   "",
-  "Ator 3 aponta para o caixa.",
+  "Ator 3 aponta a gaveta.",
   "",
   "# DIREÇÃO",
   "",
@@ -64,16 +64,16 @@ describe("roteiro em markdown", () => {
   it("lê um roteiro escrito fora do app sem perder nada", () => {
     const file = parseScriptMarkdown(external);
 
-    assert.equal(file.project.title, "PADARIA — “CADÊ O GERENTE?”");
+    assert.equal(file.project.title, "OFICINA — “ONDE ESTÁ A CHAVE?”");
     assert.equal(file.project.aspectRatio, "NINE_SIXTEEN");
     assert.deepEqual(file.warnings, []);
 
     assert.equal(file.scenes.length, 2);
     const [first, second] = file.scenes;
-    assert.equal(first.title, "O TROCO");
+    assert.equal(first.title, "A PORCA");
     assert.equal(first.estimatedDurationSeconds, 12);
     assert.equal(first.description, "Purpose: problem");
-    assert.equal(first.dialogue, "CAIXA: Só um minutinho.");
+    assert.equal(first.dialogue, "MECÂNICO: Só um minutinho.");
 
     assert.equal(first.shots.length, 2);
     assert.deepEqual(
@@ -85,24 +85,24 @@ describe("roteiro em markdown", () => {
         description: first.shots[0].description,
       },
       {
-        name: "Caixa atendendo",
+        name: "Mecânico na bancada",
         shotType: "CAMERA",
         framing: "Plano médio",
-        subject: "Caixa",
-        description: "Tipo: dialogue\nCaixa conta o dinheiro.",
+        subject: "Mecânico",
+        description: "Tipo: dialogue\nMecânico procura a chave.",
       },
     );
     assert.equal(first.shots[1].shotType, "INSERT");
-    assert.equal(first.shots[1].description, "SEM TROCO");
+    assert.equal(first.shots[1].description, "CHAVE 10 MM");
 
-    assert.equal(second.dialogue, "ATOR 3 — OFF: Tem um jeito melhor.");
-    assert.equal(second.description, "Ator 3 aponta para o caixa.");
+    assert.equal(second.dialogue, "ATOR 3 — OFF: Está na gaveta.");
+    assert.equal(second.description, "Ator 3 aponta a gaveta.");
 
     assert.deepEqual(file.sections, [
       { title: "", body: "Plataformas: Reels e Shorts" },
       {
         title: "PERSONAGENS",
-        body: "## ATOR 1 — CAIXA\nQuem atende o cliente.",
+        body: "## ATOR 1 — MECÂNICO\nQuem conserta a bicicleta.",
       },
       { title: "DIREÇÃO", body: "Não exagerar no começo." },
     ]);
@@ -137,42 +137,42 @@ describe("roteiro em markdown", () => {
   it("exportar e importar devolve as mesmas cenas e planos", () => {
     const original: ScriptFile = {
       project: {
-        title: "Cadê o supervisor?",
+        title: "Horta na varanda",
         format: "SKETCH",
         aspectRatio: "NINE_SIXTEEN",
         estimatedDurationSeconds: 150,
-        objective: "Mostrar a autorização no celular",
+        objective: "Plantar temperos em vasos",
         audience: null,
-        product: "Supervisor",
-        description: "Esquete\ncom demonstração",
+        product: "Kit de vasos",
+        description: "Tutorial\ncom passo a passo",
       },
       script: {
-        hook: "Preciso chamar meu supervisor.",
+        hook: "Tempero fresco sem quintal.",
         mainMessage: null,
-        cta: "Fale com a equipe.",
-        notes: "Cliente é a câmera.\nNão exagerar.",
+        cta: "Comece pelo manjericão.",
+        notes: "Luz natural.\nSem vento.",
       },
       scenes: [
         {
-          title: "Uma venda normal",
+          title: "Três vasos",
           type: "HOOK",
           description: "Purpose: problem",
-          dialogue: "FUNCIONÁRIO: Beleza.\nFUNCIONÁRIO: Ah...",
-          action: "Olha o monitor",
+          dialogue: "APRESENTADORA: Olá.\nAPRESENTADORA: Vamos lá.",
+          action: "Mostra os vasos",
           estimatedDurationSeconds: 15,
           cameraInstructions: "Plano médio",
           editingInstructions: null,
-          continuityNotes: "Mesma camisa",
+          continuityNotes: "Mesmo avental",
           shots: [
             {
-              name: "Funcionário atendendo",
+              name: "Apresentadora na varanda",
               cameraLabel: "A",
               shotType: "CAMERA",
               framing: "Plano médio",
               angle: "Frontal",
-              subject: "Funcionário",
+              subject: "Apresentadora",
               movement: null,
-              description: "Digitando",
+              description: "Segurando os vasos",
               requiredTakes: 3,
               notes: null,
             },
@@ -186,7 +186,7 @@ describe("roteiro em markdown", () => {
               movement: "Travado",
               description: null,
               requiredTakes: 1,
-              notes: "Tela legível",
+              notes: "Folhas em foco",
             },
           ],
         },
@@ -228,7 +228,7 @@ describe("roteiro em markdown", () => {
       const file = parseScriptMarkdown(scriptTemplate(locale));
       assert.deepEqual(file.warnings, [], locale);
       assert.deepEqual(file.sections, [], locale);
-      assert.equal(file.project.format, "SKETCH");
+      assert.equal(file.project.format, "TUTORIAL");
       assert.equal(file.script.notes?.split("\n").length, 2);
       assert.deepEqual(
         file.scenes.map((scene) => [
@@ -238,7 +238,7 @@ describe("roteiro em markdown", () => {
         ]),
         [
           ["HOOK", 15, ["CAMERA", "INSERT"]],
-          ["SCREEN_CAPTURE", 20, ["SCREEN_CAPTURE"]],
+          ["VOICE_OVER", 20, ["BROLL"]],
         ],
         locale,
       );
@@ -263,9 +263,9 @@ describe("arquivo do roteiro da produção", () => {
     assert.equal(
       scriptFileName({
         slug: null,
-        title: 'Supervisor — "Cadê o supervisor?"',
+        title: 'Horta — "Três vasos na varanda"',
       }),
-      "supervisor-cade-o-supervisor.md",
+      "horta-tres-vasos-na-varanda.md",
     );
     assert.equal(scriptFileName({ slug: "", title: "!!!" }), "roteiro.md");
   });

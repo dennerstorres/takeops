@@ -5147,3 +5147,10 @@ Resumo: formato markdown do roteiro (SPEC §18.1, ADR-046). Parser lê roteiros 
 Decisões: ADR-046. O roteiro real que originou a fase é de cliente e não entrou no repositório público; a fixture reproduz a estrutura com texto inventado. A menção ao cliente no PLAN foi trocada por descrição genérica antes do push.
 Testes: `script-markdown.test.ts` (roteiro externo, avisos, ida e volta pt/en, modelo nos dois idiomas, durações, nome do arquivo). `eslint` limpo. `tsc` sem erro novo; o único erro (`LayoutProps` em `src/app/layout.tsx`) vem do `next typegen` que não roda nesta máquina (binário nativo do SWC não carrega). Build e teste no navegador não rodados pelo mesmo motivo e por não haver banco local.
 Pendências: conferir os dois botões no app publicado após o deploy. SCRIPT-004 (importar) é a próxima.
+
+## 2026-09-30 — SCRIPT-003 — Modelo e testes com história neutra
+
+Status: DONE
+Arquivos: `src/server/script-template.ts`, `src/server/script-markdown.test.ts`.
+Resumo: o modelo para baixar e as fixtures ainda seguiam o tema do roteiro de cliente que originou a fase. Trocados por histórias neutras (horta na varanda; oficina de bicicleta), mesma estrutura e mesmos casos cobertos.
+Testes: `script-markdown.test.ts` (6/6), `eslint` limpo.

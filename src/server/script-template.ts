@@ -24,66 +24,66 @@ Modelo de roteiro do takeops. Apague estes comentários à vontade.
 - Campos opcionais: todos, menos o título da cena.
 -->
 
-# Cadê o supervisor?
+# Horta na varanda
 
-**Formato:** Esquete
+**Formato:** Tutorial
 **Proporção:** 9:16
-**Duração:** 150
-**Objetivo:** Mostrar que a autorização chega no celular do supervisor, sem parar o atendimento.
-**Público:** Gestores de comércio
-**Produto:** Supervisor
+**Duração:** 60
+**Objetivo:** Mostrar que dá para plantar temperos em três vasos pequenos.
+**Público:** Quem mora em apartamento
+**Produto:** Kit de vasos
 
-**Gancho:** A tela pede autorização e o funcionário precisa achar o supervisor.
-**Mensagem principal:** A autorização chega em tempo real, onde o supervisor estiver.
-**Chamada para ação:** Fale com a nossa equipe.
+**Gancho:** Três vasos, uma varanda e tempero fresco o ano todo.
+**Mensagem principal:** Sol, rega certa e vaso com furo resolvem quase tudo.
+**Chamada para ação:** Salve o vídeo e comece pelo manjericão.
 **Notas:**
-Cliente é a câmera.
-Não exagerar na atuação do começo.
+Gravar de manhã, com luz natural.
+Evitar vento forte nas folhas.
 
 ---
 
-# Cena 1 — Uma venda normal
+# Cena 1 — Três vasos
 
 **Tipo:** Gancho
 **Duração:** 0:00 – 0:15
-**Propósito:** problema
-**Edição:** Texto na tela: AUTORIZAÇÃO NECESSÁRIA.
+**Propósito:** abertura
+**Edição:** Texto na tela: HORTA EM 3 VASOS.
 
-## Plano 1.1 — Funcionário atendendo
+## Plano 1.1 — Apresentadora na varanda
 
 **Tipo:** Câmera
 **Enquadramento:** Plano médio
-**Assunto:** Funcionário
+**Assunto:** Apresentadora
 
-Funcionário atende normalmente, digitando.
+Apresentadora segura um vaso em cada mão.
 
-**FUNCIONÁRIO:**
-Beleza... já vou finalizar pra você.
+**APRESENTADORA:**
+Dá pra ter tempero fresco sem quintal.
 
-## Plano 1.2 — Autorização necessária
+## Plano 1.2 — Mudas
 
 **Tipo:** Inserto
-**Enquadramento:** Close na tela
-**Assunto:** Monitor do caixa
+**Enquadramento:** Close nas folhas
+**Assunto:** Mudas de manjericão
 **Takes:** 2
 
 ---
 
-# Cena 2 — Aprovação no celular
+# Cena 2 — A rega
 
-**Tipo:** Tela
+**Tipo:** Narração
 **Duração:** 20
-**Câmera:** Close no celular, tela legível.
+**Câmera:** Câmera baixa, na altura dos vasos.
 
-**NARRADOR (OFF):**
-O supervisor recebe a solicitação em tempo real, direto no celular.
+**NARRADORA (OFF):**
+Regue quando a terra estiver seca ao toque, nunca todo dia.
 
-## Plano 2.1 — Push no celular
+## Plano 2.1 — Regando os vasos
 
-**Tipo:** Captura de tela
-**Enquadramento:** Tela cheia
-**Assunto:** App no celular
-**Notas:** Gravar também o botão Reprovar para outros vídeos.
+**Tipo:** Apoio
+**Enquadramento:** Plano fechado
+**Assunto:** Regador e vasos
+**Notas:** Gravar também a água escorrendo pelo furo do vaso.
 `,
   en: `<!--
 takeops script template. Feel free to delete these comments.
@@ -105,66 +105,66 @@ takeops script template. Feel free to delete these comments.
 - Every field is optional except the scene title.
 -->
 
-# Where is the supervisor?
+# Balcony herb garden
 
-**Format:** Sketch
+**Format:** Tutorial
 **Aspect ratio:** 9:16
-**Duration:** 150
-**Objective:** Show that the approval reaches the supervisor's phone without stopping the sale.
-**Audience:** Retail managers
-**Product:** Supervisor
+**Duration:** 60
+**Objective:** Show that three small pots are enough to grow herbs.
+**Audience:** People living in apartments
+**Product:** Pot kit
 
-**Hook:** The screen asks for approval and the clerk has to find the supervisor.
-**Main message:** Approvals arrive in real time, wherever the supervisor is.
-**Call to action:** Talk to our team.
+**Hook:** Three pots, one balcony, fresh herbs all year.
+**Main message:** Sun, the right watering and pots with holes solve almost everything.
+**Call to action:** Save this video and start with basil.
 **Notes:**
-The customer is the camera.
-Keep the acting natural at the start.
+Shoot in the morning, with natural light.
+Avoid strong wind on the leaves.
 
 ---
 
-# Scene 1 — A normal sale
+# Scene 1 — Three pots
 
 **Type:** Hook
 **Duration:** 0:00 – 0:15
-**Purpose:** problem
-**Editing:** On-screen text: APPROVAL REQUIRED.
+**Purpose:** opening
+**Editing:** On-screen text: HERB GARDEN IN 3 POTS.
 
-## Shot 1.1 — Clerk at the counter
+## Shot 1.1 — Host on the balcony
 
 **Type:** Camera
 **Framing:** Medium shot
-**Subject:** Clerk
+**Subject:** Host
 
-The clerk is typing, serving the customer.
+The host holds a pot in each hand.
 
-**CLERK:**
-Alright... let me finish this for you.
+**HOST:**
+You can grow fresh herbs without a backyard.
 
-## Shot 1.2 — Approval required
+## Shot 1.2 — Seedlings
 
 **Type:** Insert
-**Framing:** Close on the screen
-**Subject:** Register screen
+**Framing:** Close on the leaves
+**Subject:** Basil seedlings
 **Takes:** 2
 
 ---
 
-# Scene 2 — Approval on the phone
+# Scene 2 — Watering
 
-**Type:** Screen
+**Type:** Voice-over
 **Duration:** 20
-**Camera:** Close on the phone, readable screen.
+**Camera:** Low camera, at pot height.
 
 **NARRATOR (VO):**
-The supervisor gets the request in real time, right on the phone.
+Water when the soil feels dry, never every day.
 
-## Shot 2.1 — Push notification
+## Shot 2.1 — Watering the pots
 
-**Type:** Screen capture
-**Framing:** Full screen
-**Subject:** App on the phone
-**Notes:** Also record the Reject button for future videos.
+**Type:** B-roll
+**Framing:** Tight shot
+**Subject:** Watering can and pots
+**Notes:** Also record the water draining through the pot hole.
 `,
 };
 
