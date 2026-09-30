@@ -5,11 +5,10 @@ import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
 import { DeleteSceneButton } from "@/components/scenes/delete-scene-button";
-import { SceneForm } from "@/components/scenes/scene-form";
-import { surfaceClass } from "@/components/ui/card";
+import { QuickSceneForm } from "@/components/scenes/quick-scene-form";
+import { StripActions } from "@/components/ui/strip-actions";
 import { Strip, StripBoard, stripIconButton } from "@/components/ui/strip";
 import { scenePhase, sceneTip } from "@/components/ui/strip-phase";
-import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
@@ -22,15 +21,7 @@ import { prismaSceneRepository } from "@/server/scene-prisma";
 import { listShotsByScene } from "@/server/shot";
 import { shotDisplayName, shotSummary } from "@/server/shot-labels";
 import { prismaShotRepository } from "@/server/shot-prisma";
-import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
-
-function personLabel(
-  member: { name: string | null; email: string | null },
-  fallback: string,
-) {
-  return member.name || member.email || fallback;
-}
 
 export default async function ScenesPage({
   params,
@@ -48,7 +39,6 @@ export default async function ScenesPage({
 
   let project;
   let scenes;
-  let team;
   let shotsByScene;
   try {
     project = await getProject(
@@ -58,7 +48,7 @@ export default async function ScenesPage({
       prismaWorkspaceRepository,
       prismaProjectRepository,
     );
-    [scenes, team, shotsByScene] = await Promise.all([
+    [scenes, shotsByScene] = await Promise.all([
       listScenes(
         session.user.id,
         workspaceId,
@@ -67,7 +57,6 @@ export default async function ScenesPage({
         prismaProjectRepository,
         prismaSceneRepository,
       ),
-      listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
       listShotsByScene(session.user.id, workspaceId, project.id, {
         workspaces: prismaWorkspaceRepository,
         projects: prismaProjectRepository,
@@ -80,11 +69,6 @@ export default async function ScenesPage({
     if (error instanceof ForbiddenError) redirect("/comecar");
     throw error;
   }
-
-  const people = team.map((member) => ({
-    id: member.userId,
-    label: personLabel(member, t("common.noName")),
-  }));
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
@@ -128,7 +112,9 @@ export default async function ScenesPage({
                   }
                   action={
                     canEdit ? (
-                      <span className="grid grid-cols-2 gap-0.5 sm:flex sm:justify-end">
+                      <StripActions
+                        label={t("strip.more", { title: scene.title })}
+                      >
                         <form action={moveSceneAction} className="contents">
                           <input
                             type="hidden"
@@ -199,7 +185,7 @@ export default async function ScenesPage({
                             title: scene.title,
                           })}
                         />
-                      </span>
+                      </StripActions>
                     ) : null
                   }
                 />
@@ -233,31 +219,7 @@ export default async function ScenesPage({
           })}
         </StripBoard>
       )}
-      {canEdit ? (
-        <section className={cn(surfaceClass, "space-y-3 p-3")}>
-          <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
-            {t("scenes.new")}
-          </h2>
-          <SceneForm
-            editing={false}
-            people={people}
-            values={{
-              projectId: project.id,
-              title: "",
-              description: "",
-              type: "OTHER",
-              speakerId: "",
-              dialogue: "",
-              action: "",
-              estimatedDurationSeconds: "",
-              cameraInstructions: "",
-              editingInstructions: "",
-              continuityNotes: "",
-              status: "PLANNED",
-            }}
-          />
-        </section>
-      ) : null}
+      {canEdit ? <QuickSceneForm projectId={project.id} /> : null}
     </div>
   );
 }

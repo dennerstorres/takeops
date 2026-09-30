@@ -122,25 +122,33 @@ export function ProductionBoard({
                 stageLabel={column.title}
                 number={card.priority}
                 title={card.title}
-                flag={card.alerts.map((alert) => (
-                  <span
-                    key={alert}
-                    className="inline-flex items-center gap-1 font-condensed text-xs font-medium"
-                  >
-                    <AlertTriangle className="size-3" aria-hidden="true" />
-                    {alert}
-                  </span>
-                ))}
+                flag={
+                  card.alerts.length > 0
+                    ? card.alerts.map((alert) => (
+                        <span
+                          key={alert}
+                          title={alert}
+                          className="flex min-w-0 items-center gap-1 font-condensed text-xs font-medium"
+                        >
+                          <AlertTriangle
+                            className="size-3 shrink-0"
+                            aria-hidden="true"
+                          />
+                          <span className="truncate">{alert}</span>
+                        </span>
+                      ))
+                    : null
+                }
                 owner={
                   <span title={card.people.join(", ")}>
                     {card.people.join(", ")}
                   </span>
                 }
-                date={card.shootDate ?? "—"}
+                date={card.shootDate}
                 meta={
                   card.checklist
                     ? `${card.checklist.done}/${card.checklist.total}`
-                    : "—"
+                    : null
                 }
                 tip={card.tip}
                 href={`/producoes/${card.id}`}
@@ -162,7 +170,7 @@ export function ProductionBoard({
                         value={column.status}
                         disabled={pending}
                         onChange={(event) => move(card.id, event.target.value)}
-                        className="h-11 w-11 appearance-none text-transparent sm:h-6 sm:w-full sm:max-w-32 sm:appearance-auto sm:text-strip-ink rounded-[2px] border border-strip-ink/25 bg-transparent px-1 font-condensed text-xs focus-visible:outline-2 focus-visible:outline-ring disabled:opacity-50 [&>option]:bg-popover [&>option]:text-popover-foreground"
+                        className="h-11 w-11 appearance-none text-transparent sm:h-6 sm:w-full sm:max-w-32 sm:appearance-auto sm:border-transparent sm:text-strip-ink sm:group-hover:border-strip-ink/25 sm:hover:border-strip-ink/40 sm:focus-visible:border-strip-ink/40 rounded-[2px] border border-strip-ink/25 bg-transparent px-1 font-condensed text-xs focus-visible:outline-2 focus-visible:outline-ring disabled:opacity-50 [&>option]:bg-popover [&>option]:text-popover-foreground"
                       >
                         {columns.map((option) => (
                           <option

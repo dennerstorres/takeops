@@ -180,18 +180,25 @@ export default async function RecordModePage({
           </div>
           <section
             className={cn(
-              "flex flex-col gap-2 rounded-md p-3 text-strip-ink",
+              "rounded-md p-3 text-strip-ink",
               stripPhaseClass[scenePhase(view.scene.status)],
             )}
           >
-            <p className="flex items-center justify-between gap-3 font-condensed text-sm font-semibold tracking-wider uppercase">
-              <span>
-                {t("record.scenePosition", {
-                  position: view.position,
-                  total: view.total,
-                })}
-              </span>
-              <span className="flex items-center gap-2">
+            <div className="flex items-start justify-between gap-3">
+              <h1 className="text-2xl leading-tight font-semibold">
+                {view.scene.title}
+              </h1>
+              <p className="flex shrink-0 items-center gap-2 pt-1 font-condensed text-sm font-semibold tracking-wide uppercase">
+                <span className="sr-only">
+                  {t("record.scenePosition", {
+                    position: view.position,
+                    total: view.total,
+                  })}
+                </span>
+                <span aria-hidden="true" className="tabular-nums">
+                  {view.position}/{view.total}
+                </span>
+                <span aria-hidden="true">·</span>
                 {sceneStatusLabel(t, view.scene.status)}
                 <span
                   aria-hidden="true"
@@ -200,11 +207,8 @@ export default async function RecordModePage({
                     stripTipClass[sceneTip(view.scene.status)],
                   )}
                 />
-              </span>
-            </p>
-            <h1 className="text-2xl leading-tight font-semibold">
-              {view.scene.title}
-            </h1>
+              </p>
+            </div>
           </section>
           {view.scene.dialogue || view.scene.speaker ? (
             <section className="space-y-2">

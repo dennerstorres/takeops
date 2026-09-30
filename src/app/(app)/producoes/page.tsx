@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Plus, SlidersHorizontal } from "lucide-react";
+import { Plus, Search, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
@@ -98,13 +98,23 @@ export default async function ProductionsPage({
         <span aria-hidden="true" className="order-3 basis-full sm:hidden" />
         <label className="order-4 min-w-0 flex-1 sm:order-none sm:max-w-72">
           <span className="sr-only">{t("projects.search")}</span>
-          <Input
-            type="search"
-            name="q"
-            defaultValue={query.text}
-            placeholder={t("projects.board.searchPlaceholder")}
-            className={cn(barControl, "bg-card")}
-          />
+          <span className="flex">
+            <Input
+              type="search"
+              name="q"
+              defaultValue={query.text}
+              placeholder={t("projects.board.searchPlaceholder")}
+              className={cn(barControl, "rounded-r-none bg-card")}
+            />
+            <button
+              type="submit"
+              aria-label={t("projects.filter")}
+              title={t("projects.filter")}
+              className="inline-flex size-11 shrink-0 items-center justify-center rounded-r-md border border-l-0 border-input bg-card text-card-foreground hover:bg-accent focus-visible:outline-2 focus-visible:outline-ring sm:size-8"
+            >
+              <Search className="size-4" aria-hidden="true" />
+            </button>
+          </span>
         </label>
         <details className="order-5 sm:order-none">
           <summary
@@ -199,15 +209,11 @@ export default async function ProductionsPage({
                 defaultValue={query.publishTo}
               />
             </label>
+            <div className="flex items-end sm:col-span-2 lg:col-span-4">
+              <Button type="submit">{t("projects.filter")}</Button>
+            </div>
           </div>
         </details>
-        <Button
-          type="submit"
-          variant="outline"
-          className={cn(barControl, "order-6 bg-card sm:order-none")}
-        >
-          {t("projects.filter")}
-        </Button>
         {filtering ? (
           <Link
             href="/producoes"

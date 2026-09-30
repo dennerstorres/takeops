@@ -22,7 +22,7 @@ HARDEN-006, 008, 009; OSS-003, 004, 006, 007; MVP-001, 002, 003; TEAM-004; WORKS
 
 ## Atualização (sessão 4)
 
-UI-010 a UI-014 feitas (ver HISTORY.md). Próxima: UI-015 (finish reviewer e documenter do impeccable, DESIGN.md novo). Contrato de direção está no `src/app/layout.tsx`.
+Redesign completo (UI-010 a UI-015, ver HISTORY.md), revisão final com veredito `ship` e DESIGN.md novo. Próxima: MVP-004 (release), depois das pendências do dono abaixo. Contrato de direção está no `src/app/layout.tsx`.
 
 ## Próximos passos exatos
 

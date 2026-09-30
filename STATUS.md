@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 24 — MVP Acceptance (MVP-001..003 e DEPLOY-003 feitas); release adiado para o redesign (ADR-045)
+Fase 24 — MVP Acceptance (MVP-001..003, DEPLOY-003 e redesign UI-010..015 feitos); falta o release
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-UI-014 — Redesign: Modo Gravação e demais telas
+UI-015 — Redesign: revisão final e DESIGN.md
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-UI-015 — Redesign: revisão final e DESIGN.md
+MVP-004 — Release MVP
 ```
 
 ## Estado dos módulos
@@ -83,4 +83,4 @@ A página da produção é a visão geral: dados, progresso, links e participant
 
 Rumo definido em 2026-09-29: produção na VPS do mantenedor via Coolify em `https://takeops.dennerstorres.dev`, imagem Docker (ADR-037); refactor de UI com PanelUI como referência visual (ADR-038); repositório público AGPL-3.0 (ADR-039); login Google + link por e-mail (ADR-040). Ordem sugerida: OSS-001 → OSS-002 → DEPLOY-001 (produção cedo) → OSS-005 → OSS-008 → UI-001..008 → OSS-003/004/006/007 → MVP. Idiomas: pt-BR e en (ADR-041, ADR-042). OSS-008 feita: shell e Avisos traduzidos, rótulos de enum pelo catálogo; o resto do texto das telas migra nas UI-002..007.
 
-Tokens do Quadro de tiras em `src/app/globals.css` (UI-010); `DESIGN.md` está desatualizado até a UI-015. `npm run check:contrast` entra no `verify`.
+Mundo visual Quadro de tiras (ADR-045): regras em `DESIGN.md` (reescrito na UI-015 a partir do código), tokens em `src/app/globals.css`, sidecar em `.impeccable/design.json`. `npm run check:contrast` entra no `verify`.

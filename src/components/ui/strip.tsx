@@ -75,7 +75,27 @@ function StripBoard({
       <ul aria-label={label} className="flex flex-col gap-px">
         {children}
       </ul>
+      <StripLegend />
     </div>
+  );
+}
+
+// Legenda impressa das pontas: o estado também em texto, não só no traço.
+function StripLegend() {
+  const t = useTranslations("strip");
+  return (
+    <p className="flex flex-wrap items-center gap-x-4 gap-y-1 px-2 pt-1.5 pb-0.5 font-condensed text-xs text-frame-foreground">
+      {(["ok", "pending", "idle"] as const).map((tip) => (
+        <span key={tip} className="inline-flex items-center gap-1.5">
+          <span
+            aria-hidden="true"
+            className={cn("h-3.5 w-1.5", stripTipClass[tip])}
+            style={{ ["--strip-ink" as string]: "var(--frame-foreground)" }}
+          />
+          {t(`tip.${tip}`)}
+        </span>
+      ))}
+    </p>
   );
 }
 
@@ -148,7 +168,7 @@ function Strip({
   const titleBody = (
     <>
       <span className="min-w-0 truncate">{title}</span>
-      {flag ? <span className="shrink-0">{flag}</span> : null}
+      {flag ? <span className="hidden shrink-0 sm:inline">{flag}</span> : null}
     </>
   );
 
@@ -158,7 +178,7 @@ function Strip({
       data-phase={phase}
       data-tip={tip}
       className={cn(
-        "strip-grid relative rounded-[2px] py-1 pr-1.5 pl-2 sm:py-0",
+        "strip-grid group relative rounded-[2px] py-1 pr-1.5 pl-2 sm:py-0",
         stripPhaseClass[phase],
         href &&
           "transition-[filter] duration-150 hover:brightness-[0.96] dark:hover:brightness-125",
@@ -188,13 +208,34 @@ function Strip({
       ) : (
         <span className={titleClass}>{titleBody}</span>
       )}
-      <span className={cn(cellMeta, "[grid-area:owner]")}>{owner}</span>
+      <span
+        className={cn(
+          cellMeta,
+          "flex items-center gap-2 [grid-area:owner] sm:block",
+        )}
+      >
+        {/* No celular a pendência desce para a linha de baixo, depois do
+            dono; o dono só corta se o nome não couber, e da pendência só
+            corta o texto, nunca o ícone. No desktop ela vem ao lado do título. */}
+        <span
+          className={cn(
+            "min-w-0 truncate",
+            flag && "max-w-[65%] shrink-0 sm:max-w-none",
+          )}
+        >
+          {owner}
+        </span>
+        {flag ? (
+          <span className="flex min-w-0 items-center sm:hidden">{flag}</span>
+        ) : null}
+      </span>
       <span className={cn(cellMeta, "[grid-area:date]")}>{date}</span>
       <span className={cn(cellMeta, "[grid-area:meta]")}>{meta}</span>
       {action ? (
         <span className="relative z-10 [grid-area:act]">{action}</span>
       ) : null}
       <span
+        title={t(`tip.${tip}`)}
         className={cn(
           "h-4 w-2 justify-self-end [grid-area:tip]",
           stripTipClass[tip],

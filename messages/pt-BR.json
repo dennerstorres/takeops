@@ -606,7 +606,9 @@
       "moveUp": "Subir {title}",
       "moveDown": "Descer {title}",
       "duplicate": "Duplicar {title}",
-      "delete": "Excluir {title}"
+      "delete": "Excluir {title}",
+      "add": "Adicionar cena",
+      "newPlaceholder": "Título da nova cena"
     }
   },
   "script": {
@@ -826,6 +828,7 @@
       "ok": "Em dia",
       "pending": "Com pendência",
       "idle": "Parada"
-    }
+    },
+    "more": "Ações de {title}"
   }
 }

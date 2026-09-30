@@ -1,0 +1,725 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-30T12:30:00-03:00",
+  "title": "Design System: TakeOps",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Azul de Claquete",
+        "canonical": "oklch(0.45 0.12 255)",
+        "dark": "oklch(0.76 0.1 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.12 255)",
+          "oklch(0.27 0.12 255)",
+          "oklch(0.39 0.12 255)",
+          "oklch(0.51 0.12 255)",
+          "oklch(0.63 0.12 255)",
+          "oklch(0.75 0.12 255)",
+          "oklch(0.87 0.12 255)",
+          "oklch(0.95 0.12 255)"
+        ]
+      },
+      "primary-foreground": {
+        "role": "primary",
+        "displayName": "Branco sobre Azul",
+        "canonical": "oklch(0.985 0.004 255)",
+        "dark": "oklch(0.18 0.03 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 255)",
+          "oklch(0.27 0.004 255)",
+          "oklch(0.39 0.004 255)",
+          "oklch(0.51 0.004 255)",
+          "oklch(0.63 0.004 255)",
+          "oklch(0.75 0.004 255)",
+          "oklch(0.87 0.004 255)",
+          "oklch(0.95 0.004 255)"
+        ]
+      },
+      "ring": {
+        "role": "primary",
+        "displayName": "Anel de Foco",
+        "canonical": "oklch(0.55 0.14 255)",
+        "dark": "oklch(0.68 0.12 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.14 255)",
+          "oklch(0.27 0.14 255)",
+          "oklch(0.39 0.14 255)",
+          "oklch(0.51 0.14 255)",
+          "oklch(0.63 0.14 255)",
+          "oklch(0.75 0.14 255)",
+          "oklch(0.87 0.14 255)",
+          "oklch(0.95 0.14 255)"
+        ]
+      },
+      "strip-plan": {
+        "role": "secondary",
+        "displayName": "Cartolina Branca (plan)",
+        "canonical": "oklch(0.99 0.004 95)",
+        "dark": "oklch(0.32 0.005 95)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 95)",
+          "oklch(0.27 0.004 95)",
+          "oklch(0.39 0.004 95)",
+          "oklch(0.51 0.004 95)",
+          "oklch(0.63 0.004 95)",
+          "oklch(0.75 0.004 95)",
+          "oklch(0.87 0.004 95)",
+          "oklch(0.95 0.004 95)"
+        ]
+      },
+      "strip-set": {
+        "role": "secondary",
+        "displayName": "Cartolina Amarela (set)",
+        "canonical": "oklch(0.92 0.075 97)",
+        "dark": "oklch(0.35 0.055 95)",
+        "tonalRamp": [
+          "oklch(0.15 0.075 97)",
+          "oklch(0.27 0.075 97)",
+          "oklch(0.39 0.075 97)",
+          "oklch(0.51 0.075 97)",
+          "oklch(0.63 0.075 97)",
+          "oklch(0.75 0.075 97)",
+          "oklch(0.87 0.075 97)",
+          "oklch(0.95 0.075 97)"
+        ]
+      },
+      "strip-post": {
+        "role": "secondary",
+        "displayName": "Cartolina Azul (post)",
+        "canonical": "oklch(0.89 0.045 235)",
+        "dark": "oklch(0.32 0.045 240)",
+        "tonalRamp": [
+          "oklch(0.15 0.045 235)",
+          "oklch(0.27 0.045 235)",
+          "oklch(0.39 0.045 235)",
+          "oklch(0.51 0.045 235)",
+          "oklch(0.63 0.045 235)",
+          "oklch(0.75 0.045 235)",
+          "oklch(0.87 0.045 235)",
+          "oklch(0.95 0.045 235)"
+        ]
+      },
+      "strip-done": {
+        "role": "secondary",
+        "displayName": "Cartolina Verde (done)",
+        "canonical": "oklch(0.895 0.055 150)",
+        "dark": "oklch(0.32 0.05 150)",
+        "tonalRamp": [
+          "oklch(0.15 0.055 150)",
+          "oklch(0.27 0.055 150)",
+          "oklch(0.39 0.055 150)",
+          "oklch(0.51 0.055 150)",
+          "oklch(0.63 0.055 150)",
+          "oklch(0.75 0.055 150)",
+          "oklch(0.87 0.055 150)",
+          "oklch(0.95 0.055 150)"
+        ]
+      },
+      "strip-shelf": {
+        "role": "secondary",
+        "displayName": "Cartolina Cinza (shelf)",
+        "canonical": "oklch(0.86 0.004 250)",
+        "dark": "oklch(0.26 0.004 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 250)",
+          "oklch(0.27 0.004 250)",
+          "oklch(0.39 0.004 250)",
+          "oklch(0.51 0.004 250)",
+          "oklch(0.63 0.004 250)",
+          "oklch(0.75 0.004 250)",
+          "oklch(0.87 0.004 250)",
+          "oklch(0.95 0.004 250)"
+        ]
+      },
+      "strip-ink": {
+        "role": "secondary",
+        "displayName": "Tinta da Tira",
+        "canonical": "oklch(0.2 0.01 250)",
+        "dark": "oklch(0.96 0.004 95)",
+        "tonalRamp": [
+          "oklch(0.15 0.01 250)",
+          "oklch(0.27 0.01 250)",
+          "oklch(0.39 0.01 250)",
+          "oklch(0.51 0.01 250)",
+          "oklch(0.63 0.01 250)",
+          "oklch(0.75 0.01 250)",
+          "oklch(0.87 0.01 250)",
+          "oklch(0.95 0.01 250)"
+        ]
+      },
+      "strip-ink-muted": {
+        "role": "secondary",
+        "displayName": "Tinta da Tira Apagada",
+        "canonical": "oklch(0.4 0.012 250)",
+        "dark": "oklch(0.82 0.01 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.012 250)",
+          "oklch(0.27 0.012 250)",
+          "oklch(0.39 0.012 250)",
+          "oklch(0.51 0.012 250)",
+          "oklch(0.63 0.012 250)",
+          "oklch(0.75 0.012 250)",
+          "oklch(0.87 0.012 250)",
+          "oklch(0.95 0.012 250)"
+        ]
+      },
+      "record": {
+        "role": "tertiary",
+        "displayName": "Luz de Gravação",
+        "canonical": "oklch(0.55 0.22 25)",
+        "dark": "oklch(0.56 0.21 25)",
+        "tonalRamp": [
+          "oklch(0.15 0.2 25)",
+          "oklch(0.27 0.2 25)",
+          "oklch(0.39 0.2 25)",
+          "oklch(0.51 0.2 25)",
+          "oklch(0.63 0.2 25)",
+          "oklch(0.75 0.2 25)",
+          "oklch(0.87 0.2 25)",
+          "oklch(0.95 0.2 25)"
+        ]
+      },
+      "destructive": {
+        "role": "tertiary",
+        "displayName": "Vermelho de Erro",
+        "canonical": "oklch(0.52 0.19 27)",
+        "dark": "oklch(0.72 0.16 25)",
+        "tonalRamp": [
+          "oklch(0.15 0.17 27)",
+          "oklch(0.27 0.17 27)",
+          "oklch(0.39 0.17 27)",
+          "oklch(0.51 0.17 27)",
+          "oklch(0.63 0.17 27)",
+          "oklch(0.75 0.17 27)",
+          "oklch(0.87 0.17 27)",
+          "oklch(0.95 0.17 27)"
+        ]
+      },
+      "destructive-muted": {
+        "role": "tertiary",
+        "displayName": "Fundo de Erro",
+        "canonical": "oklch(0.95 0.03 27)",
+        "dark": "oklch(0.29 0.06 25)",
+        "tonalRamp": [
+          "oklch(0.15 0.03 27)",
+          "oklch(0.27 0.03 27)",
+          "oklch(0.39 0.03 27)",
+          "oklch(0.51 0.03 27)",
+          "oklch(0.63 0.03 27)",
+          "oklch(0.75 0.03 27)",
+          "oklch(0.87 0.03 27)",
+          "oklch(0.95 0.03 27)"
+        ]
+      },
+      "success": {
+        "role": "tertiary",
+        "displayName": "Verde de Sucesso",
+        "canonical": "oklch(0.48 0.11 150)",
+        "dark": "oklch(0.75 0.13 150)",
+        "tonalRamp": [
+          "oklch(0.15 0.11 150)",
+          "oklch(0.27 0.11 150)",
+          "oklch(0.39 0.11 150)",
+          "oklch(0.51 0.11 150)",
+          "oklch(0.63 0.11 150)",
+          "oklch(0.75 0.11 150)",
+          "oklch(0.87 0.11 150)",
+          "oklch(0.95 0.11 150)"
+        ]
+      },
+      "success-muted": {
+        "role": "tertiary",
+        "displayName": "Fundo de Sucesso",
+        "canonical": "oklch(0.94 0.04 150)",
+        "dark": "oklch(0.28 0.05 150)",
+        "tonalRamp": [
+          "oklch(0.15 0.04 150)",
+          "oklch(0.27 0.04 150)",
+          "oklch(0.39 0.04 150)",
+          "oklch(0.51 0.04 150)",
+          "oklch(0.63 0.04 150)",
+          "oklch(0.75 0.04 150)",
+          "oklch(0.87 0.04 150)",
+          "oklch(0.95 0.04 150)"
+        ]
+      },
+      "warning": {
+        "role": "tertiary",
+        "displayName": "Âmbar de Atenção",
+        "canonical": "oklch(0.5 0.11 65)",
+        "dark": "oklch(0.8 0.13 80)",
+        "tonalRamp": [
+          "oklch(0.15 0.11 65)",
+          "oklch(0.27 0.11 65)",
+          "oklch(0.39 0.11 65)",
+          "oklch(0.51 0.11 65)",
+          "oklch(0.63 0.11 65)",
+          "oklch(0.75 0.11 65)",
+          "oklch(0.87 0.11 65)",
+          "oklch(0.95 0.11 65)"
+        ]
+      },
+      "warning-muted": {
+        "role": "tertiary",
+        "displayName": "Fundo de Atenção",
+        "canonical": "oklch(0.95 0.05 85)",
+        "dark": "oklch(0.29 0.05 80)",
+        "tonalRamp": [
+          "oklch(0.15 0.05 85)",
+          "oklch(0.27 0.05 85)",
+          "oklch(0.39 0.05 85)",
+          "oklch(0.51 0.05 85)",
+          "oklch(0.63 0.05 85)",
+          "oklch(0.75 0.05 85)",
+          "oklch(0.87 0.05 85)",
+          "oklch(0.95 0.05 85)"
+        ]
+      },
+      "info": {
+        "role": "tertiary",
+        "displayName": "Azul de Informação",
+        "canonical": "oklch(0.48 0.12 245)",
+        "dark": "oklch(0.75 0.1 245)",
+        "tonalRamp": [
+          "oklch(0.15 0.1 245)",
+          "oklch(0.27 0.1 245)",
+          "oklch(0.39 0.1 245)",
+          "oklch(0.51 0.1 245)",
+          "oklch(0.63 0.1 245)",
+          "oklch(0.75 0.1 245)",
+          "oklch(0.87 0.1 245)",
+          "oklch(0.95 0.1 245)"
+        ]
+      },
+      "info-muted": {
+        "role": "tertiary",
+        "displayName": "Fundo de Informação",
+        "canonical": "oklch(0.94 0.03 245)",
+        "dark": "oklch(0.28 0.05 245)",
+        "tonalRamp": [
+          "oklch(0.15 0.03 245)",
+          "oklch(0.27 0.03 245)",
+          "oklch(0.39 0.03 245)",
+          "oklch(0.51 0.03 245)",
+          "oklch(0.63 0.03 245)",
+          "oklch(0.75 0.03 245)",
+          "oklch(0.87 0.03 245)",
+          "oklch(0.95 0.03 245)"
+        ]
+      },
+      "frame": {
+        "role": "neutral",
+        "displayName": "Alumínio",
+        "canonical": "oklch(0.8 0.006 250)",
+        "dark": "oklch(0.3 0.006 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 250)",
+          "oklch(0.27 0.006 250)",
+          "oklch(0.39 0.006 250)",
+          "oklch(0.51 0.006 250)",
+          "oklch(0.63 0.006 250)",
+          "oklch(0.75 0.006 250)",
+          "oklch(0.87 0.006 250)",
+          "oklch(0.95 0.006 250)"
+        ]
+      },
+      "frame-foreground": {
+        "role": "neutral",
+        "displayName": "Tinta do Alumínio",
+        "canonical": "oklch(0.2 0.012 250)",
+        "dark": "oklch(0.93 0.004 95)",
+        "tonalRamp": [
+          "oklch(0.15 0.012 250)",
+          "oklch(0.27 0.012 250)",
+          "oklch(0.39 0.012 250)",
+          "oklch(0.51 0.012 250)",
+          "oklch(0.63 0.012 250)",
+          "oklch(0.75 0.012 250)",
+          "oklch(0.87 0.012 250)",
+          "oklch(0.95 0.012 250)"
+        ]
+      },
+      "divider": {
+        "role": "neutral",
+        "displayName": "Divisória Preta",
+        "canonical": "oklch(0.2 0.006 250)",
+        "dark": "oklch(0.08 0.004 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 250)",
+          "oklch(0.27 0.006 250)",
+          "oklch(0.39 0.006 250)",
+          "oklch(0.51 0.006 250)",
+          "oklch(0.63 0.006 250)",
+          "oklch(0.75 0.006 250)",
+          "oklch(0.87 0.006 250)",
+          "oklch(0.95 0.006 250)"
+        ]
+      },
+      "divider-foreground": {
+        "role": "neutral",
+        "displayName": "Tinta da Divisória",
+        "canonical": "oklch(0.96 0.004 95)",
+        "dark": "oklch(0.93 0.004 95)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 95)",
+          "oklch(0.27 0.004 95)",
+          "oklch(0.39 0.004 95)",
+          "oklch(0.51 0.004 95)",
+          "oklch(0.63 0.004 95)",
+          "oklch(0.75 0.004 95)",
+          "oklch(0.87 0.004 95)",
+          "oklch(0.95 0.004 95)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Papel Frio",
+        "canonical": "oklch(0.965 0.003 250)",
+        "dark": "oklch(0.165 0.006 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.003 250)",
+          "oklch(0.27 0.003 250)",
+          "oklch(0.39 0.003 250)",
+          "oklch(0.51 0.003 250)",
+          "oklch(0.63 0.003 250)",
+          "oklch(0.75 0.003 250)",
+          "oklch(0.87 0.003 250)",
+          "oklch(0.95 0.003 250)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Grafite",
+        "canonical": "oklch(0.21 0.012 250)",
+        "dark": "oklch(0.95 0.004 95)",
+        "tonalRamp": [
+          "oklch(0.15 0.012 250)",
+          "oklch(0.27 0.012 250)",
+          "oklch(0.39 0.012 250)",
+          "oklch(0.51 0.012 250)",
+          "oklch(0.63 0.012 250)",
+          "oklch(0.75 0.012 250)",
+          "oklch(0.87 0.012 250)",
+          "oklch(0.95 0.012 250)"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Papel Branco",
+        "canonical": "oklch(0.995 0.002 95)",
+        "dark": "oklch(0.2 0.007 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.002 95)",
+          "oklch(0.27 0.002 95)",
+          "oklch(0.39 0.002 95)",
+          "oklch(0.51 0.002 95)",
+          "oklch(0.63 0.002 95)",
+          "oklch(0.75 0.002 95)",
+          "oklch(0.87 0.002 95)",
+          "oklch(0.95 0.002 95)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Papel Cinza",
+        "canonical": "oklch(0.93 0.004 250)",
+        "dark": "oklch(0.25 0.007 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.004 250)",
+          "oklch(0.27 0.004 250)",
+          "oklch(0.39 0.004 250)",
+          "oklch(0.51 0.004 250)",
+          "oklch(0.63 0.004 250)",
+          "oklch(0.75 0.004 250)",
+          "oklch(0.87 0.004 250)",
+          "oklch(0.95 0.004 250)"
+        ]
+      },
+      "muted-foreground": {
+        "role": "neutral",
+        "displayName": "Grafite Apagado",
+        "canonical": "oklch(0.46 0.012 250)",
+        "dark": "oklch(0.72 0.01 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.012 250)",
+          "oklch(0.27 0.012 250)",
+          "oklch(0.39 0.012 250)",
+          "oklch(0.51 0.012 250)",
+          "oklch(0.63 0.012 250)",
+          "oklch(0.75 0.012 250)",
+          "oklch(0.87 0.012 250)",
+          "oklch(0.95 0.012 250)"
+        ]
+      },
+      "accent": {
+        "role": "neutral",
+        "displayName": "Papel Azulado",
+        "canonical": "oklch(0.91 0.012 250)",
+        "dark": "oklch(0.29 0.012 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.012 250)",
+          "oklch(0.27 0.012 250)",
+          "oklch(0.39 0.012 250)",
+          "oklch(0.51 0.012 250)",
+          "oklch(0.63 0.012 250)",
+          "oklch(0.75 0.012 250)",
+          "oklch(0.87 0.012 250)",
+          "oklch(0.95 0.012 250)"
+        ]
+      },
+      "accent-foreground": {
+        "role": "neutral",
+        "displayName": "Tinta Azulada",
+        "canonical": "oklch(0.24 0.03 255)",
+        "dark": "oklch(0.94 0.02 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.03 255)",
+          "oklch(0.27 0.03 255)",
+          "oklch(0.39 0.03 255)",
+          "oklch(0.51 0.03 255)",
+          "oklch(0.63 0.03 255)",
+          "oklch(0.75 0.03 255)",
+          "oklch(0.87 0.03 255)",
+          "oklch(0.95 0.03 255)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Borda",
+        "canonical": "oklch(0.86 0.005 250)",
+        "dark": "oklch(1 0 0 / 11%)",
+        "tonalRamp": [
+          "oklch(0.15 0.005 250)",
+          "oklch(0.27 0.005 250)",
+          "oklch(0.39 0.005 250)",
+          "oklch(0.51 0.005 250)",
+          "oklch(0.63 0.005 250)",
+          "oklch(0.75 0.005 250)",
+          "oklch(0.87 0.005 250)",
+          "oklch(0.95 0.005 250)"
+        ]
+      },
+      "input": {
+        "role": "neutral",
+        "displayName": "Borda de Campo",
+        "canonical": "oklch(0.78 0.006 250)",
+        "dark": "oklch(1 0 0 / 18%)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 250)",
+          "oklch(0.27 0.006 250)",
+          "oklch(0.39 0.006 250)",
+          "oklch(0.51 0.006 250)",
+          "oklch(0.63 0.006 250)",
+          "oklch(0.75 0.006 250)",
+          "oklch(0.87 0.006 250)",
+          "oklch(0.95 0.006 250)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Título da cena no Modo Gravação."
+      },
+      "headline": {
+        "displayName": "Headline impressa",
+        "purpose": "Título da página na barra de filtros."
+      },
+      "title": {
+        "displayName": "Título impresso",
+        "purpose": "Navegação, abas, CardTitle, títulos de seção."
+      },
+      "body": {
+        "displayName": "Corpo",
+        "purpose": "Conteúdo; 1rem e 1.25rem (diálogo) no Modo Gravação."
+      },
+      "strip-title": {
+        "displayName": "Título da tira",
+        "purpose": "Título dentro da tira, truncado."
+      },
+      "label": {
+        "displayName": "Rótulo",
+        "purpose": "Código de fase, divisória, StatusBadge, metadados da tira."
+      },
+      "column-head": {
+        "displayName": "Cabeçalho de coluna",
+        "purpose": "Cabeçalho impresso das colunas do quadro."
+      }
+    },
+    "shadows": [
+      {
+        "name": "elevation-sm",
+        "value": "0 1px 2px oklch(0.2 0.012 250 / 8%)",
+        "purpose": "Item atual da navegação/aba levantado do trilho."
+      },
+      {
+        "name": "elevation-md",
+        "value": "0 6px 16px oklch(0.2 0.012 250 / 12%), 0 1px 3px oklch(0.2 0.012 250 / 8%)",
+        "purpose": "Popovers, painel de filtros, menu de ações da tira no celular."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-150",
+        "value": "150ms (colors / filter / opacity)",
+        "purpose": "Hover de tira (brilho), navegação e ações da tira."
+      },
+      {
+        "name": "overlay-100",
+        "value": "100ms fade + zoom 95%",
+        "purpose": "Abrir e fechar dialog."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px",
+        "purpose": "Tira 44px→28px, grade de 2 linhas→1 linha, alvos 44px→densos."
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px",
+        "purpose": "Navegação impressa na barra; abaixo, menu lateral."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Tira do quadro",
+      "kind": "custom",
+      "refersTo": "strip",
+      "description": "Grupo com divisória preta e uma tira na cartolina da fase, com código de letra e ponta de estado riscada (pendência).",
+      "html": "<div class=\"ds-board\"><ul><li><div class=\"ds-divider\"><span>PRONTO PARA GRAVAR</span><span>1</span></div></li><li class=\"ds-strip\"><span class=\"ds-code\">SET</span><span class=\"ds-meta\">Urgente</span><a class=\"ds-title\" href=\"#\">Tutorial: exportar relatório em PDF</a><span class=\"ds-meta\">Carla Dias</span><span class=\"ds-meta\">02/10/2026</span><span class=\"ds-tip\" title=\"Com pendência\"></span></li></ul></div>",
+      "css": ".ds-board{background:var(--frame,#c4c7cc);border-radius:3.2px;padding:4px;color:var(--strip-ink,#1f2328);font-family:'IBM Plex Sans',sans-serif}.ds-board ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}.ds-divider{display:flex;height:24px;align-items:center;justify-content:space-between;padding:0 8px;border-radius:2px;background:var(--divider,#1b1d21);color:var(--divider-foreground,#f4f3ef);font-family:'IBM Plex Sans Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}.ds-strip{display:grid;grid-template-columns:44px 64px minmax(0,1fr) 144px 96px 8px;column-gap:10px;align-items:center;min-height:28px;padding:0 6px 0 8px;border-radius:2px;background:var(--strip-set,#f1e3a4);transition:filter .15s}.ds-strip:hover{filter:brightness(.96)}.ds-strip:focus-within{outline:2px solid var(--ring,#2f6fc0);outline-offset:-2px}.ds-code{align-self:stretch;display:flex;align-items:center;border-right:1px solid rgba(0,0,0,.15);font-family:'IBM Plex Sans Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}.ds-title{font-size:14px;font-weight:500;color:inherit;text-decoration:none;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;outline:none}.ds-meta{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:12px;color:var(--strip-ink-muted,#50555c);font-variant-numeric:tabular-nums}.ds-tip{width:8px;height:16px;justify-self:end;box-shadow:inset 0 0 0 1px var(--strip-ink,#1f2328);background:repeating-linear-gradient(135deg,var(--strip-ink,#1f2328) 0 2px,transparent 2px 5px)}"
+    },
+    {
+      "name": "Botão primário",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal; um por barra.",
+      "html": "<button class=\"ds-btn-primary\">Nova produção</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;height:44px;padding:0 12px;border:1px solid transparent;border-radius:4px;background:var(--primary,#2d5ea8);color:var(--primary-foreground,#fafbfd);font:500 14px 'IBM Plex Sans',sans-serif;cursor:pointer;transition:background .15s}.ds-btn-primary:hover{background:color-mix(in oklch,var(--primary,#2d5ea8) 80%,transparent)}.ds-btn-primary:focus-visible{outline:none;border-color:var(--ring,#2f6fc0);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring,#2f6fc0) 50%,transparent)}.ds-btn-primary:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Botão outline",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ações secundárias; sobre alumínio usa fundo card.",
+      "html": "<button class=\"ds-btn-outline\">Refazer</button>",
+      "css": ".ds-btn-outline{height:44px;padding:0 12px;border:1px solid var(--border,#d3d6da);border-radius:4px;background:var(--card,#fdfdfc);color:var(--foreground,#1f2328);font:500 14px 'IBM Plex Sans',sans-serif;cursor:pointer;transition:background .15s}.ds-btn-outline:hover{background:var(--muted,#e9eaec)}.ds-btn-outline:focus-visible{outline:none;border-color:var(--ring,#2f6fc0);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring,#2f6fc0) 50%,transparent)}"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de 44px, borda input, foco com anel.",
+      "html": "<input class=\"ds-input\" placeholder=\"Buscar por título\">",
+      "css": ".ds-input{min-height:44px;width:260px;padding:0 12px;border:1px solid var(--input,#b9bcc1);border-radius:4px;background:var(--card,#fdfdfc);color:var(--foreground,#1f2328);font:400 14px 'IBM Plex Sans',sans-serif;outline:none;transition:border-color .15s}.ds-input:focus-visible{outline:none;border-color:var(--ring,#2f6fc0);box-shadow:0 0 0 3px color-mix(in oklch,var(--ring,#2f6fc0) 50%,transparent)}"
+    },
+    {
+      "name": "Navegação impressa",
+      "kind": "nav",
+      "refersTo": "tab-link",
+      "description": "Trilho de alumínio; item atual vira tira clara levantada.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\">Dashboard</a><a href=\"#\" aria-current=\"page\">Produções</a><a href=\"#\">Ideias</a></nav>",
+      "css": ".ds-nav{display:flex;gap:2px;padding:4px;border-radius:3.2px;background:var(--frame,#c4c7cc)}.ds-nav a{display:inline-flex;align-items:center;height:32px;padding:0 10px;border-radius:2px;color:var(--frame-foreground,#1f2328);font:600 13px 'IBM Plex Sans Condensed',sans-serif;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;transition:background .15s}.ds-nav a:hover{background:color-mix(in oklch,var(--card,#fdfdfc) 50%,transparent)}.ds-nav a[aria-current=page]{background:var(--card,#fdfdfc);box-shadow:0 1px 2px rgba(20,24,30,.08)}.ds-nav a:focus-visible{outline:2px solid var(--ring,#2f6fc0);outline-offset:-2px}"
+    },
+    {
+      "name": "StatusBadge",
+      "kind": "chip",
+      "refersTo": "status-badge",
+      "description": "Rótulo de status em tom -muted, sempre com texto.",
+      "html": "<span class=\"ds-badge\">Refazer</span>",
+      "css": ".ds-badge{display:inline-flex;align-items:center;padding:1px 6px;border-radius:2px;background:var(--warning-muted,#f7ecd4);color:var(--warning,#7a5410);font:600 12px 'IBM Plex Sans Condensed',sans-serif;letter-spacing:.025em;text-transform:uppercase}"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Superfície de formulário ou detalhe; plana, borda de 1px.",
+      "html": "<section class=\"ds-card\"><h2>Checklist</h2><p>3 de 8 itens concluídos.</p></section>",
+      "css": ".ds-card{padding:16px;border:1px solid var(--border,#d3d6da);border-radius:3.2px;background:var(--card,#fdfdfc);color:var(--foreground,#1f2328);font:400 14px 'IBM Plex Sans',sans-serif}.ds-card h2{margin:0 0 4px;font:600 14px 'IBM Plex Sans Condensed',sans-serif;letter-spacing:.05em;text-transform:uppercase}.ds-card p{margin:0;color:var(--muted-foreground,#62676e)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Quadro de Tiras",
+    "overview": "O TakeOps é um stripboard de set de filmagem na tela (ADR-045). Cada produção, cena, plano ou ideia é uma tira fina de cartolina; a cor da tira diz a etapa, a ponta direita diz o estado, e tiras pretas separam os grupos. Tudo mora dentro de uma moldura de alumínio com cabeçalho impresso em Plex Condensed caixa-alta. A equipe lê o quadro de relance e abre a tira para agir.\n\nA densidade é de ferramenta de produção, não de vitrine: linhas de 28px no desktop, colunas fixas que nunca desalinham, zero decoração. O mundo recusa cards arredondados em colunas (kanban) e o arco-íris de status: onze etapas cabem em cinco cartolinas dessaturadas.\n\nO tema escuro mantém o mesmo quadro: a moldura escurece, as tiras guardam o matiz. Valores do escuro estão em `src/app/globals.css` (`.dark`) e no sidecar.\n\nEste registro descreve o build revisado: a revisão final fechou com disposição \"ship\" sobre as correções pontuadas (renders em `.impeccable/review/`, 1440 e 390, claro e escuro).",
+    "keyCharacteristics": [
+      "Tiras de 28px (44px abaixo de `sm`) com código de letra da fase à esquerda e ponta de estado à direita.",
+      "Cinco cartolinas: branca (plan), amarela (set), azul (post), verde (done), cinza (shelf).",
+      "Divisórias pretas como cabeçalho de grupo; moldura de alumínio em volta.",
+      "Plex Condensed caixa-alta para tudo que é \"impresso\"; Plex Sans para conteúdo.",
+      "Cantos quase retos (2px na tira, 3–4px em superfícies e controles).",
+      "Plano, sem sombra estrutural; profundidade vem de moldura → tira."
+    ],
+    "rules": [
+      {
+        "name": "A Regra da Cartolina",
+        "body": "A cor da tira é a etapa e nada mais. Estado vai na ponta, pendência vai em texto com ícone; nunca pinte uma tira para chamar atenção.",
+        "section": "colors"
+      },
+      {
+        "name": "A Regra do Texto ao Lado",
+        "body": "Cor nunca carrega status sozinha: a tira tem código de letra da fase (+ `sr-only` com a etapa), a ponta tem `title`/`sr-only` e a legenda impressa, o StatusBadge tem rótulo.",
+        "section": "colors"
+      },
+      {
+        "name": "A Regra do Par Conferido",
+        "body": "Todo par texto/fundo novo entra em `scripts/check-contrast.mjs` e passa `npm run check:contrast` (4.5:1 texto, 3:1 foco) nos dois temas antes de ser usado.",
+        "section": "colors"
+      },
+      {
+        "name": "A Regra do Impresso",
+        "body": "Caixa-alta condensada é para o que é \"impresso no quadro\" (rótulos, cabeçalhos, códigos, navegação). Conteúdo escrito pelo usuário — títulos de produção, diálogo, notas — fica em Plex Sans, caixa normal.",
+        "section": "typography"
+      },
+      {
+        "name": "A Regra do Número Tabular",
+        "body": "Contagens, datas, prioridades e checklists usam `tabular-nums` para as colunas não dançarem.",
+        "section": "typography"
+      },
+      {
+        "name": "A Regra da Coluna Fixa",
+        "body": "Toda tira usa `.strip-grid`; a mesma etiqueta fica no mesmo lugar e só os valores mudam. Se falta um dado, a célula fica vazia, não colapsa.",
+        "section": "layout"
+      },
+      {
+        "name": "A Regra dos 44px",
+        "body": "Todo alvo de toque tem 44px abaixo de `sm`: tiras sobem para 44px, botões `h-11`, ícones da tira `size-11`, abas `h-11`. Acima de `sm` a densidade volta (tira 28px, ícone 24px, abas 32px).",
+        "section": "layout"
+      },
+      {
+        "name": "A Regra do Quadro Plano",
+        "body": "Tira, moldura, card e lista não têm sombra em repouso. Hover da tira é brilho (`brightness 0.96`; escuro `1.25`), não elevação.",
+        "section": "elevation"
+      },
+      {
+        "name": "A Regra da Ponta",
+        "body": "Estado é traço, não cor: contínuo (`ok`, em dia), riscado 135° (`pending`, com pendência), vazado (`idle`, parado). Todo quadro exibe a legenda impressa das pontas (`StripLegend`).",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** tirar todo texto de UI dos catálogos `messages/` via next-intl (ADR-041), inclusive rótulos de coluna, códigos de fase (`strip.phase.*`) e legenda das pontas (`strip.tip.*`).",
+      "**Do** mapear status para cartolina e ponta só pelas funções de `strip-phase.ts` (`stripPhase`, `scenePhase`, `sceneTip`, `ideaPhase`).",
+      "**Do** colocar texto ao lado de toda cor de status: código de letra, rótulo, legenda ou `sr-only`.",
+      "**Do** garantir 44px de alvo abaixo de `sm` e desenhar o Modo Gravação para 375–430px sem depender de hover.",
+      "**Do** usar `font-condensed` caixa-alta com `tracking-wider` para rótulos impressos e Plex Sans para conteúdo.",
+      "**Do** rodar `npm run check:contrast` ao mexer em qualquer token de cor."
+    ],
+    "donts": [
+      "**Don't** montar coleções como cards arredondados em colunas (kanban); a coleção é um quadro de tiras.",
+      "**Don't** criar cartolina nova nem pintar tira fora do mapa de fase; onze etapas cabem em cinco cores.",
+      "**Don't** mostrar estado só pela cor da ponta ou do fundo.",
+      "**Don't** usar `record` fora do \"gravando agora\".",
+      "**Don't** pôr sombra em tira, moldura, card ou lista em repouso.",
+      "**Don't** arredondar além de 4px em superfícies novas.",
+      "**Don't** escrever texto de interface direto no JSX."
+    ]
+  }
+}

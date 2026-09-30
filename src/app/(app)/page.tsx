@@ -140,7 +140,7 @@ export default async function Home() {
               <span
                 aria-hidden="true"
                 className={cn(
-                  "size-3 rounded-[2px] ring-1 ring-frame-foreground/40",
+                  "h-3.5 w-1.5 rounded-[1px]",
                   stripPhaseClass[stripPhase(counterStatus[item.key] ?? "")],
                 )}
               />

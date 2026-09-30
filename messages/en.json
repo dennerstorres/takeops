@@ -606,7 +606,9 @@
       "moveUp": "Move {title} up",
       "moveDown": "Move {title} down",
       "duplicate": "Duplicate {title}",
-      "delete": "Delete {title}"
+      "delete": "Delete {title}",
+      "add": "Add scene",
+      "newPlaceholder": "New scene title"
     }
   },
   "script": {
@@ -826,6 +828,7 @@
       "ok": "On track",
       "pending": "Needs attention",
       "idle": "Stalled"
-    }
+    },
+    "more": "Actions for {title}"
   }
 }

@@ -2058,7 +2058,7 @@ Modo Gravação mobile (375–430 px, toque grande) com a cena atual como tira a
 
 ## UI-015 — Redesign: revisão final e DESIGN.md
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-011, UI-012, UI-013, UI-014
 
