@@ -2084,7 +2084,7 @@ Remover:
 
 ## MVP-004 — Release MVP
 
-**Status:** TODO  
+**Status:** IN_PROGRESS  
 **Prioridade:** P0  
 **Dependências:** MVP-003, DEPLOY-003, OSS-004
 

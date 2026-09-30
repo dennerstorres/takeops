@@ -16,7 +16,7 @@ Fase 24 — MVP Acceptance (MVP-001..003, DEPLOY-003 e redesign UI-010..015 feit
 ## Tarefa ativa
 
 ```text
-Nenhuma
+MVP-004 — Release MVP (tag e release feitos; falta o dono abrir o repositório)
 ```
 
 ## Última tarefa concluída
