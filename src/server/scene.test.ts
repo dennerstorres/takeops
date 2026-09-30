@@ -74,6 +74,9 @@ function harness() {
     async updateMemberRole() {
       throw new Error("não usado");
     },
+    async updateWorkspace() {
+      return null;
+    },
     async removeMember() {
       return false;
     },

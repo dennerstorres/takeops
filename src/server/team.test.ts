@@ -42,6 +42,9 @@ function repository(members: TeamMemberRecord[]): WorkspaceRepository {
     async updateMemberRole() {
       throw new Error("não usado");
     },
+    async updateWorkspace() {
+      return null;
+    },
     async removeMember() {
       return false;
     },
@@ -126,6 +129,9 @@ function roleRepository() {
       if (!membership) return null;
       membership.role = role;
       return membership;
+    },
+    async updateWorkspace() {
+      return null;
     },
     async removeMember(workspaceId, userId) {
       const index = memberships.findIndex(

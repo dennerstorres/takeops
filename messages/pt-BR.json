@@ -450,7 +450,14 @@
   "settings": {
     "title": "Configurações",
     "description": "Os dados do workspace aparecem aqui.",
-    "back": "Voltar às configurações"
+    "back": "Voltar às configurações",
+    "workspace": "Workspace",
+    "name": "Nome",
+    "timezone": "Fuso horário",
+    "timezoneHelp": "Datas e horários aparecem neste fuso. Trocar não muda o que já foi marcado, só como é exibido.",
+    "logoUrl": "URL do logo",
+    "save": "Salvar",
+    "ownerOnly": "Só o dono altera os dados do workspace."
   },
   "equipment": {
     "title": "Equipamentos",

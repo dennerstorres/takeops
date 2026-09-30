@@ -9,6 +9,7 @@ import {
   listWorkspaces,
   requireRole,
   slugifyWorkspaceName,
+  updateWorkspaceSettings,
 } from "./workspace.ts";
 import {
   DuplicateSlugError,
@@ -86,6 +87,12 @@ function memoryRepository(): WorkspaceRepository {
       if (!membership) return null;
       membership.role = role;
       return membership;
+    },
+    async updateWorkspace(workspaceId, input) {
+      const workspace = workspaces.get(workspaceId);
+      if (!workspace) return null;
+      Object.assign(workspace, input, { updatedAt: new Date() });
+      return workspace;
     },
     async removeMember() {
       return false;
@@ -194,6 +201,75 @@ describe("membership", () => {
         ),
       (error: unknown) =>
         error instanceof ValidationError && error.fields.logoUrl !== undefined,
+    );
+  });
+});
+
+describe("configurações do workspace", () => {
+  it("só o dono edita nome, fuso e logo, com fuso e URL validados", async () => {
+    const repository = memoryRepository();
+    const own = await ownedWorkspace(repository, "user-a", "Time A");
+    const id = own.workspace.id;
+
+    const updated = await updateWorkspaceSettings(
+      "user-a",
+      id,
+      {
+        name: " Time Novo ",
+        timezone: "America/Sao_Paulo",
+        logoUrl: "https://cdn.example/logo.png",
+      },
+      repository,
+    );
+    assert.equal(updated.name, "Time Novo");
+    assert.equal(updated.timezone, "America/Sao_Paulo");
+    assert.equal(updated.logoUrl, "https://cdn.example/logo.png");
+
+    const cleared = await updateWorkspaceSettings(
+      "user-a",
+      id,
+      { name: "Time Novo", timezone: "UTC", logoUrl: "" },
+      repository,
+    );
+    assert.equal(cleared.logoUrl, null);
+
+    for (const [input, field] of [
+      [{ name: "X", timezone: "Nao/Existe" }, "timezone"],
+      [
+        { name: "X", timezone: "UTC", logoUrl: "javascript:alert(1)" },
+        "logoUrl",
+      ],
+      [{ name: "", timezone: "UTC" }, "name"],
+    ] as const) {
+      await assert.rejects(
+        () => updateWorkspaceSettings("user-a", id, input, repository),
+        (error: unknown) =>
+          error instanceof ValidationError && error.fields[field] !== undefined,
+      );
+    }
+
+    const membership = await repository.findMembership("user-a", id);
+    assert.ok(membership);
+    membership.role = "ADMIN";
+    await assert.rejects(
+      () =>
+        updateWorkspaceSettings(
+          "user-a",
+          id,
+          { name: "Admin", timezone: "UTC" },
+          repository,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
+    );
+    await assert.rejects(
+      () =>
+        updateWorkspaceSettings(
+          "user-b",
+          id,
+          { name: "Fora", timezone: "UTC" },
+          repository,
+        ),
+      (error: unknown) => error instanceof ForbiddenError,
     );
   });
 });

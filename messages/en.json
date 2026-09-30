@@ -450,7 +450,14 @@
   "settings": {
     "title": "Settings",
     "description": "Workspace details show up here.",
-    "back": "Back to settings"
+    "back": "Back to settings",
+    "workspace": "Workspace",
+    "name": "Name",
+    "timezone": "Time zone",
+    "timezoneHelp": "Dates and times are shown in this time zone. Changing it doesn't move what's already scheduled, only how it's displayed.",
+    "logoUrl": "Logo URL",
+    "save": "Save",
+    "ownerOnly": "Only the owner can change the workspace details."
   },
   "equipment": {
     "title": "Equipment",

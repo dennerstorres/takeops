@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-TEAM-004 — Remover membro do workspace
+WORKSPACE-003 — Configurações do workspace
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-WORKSPACE-003 — Configurações do workspace (depois UI-009, PUB-005, REVIEW-005, MVP-003)
+PUB-005 — Publicação registrada publica a produção (depois REVIEW-005, UI-009, MVP-003)
 ```
 
 ## Estado dos módulos

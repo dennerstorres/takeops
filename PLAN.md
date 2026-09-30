@@ -1961,7 +1961,7 @@ Achado da MVP-002 (spec §7.1, §71, §75). Hoje só dá para mudar papel.
 
 ## WORKSPACE-003 — Configurações do workspace
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** WORKSPACE-001
 

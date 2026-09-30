@@ -4967,3 +4967,20 @@ Revisão de leitura; nenhuma alteração de código nesta tarefa.
 ### Testes
 
 `team.test.ts` (regras de quem remove quem, validação) e `team.integration.test.ts` (acesso some só no workspace do qual saiu, participação sai só dele, autoria fica). `npm test`: 162 passam. Lint ok; `tsc` só com `LayoutProps` (SWC).
+
+## 2026-09-30 — WORKSPACE-003 — Configurações do workspace
+
+**Status:** DONE
+**Agente:** Claude
+
+- `updateWorkspaceSettings` (`workspace.ts`): só OWNER (spec §7.1 "gerenciar workspace"; ADMIN fica com as configurações operacionais, como equipamentos e checklists). Valida nome, fuso (`Intl`) e `logoUrl` http(s) com as mesmas regras da criação; logo vazio vira null.
+- `/configuracoes` ganhou a seção Workspace: formulário para o dono (fuso escolhido na lista `Intl.supportedValuesOf("timeZone")`), leitura para os demais. Salvar revalida o layout inteiro, porque nome e fuso aparecem em todo lugar.
+- Trocar o fuso muda só a exibição; as datas continuam em UTC (ADR-028). Texto de ajuda diz isso na tela.
+
+### Testes
+
+`workspace.test.ts` (dono edita, logo limpa, fuso/URL/nome inválidos, admin e estranho recusados) e `workspace.integration.test.ts` (persistência e nada muda em outro workspace). `npm test`: 163 passam. Lint ok; `tsc` só com `LayoutProps`.
+
+### Observações
+
+- O primeiro acesso cria o workspace com o fuso padrão `America/Cuiaba` sem perguntar. Agora dá para corrigir depois; perguntar na criação fica para quando fizer falta.

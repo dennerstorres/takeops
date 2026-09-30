@@ -66,6 +66,10 @@ export type WorkspaceRepository = {
     userId: string,
     role: WorkspaceRole,
   ): Promise<MembershipRecord | null>;
+  updateWorkspace(
+    workspaceId: string,
+    input: { name: string; timezone: string; logoUrl: string | null },
+  ): Promise<WorkspaceRecord | null>;
   // Tira o acesso e as funções nas produções do workspace; autoria fica.
   removeMember(workspaceId: string, userId: string): Promise<boolean>;
 };

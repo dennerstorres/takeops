@@ -153,6 +153,15 @@ export const prismaWorkspaceRepository: WorkspaceRepository = {
     return membership ? mapMembership(membership) : null;
   },
 
+  async updateWorkspace(workspaceId, input) {
+    const updated = await prisma.workspace.updateMany({
+      where: { id: workspaceId },
+      data: input,
+    });
+    if (updated.count !== 1) return null;
+    return this.findWorkspace(workspaceId);
+  },
+
   async removeMember(workspaceId, userId) {
     return prisma.$transaction(async (tx) => {
       const removed = await tx.workspaceMember.deleteMany({

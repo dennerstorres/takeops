@@ -2,7 +2,12 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import { ForbiddenError } from "./errors.ts";
-import { createWorkspace, getWorkspace, listWorkspaces } from "./workspace.ts";
+import {
+  createWorkspace,
+  getWorkspace,
+  listWorkspaces,
+  updateWorkspaceSettings,
+} from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
 
@@ -63,6 +68,29 @@ describe(
           where: { userId: userA.id, workspaceId: workspaceBId },
         });
         assert.equal(foreignMembership, null);
+
+        // Configurações: o dono de A muda A; B não muda pelo id enviado.
+        const renamed = await updateWorkspaceSettings(
+          userA.id,
+          workspaceAId,
+          { name: "Time A novo", timezone: "America/Sao_Paulo", logoUrl: "" },
+          prismaWorkspaceRepository,
+        );
+        assert.equal(renamed.timezone, "America/Sao_Paulo");
+        await assert.rejects(
+          () =>
+            updateWorkspaceSettings(
+              userA.id,
+              workspaceBId,
+              { name: "Invadido", timezone: "UTC" },
+              prismaWorkspaceRepository,
+            ),
+          (error: unknown) => error instanceof ForbiddenError,
+        );
+        const untouched = await prisma.workspace.findUnique({
+          where: { id: workspaceBId },
+        });
+        assert.equal(untouched?.name, `Time B ${suffix}`);
       } finally {
         if (workspaceAId) {
           await prisma.workspace.deleteMany({ where: { id: workspaceAId } });

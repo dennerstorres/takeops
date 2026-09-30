@@ -74,6 +74,45 @@ function readLogoUrl(value: string | null | undefined) {
   return value;
 }
 
+const settingsSchema = z.object({
+  name: createWorkspaceSchema.shape.name,
+  timezone: z
+    .string({ error: "Informe o fuso horário." })
+    .trim()
+    .min(1, "Informe o fuso horário.")
+    .max(64),
+  logoUrl: createWorkspaceSchema.shape.logoUrl,
+});
+
+// Só o dono muda nome, fuso e logo (spec §7.1 "gerenciar workspace").
+// Trocar o fuso muda só a exibição: as datas ficam em UTC (ADR-028).
+export async function updateWorkspaceSettings(
+  userId: string,
+  workspaceId: string,
+  input: unknown,
+  repository: WorkspaceRepository,
+) {
+  const membership = await requireRole(
+    userId,
+    workspaceId,
+    ["OWNER"],
+    repository,
+  );
+  const data = parseInput(settingsSchema, input);
+  if (!isTimeZone(data.timezone)) {
+    throw new ValidationError({ timezone: "Informe um fuso horário válido." });
+  }
+  const updated = await repository.updateWorkspace(membership.workspaceId, {
+    name: data.name,
+    timezone: data.timezone,
+    logoUrl: readLogoUrl(data.logoUrl),
+  });
+  if (!updated || updated.id !== membership.workspaceId) {
+    throw new ForbiddenError();
+  }
+  return updated;
+}
+
 export async function createWorkspace(
   userId: string,
   input: unknown,
