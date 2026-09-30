@@ -912,3 +912,32 @@ A MVP-002 deixou três pontos da spec em aberto; o dono decidiu.
 ## Consequências
 
 Tarefas PUB-005 e REVIEW-005.
+
+---
+
+# ADR-045 — Redesign: mundo visual "Quadro de tiras"
+
+**Status:** Accepted  
+**Data:** 2026-09-30
+
+## Contexto
+
+O dono considera a UI atual genérica ("cara de app feito por IA") e pediu redesign total, mais condensado. Rodada de direções pelo método impeccable (seed `f096d5ba`, modo operate, build code-led, sem geração de imagem). Produto em `PRODUCT.md`. Régua de acabamento citada: Notion/ClickUp. Evitar: cards grandes e vazios, cara de template, escuro "gamer".
+
+## Decisão
+
+Mundo visual **Quadro de tiras**, do stripboard de produção audiovisual. Substitui o visual atual (a DESIGN.md antiga, ADR-038, vira só evidência).
+
+- THESIS: cada produção e cada cena é uma tira fina no quadro; a etapa é a cor da tira. Recusa o arranjo padrão de cards arredondados em colunas.
+- OWN-WORLD: tiras de ~28px como cartolina colorida por etapa (branco, amarelo, azul, verde, cinza), divisórias pretas entre grupos, moldura cinza-alumínio, cabeçalho impresso com legenda. Tema claro e escuro (no escuro, a moldura escurece e as tiras mantêm o matiz).
+- FIRST VIEWPORT (kanban/lista): quadro horizontal de tiras agrupadas por etapa com tiras pretas separando grupos; cada tira em uma linha traz nº, título, dono, data de gravação, checklist e alerta.
+- Raises (doadores da rodada):
+  - patch bay: estado também pela ponta da tira (traço contínuo, riscado, vazado), nunca só cor;
+  - painel de partidas: colunas fixas, a tira não muda de forma, só os valores; pendência reestiliza a linha sem quebrar a grade;
+  - parede de caixas: toda tira tem a mesma etiqueta (nome, etapa, dono, data) em qualquer tela.
+
+## Consequências
+
+- Tarefas UI-010..UI-015. Restrições de PRODUCT.md continuam: pt-BR/en pelo catálogo, claro/escuro, AA, Modo Gravação mobile, status com texto.
+- DESIGN.md é reescrito no fim (UI-015) a partir do que foi construído, não antes.
+- Risco conhecido: arco-íris de etapas; controlar com código de letra/traço e paleta de tiras dessaturada.

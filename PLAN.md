@@ -2006,6 +2006,66 @@ ADR-044. VIEWER cria comentário na revisão; resolver comentário continua com 
 
 ---
 
+## UI-010 — Redesign: tokens e shell do Quadro de tiras
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** ADR-045
+
+Novos tokens em `globals.css` (cores das tiras por etapa, moldura, divisória, tipografia condensada de tabela, densidade de 28px), claro e escuro, AA em `check:contrast`. Shell novo (barra do quadro, navegação compacta) no lugar da sidebar genérica. Componente base `Strip` (tira com etiqueta fixa e ponta de estado por traço).
+
+---
+
+## UI-011 — Redesign: produções (quadro e lista)
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-010
+
+`/producoes` como quadro de tiras agrupado por etapa, com divisórias; filtros e busca na barra do quadro; mover etapa continua por arraste e por teclado/select.
+
+---
+
+## UI-012 — Redesign: dashboard
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-010
+
+Dashboard em tiras: gravações próximas, em andamento, revisão e aprovação, ideias; contadores como legenda do quadro.
+
+---
+
+## UI-013 — Redesign: página da produção, roteiro e cenas
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-010
+
+Abas compactas; cenas e planos como tiras (o uso original do stripboard); edição, revisão, publicação e atividade no mesmo vocabulário.
+
+---
+
+## UI-014 — Redesign: Modo Gravação e demais telas
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-010
+
+Modo Gravação mobile (375–430 px, toque grande) com a cena atual como tira ampliada; ideias, calendário, templates, equipe, configurações, avisos, login e convite no mesmo mundo.
+
+---
+
+## UI-015 — Redesign: revisão final e DESIGN.md
+
+**Status:** TODO  
+**Prioridade:** P0  
+**Dependências:** UI-011, UI-012, UI-013, UI-014
+
+Capturas desktop e mobile, revisão de acabamento (impeccable finish reviewer), detector, e DESIGN.md reescrito a partir do que foi construído.
+
+---
+
 ## MVP-003 — Limpeza final
 
 **Status:** DONE  

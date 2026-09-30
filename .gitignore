@@ -43,3 +43,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# impeccable: páginas de decisão locais
+.impeccable/questions/
+.impeccable/config.local.json

@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 24 — MVP Acceptance (MVP-001..003 feitas)
+Fase 24 — MVP Acceptance (MVP-001..003 e DEPLOY-003 feitas); release adiado para o redesign (ADR-045)
 ```
 
 ## Tarefa ativa
@@ -28,7 +28,7 @@ DEPLOY-003 — Smoke test de produção
 ## Próxima tarefa recomendada
 
 ```text
-MVP-004 — Release MVP (tag v0.1.0, repositório público)
+UI-010 — Redesign: tokens e shell do Quadro de tiras (ver HANDOFF.md)
 ```
 
 ## Estado dos módulos
