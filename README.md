@@ -4,7 +4,7 @@
 
 TakeOps is a self-hosted web app for small teams that produce short videos (Reels, TikTok, YouTube Shorts). It covers the whole workflow, from idea to publication:
 
-- ideas inbox and production pipeline (list and kanban);
+- ideas inbox and production pipeline on a stripboard grouped by stage;
 - script, scenes and shots;
 - shoot planning with equipment and checklists;
 - **recording mode**, mobile-first, to log takes on set;
@@ -16,6 +16,20 @@ TakeOps is a self-hosted web app for small teams that produce short videos (Reel
 TakeOps manages the process. It doesn't store media or edit video, and it doesn't post to social networks: assets and edit versions are links to wherever your files already live, and publications are recorded, not executed.
 
 The interface is available in English and Brazilian Portuguese.
+
+## Screenshots
+
+Sample workspace from `npm run db:seed` (fictional data, Portuguese UI).
+
+![Productions on the stripboard, grouped by stage](docs/screenshots/producoes.png)
+
+![Dashboard with upcoming shoots, review and productions in progress](docs/screenshots/dashboard.png)
+
+![Scenes and shots of a production](docs/screenshots/cenas.png)
+
+<img src="docs/screenshots/modo-gravacao.png" alt="Recording mode on a phone" width="320">
+
+![Productions in dark theme](docs/screenshots/producoes-escuro.png)
 
 ## Requirements
 

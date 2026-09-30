@@ -1806,7 +1806,7 @@ README público em inglês com `README.pt-BR.md` (incluir nota sobre SMTP própr
 
 ## OSS-009 — Prints e teste do compose
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** OSS-004
 

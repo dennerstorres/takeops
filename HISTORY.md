@@ -5115,3 +5115,12 @@ Decisões: `.impeccable/review/` fica fora do git (capturas locais). Criar cena 
 Testes: lint, `tsc` (só `LayoutProps`), `check:contrast`, detector; `npm test` 122/123 sem banco local (só `seed.integration`).
 Pendências: sobras do shadcn fora da escala de cantos (`rounded-b-xl` no rodapé do diálogo, raios dos botões xs/sm) não entraram no DESIGN.md; no toque o texto completo do alerta só aparece abrindo a produção. `SceneForm` segue com o modo de criação, hoje sem uso na lista.
 
+## 2026-09-30 — OSS-009 — Prints e teste do compose
+
+Status: DONE
+Arquivos: `docs/screenshots/{producoes,producoes-escuro,dashboard,cenas,modo-gravacao}.png`, `README.md`, `README.pt-BR.md`.
+Resumo: clone limpo do GitHub, `.env` preenchido só com o que o "Início rápido" pede (`AUTH_SECRET`, `POSTGRES_PASSWORD`, `AUTH_URL`, login por e-mail) e `docker compose up -d --build`: imagem compilou, migrations aplicadas na subida, `/api/health` ok, login por link de e-mail funcionou de ponta a ponta (Mailpit local só para capturar o link). O guia não precisou de correção. Seed do workspace demo rodado do host contra o banco do compose e prints tirados do app rodando (Chrome headless por CDP, 1440 px e 390 px, escala 2x): produções claro e escuro, dashboard, cenas e Modo Gravação. READMEs ganharam a seção de telas e a descrição do pipeline passou de "lista e kanban" para quadro de tiras.
+Decisões: prints em PNG 2x no repositório (~800 KB no total); dados só do seed (fictícios).
+Testes: teste manual do guia descrito acima; nenhum código alterado.
+Pendências: nenhuma do guia. O primeiro build travou por instabilidade da rede do Docker Desktop nesta máquina (downloads grandes paravam); resolveu reiniciando o Docker. O seed dentro do compose exige expor a porta do banco (usei um override local, fora do repo).
+

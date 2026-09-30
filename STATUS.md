@@ -22,7 +22,7 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-UI-015 — Redesign: revisão final e DESIGN.md
+OSS-009 — Prints e teste do compose
 ```
 
 ## Próxima tarefa recomendada
