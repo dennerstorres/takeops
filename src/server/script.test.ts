@@ -65,6 +65,9 @@ function harness() {
     async updateMemberRole() {
       throw new Error("não usado");
     },
+    async removeMember() {
+      return false;
+    },
   };
 
   const projectRepo: ProjectRepository = {

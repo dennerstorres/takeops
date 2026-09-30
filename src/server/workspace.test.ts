@@ -87,6 +87,9 @@ function memoryRepository(): WorkspaceRepository {
       membership.role = role;
       return membership;
     },
+    async removeMember() {
+      return false;
+    },
   };
 }
 

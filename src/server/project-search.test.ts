@@ -82,6 +82,9 @@ function harness(rows: ProjectRecord[]) {
     async updateMemberRole() {
       throw new Error("não usado");
     },
+    async removeMember() {
+      return false;
+    },
   };
   const projects: ProjectRepository = {
     async list(workspaceId) {

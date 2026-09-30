@@ -402,6 +402,9 @@
     "linkLabel": "Invite link",
     "save": "Save",
     "revoke": "Revoke",
+    "remove": "Remove",
+    "removeTitle": "Remove {name} from the team?",
+    "removeDescription": "They lose access to the workspace and leave the productions they take part in. What they already recorded stays.",
     "roles": {
       "OWNER": "Owner",
       "ADMIN": "Admin",

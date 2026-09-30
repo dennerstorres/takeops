@@ -152,4 +152,19 @@ export const prismaWorkspaceRepository: WorkspaceRepository = {
     });
     return membership ? mapMembership(membership) : null;
   },
+
+  async removeMember(workspaceId, userId) {
+    return prisma.$transaction(async (tx) => {
+      const removed = await tx.workspaceMember.deleteMany({
+        where: { workspaceId, userId },
+      });
+      if (removed.count !== 1) return false;
+      // Participação é atribuição, não histórico: sai das produções. Takes,
+      // versões, comentários e atividade continuam com a autoria.
+      await tx.projectMember.deleteMany({
+        where: { userId, project: { workspaceId } },
+      });
+      return true;
+    });
+  },
 };

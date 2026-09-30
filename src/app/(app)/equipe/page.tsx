@@ -4,6 +4,7 @@ import { ItemList, ItemListRow } from "@/components/ui/item-list";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { InviteForm } from "@/components/team/invite-form";
 import { MemberRoleForm } from "@/components/team/member-role-form";
+import { RemoveMemberButton } from "@/components/team/remove-member-button";
 import { RevokeInviteButton } from "@/components/team/revoke-invite-button";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
@@ -120,11 +121,17 @@ export default async function TeamPage() {
                 </p>
               </div>
               {options.length > 0 && member.userId !== session.user.id ? (
-                <MemberRoleForm
-                  userId={member.userId}
-                  role={member.role}
-                  roles={options}
-                />
+                <div className="flex shrink-0 flex-wrap items-center gap-2">
+                  <MemberRoleForm
+                    userId={member.userId}
+                    role={member.role}
+                    roles={options}
+                  />
+                  <RemoveMemberButton
+                    userId={member.userId}
+                    name={name}
+                  />
+                </div>
               ) : (
                 <p className="shrink-0 text-sm">
                   {t(`team.roles.${member.role}`)}

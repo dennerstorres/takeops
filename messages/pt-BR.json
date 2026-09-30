@@ -402,6 +402,9 @@
     "linkLabel": "Link do convite",
     "save": "Salvar",
     "revoke": "Revogar",
+    "remove": "Remover",
+    "removeTitle": "Remover {name} da equipe?",
+    "removeDescription": "A pessoa perde o acesso ao workspace e sai das produções em que participa. O que ela já registrou continua.",
     "roles": {
       "OWNER": "Dono",
       "ADMIN": "Admin",

@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-MVP-002 — Revisão contra SPEC
+TEAM-004 — Remover membro do workspace
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-TEAM-004 — Remover membro do workspace (depois WORKSPACE-003, UI-009, MVP-003)
+WORKSPACE-003 — Configurações do workspace (depois UI-009, PUB-005, REVIEW-005, MVP-003)
 ```
 
 ## Estado dos módulos

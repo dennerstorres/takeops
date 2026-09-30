@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { ForbiddenError, ValidationError } from "./errors.ts";
-import { changeMemberRole, listTeam, roleLabel } from "./team.ts";
+import { changeMemberRole, listTeam, removeMember, roleLabel } from "./team.ts";
 import type {
   MembershipRecord,
   TeamMemberRecord,
@@ -41,6 +41,9 @@ function repository(members: TeamMemberRecord[]): WorkspaceRepository {
     },
     async updateMemberRole() {
       throw new Error("não usado");
+    },
+    async removeMember() {
+      return false;
     },
   };
 }
@@ -123,6 +126,14 @@ function roleRepository() {
       if (!membership) return null;
       membership.role = role;
       return membership;
+    },
+    async removeMember(workspaceId, userId) {
+      const index = memberships.findIndex(
+        (item) => item.userId === userId && item.workspaceId === workspaceId,
+      );
+      if (index < 0) return false;
+      memberships.splice(index, 1);
+      return true;
     },
   };
 
@@ -258,6 +269,67 @@ describe("alteração de papel", () => {
     assert.equal(
       memberships.find((item) => item.userId === "owner")?.role,
       "OWNER",
+    );
+  });
+});
+
+describe("remoção de membro", () => {
+  const forbidden = (error: unknown) => error instanceof ForbiddenError;
+
+  it("dono remove admin, membro e leitor; ninguém remove o dono nem a si", async () => {
+    const { repository, memberships, add } = roleRepository();
+    add("owner", "ws-a", "OWNER");
+    add("admin", "ws-a", "ADMIN");
+    add("member", "ws-a", "MEMBER");
+    add("viewer", "ws-a", "VIEWER");
+    add("outsider", "ws-b", "MEMBER");
+
+    await assert.rejects(
+      () => removeMember("owner", "ws-a", { userId: "owner" }, repository),
+      forbidden,
+    );
+    await assert.rejects(
+      () => removeMember("admin", "ws-a", { userId: "owner" }, repository),
+      forbidden,
+    );
+    // Membro de outro workspace não sai pelo id enviado.
+    await assert.rejects(
+      () => removeMember("owner", "ws-a", { userId: "outsider" }, repository),
+      forbidden,
+    );
+    await assert.rejects(
+      () => removeMember("member", "ws-a", { userId: "viewer" }, repository),
+      forbidden,
+    );
+    await assert.rejects(
+      () => removeMember("owner", "ws-a", {}, repository),
+      (error: unknown) => error instanceof ValidationError,
+    );
+
+    await removeMember("owner", "ws-a", { userId: "admin" }, repository);
+    await removeMember("owner", "ws-a", { userId: "viewer" }, repository);
+    assert.deepEqual(memberships.map((item) => item.userId).sort(), [
+      "member",
+      "outsider",
+      "owner",
+    ]);
+  });
+
+  it("admin remove só membro e leitor", async () => {
+    const { repository, memberships, add } = roleRepository();
+    add("owner", "ws-a", "OWNER");
+    add("admin", "ws-a", "ADMIN");
+    add("admin2", "ws-a", "ADMIN");
+    add("member", "ws-a", "MEMBER");
+
+    await assert.rejects(
+      () => removeMember("admin", "ws-a", { userId: "admin2" }, repository),
+      forbidden,
+    );
+    await removeMember("admin", "ws-a", { userId: "member" }, repository);
+    assert.equal(
+      memberships.some((item) => item.userId === "member"),
+      false,
     );
   });
 });

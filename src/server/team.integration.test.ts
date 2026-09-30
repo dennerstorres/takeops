@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
 import { ForbiddenError } from "./errors.ts";
-import { changeMemberRole, listTeam } from "./team.ts";
-import { createWorkspace } from "./workspace.ts";
+import { changeMemberRole, listTeam, removeMember } from "./team.ts";
+import { createWorkspace, requireMembership } from "./workspace.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
 
@@ -158,6 +158,89 @@ describe(
         }
         await prisma.user.deleteMany({
           where: { id: { in: [owner.id, admin.id, viewer.id] } },
+        });
+      }
+    });
+
+    it("remover membro tira acesso e participação só no workspace dele", async () => {
+      const { prisma } = await import("./db.ts");
+      const { prismaWorkspaceRepository: repo } =
+        await import("./workspace-prisma.ts");
+      const suffix = randomUUID();
+      const [owner, member] = await Promise.all(
+        ["dono", "membro"].map((name) =>
+          prisma.user.create({
+            data: { email: `rm-${name}-${suffix}@example.com`, name },
+          }),
+        ),
+      );
+      const [home, other] = await Promise.all(
+        ["casa", "outro"].map((name) =>
+          prisma.workspace.create({
+            data: {
+              name,
+              slug: `rm-${name}-${suffix}`,
+              members: {
+                create: [
+                  { userId: owner.id, role: "OWNER" },
+                  { userId: member.id, role: "MEMBER" },
+                ],
+              },
+            },
+          }),
+        ),
+      );
+      try {
+        const project = (workspaceId: string) =>
+          prisma.videoProject.create({
+            data: {
+              workspaceId,
+              title: "Produção",
+              format: "DEMO",
+              createdById: member.id,
+              members: { create: { userId: member.id, role: "CAMERA" } },
+            },
+          });
+        const homeProject = await project(home.id);
+        const otherProject = await project(other.id);
+        const idea = await prisma.idea.create({
+          data: { workspaceId: home.id, title: "Ideia", authorId: member.id },
+        });
+
+        await removeMember(owner.id, home.id, { userId: member.id }, repo);
+
+        await assert.rejects(
+          requireMembership(member.id, home.id, repo),
+          ForbiddenError,
+        );
+        await requireMembership(member.id, other.id, repo);
+        assert.equal(
+          await prisma.projectMember.count({
+            where: { videoProjectId: homeProject.id },
+          }),
+          0,
+        );
+        assert.equal(
+          await prisma.projectMember.count({
+            where: { videoProjectId: otherProject.id },
+          }),
+          1,
+        );
+        // Autoria fica: a produção e a ideia continuam com o autor.
+        assert.equal(
+          (await prisma.idea.findUnique({ where: { id: idea.id } }))?.authorId,
+          member.id,
+        );
+        await assert.rejects(
+          removeMember(owner.id, home.id, { userId: member.id }, repo),
+          ForbiddenError,
+        );
+      } finally {
+        await prisma.workspace.deleteMany({
+          where: { id: { in: [home.id, other.id] } },
+        });
+        await prisma.user.deleteMany({
+          where: { id: { in: [owner.id, member.id] } },
         });
       }
     });

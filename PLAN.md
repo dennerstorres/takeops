@@ -1946,7 +1946,7 @@ Revisar cada requisito P0 do SPEC.
 
 ## TEAM-004 — Remover membro do workspace
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** TEAM-003
 
@@ -2000,7 +2000,7 @@ ADR-044. `recordPublicationOutcome` com PUBLISHED move a produção para PUBLISH
 
 **Status:** TODO  
 **Prioridade:** P1  
-**Dependências:** REVIEW-002
+**Dependências:** REVIEW-003
 
 ADR-044. VIEWER cria comentário na revisão; resolver comentário continua com OWNER, ADMIN e MEMBER. Ajustar `reviewers` em `review.ts`, tela e testes de autorização.
 

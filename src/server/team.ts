@@ -96,6 +96,44 @@ export async function changeMemberRole(
   return updated;
 }
 
+const removeSchema = z.object({
+  userId: z.string().trim().min(1).max(80),
+});
+
+// Remove quem o ator poderia gerenciar: OWNER tira ADMIN, MEMBER e VIEWER;
+// ADMIN tira MEMBER e VIEWER. O dono e o próprio ator não saem por aqui.
+export async function removeMember(
+  actorId: string,
+  workspaceId: string,
+  input: unknown,
+  repository: WorkspaceRepository,
+) {
+  const data = parseInput(removeSchema, input);
+  if (data.userId === actorId) {
+    throw new ForbiddenError("Você não pode remover a si mesmo.");
+  }
+  const actor = await requireRole(
+    actorId,
+    workspaceId,
+    ["OWNER", "ADMIN"],
+    repository,
+  );
+  const target = await repository.findMembership(data.userId, workspaceId);
+  if (
+    !target ||
+    target.userId !== data.userId ||
+    target.workspaceId !== workspaceId
+  ) {
+    throw new ForbiddenError();
+  }
+  if (manageableRoles(actor.role, target.role).length === 0) {
+    throw new ForbiddenError("Você não pode remover esse membro.");
+  }
+  if (!(await repository.removeMember(workspaceId, data.userId))) {
+    throw new ForbiddenError();
+  }
+}
+
 function safeImage(value: string | null) {
   if (!value) return null;
   try {

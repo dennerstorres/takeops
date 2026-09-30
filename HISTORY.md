@@ -4953,3 +4953,17 @@ Revisão dos módulos P0 (spec §85) e dos critérios de aceite §61–§79 cont
 ### Testes
 
 Revisão de leitura; nenhuma alteração de código nesta tarefa.
+
+## 2026-09-30 — TEAM-004 — Remover membro do workspace
+
+**Status:** DONE
+**Agente:** Claude
+
+- `removeMember` (`team.ts`): mesma regra de `manageableRoles` da troca de papel. OWNER remove ADMIN, MEMBER e VIEWER; ADMIN remove MEMBER e VIEWER; ninguém remove o dono nem a si. Alvo de outro workspace é recusado.
+- `removeMember` no repositório: numa transação apaga o `WorkspaceMember` e as participações (`ProjectMember`) nas produções daquele workspace. Autoria (ideias, takes, versões, comentários, atividade) fica; o acesso cai na próxima requisição, porque toda rota confere a membership.
+- Tela Equipe: botão Remover ao lado do papel, com `ConfirmDialog`. Textos nos dois catálogos.
+- Primeira execução verde do CI (push do ADR-044): testes, build e imagem Docker.
+
+### Testes
+
+`team.test.ts` (regras de quem remove quem, validação) e `team.integration.test.ts` (acesso some só no workspace do qual saiu, participação sai só dele, autoria fica). `npm test`: 162 passam. Lint ok; `tsc` só com `LayoutProps` (SWC).
