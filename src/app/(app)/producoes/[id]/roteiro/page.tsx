@@ -106,6 +106,23 @@ export default async function ScriptPage({
       <ProductionTabs project={project} active="Roteiro" canEdit={canEdit} />
       <h1 className="sr-only">{t("tabs.script")}</h1>
 
+      <div className="flex flex-wrap justify-end gap-2">
+        <a
+          href={`/producoes/${project.id}/roteiro/modelo`}
+          download
+          className={buttonVariants({ variant: "outline", size: "sm" })}
+        >
+          {t("script.downloadTemplate")}
+        </a>
+        <a
+          href={`/producoes/${project.id}/roteiro/exportar`}
+          download
+          className={buttonVariants({ variant: "outline", size: "sm" })}
+        >
+          {t("script.exportScript")}
+        </a>
+      </div>
+
       {canEdit ? (
         <ScriptForm projectId={project.id} values={values} />
       ) : (

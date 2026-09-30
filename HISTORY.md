@@ -5138,3 +5138,12 @@ Arquivos: nenhum código.
 Resumo: o dono tornou o repositório público; conferido pela API do GitHub: visibilidade `PUBLIC`, *Private vulnerability reporting* ligado e release `v0.1.0` publicado (não rascunho). Fecha a entrada parcial anterior.
 Pendências: destino S3 do backup e contato público no perfil do GitHub (com o dono). Próxima tarefa técnica: PERF-001 (P2).
 
+
+## 2026-09-30 — SCRIPT-003 — Formato de roteiro e modelo de exemplo
+
+Status: DONE
+Arquivos: `src/server/script-markdown.ts`, `src/server/script-template.ts`, `src/server/script-file.ts`, `src/server/script-markdown.test.ts`, `src/lib/markdown-download.ts`, `src/app/(app)/producoes/[id]/roteiro/{page.tsx,exportar/route.ts,modelo/route.ts}`, `messages/*.json`, `package.json`, `SPEC.md`, `DECISIONS.md`, `PLAN.md`, `STATUS.md`.
+Resumo: formato markdown do roteiro (SPEC §18.1, ADR-046). Parser lê roteiros escritos fora do app (rótulos pt/en, Subject/Purpose/Tempo, falas `**NOME:**`, seções de direção) e o gerador exporta a produção no mesmo formato. Aba Roteiro ganhou "Baixar modelo de roteiro" e "Exportar roteiro" (rotas GET que exigem sessão e respeitam o workspace aberto).
+Decisões: ADR-046. O roteiro real que originou a fase é de cliente e não entrou no repositório público; a fixture reproduz a estrutura com texto inventado. A menção ao cliente no PLAN foi trocada por descrição genérica antes do push.
+Testes: `script-markdown.test.ts` (roteiro externo, avisos, ida e volta pt/en, modelo nos dois idiomas, durações, nome do arquivo). `eslint` limpo. `tsc` sem erro novo; o único erro (`LayoutProps` em `src/app/layout.tsx`) vem do `next typegen` que não roda nesta máquina (binário nativo do SWC não carrega). Build e teste no navegador não rodados pelo mesmo motivo e por não haver banco local.
+Pendências: conferir os dois botões no app publicado após o deploy. SCRIPT-004 (importar) é a próxima.

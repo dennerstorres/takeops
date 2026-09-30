@@ -619,7 +619,9 @@
     "estimatedTotal": "Estimated total {total}",
     "withoutDuration": " · {count} without duration",
     "emptyScenes": "The script is built from this production's scenes.",
-    "editScenes": "Edit scenes"
+    "editScenes": "Edit scenes",
+    "downloadTemplate": "Download script template",
+    "exportScript": "Export script"
   },
   "shots": {
     "title": "Shots",

@@ -2100,7 +2100,7 @@ Origem: roteiro real de um esquete de 11 cenas (2026-09-30), escrito em markdown
 
 ## SCRIPT-003 — Formato de roteiro e modelo de exemplo
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** nenhuma
 

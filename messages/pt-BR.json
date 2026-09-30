@@ -619,7 +619,9 @@
     "estimatedTotal": "Total estimado {total}",
     "withoutDuration": " · {count} sem duração",
     "emptyScenes": "O roteiro é montado pelas cenas desta produção.",
-    "editScenes": "Editar cenas"
+    "editScenes": "Editar cenas",
+    "downloadTemplate": "Baixar modelo de roteiro",
+    "exportScript": "Exportar roteiro"
   },
   "shots": {
     "title": "Shots",

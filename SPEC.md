@@ -689,6 +689,26 @@ Script {
 }
 ```
 
+## 18.1 Arquivo do roteiro (markdown)
+
+O roteiro sai e entra do app como um arquivo `.md` (ADR-046). O mesmo formato serve para exportar, para o modelo que quem escreve baixa na aba Roteiro e para a importação (SCRIPT-004).
+
+- `# Título` na primeira linha: título da produção.
+- Campos: linha `**Campo:** valor`. Valor longo continua nas linhas de baixo até uma linha em branco; dentro do valor, linha em branco vira quebra simples.
+- Antes da primeira cena: Formato, Proporção, Duração, Objetivo, Público, Produto, Descrição (produção) e Gancho, Mensagem principal, Chamada para ação, Notas (Script).
+- `# Cena N — título`: cena. Campos: Tipo, Duração (ou Tempo), Propósito, Ação, Câmera, Edição, Continuidade, Descrição, Fala.
+- `## Plano N.N — nome` (ou `## Shot`): plano da cena. Campos: Tipo, Enquadramento, Ângulo, Assunto (ou Subject), Movimento, Câmera, Takes, Propósito, Descrição, Notas.
+- Rótulos de campo e de tipo são aceitos em português e em inglês, sem diferença de acento ou caixa. A exportação escreve no idioma de quem baixa.
+- `**NOME:**` que não é campo (sozinho na linha ou em maiúsculas) é fala: vai para Fala da cena como `NOME: texto`.
+- Texto solto vira descrição do plano, ou da cena antes do primeiro plano.
+- Propósito não tem campo: vai para a descrição como `Propósito: valor`.
+- Tipo livre (`dialogue`, `reaction`, `off`) vira o tipo mais próximo e o valor original fica na descrição; tipo desconhecido vira Outro com aviso.
+- Duração aceita segundos (`15`), relógio (`0:15`), minutos (`2min20s`) e intervalo (`0:00 – 0:15`).
+- Outro `# Título` (personagens, direção) e texto solto antes da primeira cena ficam como trechos à parte; a importação leva para as notas do roteiro. Comentário `<!-- -->` é ignorado.
+- Não viajam no arquivo: quem fala (usuário do workspace), status, takes gravados e datas.
+
+Exportar e importar o mesmo arquivo gera as mesmas cenas e planos.
+
 ---
 
 # 19. Cenas

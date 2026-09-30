@@ -941,3 +941,26 @@ Mundo visual **Quadro de tiras**, do stripboard de produção audiovisual. Subst
 - Tarefas UI-010..UI-015. Restrições de PRODUCT.md continuam: pt-BR/en pelo catálogo, claro/escuro, AA, Modo Gravação mobile, status com texto.
 - DESIGN.md é reescrito no fim (UI-015) a partir do que foi construído, não antes.
 - Risco conhecido: arco-íris de etapas; controlar com código de letra/traço e paleta de tiras dessaturada.
+
+---
+
+# ADR-046 — Roteiro em markdown com campos em negrito
+
+**Status:** Accepted  
+**Data:** 2026-09-30
+
+## Contexto
+
+Roteiros chegam escritos fora do app, em markdown livre (cenas em `#`, planos em `##`, campos em negrito, falas `**NOME:**`). A SCRIPT-004 vai importar esses arquivos; quem escreve precisa de um modelo e de um formato estável.
+
+## Decisão
+
+- Um só formato para exportar, baixar o modelo e importar (SPEC §18.1), sem YAML nem bloco de código: é o jeito que quem escreve roteiro já usa.
+- Parser e gerador puros em `src/server/script-markdown.ts`; rótulos de tipo lidos do catálogo `messages/`, rótulos de campo nos dois idiomas no próprio módulo.
+- O parser nunca descarta texto: o que não é campo vira descrição, fala ou trecho à parte, e valor não reconhecido gera aviso com a linha.
+- Exportar e importar o mesmo arquivo devolve as mesmas cenas e planos (teste de ida e volta).
+
+## Consequências
+
+- Linha em branco dentro de um campo não sobrevive à ida e volta (vira quebra simples).
+- Quem fala na cena não viaja no arquivo até existir elenco (CAST-001).

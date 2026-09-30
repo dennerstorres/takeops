@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 24 — MVP entregue: v0.1.0 publicada, repositório público
+Fase 25 — Roteiro de fora para dentro
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-MVP-004 — Release MVP
+SCRIPT-003 — Formato de roteiro e modelo de exemplo
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-PERF-001 — Paginação de produções e ideias (P2, quando um workspace passar de algumas centenas de produções)
+SCRIPT-004 — Importar roteiro (P1)
 ```
 
 ## Estado dos módulos
