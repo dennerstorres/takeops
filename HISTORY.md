@@ -4787,3 +4787,20 @@ Lint. `i18n.test.ts`, `dashboard.test.ts`, `status-tone.test.ts`. `check:contras
 ### Pendências
 
 - PERF-001 (paginação), quando o volume pedir.
+
+## 2026-09-29 — HARDEN-008 — Um pedido de aprovação aberto por produção no banco
+
+**Status:** DONE
+**Agente:** Claude
+
+- Migration `20260929110000_approval_pending_unique`: índice único parcial `Approval_videoProjectId_pending_key` em `videoProjectId` onde `status = 'PENDING'`. Declarado no schema via preview `partialIndexes` (ADR-043).
+- `prismaApprovalRepository.request`: se o banco devolve P2002 (dois pedidos juntos), refaz a transação uma vez e responde `existing` ou `conflict` como antes. Serviço sem mudança.
+- Deploy: a migration falha se já houver dois pedidos PENDING na mesma produção. Checar antes: `SELECT "videoProjectId" FROM "Approval" WHERE status = 'PENDING' GROUP BY 1 HAVING count(*) > 1;`
+
+### Testes
+
+`npm test` em Postgres local (`prisma dev`): 156 passam. Teste novo em `approval.integration.test.ts`: insert direto do segundo pedido dá P2002; dois pedidos em paralelo terminam com um aberto. O `prisma dev` serializa conexões, então a corrida real (caminho do retry) não se reproduz localmente; vai ser exercida no Postgres do CI (OSS-007). Lint ok; `tsc` só com `LayoutProps` (SWC).
+
+### Observações
+
+`migrate dev --create-only` falhou porque o banco local foi migrado em `template1` e o shadow herda as tabelas. A migration saiu de `prisma migrate diff --from-config-datasource --to-schema`.

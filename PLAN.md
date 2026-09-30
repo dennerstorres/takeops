@@ -1635,7 +1635,7 @@ Revisar:
 
 ## HARDEN-008 — Um pedido de aprovação aberto por produção no banco
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** APPROVAL-001
 

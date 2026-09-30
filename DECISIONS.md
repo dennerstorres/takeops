@@ -872,3 +872,22 @@ OSS-008 precisava tirar texto fixo sem prender serviços ao Next (testes rodam e
 ## Consequências
 
 Tela nova usa `getTranslations`/`useTranslations`; teste `i18n.test.ts` falha se uma chave faltar num idioma.
+
+---
+
+# ADR-043 — Índice parcial pelo preview `partialIndexes` do Prisma
+
+**Status:** Accepted  
+**Data:** 2026-09-29
+
+## Contexto
+
+HARDEN-008 precisava de índice único parcial (`Approval.videoProjectId` onde `status = 'PENDING'`). Índice só em SQL de migration vira drift para o `prisma migrate`.
+
+## Decisão
+
+Ligar `previewFeatures = ["partialIndexes"]` no generator e declarar no schema com `@@unique([...], where: raw("..."))`. A migration sai do `prisma migrate diff`.
+
+## Consequências
+
+Novas regras "no máximo um X em tal estado" seguem o mesmo caminho. Conflito no banco vira P2002; o repositório refaz a leitura uma vez e devolve o resultado de domínio. Se o preview mudar numa atualização do Prisma, revisar esse índice.

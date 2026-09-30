@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client"
+  previewFeatures = ["partialIndexes"]
+  output          = "../src/generated/prisma"
 }
 
 datasource db {
@@ -666,6 +667,8 @@ model Approval {
 
   @@index([videoProjectId, status])
   @@index([editVersionId, createdAt])
+  // Um pedido aberto por produção, garantido pelo banco (HARDEN-008).
+  @@unique([videoProjectId], map: "Approval_videoProjectId_pending_key", where: raw("status = 'PENDING'"))
 }
 
 enum Platform {

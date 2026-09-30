@@ -193,6 +193,34 @@ describe(
       }
     });
 
+    it("o banco barra um segundo pedido aberto, inclusive em paralelo", async () => {
+      const ctx = await setup();
+      try {
+        const { deps, workspaceId, project, v1, v2 } = ctx;
+        const both = await Promise.all(
+          [ctx.owner.id, ctx.member.id].map((userId) =>
+            requestApproval(userId, workspaceId, project.id, v1.id, deps),
+          ),
+        );
+        assert.equal(both[0].id, both[1].id);
+
+        await assert.rejects(
+          ctx.prisma.approval.create({
+            data: { videoProjectId: project.id, editVersionId: v2.id },
+          }),
+          (error: { code?: string }) => error.code === "P2002",
+        );
+        assert.equal(
+          await ctx.prisma.approval.count({
+            where: { videoProjectId: project.id, status: "PENDING" },
+          }),
+          1,
+        );
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+
     it("solicitar alterações devolve a produção para edição", async () => {
       const ctx = await setup();
       try {
