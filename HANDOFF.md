@@ -32,6 +32,5 @@ Redesign completo (UI-010 a UI-015, ver HISTORY.md), revisão final com veredito
 
 ## Pendências do dono
 
-- `CRON_SECRET` e Scheduled Task no Coolify (o aviso de gravação próxima não roda sem isso).
 - Destino S3 para o backup do banco.
-- Antes do release: ligar *Private vulnerability reporting* e deixar um contato público no perfil do GitHub.
+- Antes do release: contato público no perfil do GitHub; ligar *Private vulnerability reporting* assim que o repositório ficar público (hoje é privado e o GitHub só oferece o recurso em repositório público).
