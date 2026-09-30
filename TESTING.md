@@ -31,6 +31,15 @@ Usar para:
 - criação e alteração de entidades;
 - efeitos colaterais.
 
+Rodam quando `DATABASE_URL` começa com `postgres`; sem isso ficam "sem Postgres". O `prisma dev` local (PGlite) serializa conexões e quebra com queries parametrizadas em paralelo fora de transação: teste de concorrência só vale no CI.
+
+## CI
+
+`.github/workflows/ci.yml` (OSS-007), em push na `main` e em pull request:
+
+- `verify`: Postgres 17 real como serviço, `prisma migrate deploy`, lint, contraste, typecheck, `npm test` e build;
+- `docker`: build da imagem pelo `Dockerfile`, sem publicar.
+
 ## E2E
 
 Usar somente em fluxos críticos.

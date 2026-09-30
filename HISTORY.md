@@ -4876,3 +4876,21 @@ Só documentação; links internos conferidos.
 ### Pendências
 
 - Dono: ao tornar o repositório público, ligar *Private vulnerability reporting* em Settings → Code security, e ter um contato público no perfil do GitHub.
+
+## 2026-09-29 — OSS-007 — CI no GitHub Actions
+
+**Status:** DONE (primeira execução depende do push)
+**Agente:** Claude
+
+- `.github/workflows/ci.yml`: job `verify` com serviço `postgres:17-alpine`, `npm ci`, `prisma migrate deploy`, lint, `check:contrast`, `typecheck`, `npm test` e `build`; job `docker` constrói a imagem com buildx e cache do GitHub Actions, sem push. Roda em push na `main` e em PR; execução anterior da mesma ref é cancelada.
+- No CI os testes de integração usam Postgres real, e o `typecheck` completo (com `next typegen`) roda em Linux, onde o SWC funciona.
+- `TESTING.md` ganhou a seção CI e a nota sobre PGlite.
+
+### Testes
+
+Workflow validado contra o schema do GitHub Actions (`@action-validator/cli`). Não executado: o CI só roda depois do push.
+
+### Pendências
+
+- Conferir a primeira execução depois do push. Candidatos a falhar: `typecheck`/`build` (nunca rodaram completos no Windows do agente) e o build Docker.
+- Com Postgres real, dá para voltar a testar em paralelo as execuções do cron (HARDEN-009).

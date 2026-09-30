@@ -1841,7 +1841,7 @@ Pendência da OSS-004, que não pôde subir o app (SWC nativo falha no Windows d
 
 ## OSS-007 — CI no GitHub Actions
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** OSS-001
 

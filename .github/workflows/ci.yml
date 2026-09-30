@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Lint, typecheck, tests and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: takeops
+          POSTGRES_USER: takeops
+          POSTGRES_PASSWORD: takeops
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U takeops -d takeops"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Postgres real: os testes de integração rodam em vez de ficarem
+      # "sem Postgres", e concorrência se comporta como em produção.
+      DATABASE_URL: postgresql://takeops:takeops@localhost:5432/takeops?schema=public
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx prisma migrate deploy
+      - run: npm run lint
+      - run: npm run check:contrast
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  docker:
+    name: Docker image
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: takeops:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
