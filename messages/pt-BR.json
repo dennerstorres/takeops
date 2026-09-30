@@ -323,7 +323,6 @@
   "ideas": {
     "title": "Ideias",
     "saved": "Ideia salva.",
-    "workspace": "Ideias de {workspace}.",
     "fillIn": "Completar campos",
     "emptyTitle": "Nenhuma ideia",
     "emptyDescription": "As ideias da equipe aparecem aqui.",
@@ -353,7 +352,9 @@
     "saveStatus": "Salvar status",
     "delete": "Excluir",
     "deleteTitle": "Excluir esta ideia?",
-    "deleteDescription": "Ela sai da lista. O registro permanece guardado."
+    "deleteDescription": "Ela sai da lista. O registro permanece guardado.",
+    "author": "Autor",
+    "created": "Criada"
   },
   "calendar": {
     "title": "Calendário",

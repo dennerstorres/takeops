@@ -57,12 +57,12 @@ export default async function NotificationsPage() {
   });
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <header className="flex flex-wrap items-end justify-between gap-3">
+      <header className="flex flex-wrap items-center justify-between gap-3 rounded-md bg-frame px-3 py-2 text-frame-foreground">
         <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">
+          <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
             {t("notifications.title")}
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-frame-foreground/80">
             {t("notifications.unread", { count: unread })}
           </p>
         </div>

@@ -75,11 +75,11 @@ export default async function TeamPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">
+      <header className="flex flex-col gap-0.5 rounded-md bg-frame px-3 py-2 text-frame-foreground">
+        <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("team.title")}
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-frame-foreground/80">
           {t("team.description", {
             workspace: access.workspace.workspace.name,
           })}
@@ -104,12 +104,12 @@ export default async function TeamPage() {
                 <img
                   src={member.image}
                   alt=""
-                  className="size-11 shrink-0 rounded-full object-cover"
+                  className="size-11 shrink-0 rounded-[2px] object-cover"
                 />
               ) : (
                 <span
                   aria-hidden="true"
-                  className="flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium"
+                  className="flex size-11 shrink-0 items-center justify-center rounded-[2px] bg-divider font-condensed text-sm font-semibold text-divider-foreground"
                 >
                   {initials(name)}
                 </span>
@@ -127,10 +127,7 @@ export default async function TeamPage() {
                     role={member.role}
                     roles={options}
                   />
-                  <RemoveMemberButton
-                    userId={member.userId}
-                    name={name}
-                  />
+                  <RemoveMemberButton userId={member.userId} name={name} />
                 </div>
               ) : (
                 <p className="shrink-0 text-sm">

@@ -80,16 +80,18 @@ export default async function TemplatePage({
       >
         {t("templates.back")}
       </Link>
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">{template.name}</h1>
+      <header className="flex flex-col gap-0.5 rounded-md bg-frame px-3 py-2 text-frame-foreground">
+        <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
+          {template.name}
+        </h1>
         {template.description ? (
-          <p className="text-sm whitespace-pre-wrap text-muted-foreground">
+          <p className="text-sm whitespace-pre-wrap text-frame-foreground/80">
             {template.description}
           </p>
         ) : null}
       </header>
       {canManage ? (
-        <section className="space-y-3 rounded-xl border p-3">
+        <section className="space-y-3 rounded-md border p-3">
           <h2 className="text-sm font-medium">{t("templates.details")}</h2>
           <ProductionTemplateForm
             values={{
@@ -110,7 +112,7 @@ export default async function TemplatePage({
         ) : (
           <ol className="flex flex-col gap-2">
             {scenes.map((scene, index) => (
-              <li key={scene.id} className="rounded-xl border p-3">
+              <li key={scene.id} className="rounded-md border p-3">
                 <p className="text-sm font-medium">
                   {scene.order}. {scene.title}
                 </p>
@@ -162,7 +164,7 @@ export default async function TemplatePage({
           </ol>
         )}
         {canManage ? (
-          <div className="rounded-xl border p-3">
+          <div className="rounded-md border p-3">
             <TemplateSceneForm templateId={template.id} />
           </div>
         ) : null}
@@ -178,7 +180,7 @@ export default async function TemplatePage({
             : t("templates.noLinkedChecklist")}
         </p>
         {canManage ? (
-          <div className="rounded-xl border p-3">
+          <div className="rounded-md border p-3">
             <TemplateChecklistForm
               templateId={template.id}
               current={template.checklistTemplateId ?? ""}

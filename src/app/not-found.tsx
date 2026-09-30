@@ -5,7 +5,7 @@ export default async function NotFound() {
   const t = await getTranslations();
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col justify-center gap-3 px-4">
-      <h1 className="text-2xl font-medium tracking-tight">
+      <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
         {t("notFound.title")}
       </h1>
       <p className="text-sm text-muted-foreground">

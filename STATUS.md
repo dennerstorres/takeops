@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-UI-013 — Redesign: página da produção, roteiro e cenas
+UI-014 — Redesign: Modo Gravação e demais telas
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-UI-014 — Redesign: Modo Gravação e demais telas
+UI-015 — Redesign: revisão final e DESIGN.md
 ```
 
 ## Estado dos módulos

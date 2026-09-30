@@ -29,17 +29,22 @@ export function CaptureIdeaForm() {
           placeholder={t("ideas.capturePlaceholder")}
           disabled={pending}
           aria-invalid={state?.fields?.title ? true : undefined}
-          className="min-w-0 flex-1"
+          className="h-11 min-w-0 flex-1 bg-card sm:h-8"
         />
-        <Button type="submit" className="min-h-11" disabled={pending}>
+        <Button type="submit" className="h-11 sm:h-8" disabled={pending}>
           {pending ? t("ideas.saving") : t("ideas.capture")}
         </Button>
       </div>
       {state?.fields?.title ? (
-        <p className="text-sm text-destructive">{state.fields.title}</p>
+        <p className="rounded-[2px] bg-card px-2 py-1 text-sm text-destructive">
+          {state.fields.title}
+        </p>
       ) : null}
       {state && !state.fields ? (
-        <p className="text-sm text-destructive" role="alert">
+        <p
+          className="rounded-[2px] bg-card px-2 py-1 text-sm text-destructive"
+          role="alert"
+        >
           {state.message}
         </p>
       ) : null}

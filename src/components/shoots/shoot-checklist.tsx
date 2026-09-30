@@ -61,7 +61,7 @@ export function ShootChecklist({
   return (
     <div className="space-y-3">
       <div
-        className="h-2 overflow-hidden rounded-full bg-muted"
+        className="h-2 overflow-hidden rounded-[2px] bg-muted"
         role="progressbar"
         aria-label={t("record.itemsDone")}
         aria-valuemin={0}

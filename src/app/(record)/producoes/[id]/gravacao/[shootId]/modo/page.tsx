@@ -5,7 +5,8 @@ import { EmptyState } from "@/components/feedback/empty-state";
 import { TakeList } from "@/components/takes/take-list";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { surfaceClass } from "@/components/ui/card";
-import { StatusBadge } from "@/components/ui/status-badge";
+import { stripPhaseClass, stripTipClass } from "@/components/ui/strip";
+import { scenePhase, sceneTip } from "@/components/ui/strip-phase";
 import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
@@ -122,22 +123,25 @@ export default async function RecordModePage({
 
   return (
     <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col">
-      <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b bg-background px-4 py-2">
+      <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b-2 border-divider bg-frame px-4 py-2 text-frame-foreground">
         <div className="min-w-0">
-          <p className="flex items-center gap-2 text-xs font-medium tracking-wide uppercase">
+          <p className="flex items-center gap-2 font-condensed text-xs font-semibold tracking-wider uppercase">
             <span
               aria-hidden
-              className="size-2 shrink-0 rounded-full bg-record"
+              className="size-2.5 shrink-0 rounded-full bg-record"
             />
             {t("tabs.recording")}
           </p>
-          <p className="truncate text-sm">
+          <p className="truncate text-sm font-medium">
             {shoot.title || t("record.session")}
           </p>
         </div>
         <Link
           href={exit}
-          className={cn(buttonVariants({ variant: "outline" }), "shrink-0")}
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "shrink-0 bg-card",
+          )}
         >
           {t("record.exit")}
         </Link>
@@ -161,7 +165,7 @@ export default async function RecordModePage({
               ) : null}
             </p>
             <div
-              className="h-2 overflow-hidden rounded-full bg-muted"
+              className="h-2 overflow-hidden rounded-[2px] bg-frame"
               role="progressbar"
               aria-label={t("record.doneLabel")}
               aria-valuemin={0}
@@ -169,31 +173,43 @@ export default async function RecordModePage({
               aria-valuenow={view.done}
             >
               <div
-                className="h-full bg-primary"
+                className="h-full bg-divider"
                 style={{ width: `${(view.done / view.total) * 100}%` }}
               />
             </div>
           </div>
-          <div className="space-y-1">
-            <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <section
+            className={cn(
+              "flex flex-col gap-2 rounded-md p-3 text-strip-ink",
+              stripPhaseClass[scenePhase(view.scene.status)],
+            )}
+          >
+            <p className="flex items-center justify-between gap-3 font-condensed text-sm font-semibold tracking-wider uppercase">
               <span>
                 {t("record.scenePosition", {
                   position: view.position,
                   total: view.total,
                 })}
               </span>
-              <StatusBadge status={view.scene.status}>
+              <span className="flex items-center gap-2">
                 {sceneStatusLabel(t, view.scene.status)}
-              </StatusBadge>
+                <span
+                  aria-hidden="true"
+                  className={cn(
+                    "h-5 w-2.5",
+                    stripTipClass[sceneTip(view.scene.status)],
+                  )}
+                />
+              </span>
             </p>
-            <h1 className="text-2xl font-medium tracking-tight">
+            <h1 className="text-2xl leading-tight font-semibold">
               {view.scene.title}
             </h1>
-          </div>
+          </section>
           {view.scene.dialogue || view.scene.speaker ? (
             <section className="space-y-2">
               {view.scene.speaker ? (
-                <p className="text-sm font-medium tracking-wide uppercase">
+                <p className="font-condensed text-sm font-semibold tracking-wider uppercase">
                   {view.scene.speaker}
                 </p>
               ) : null}
@@ -209,24 +225,34 @@ export default async function RecordModePage({
           ) : null}
           {view.shots.length > 0 ? (
             <section className="space-y-2">
-              <h2 className="text-sm font-medium">
+              <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
                 {t("record.shotsAndTakes")}
               </h2>
               <ul className="flex flex-col gap-2">
                 {view.shots.map((shot, index) => (
-                  <li key={shot.id} className={cn(surfaceClass, "p-3")}>
-                    <p className="text-base font-medium">
-                      {shotDisplayName(t, shot.name, index)}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {shotSummary(t, shot)}
-                    </p>
+                  <li
+                    key={shot.id}
+                    className="overflow-hidden rounded-md border bg-card"
+                  >
+                    <div
+                      className={cn(
+                        "flex min-h-11 flex-wrap items-baseline gap-x-2 border-b border-strip-ink/10 px-3 py-2 text-strip-ink",
+                        stripPhaseClass[scenePhase(shot.status)],
+                      )}
+                    >
+                      <span className="font-condensed text-base font-semibold tracking-wide uppercase">
+                        {shotDisplayName(t, shot.name, index)}
+                      </span>
+                      <span className="text-sm text-strip-ink-muted">
+                        {shotSummary(t, shot)}
+                      </span>
+                    </div>
                     {shot.description ? (
-                      <p className="mt-1 text-base whitespace-pre-wrap">
+                      <p className="px-3 pt-3 text-base whitespace-pre-wrap">
                         {shot.description}
                       </p>
                     ) : null}
-                    <div className="mt-3 border-t pt-3">
+                    <div className="p-3">
                       <TakeList
                         projectId={id}
                         sceneId={view.scene.id}
@@ -251,7 +277,9 @@ export default async function RecordModePage({
           )}
           {view.scene.cameraInstructions ? (
             <section className="space-y-1">
-              <h2 className="text-sm font-medium">{t("scenes.camera")}</h2>
+              <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+                {t("scenes.camera")}
+              </h2>
               <p className="text-base whitespace-pre-wrap">
                 {view.scene.cameraInstructions}
               </p>
@@ -259,7 +287,9 @@ export default async function RecordModePage({
           ) : null}
           {view.scene.editingInstructions ? (
             <section className="space-y-1">
-              <h2 className="text-sm font-medium">{t("tabs.editing")}</h2>
+              <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+                {t("tabs.editing")}
+              </h2>
               <p className="text-base whitespace-pre-wrap">
                 {view.scene.editingInstructions}
               </p>
@@ -273,7 +303,9 @@ export default async function RecordModePage({
                 "space-y-1 border-warning/40 bg-warning-muted p-3 text-warning",
               )}
             >
-              <h2 className="text-sm font-medium">{t("record.attention")}</h2>
+              <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+                {t("record.attention")}
+              </h2>
               <p className="text-base whitespace-pre-wrap">
                 {view.scene.continuityNotes}
               </p>
@@ -282,7 +314,7 @@ export default async function RecordModePage({
         </main>
       )}
       {view !== null && (canEdit || view.total > 1) ? (
-        <footer className="sticky bottom-0 z-10 border-t bg-background px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <footer className="sticky bottom-0 z-10 border-t-2 border-divider bg-frame px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           <div className="mx-auto flex w-full max-w-xl flex-col gap-2">
             {canEdit ? (
               <form

@@ -57,9 +57,11 @@ export default async function ChecklistTemplatePage({
       >
         {t("checklists.back")}
       </Link>
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">{template.name}</h1>
-        <p className="text-sm text-muted-foreground">
+      <header className="flex flex-col gap-0.5 rounded-md bg-frame px-3 py-2 text-frame-foreground">
+        <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
+          {template.name}
+        </h1>
+        <p className="text-sm text-frame-foreground/80">
           {t("checklists.unchangedCopies")}
         </p>
       </header>
@@ -81,7 +83,7 @@ export default async function ChecklistTemplatePage({
         ) : (
           <ol className="flex flex-col gap-3">
             {template.items.map((item, index) => (
-              <li key={item.id} className="rounded-xl border p-3">
+              <li key={item.id} className="rounded-md border p-3">
                 {canEdit ? (
                   <div className="space-y-2">
                     <ItemForm

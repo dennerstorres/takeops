@@ -43,11 +43,11 @@ export default async function NewProductionPage({
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">
+      <header className="flex flex-col gap-0.5 rounded-md bg-frame px-3 py-2 text-frame-foreground">
+        <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("projects.create")}
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-frame-foreground/80">
           {t("projects.startsAsIdea")}
         </p>
       </header>

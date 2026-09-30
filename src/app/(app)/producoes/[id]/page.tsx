@@ -51,7 +51,7 @@ export default async function ProductionPage({
   if (!project) {
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
-        <h1 className="text-2xl font-medium tracking-tight">
+        <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("projects.one")}
         </h1>
         <p className="text-sm text-muted-foreground">{t("projects.missing")}</p>

@@ -68,11 +68,11 @@ export default async function ContinuityPage({
       >
         {t("record.back")}
       </Link>
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">
+      <header className="flex flex-col gap-0.5 rounded-md bg-frame px-3 py-2 text-frame-foreground">
+        <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("continuity.title")}
         </h1>
-        <p className="text-sm text-muted-foreground">{project.title}</p>
+        <p className="text-sm text-frame-foreground/80">{project.title}</p>
       </header>
       {canEdit ? (
         <section className={cn(surfaceClass, "space-y-3 p-3")}>

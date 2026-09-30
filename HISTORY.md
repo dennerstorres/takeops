@@ -5097,3 +5097,12 @@ Decisões: `scenePhase`/`sceneTip` (planejada branca; pronta, gravando e refazer
 Testes: `strip-phase` (cenas), lint, `tsc` (só `LayoutProps`), `check:contrast`, detector sem achados; `npm test` 121/122 sem banco local (só `seed.integration`). Prévia por pré-renderização do servidor com dados falsos (visão geral, cenas, cena) em claro/escuro e 375px.
 Pendências: arquivos, continuidade, checklist e editar produção só herdam as primitivas; ficam para a UI-014 se precisarem de mais.
 
+## 2026-09-30 — UI-014 — Redesign: Modo Gravação e demais telas
+
+Status: DONE
+Arquivos: `src/app/(record)/producoes/[id]/gravacao/[shootId]/modo/page.tsx`, `src/app/(app)/ideias/{page,[id]/page}.tsx`, `src/components/ideas/capture-idea-form.tsx`, `src/components/ui/strip-phase.ts` (+ teste), cabeçalhos de avisos, calendário, templates, equipe, configurações, checklists, equipamentos, nova produção, nova ideia, editar produção, arquivos, continuidade e checklist da gravação; `login`, `convite`, `not-found`, `route-error`, `loading-state`, `dialog`, `section-page`, `create-workspace-form`; `messages/*.json`.
+Resumo: Modo Gravação com barra de alumínio (luz de gravação, sessão, Sair), régua de progresso em tinta sobre trilho, cena atual como tira ampliada (posição, status e ponta; título grande em fonte normal para leitura no set), planos com cabeça em tira e rodapé fixo na moldura; continua 375–430 px sem hover. Ideias viraram quadro de tiras (autor, criada, status; captura rápida dentro da barra do quadro) e a ideia aberta é a tira ampliada na cor do status. Demais telas: cabeçalho de página vira barra de alumínio (descrição em `frame-foreground/80`); títulos de página em caixa-alta estreita; cantos de 4px no lugar de `rounded-xl`; avatares e marcadores quadrados; diálogo e carregando no mesmo canto.
+Decisões: `ideaPhase` (nova branca, em análise azul, aprovada/convertida fim, descartada arquivo). A luz de gravação é o único elemento redondo que ficou (é uma luz). Chave `ideas.workspace` removida; `ideas.author` e `ideas.created` novas.
+Testes: `strip-phase` (ideias), lint, `tsc` (só `LayoutProps`), `check:contrast`, detector sem achados; `npm test` 122/123 sem banco local (só `seed.integration`). Prévia por pré-renderização com dados falsos: ideias, ideia aberta, Modo Gravação (claro/escuro, 375px).
+Pendências: login, convite, calendário, equipe e configurações só receberam a passada de vocabulário (sem prévia própria); revisar na UI-015.
+

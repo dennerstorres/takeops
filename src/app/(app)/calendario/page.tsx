@@ -138,7 +138,7 @@ export default async function CalendarPage({
           ) : null}
           <span
             aria-hidden
-            className={`mr-1 inline-block size-2 rounded-full ${kindClass[event.kind]}`}
+            className={`mr-1 inline-block size-2.5 rounded-[2px] ${kindClass[event.kind]}`}
           />
           <span className="font-medium">{event.label}</span>
           {event.canceled ? (
@@ -154,12 +154,12 @@ export default async function CalendarPage({
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-4">
-      <header className="flex flex-wrap items-center justify-between gap-3">
+      <header className="flex flex-wrap items-center justify-between gap-3 rounded-md bg-frame px-3 py-2 text-frame-foreground">
         <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">
+          <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
             {t("calendar.title")}
           </h1>
-          <p className="text-sm text-muted-foreground first-letter:uppercase">
+          <p className="text-sm text-frame-foreground/80 first-letter:uppercase">
             {title}
           </p>
         </div>
@@ -182,20 +182,20 @@ export default async function CalendarPage({
       </header>
       <p className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1">
-          <span aria-hidden className="size-2 rounded-full bg-info" />
+          <span aria-hidden className="size-2.5 rounded-[2px] bg-info" />
           {t("calendar.shoot")}
         </span>
         <span className="inline-flex items-center gap-1">
-          <span aria-hidden className="size-2 rounded-full bg-warning" />
+          <span aria-hidden className="size-2.5 rounded-[2px] bg-warning" />
           {t("calendar.plannedPublication")}
         </span>
         <span className="inline-flex items-center gap-1">
-          <span aria-hidden className="size-2 rounded-full bg-success" />
+          <span aria-hidden className="size-2.5 rounded-[2px] bg-success" />
           {t("calendar.publication")}
         </span>
       </p>
 
-      <div className="hidden overflow-hidden rounded-xl border bg-card shadow-sm md:block">
+      <div className="hidden overflow-hidden rounded-md border bg-card md:block">
         <div className="grid grid-cols-7 border-b bg-muted/40 text-xs text-muted-foreground">
           {weekdayKeys.map((key) => (
             <div key={key} className="px-2 py-1">
@@ -220,7 +220,7 @@ export default async function CalendarPage({
                   dateTime={day}
                   className={
                     day === today
-                      ? "inline-flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground"
+                      ? "inline-flex size-6 items-center justify-center rounded-[2px] bg-primary text-primary-foreground"
                       : undefined
                   }
                 >

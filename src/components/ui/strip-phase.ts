@@ -48,3 +48,17 @@ export function sceneTip(status: string): StripTip {
   if (status === "DISCARDED") return "idle";
   return "ok";
 }
+
+// Ideias: nova é branca, em avaliação vai para o azul da revisão,
+// aprovada ou convertida fecha, descartada sai do quadro.
+const phaseByIdea: Record<string, StripPhase> = {
+  NEW: "plan",
+  UNDER_REVIEW: "post",
+  APPROVED: "done",
+  CONVERTED: "done",
+  DISCARDED: "shelf",
+};
+
+export function ideaPhase(status: string): StripPhase {
+  return phaseByIdea[status] ?? "plan";
+}

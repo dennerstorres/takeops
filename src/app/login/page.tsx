@@ -29,7 +29,7 @@ export default async function LoginPage({
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center px-4 py-8">
       <section className={cn(surfaceClass, "flex flex-col gap-6 p-6")}>
         <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">
+          <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
             {t("login.title")}
           </h1>
           <p className="text-sm text-muted-foreground">

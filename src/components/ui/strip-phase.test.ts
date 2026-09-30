@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { scenePhase, sceneTip, stripPhase } from "./strip-phase.ts";
+import { ideaPhase, scenePhase, sceneTip, stripPhase } from "./strip-phase.ts";
 
 describe("stripPhase", () => {
   it("agrupa as etapas da produção em cinco cartolinas", () => {
@@ -35,5 +35,14 @@ describe("scenePhase e sceneTip", () => {
     assert.equal(sceneTip("NEEDS_RETAKE"), "pending");
     assert.equal(sceneTip("DISCARDED"), "idle");
     assert.equal(sceneTip("RECORDED"), "ok");
+  });
+});
+
+describe("ideaPhase", () => {
+  it("leva a ideia da cartolina branca até o arquivo", () => {
+    assert.equal(ideaPhase("NEW"), "plan");
+    assert.equal(ideaPhase("UNDER_REVIEW"), "post");
+    assert.equal(ideaPhase("CONVERTED"), "done");
+    assert.equal(ideaPhase("DISCARDED"), "shelf");
   });
 });

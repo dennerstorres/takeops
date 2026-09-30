@@ -2048,7 +2048,7 @@ Abas compactas; cenas e planos como tiras (o uso original do stripboard); ediç�
 
 ## UI-014 — Redesign: Modo Gravação e demais telas
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-010
 

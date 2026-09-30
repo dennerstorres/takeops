@@ -6,6 +6,9 @@ import { ConvertIdeaButton } from "@/components/ideas/convert-idea-button";
 import { DeleteIdeaButton } from "@/components/ideas/delete-idea-button";
 import { IdeaForm } from "@/components/ideas/idea-form";
 import { IdeaStatusForm } from "@/components/ideas/idea-status-form";
+import { stripPhaseClass } from "@/components/ui/strip";
+import { ideaPhase } from "@/components/ui/strip-phase";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { NotFoundError } from "@/server/errors";
@@ -45,7 +48,7 @@ export default async function IdeaPage({
   if (!idea) {
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
-        <h1 className="text-2xl font-medium tracking-tight">
+        <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("ideas.missingTitle")}
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -76,10 +79,18 @@ export default async function IdeaPage({
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <header className="flex flex-wrap items-start justify-between gap-3">
+      {/* A ideia aberta é a tira ampliada, na cartolina do status. */}
+      <header
+        className={cn(
+          "flex flex-wrap items-start justify-between gap-3 rounded-md p-3 text-strip-ink",
+          stripPhaseClass[ideaPhase(idea.status)],
+        )}
+      >
         <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">{idea.title}</h1>
-          <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
+            {idea.title}
+          </h1>
+          <p className="flex flex-wrap items-center gap-2 text-sm text-strip-ink-muted">
             <StatusBadge status={idea.status}>
               {statusLabel(t, idea.status)}
             </StatusBadge>

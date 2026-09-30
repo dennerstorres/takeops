@@ -9,7 +9,7 @@ export function LoadingState({ label }: { label?: string }) {
     <div
       role="status"
       aria-live="polite"
-      className="space-y-3 rounded-xl border bg-card p-6"
+      className="space-y-3 rounded-md border bg-card p-6"
     >
       <span className="sr-only">{label ?? t("loading")}</span>
       <Skeleton className="h-4 w-1/3" />

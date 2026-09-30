@@ -12,7 +12,7 @@ export function RouteError({ reset }: { reset: () => void }) {
       role="alert"
       className="mx-auto flex w-full max-w-3xl flex-col items-start gap-3"
     >
-      <h1 className="text-2xl font-medium tracking-tight">
+      <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
         {t("routeError.title")}
       </h1>
       <p className="text-sm text-muted-foreground">
