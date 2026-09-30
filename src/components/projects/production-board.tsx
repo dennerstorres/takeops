@@ -6,7 +6,10 @@ import {
   moveProjectStatusAction,
   type ProjectFormState,
 } from "@/server/project-actions";
+import { surfaceLinkClass } from "@/components/ui/card";
 import { Input, Select } from "@/components/ui/input";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { cn } from "@/lib/utils";
 
 type BoardCard = {
   id: string;
@@ -72,16 +75,16 @@ export function ProductionBoard({
           <section
             key={column.status}
             aria-label={column.title}
-            className="flex w-64 shrink-0 flex-col gap-2"
+            className="flex w-72 shrink-0 flex-col gap-2 rounded-xl bg-muted p-2"
             onDragOver={(event) => {
               if (!canEdit) return;
               event.preventDefault();
             }}
             onDrop={(event) => dropOn(column.status, event)}
           >
-            <h2 className="text-sm font-medium">
-              {column.title}
-              <span className="ml-2 text-muted-foreground">
+            <h2 className="flex items-center justify-between gap-2 px-1">
+              <StatusBadge status={column.status}>{column.title}</StatusBadge>
+              <span className="text-xs text-muted-foreground tabular-nums">
                 {column.cards.length}
               </span>
             </h2>
@@ -95,7 +98,7 @@ export function ProductionBoard({
                       event.dataTransfer.setData("text/plain", card.id);
                       event.dataTransfer.effectAllowed = "move";
                     }}
-                    className="flex min-h-11 flex-col gap-2 rounded-xl border p-3 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                    className={cn(surfaceLinkClass, "flex-col gap-2 p-3")}
                   >
                     {card.thumbnailUrl ? (
                       // URL externa da produção; o app não define remotePatterns.
@@ -121,7 +124,7 @@ export function ProductionBoard({
                     {card.alerts.length > 0 ? (
                       <ul>
                         {card.alerts.map((alert) => (
-                          <li key={alert} className="text-sm text-destructive">
+                          <li key={alert} className="text-sm text-warning">
                             {alert}
                           </li>
                         ))}

@@ -2,6 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { TemplateForm } from "@/components/checklists/checklist-forms";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { ItemList, ItemListRow } from "@/components/ui/item-list";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { listChecklistTemplates } from "@/server/checklist";
@@ -43,12 +46,12 @@ export default async function ChecklistsPage() {
           description="Os modelos de checklist do workspace aparecem aqui."
         />
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ItemList>
           {templates.map((template) => (
-            <li key={template.id}>
+            <ItemListRow key={template.id} className="p-0">
               <Link
                 href={`/configuracoes/checklists/${template.id}`}
-                className="flex min-h-11 flex-col rounded-xl border p-3"
+                className="flex min-h-11 w-full flex-col px-4 py-3 hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
               >
                 <span className="text-sm font-medium">{template.name}</span>
                 <span className="text-sm text-muted-foreground">
@@ -56,26 +59,22 @@ export default async function ChecklistsPage() {
                   {template.items.length} itens
                 </span>
               </Link>
-            </li>
+            </ItemListRow>
           ))}
-        </ul>
+        </ItemList>
       )}
       {canEdit && !templates.some((template) => template.type === "SHOOT") ? (
-        <form
-          action={createRecommendedChecklistAction}
-          className="space-y-2 rounded-xl border p-3"
-        >
-          <p className="text-sm">
-            Comece pelo checklist recomendado: equipamentos e preparação, 22
-            itens.
-          </p>
-          <button
-            type="submit"
-            className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
-          >
-            Criar checklist recomendado
-          </button>
-        </form>
+        <Card className="space-y-2">
+          <form action={createRecommendedChecklistAction} className="space-y-2">
+            <p className="text-sm">
+              Comece pelo checklist recomendado: equipamentos e preparação, 22
+              itens.
+            </p>
+            <Button type="submit" variant="outline">
+              Criar checklist recomendado
+            </Button>
+          </form>
+        </Card>
       ) : null}
       {canEdit ? (
         <section className="space-y-3">

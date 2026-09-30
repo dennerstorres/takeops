@@ -1,6 +1,9 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { Button } from "@/components/ui/button";
+import { ItemList, ItemListRow } from "@/components/ui/item-list";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { listMyNotifications } from "@/server/notification";
@@ -52,9 +55,6 @@ export default async function NotificationsPage() {
     hour: "2-digit",
     minute: "2-digit",
   });
-  const buttonClass =
-    "inline-flex min-h-11 items-center rounded-lg border px-3 text-sm";
-
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
@@ -68,9 +68,9 @@ export default async function NotificationsPage() {
         </div>
         {unread > 0 ? (
           <form action={markNotificationsReadAction}>
-            <button type="submit" className={buttonClass}>
+            <Button type="submit" variant="outline">
               {t("notifications.markAllRead")}
-            </button>
+            </Button>
           </form>
         ) : null}
       </header>
@@ -80,15 +80,16 @@ export default async function NotificationsPage() {
           description={t("notifications.emptyDescription")}
         />
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ItemList>
           {rows.map((row) => {
             const href = target(row.type, row.videoProjectId);
             return (
-              <li
+              <ItemListRow
                 key={row.id}
-                className={`rounded-xl border p-3 ${
-                  row.readAt ? "" : "border-primary/40 bg-primary/5"
-                }`}
+                className={cn(
+                  "flex-col items-stretch gap-1",
+                  row.readAt ? "" : "bg-info-muted",
+                )}
               >
                 <p className="text-sm">
                   {row.readAt ? null : (
@@ -118,26 +119,26 @@ export default async function NotificationsPage() {
                   >
                     <input type="hidden" name="notificationId" value={row.id} />
                     {href ? (
-                      <button
+                      <Button
                         type="submit"
                         name="next"
                         value={href}
-                        className={buttonClass}
+                        variant="outline"
                       >
                         {t("notifications.open")}
-                      </button>
+                      </Button>
                     ) : null}
                     {row.readAt ? null : (
-                      <button type="submit" className={buttonClass}>
+                      <Button type="submit" variant="outline">
                         {t("notifications.markRead")}
-                      </button>
+                      </Button>
                     )}
                   </form>
                 ) : null}
-              </li>
+              </ItemListRow>
             );
           })}
-        </ul>
+        </ItemList>
       )}
     </div>
   );

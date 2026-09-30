@@ -4682,3 +4682,21 @@ Lint. `status-tone.test.ts` e `i18n.test.ts`. `tsc --noEmit` só acusa `LayoutPr
 
 - Telas ainda não foram redesenhadas com `Card`/`Table`; isso é UI-004..007.
 - Cores cruas do calendário e do Modo Gravação ficam para UI-004 e UI-006.
+
+## 2026-09-29 — UI-004 — Dashboard, listas e kanban
+
+**Status:** DONE
+**Agente:** Grok
+
+- Dashboard, produções (filtros em card + kanban), ideias, calendário, templates, equipe, configurações, equipamentos, checklists e avisos usam superfície de card, lista e botão do UI-003.
+- Status de produção, convite e equipamento fora de uso aparecem com texto e cor. O calendário trocou `sky`/`amber`/`emerald` por `info`/`warning`/`success`. Convite expirado entra no tom de atenção.
+- O cartão do dashboard ganhou `statusCode` para o badge, sem mudar o rótulo já testado.
+
+### Testes
+
+Lint. `dashboard.test.ts` e `status-tone.test.ts`. `tsc --noEmit` continua só com `LayoutProps`, porque o SWC nativo não carrega neste Windows. Dev server e navegador não abriram por isso.
+
+### Pendências
+
+- Modo Gravação ainda usa âmbar cru; fica na UI-006.
+- `Table` segue sem tela: estas listas são de cartão, não de grade.

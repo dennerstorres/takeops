@@ -2,6 +2,11 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { buttonVariants } from "@/components/ui/button";
+import { surfaceClass, surfaceLinkClass } from "@/components/ui/card";
+import { ItemList, ItemListRow } from "@/components/ui/item-list";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { prismaCalendarRepository } from "@/server/calendar-prisma";
@@ -20,6 +25,7 @@ type ProjectCard = {
   people: string[];
   shootDate: string | null;
   status: string;
+  statusCode: string;
   nextAction: string;
 };
 
@@ -34,7 +40,7 @@ function Section({
 }) {
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-base font-medium">
+      <h2 className="text-lg font-medium">
         {title}
         {count !== undefined ? (
           <span className="ml-2 text-muted-foreground tabular-nums">
@@ -54,7 +60,7 @@ function ProjectList({ cards }: { cards: ProjectCard[] }) {
         <li key={card.id}>
           <Link
             href={`/producoes/${card.id}`}
-            className="flex min-h-11 gap-3 rounded-xl border p-3 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+            className={cn(surfaceLinkClass, "gap-3 p-3")}
           >
             {card.thumbnailUrl ? (
               // URL externa da produção; o app não define remotePatterns.
@@ -67,9 +73,11 @@ function ProjectList({ cards }: { cards: ProjectCard[] }) {
             ) : null}
             <span className="flex min-w-0 flex-col gap-1">
               <span className="truncate text-sm font-medium">{card.title}</span>
-              <span className="text-sm text-muted-foreground">
-                {card.status}
-                {card.shootDate ? ` · gravação ${card.shootDate}` : ""}
+              <span className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                <StatusBadge status={card.statusCode}>
+                  {card.status}
+                </StatusBadge>
+                {card.shootDate ? `gravação ${card.shootDate}` : null}
               </span>
               {card.people.length > 0 ? (
                 <span className="truncate text-sm text-muted-foreground">
@@ -124,7 +132,7 @@ export default async function Home() {
   });
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-medium tracking-tight">Dashboard</h1>
         <p className="text-sm text-muted-foreground">
@@ -134,7 +142,7 @@ export default async function Home() {
 
       <dl className="grid grid-cols-3 gap-2 sm:grid-cols-6">
         {data.counters.map((item) => (
-          <div key={item.label} className="rounded-xl border p-3">
+          <div key={item.label} className={cn(surfaceClass, "p-3")}>
             <dt className="text-xs text-muted-foreground">{item.label}</dt>
             <dd className="text-2xl font-medium tabular-nums">{item.value}</dd>
           </div>
@@ -153,16 +161,20 @@ export default async function Home() {
               <li key={shoot.key}>
                 <Link
                   href={shoot.href}
-                  className="flex min-h-11 flex-col gap-1 rounded-xl border p-3 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                  className={cn(surfaceLinkClass, "flex-col gap-1 p-3")}
                 >
                   <span className="text-sm font-medium first-letter:uppercase">
                     {shoot.at ? when.format(shoot.at) : shoot.day}
                     {" · "}
                     {shoot.label}
                   </span>
-                  <span className="truncate text-sm text-muted-foreground">
+                  <span className="flex flex-wrap items-center gap-2 truncate text-sm text-muted-foreground">
                     {shoot.projectTitle}
-                    {shoot.status ? ` · ${shoot.status}` : ""}
+                    {shoot.status && shoot.statusCode ? (
+                      <StatusBadge status={shoot.statusCode}>
+                        {shoot.status}
+                      </StatusBadge>
+                    ) : null}
                   </span>
                   {shoot.people.length > 0 ? (
                     <span className="truncate text-sm text-muted-foreground">
@@ -204,7 +216,7 @@ export default async function Home() {
             action={
               <Link
                 href="/producoes"
-                className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
+                className={buttonVariants({ variant: "outline" })}
               >
                 Ver produções
               </Link>
@@ -223,19 +235,19 @@ export default async function Home() {
             action={
               <Link
                 href="/ideias"
-                className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
+                className={buttonVariants({ variant: "outline" })}
               >
                 Anotar ideia
               </Link>
             }
           />
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ItemList>
             {data.ideas.map((idea) => (
-              <li key={idea.id}>
+              <ItemListRow key={idea.id} className="p-0">
                 <Link
                   href={`/ideias/${idea.id}`}
-                  className="flex min-h-11 flex-col justify-center rounded-xl border px-3 py-2 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                  className="flex min-h-11 w-full flex-col justify-center px-4 py-3 hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
                 >
                   <span className="truncate text-sm font-medium">
                     {idea.title}
@@ -246,9 +258,9 @@ export default async function Home() {
                     </span>
                   ) : null}
                 </Link>
-              </li>
+              </ItemListRow>
             ))}
-          </ul>
+          </ItemList>
         )}
       </Section>
     </div>

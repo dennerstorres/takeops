@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { Card } from "@/components/ui/card";
+import { ItemList, ItemListRow } from "@/components/ui/item-list";
 import { ProductionTemplateForm } from "@/components/templates/production-template-form";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
@@ -33,14 +35,16 @@ export default async function TemplatesPage() {
         </p>
       </header>
       {canManage ? (
-        <details className="rounded-xl border p-3">
-          <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
-            Novo template
-          </summary>
-          <div className="mt-2">
-            <ProductionTemplateForm values={{ name: "", description: "" }} />
-          </div>
-        </details>
+        <Card>
+          <details>
+            <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
+              Novo template
+            </summary>
+            <div className="mt-2">
+              <ProductionTemplateForm values={{ name: "", description: "" }} />
+            </div>
+          </details>
+        </Card>
       ) : null}
       {templates.length === 0 ? (
         <EmptyState
@@ -48,12 +52,12 @@ export default async function TemplatesPage() {
           description="Os modelos de produção do workspace aparecem aqui."
         />
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ItemList>
           {templates.map((template) => (
-            <li key={template.id}>
+            <ItemListRow key={template.id} className="p-0">
               <Link
                 href={`/templates/${template.id}`}
-                className="flex min-h-11 flex-col rounded-xl border p-3"
+                className="flex min-h-11 w-full flex-col px-4 py-3 hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
               >
                 <span className="text-sm font-medium">{template.name}</span>
                 {template.description ? (
@@ -62,9 +66,9 @@ export default async function TemplatesPage() {
                   </span>
                 ) : null}
               </Link>
-            </li>
+            </ItemListRow>
           ))}
-        </ul>
+        </ItemList>
       )}
     </div>
   );

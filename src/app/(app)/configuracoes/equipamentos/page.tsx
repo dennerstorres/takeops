@@ -3,6 +3,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EquipmentForm } from "@/components/equipment/equipment-form";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { ItemList, ItemListRow } from "@/components/ui/item-list";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { listEquipment } from "@/server/equipment";
@@ -45,13 +47,18 @@ export default async function EquipmentPage() {
           description="Câmeras, microfones e o resto do kit aparecem aqui."
         />
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ItemList>
           {items.map((item) => (
-            <li key={item.id} className="rounded-xl border p-3">
+            <ItemListRow key={item.id} className="flex-col items-stretch">
               <p className="text-sm font-medium">{item.name}</p>
               <p className="text-sm text-muted-foreground">
                 {equipmentCategoryLabel(t, item.category)}
-                {item.active ? null : " · Fora de uso"}
+                {item.active ? null : (
+                  <>
+                    {" · "}
+                    <StatusBadge tone="muted">Fora de uso</StatusBadge>
+                  </>
+                )}
                 {item.notes ? ` · ${item.notes}` : null}
               </p>
               {canEdit ? (
@@ -72,9 +79,9 @@ export default async function EquipmentPage() {
                   </div>
                 </details>
               ) : null}
-            </li>
+            </ItemListRow>
           ))}
-        </ul>
+        </ItemList>
       )}
       {canEdit ? (
         <section className="space-y-3">

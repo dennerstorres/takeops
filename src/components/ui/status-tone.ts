@@ -30,6 +30,7 @@ const toneByStatus: Record<string, StatusTone> = {
   NEEDS_RETAKE: "warning",
   RETAKE: "warning",
   PENDING: "warning",
+  EXPIRED: "warning",
   CHANGES_REQUESTED: "warning",
   APPROVED: "success",
   CONVERTED: "success",

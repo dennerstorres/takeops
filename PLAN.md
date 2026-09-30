@@ -1691,7 +1691,7 @@ Botões, campos (substituir `<input>`/`<select>` crus por componentes), card, ba
 
 ## UI-004 — Dashboard, listas e kanban
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-002, UI-003
 

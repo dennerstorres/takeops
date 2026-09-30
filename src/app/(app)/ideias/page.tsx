@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { buttonVariants } from "@/components/ui/button";
 import { ItemList, ItemListRow } from "@/components/ui/item-list";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { CaptureIdeaForm } from "@/components/ideas/capture-idea-form";
@@ -52,7 +53,7 @@ export default async function IdeasPage() {
         {canEdit ? (
           <Link
             href="/ideias/nova"
-            className="inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-medium"
+            className={buttonVariants({ variant: "outline" })}
           >
             Completar campos
           </Link>
@@ -70,7 +71,7 @@ export default async function IdeasPage() {
             <ItemListRow key={idea.id} className="p-0">
               <Link
                 href={`/ideias/${idea.id}`}
-                className="flex min-h-11 w-full flex-col gap-1 px-4 py-3 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                className="flex min-h-11 w-full flex-col gap-1 px-4 py-3 hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
               >
                 <span className="truncate text-sm font-medium">
                   {idea.title}

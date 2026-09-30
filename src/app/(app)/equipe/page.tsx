@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import { ItemList, ItemListRow } from "@/components/ui/item-list";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { InviteForm } from "@/components/team/invite-form";
 import { MemberRoleForm } from "@/components/team/member-role-form";
 import { RevokeInviteButton } from "@/components/team/revoke-invite-button";
@@ -71,7 +73,7 @@ export default async function TeamPage() {
           Pessoas com acesso a {access.workspace.workspace.name}.
         </p>
       </header>
-      <ul className="flex flex-col gap-3">
+      <ItemList>
         {members.map((member) => {
           const name = displayName(member.name, member.email);
           const options = manageableRoles(
@@ -79,10 +81,7 @@ export default async function TeamPage() {
             member.role,
           );
           return (
-            <li
-              key={member.userId}
-              className="flex flex-wrap items-center gap-3 rounded-xl border p-3"
-            >
+            <ItemListRow key={member.userId} className="flex-wrap">
               {member.image ? (
                 // URL externa do Google. next/image exigiria allowlist.
                 // eslint-disable-next-line @next/next/no-img-element
@@ -114,10 +113,10 @@ export default async function TeamPage() {
               ) : (
                 <p className="shrink-0 text-sm">{roleLabel(member.role)}</p>
               )}
-            </li>
+            </ItemListRow>
           );
         })}
-      </ul>
+      </ItemList>
       {roles.length > 0 ? (
         <section className="flex flex-col gap-4">
           <header className="space-y-1">
@@ -129,26 +128,25 @@ export default async function TeamPage() {
           </header>
           <InviteForm roles={roles} />
           {invites.length > 0 ? (
-            <ul className="flex flex-col gap-3">
+            <ItemList>
               {invites.map((invite) => (
-                <li
-                  key={invite.id}
-                  className="flex flex-wrap items-center gap-3 rounded-xl border p-3"
-                >
+                <ItemListRow key={invite.id} className="flex-wrap">
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">
                       {invite.email}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      {roleLabel(invite.role)} ·{" "}
-                      {invite.status === "EXPIRED" ? "Expirado" : "Pendente"} ·
+                    <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                      {roleLabel(invite.role)}
+                      <StatusBadge status={invite.status}>
+                        {invite.status === "EXPIRED" ? "Expirado" : "Pendente"}
+                      </StatusBadge>
                       até {expires.format(invite.expiresAt)}
                     </p>
                   </div>
                   <RevokeInviteButton inviteId={invite.id} />
-                </li>
+                </ItemListRow>
               ))}
-            </ul>
+            </ItemList>
           ) : null}
         </section>
       ) : null}

@@ -1,6 +1,11 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+const surfaceClass = "rounded-xl border bg-card text-card-foreground shadow-sm";
+
+const surfaceLinkClass =
+  "flex min-h-11 rounded-xl border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none";
+
 function Card({ className, ...props }: React.ComponentProps<"section">) {
   return (
     <section
@@ -44,4 +49,11 @@ function CardDescription({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-export { Card, CardDescription, CardHeader, CardTitle };
+export {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  surfaceClass,
+  surfaceLinkClass,
+};

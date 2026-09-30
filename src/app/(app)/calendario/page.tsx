@@ -10,6 +10,7 @@ import {
   weekDays,
 } from "@/lib/calendar-grid";
 import { utcToZonedLocal, zonedLocalToUtc } from "@/lib/zoned-time";
+import { buttonVariants } from "@/components/ui/button";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { listCalendarEvents, type CalendarEvent } from "@/server/calendar";
@@ -19,9 +20,9 @@ import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 const weekdays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 const kindClass: Record<CalendarEvent["kind"], string> = {
-  SHOOT: "bg-sky-500",
-  PLANNED_PUBLISH: "bg-amber-500",
-  PUBLICATION: "bg-emerald-500",
+  SHOOT: "bg-info",
+  PLANNED_PUBLISH: "bg-warning",
+  PUBLICATION: "bg-success",
 };
 
 export default async function CalendarPage({
@@ -102,8 +103,7 @@ export default async function CalendarPage({
     view === "week"
       ? `/calendario?mes=${month}`
       : `/calendario?semana=${month === today.slice(0, 7) ? today : `${month}-01`}`;
-  const linkClass =
-    "inline-flex min-h-11 items-center rounded-lg border px-3 text-sm";
+  const linkClass = buttonVariants({ variant: "outline" });
   const dayTitle = new Intl.DateTimeFormat("pt-BR", {
     timeZone: "UTC",
     weekday: "short",
@@ -176,20 +176,20 @@ export default async function CalendarPage({
       </header>
       <p className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
         <span className="inline-flex items-center gap-1">
-          <span aria-hidden className="size-2 rounded-full bg-sky-500" />
+          <span aria-hidden className="size-2 rounded-full bg-info" />
           Gravação
         </span>
         <span className="inline-flex items-center gap-1">
-          <span aria-hidden className="size-2 rounded-full bg-amber-500" />
+          <span aria-hidden className="size-2 rounded-full bg-warning" />
           Publicação planejada
         </span>
         <span className="inline-flex items-center gap-1">
-          <span aria-hidden className="size-2 rounded-full bg-emerald-500" />
+          <span aria-hidden className="size-2 rounded-full bg-success" />
           Publicação agendada ou feita
         </span>
       </p>
 
-      <div className="hidden overflow-hidden rounded-xl border md:block">
+      <div className="hidden overflow-hidden rounded-xl border bg-card shadow-sm md:block">
         <div className="grid grid-cols-7 border-b bg-muted/40 text-xs text-muted-foreground">
           {weekdays.map((name) => (
             <div key={name} className="px-2 py-1">
@@ -209,12 +209,17 @@ export default async function CalendarPage({
                   : "bg-muted/30 text-muted-foreground"
               }`}
             >
-              <p
-                className={`mb-1 text-xs ${
-                  day === today ? "font-semibold text-foreground" : ""
-                }`}
-              >
-                <time dateTime={day}>{Number(day.slice(8))}</time>
+              <p className="mb-1 text-xs">
+                <time
+                  dateTime={day}
+                  className={
+                    day === today
+                      ? "inline-flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground"
+                      : undefined
+                  }
+                >
+                  {Number(day.slice(8))}
+                </time>
                 {day === today ? (
                   <span className="sr-only"> (hoje)</span>
                 ) : null}

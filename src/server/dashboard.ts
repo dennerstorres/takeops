@@ -91,6 +91,7 @@ export function buildDashboard(input: {
   const card = (project: ProjectRecord) => ({
     ...cards.get(project.id)!,
     status: projectStatusLabel(t, project.status),
+    statusCode: project.status,
     nextAction: nextAction[project.status],
   });
   const recent = (a: ProjectRecord, b: ProjectRecord) =>
@@ -113,6 +114,7 @@ export function buildDashboard(input: {
         status: byId.get(event.projectId)
           ? projectStatusLabel(t, byId.get(event.projectId)!.status)
           : null,
+        statusCode: byId.get(event.projectId)?.status ?? null,
       })),
     inProgress: input.projects
       .filter((project) => !idle.includes(project.status))

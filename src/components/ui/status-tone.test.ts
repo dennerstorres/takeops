@@ -17,6 +17,7 @@ describe("statusTone", () => {
     assert.equal(statusTone("IN_PROGRESS"), "primary");
     assert.equal(statusTone("NEEDS_RETAKE"), "warning");
     assert.equal(statusTone("PENDING"), "warning");
+    assert.equal(statusTone("EXPIRED"), "warning");
     assert.equal(statusTone("CHANGES_REQUESTED"), "warning");
     assert.equal(statusTone("APPROVED"), "success");
     assert.equal(statusTone("RECORDED"), "success");
