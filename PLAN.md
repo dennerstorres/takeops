@@ -2094,6 +2094,52 @@ Remover:
 
 ---
 
+# Fase 25 — Roteiro de fora para dentro
+
+Origem: roteiro real de um esquete de 11 cenas (2026-09-30), escrito em markdown fora do app. Coube no modelo atual sem mudar código, mas lançá-lo exigiu 34 formulários (11 cenas, 23 planos) e as falas de atores ficaram como texto solto.
+
+## SCRIPT-003 — Formato de roteiro e modelo de exemplo
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** nenhuma
+
+Definir o formato markdown que o app lê e escreve, e deixar quem escreve o roteiro baixar um exemplo.
+
+- Formato documentado em `SPEC.md`: cabeçalho da produção (formato, proporção, duração), campos do `Script` (gancho, mensagem, CTA, notas), `# CENA n — título` com tempo, tipo e propósito, `## Shot n.n — nome` com enquadramento, tipo e assunto, falas no padrão `**PERSONAGEM:**`.
+- Aceitar os rótulos em português e os que já aparecem em roteiros reais (`Enquadramento`, `Tipo`, `Subject`, `Purpose`, `Tempo`).
+- Botão "Baixar modelo de roteiro" na aba Roteiro: arquivo `.md` de exemplo curto, com todos os campos preenchidos e comentários do que é opcional.
+- Exportar o roteiro de uma produção existente no mesmo formato (ida e volta: exportar → importar gera as mesmas cenas e planos).
+- Testes do parser e do gerador, com fixture que reproduz a estrutura do roteiro de origem (texto inventado: o repositório é público).
+
+## SCRIPT-004 — Importar roteiro
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** SCRIPT-003
+
+- Na aba Roteiro, colar ou enviar o `.md` e ver uma prévia (cenas, planos, duração somada, avisos) antes de gravar.
+- Criar roteiro, cenas e planos numa transação, na ordem do arquivo; cena ou plano sem campo reconhecido vai para descrição ou notas, nunca é descartado em silêncio.
+- Mapear tipos livres para os enums (`dialogue`/`reaction` → `CAMERA`, `insert` → `INSERT`, `OFF` → `VOICE_OVER`); o valor original fica na descrição.
+- Avisar quando a soma das cenas passa da duração da produção (o roteiro de origem somava 180 s para meta de 150 s).
+- Produção que já tem cenas: importar acrescenta ao fim, com confirmação; sem sobrescrever.
+- Respeitar isolamento por workspace e registrar no Activity Log.
+
+## CAST-001 — Elenco da produção
+
+**Status:** TODO  
+**Prioridade:** P2  
+**Dependências:** nenhuma (SCRIPT-004 passa a usar quando existir)
+
+Hoje o apresentador da cena é um usuário do workspace; ator e personagem não são.
+
+- Modelo de personagem por produção (nome do personagem, ator opcional, usuário opcional) — decidir em ADR.
+- Cena com um ou mais personagens; falas continuam em texto.
+- Filtro de cenas por personagem na lista de cenas e no Modo Gravação, para montar a ordem de gravação por ator.
+- Importação (SCRIPT-004) cria os personagens a partir de `**PERSONAGEM:**` e da seção de personagens do roteiro.
+
+---
+
 # Backlog pós-MVP
 
 Não implementar sem decisão explícita.
