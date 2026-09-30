@@ -46,7 +46,7 @@ export default async function IdeasPage() {
   return (
     <div className="flex w-full flex-col gap-3">
       <header className="flex flex-wrap items-center gap-2 rounded-md bg-frame p-1.5 text-frame-foreground">
-        <h1 className="flex items-baseline gap-2 px-1.5 font-condensed text-lg font-semibold tracking-wider uppercase">
+        <h1 className="flex items-baseline gap-2 px-1.5 font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("ideas.title")}
           <span className="text-sm font-medium tabular-nums">
             {ideas.length}

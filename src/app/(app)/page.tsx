@@ -130,7 +130,7 @@ export default async function Home() {
   return (
     <div className="flex w-full flex-col gap-3">
       <header className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-md bg-frame px-3 py-2 text-frame-foreground">
-        <h1 className="font-condensed text-lg font-semibold tracking-wider uppercase">
+        <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("dashboard.title")}
         </h1>
         {/* Contadores como legenda impressa do quadro: cor da etapa + nome. */}

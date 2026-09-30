@@ -88,7 +88,7 @@ export default async function ProductionsPage({
         aria-label={t("projects.filters")}
         className="relative flex flex-wrap items-center gap-2 rounded-md bg-frame p-1.5 text-frame-foreground"
       >
-        <h1 className="order-1 flex items-baseline sm:order-first gap-2 px-1.5 font-condensed text-lg font-semibold tracking-wider uppercase">
+        <h1 className="order-1 flex items-baseline sm:order-first gap-2 px-1.5 font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("projects.title")}
           <span className="text-sm font-medium tabular-nums">
             {projects.length}

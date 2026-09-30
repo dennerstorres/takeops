@@ -122,7 +122,7 @@ export default async function RecordModePage({
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-xl flex-col">
+    <div className="flex min-h-dvh w-full flex-col">
       <header className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b-2 border-divider bg-frame px-4 py-2 text-frame-foreground">
         <div className="min-w-0">
           <p className="flex items-center gap-2 font-condensed text-xs font-semibold tracking-wider uppercase">
@@ -319,7 +319,7 @@ export default async function RecordModePage({
       )}
       {view !== null && (canEdit || view.total > 1) ? (
         <footer className="sticky bottom-0 z-10 border-t-2 border-divider bg-frame px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-          <div className="mx-auto flex w-full max-w-xl flex-col gap-2">
+          <div className="flex w-full flex-col gap-2">
             {canEdit ? (
               <form
                 action={recordSceneStatusAction}

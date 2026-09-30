@@ -220,7 +220,7 @@ Neutros frios quase sem croma, cinco cartolinas dessaturadas que carregam a etap
 - **Barra de filtros:** faixa de alumínio acima do quadro com título + contagem, busca sempre visível, "Filtros" em painel (`details`), ação primária empurrada à direita (`ml-auto`). No celular a busca desce para a segunda linha.
 - **Grade da tira (`.strip-grid`):** colunas fixas compartilhadas entre cabeçalho impresso e tiras. Desktop (`≥40rem`): código 44px · nº 64px · título flexível · dono 144px · data 96px · meta 72px · [ação 136px] · ponta 8px, gap 10px. Celular: duas linhas de 44px — título em cima, dono/meta/data embaixo; nº some.
 - **Ritmo:** tiras separadas por 1px (a moldura aparece entre elas); moldura com 4px de respiro.
-- **Modo Gravação:** mobile-first 375–430px, coluna única `max-w-xl`, cabeçalho e rodapé sticky em alumínio com borda preta de 2px, rodapé respeita `safe-area-inset-bottom`, ações em largura total. Sem hover: tudo precisa funcionar só com toque.
+- **Modo Gravação:** mobile-first 375–430px, coluna única em largura total, cabeçalho e rodapé sticky em alumínio com borda preta de 2px, rodapé respeita `safe-area-inset-bottom`, ações em largura total. Sem hover: tudo precisa funcionar só com toque.
 
 ### Named Rules
 **A Regra da Coluna Fixa.** Toda tira usa `.strip-grid`; a mesma etiqueta fica no mesmo lugar e só os valores mudam. Se falta um dado, a célula fica vazia, não colapsa.

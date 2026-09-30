@@ -68,6 +68,7 @@
 }
 
 :root {
+  color-scheme: light;
   /* Quadro de tiras (ADR-045). Contraste AA: scripts/check-contrast.mjs. */
   --background: oklch(0.965 0.003 250);
   --foreground: oklch(0.21 0.012 250);
@@ -129,6 +130,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: oklch(0.165 0.006 250);
   --foreground: oklch(0.95 0.004 95);
   --card: oklch(0.2 0.007 250);
@@ -192,6 +194,11 @@
   body {
     @apply bg-background text-foreground;
     caret-color: var(--primary);
+  }
+  /* Lista nativa do select segue o tema, não o branco do sistema. */
+  option {
+    background-color: var(--popover);
+    color: var(--popover-foreground);
   }
   ::selection {
     background: color-mix(in oklch, var(--primary) 28%, transparent);
