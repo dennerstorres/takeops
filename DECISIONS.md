@@ -891,3 +891,24 @@ Ligar `previewFeatures = ["partialIndexes"]` no generator e declarar no schema c
 ## Consequências
 
 Novas regras "no máximo um X em tal estado" seguem o mesmo caminho. Conflito no banco vira P2002; o repositório refaz a leitura uma vez e devolve o resultado de domínio. Se o preview mudar numa atualização do Prisma, revisar esse índice.
+
+---
+
+# ADR-044 — Decisões da revisão do MVP
+
+**Status:** Accepted  
+**Data:** 2026-09-29
+
+## Contexto
+
+A MVP-002 deixou três pontos da spec em aberto; o dono decidiu.
+
+## Decisão
+
+1. Registrar uma publicação como PUBLISHED move a produção para PUBLISHED (se ainda não estiver arquivada).
+2. Versão de edição não é excluída: o histórico de versões é imutável. A menção a "excluir versão" na §75 não vale.
+3. VIEWER pode comentar na revisão. Continua sem alterar conteúdo operacional.
+
+## Consequências
+
+Tarefas PUB-005 e REVIEW-005.

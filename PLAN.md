@@ -1986,6 +1986,26 @@ Achados menores da MVP-002:
 
 ---
 
+## PUB-005 — Publicação registrada publica a produção
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** PUB-004
+
+ADR-044. `recordPublicationOutcome` com PUBLISHED move a produção para PUBLISHED na mesma operação, com Activity Log de mudança de etapa. Produção ARCHIVED fica como está.
+
+---
+
+## REVIEW-005 — Leitor comenta na revisão
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** REVIEW-002
+
+ADR-044. VIEWER cria comentário na revisão; resolver comentário continua com OWNER, ADMIN e MEMBER. Ajustar `reviewers` em `review.ts`, tela e testes de autorização.
+
+---
+
 ## MVP-003 — Limpeza final
 
 **Status:** TODO  
