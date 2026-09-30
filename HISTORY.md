@@ -4858,3 +4858,21 @@ Conferido contra o código: variáveis de `env.ts`/`.env.example`, serviços do 
 ### Pendências
 
 - OSS-009: prints e subir o compose seguindo o guia. O app não roda nesta máquina (SWC) e o Docker está desligado.
+
+## 2026-09-29 — OSS-006 — Arquivos de comunidade
+
+**Status:** DONE
+**Agente:** Claude
+
+- `CONTRIBUTING.md`, `SECURITY.md` e `CODE_OF_CONDUCT.md` em inglês (público, como o README). Templates de bug, feature e PR em `.github/`; issue em branco desligada e link para reporte privado de vulnerabilidade.
+- Sem e-mail no repositório (AGENTS §23.1): vulnerabilidade vai pelo "Report a vulnerability" do GitHub; conduta, pelo contato do perfil do dono.
+- Código de conduta curto e próprio, inspirado no Contributor Covenant (com link), em vez de copiar o texto.
+- READMEs apontam para CONTRIBUTING e SECURITY.
+
+### Testes
+
+Só documentação; links internos conferidos.
+
+### Pendências
+
+- Dono: ao tornar o repositório público, ligar *Private vulnerability reporting* em Settings → Code security, e ter um contato público no perfil do GitHub.

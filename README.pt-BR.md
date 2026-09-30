@@ -138,7 +138,7 @@ npm run dev
 
 `npx prisma dev --name takeops` sobe um PostgreSQL local e mostra a URL. `npm run verify` roda lint, checagem de contraste, typecheck, testes e build.
 
-Quem for contribuir (pessoa ou agente de código) deve ler antes o [`HARNESS.md`](HARNESS.md) e o [`AGENTS.md`](AGENTS.md). A documentação do projeto (spec, plano, decisões) está em português.
+Veja o [`CONTRIBUTING.md`](CONTRIBUTING.md) antes de abrir um pull request e o [`SECURITY.md`](SECURITY.md) para reportar vulnerabilidades. Quem for contribuir (pessoa ou agente de código) deve ler antes o [`HARNESS.md`](HARNESS.md) e o [`AGENTS.md`](AGENTS.md). A documentação do projeto (spec, plano, decisões) está em português.
 
 Stack: Next.js, React, Prisma, PostgreSQL, Auth.js, next-intl, Tailwind CSS.
 

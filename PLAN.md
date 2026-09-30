@@ -1831,7 +1831,7 @@ Pendência da OSS-004, que não pôde subir o app (SWC nativo falha no Windows d
 
 ## OSS-006 — Arquivos de comunidade
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** OSS-001
 
