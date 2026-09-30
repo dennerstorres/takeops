@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 22 — Self-hosted (OSS-003..007 feitas); Fase MVP: MVP-001 feita
+Fase 24 — MVP Acceptance (MVP-001 feita)
 ```
 
 ## Tarefa ativa
