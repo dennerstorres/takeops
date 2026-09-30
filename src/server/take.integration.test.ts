@@ -187,161 +187,153 @@ describe(
       } finally {
         await ctx.cleanup();
       }
-      it("numera por shot no servidor, mesmo em registros simultâneos", async () => {
-        const ctx = await setup();
-        try {
-          const { deps, targetA, targetB, workspaceId } = ctx;
-          const now = new Date("2026-10-06T14:00:00.000Z");
-          const first = await registerTake(
-            ctx.member.id,
-            workspaceId,
-            targetA,
-            {
-              status: "RETAKE",
-              notes: " Tremeu ",
-              number: 9,
-              recordedById: ctx.owner.id,
-              favorite: true,
-            },
-            deps,
-            now,
-          );
-          assert.equal(first.number, 1);
-          assert.equal(first.status, "RETAKE");
-          assert.equal(first.notes, "Tremeu");
-          assert.equal(first.favorite, false);
-          assert.equal(first.recordedById, ctx.member.id);
-          assert.equal(first.recordedAt.toISOString(), now.toISOString());
+    });
 
-          const together = await Promise.all(
-            [0, 1, 2].map(() =>
-              registerTake(ctx.owner.id, workspaceId, targetA, {}, deps),
-            ),
-          );
-          assert.deepEqual(
-            together.map((take) => take.number).sort(),
-            [2, 3, 4],
-          );
-          assert.ok(together.every((take) => take.status === "OK"));
-          const other = await registerTake(
+    it("numera por shot no servidor, mesmo em registros simultâneos", async () => {
+      const ctx = await setup();
+      try {
+        const { deps, targetA, targetB, workspaceId } = ctx;
+        const now = new Date("2026-10-06T14:00:00.000Z");
+        const first = await registerTake(
+          ctx.member.id,
+          workspaceId,
+          targetA,
+          {
+            status: "RETAKE",
+            notes: " Tremeu ",
+            number: 9,
+            recordedById: ctx.owner.id,
+            favorite: true,
+          },
+          deps,
+          now,
+        );
+        assert.equal(first.number, 1);
+        assert.equal(first.status, "RETAKE");
+        assert.equal(first.notes, "Tremeu");
+        assert.equal(first.favorite, false);
+        assert.equal(first.recordedById, ctx.member.id);
+        assert.equal(first.recordedAt.toISOString(), now.toISOString());
+
+        const together = await Promise.all(
+          [0, 1, 2].map(() =>
+            registerTake(ctx.owner.id, workspaceId, targetA, {}, deps),
+          ),
+        );
+        assert.deepEqual(together.map((take) => take.number).sort(), [2, 3, 4]);
+        assert.ok(together.every((take) => take.status === "OK"));
+        const other = await registerTake(
+          ctx.owner.id,
+          workspaceId,
+          targetB,
+          {},
+          deps,
+        );
+        assert.equal(other.number, 1);
+
+        const edited = await updateTake(
+          ctx.member.id,
+          workspaceId,
+          targetA,
+          first.id,
+          { status: "DISCARDED", notes: "Foco", number: 7 },
+          deps,
+        );
+        assert.equal(edited.status, "DISCARDED");
+        assert.equal(edited.number, 1);
+
+        await assert.rejects(
+          registerTake(
             ctx.owner.id,
             workspaceId,
-            targetB,
-            {},
-            deps,
-          );
-          assert.equal(other.number, 1);
-
-          const edited = await updateTake(
-            ctx.member.id,
-            workspaceId,
             targetA,
-            first.id,
-            { status: "DISCARDED", notes: "Foco", number: 7 },
+            { status: "BOM" },
             deps,
-          );
-          assert.equal(edited.status, "DISCARDED");
-          assert.equal(edited.number, 1);
+          ),
+          ValidationError,
+        );
+        await assert.rejects(
+          registerTake(ctx.viewer.id, workspaceId, targetA, {}, deps),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          updateTake(ctx.owner.id, workspaceId, targetB, first.id, {}, deps),
+          NotFoundError,
+        );
+      } finally {
+        await ctx.cleanup();
+      }
+    });
+    it("marca um preferido por shot, só entre os OK", async () => {
+      const ctx = await setup();
+      try {
+        const { deps, targetA, targetB, workspaceId } = ctx;
+        const register = (status: string) =>
+          registerTake(ctx.member.id, workspaceId, targetA, { status }, deps);
+        const one = await register("OK");
+        const two = await register("OK");
+        const retake = await register("RETAKE");
 
-          await assert.rejects(
-            registerTake(
-              ctx.owner.id,
-              workspaceId,
-              targetA,
-              { status: "BOM" },
-              deps,
-            ),
-            ValidationError,
-          );
-          await assert.rejects(
-            registerTake(ctx.viewer.id, workspaceId, targetA, {}, deps),
-            ForbiddenError,
-          );
-          await assert.rejects(
-            updateTake(ctx.owner.id, workspaceId, targetB, first.id, {}, deps),
-            NotFoundError,
-          );
-        } finally {
-          await ctx.cleanup();
-        }
-      });
-      it("marca um preferido por shot, só entre os OK", async () => {
-        const ctx = await setup();
-        try {
-          const { deps, targetA, targetB, workspaceId } = ctx;
-          const register = (status: string) =>
-            registerTake(ctx.member.id, workspaceId, targetA, { status }, deps);
-          const one = await register("OK");
-          const two = await register("OK");
-          const retake = await register("RETAKE");
+        let rows = await setFavoriteTake(
+          ctx.member.id,
+          workspaceId,
+          targetA,
+          one.id,
+          deps,
+        );
+        assert.deepEqual(
+          rows.filter((take) => take.favorite).map((take) => take.id),
+          [one.id],
+        );
+        rows = await setFavoriteTake(
+          ctx.member.id,
+          workspaceId,
+          targetA,
+          two.id,
+          deps,
+        );
+        assert.deepEqual(
+          rows.filter((take) => take.favorite).map((take) => take.id),
+          [two.id],
+        );
+        // Mais de um OK convive; o preferido é um só.
+        assert.equal(rows.filter((take) => take.status === "OK").length, 2);
 
-          let rows = await setFavoriteTake(
-            ctx.member.id,
-            workspaceId,
-            targetA,
-            one.id,
-            deps,
-          );
-          assert.deepEqual(
-            rows.filter((take) => take.favorite).map((take) => take.id),
-            [one.id],
-          );
-          rows = await setFavoriteTake(
-            ctx.member.id,
-            workspaceId,
-            targetA,
-            two.id,
-            deps,
-          );
-          assert.deepEqual(
-            rows.filter((take) => take.favorite).map((take) => take.id),
-            [two.id],
-          );
-          // Mais de um OK convive; o preferido é um só.
-          assert.equal(rows.filter((take) => take.status === "OK").length, 2);
+        await assert.rejects(
+          setFavoriteTake(ctx.member.id, workspaceId, targetA, retake.id, deps),
+          ValidationError,
+        );
+        await assert.rejects(
+          setFavoriteTake(ctx.viewer.id, workspaceId, targetA, one.id, deps),
+          ForbiddenError,
+        );
+        await assert.rejects(
+          setFavoriteTake(ctx.owner.id, workspaceId, targetB, one.id, deps),
+          NotFoundError,
+        );
 
-          await assert.rejects(
-            setFavoriteTake(
-              ctx.member.id,
-              workspaceId,
-              targetA,
-              retake.id,
-              deps,
-            ),
-            ValidationError,
-          );
-          await assert.rejects(
-            setFavoriteTake(ctx.viewer.id, workspaceId, targetA, one.id, deps),
-            ForbiddenError,
-          );
-          await assert.rejects(
-            setFavoriteTake(ctx.owner.id, workspaceId, targetB, one.id, deps),
-            NotFoundError,
-          );
+        // Descartar o preferido tira a marca.
+        const dropped = await updateTake(
+          ctx.member.id,
+          workspaceId,
+          targetA,
+          two.id,
+          { status: "DISCARDED" },
+          deps,
+        );
+        assert.equal(dropped.favorite, false);
 
-          // Descartar o preferido tira a marca.
-          const dropped = await updateTake(
-            ctx.member.id,
-            workspaceId,
-            targetA,
-            two.id,
-            { status: "DISCARDED" },
-            deps,
-          );
-          assert.equal(dropped.favorite, false);
-
-          rows = await setFavoriteTake(
-            ctx.member.id,
-            workspaceId,
-            targetA,
-            null,
-            deps,
-          );
-          assert.equal(rows.filter((take) => take.favorite).length, 0);
-        } finally {
-          await ctx.cleanup();
-        }
-      });
+        rows = await setFavoriteTake(
+          ctx.member.id,
+          workspaceId,
+          targetA,
+          null,
+          deps,
+        );
+        assert.equal(rows.filter((take) => take.favorite).length, 0);
+      } finally {
+        await ctx.cleanup();
+      }
     });
   },
 );

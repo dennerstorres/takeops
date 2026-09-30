@@ -4912,3 +4912,12 @@ Workflow validado contra o schema do GitHub Actions (`@action-validator/cli`). N
 
 - Registrar a publicação como PUBLISHED não move a produção para PUBLISHED; é um passo manual. A spec não exige automático, mas vale decidir.
 - E2E no navegador, se desejado, precisa de tarefa própria (Playwright + login de teste só em desenvolvimento).
+
+## 2026-09-29 — OSS-007 — Correção: testes de take aninhados
+
+**Status:** DONE
+**Agente:** Claude
+
+- Primeira execução do CI: imagem Docker, lint, contraste e typecheck passaram; `npm test` falhou em `take.integration.test.ts`. Dois `it` estavam dentro do corpo do primeiro (chave fora do lugar), sem `await`, e eram cancelados pelo pai. Era a "falha no PGlite" registrada desde a ADR-031: problema do teste, não do banco.
+- Blocos desaninhados; os 3 testes rodam e passam no Postgres local.
+- Nenhum outro arquivo de teste tem `it` aninhado.
