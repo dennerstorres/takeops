@@ -71,7 +71,7 @@ export default async function ScenesPage({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <ProductionTabs project={project} active="Cenas" canEdit={canEdit} />
       <h1 className="sr-only">{t("tabs.scenes")}</h1>
       {scenes.length === 0 ? (

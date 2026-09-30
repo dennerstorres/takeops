@@ -50,7 +50,7 @@ export default async function ProductionPage({
 
   if (!project) {
     return (
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
+      <div className="flex w-full flex-col gap-3">
         <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("projects.one")}
         </h1>
@@ -103,7 +103,7 @@ export default async function ProductionPage({
   ] as const;
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <ProductionTabs project={project} canEdit={canEdit} />
       {/* Ficha técnica impressa: fios de 1px entre campos, rótulo estreito. */}
       <section className="flex flex-col gap-2">

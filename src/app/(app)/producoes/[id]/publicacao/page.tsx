@@ -75,7 +75,7 @@ export default async function PublicationsPage({
   });
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <ProductionTabs project={project} active="Publicação" canEdit={canEdit} />
       <h1 className="sr-only">{t("tabs.publication")}</h1>
       <p className="text-sm text-muted-foreground">

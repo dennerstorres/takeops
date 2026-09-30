@@ -6,7 +6,7 @@ export function SectionPage({
   description: string;
 }) {
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
+    <div className="flex w-full flex-col gap-2">
       <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
         {title}
       </h1>

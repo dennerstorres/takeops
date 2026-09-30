@@ -155,7 +155,7 @@ export default async function ShootsPage({
   });
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <ProductionTabs project={project} active="Gravação" canEdit={canEdit} />
       <h1 className="sr-only">{t("tabs.recording")}</h1>
       {projectChecklist.length > 0 ? (

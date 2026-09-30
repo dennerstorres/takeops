@@ -73,7 +73,7 @@ export default async function TemplatePage({
     checklists.find((item) => item.id === template.checklistTemplateId) ?? null;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <Link
         href="/templates"
         className="inline-flex min-h-11 items-center text-sm text-muted-foreground"

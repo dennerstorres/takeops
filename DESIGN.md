@@ -216,7 +216,7 @@ Neutros frios quase sem croma, cinco cartolinas dessaturadas que carregam a etap
 
 ## Layout
 
-- **Barra do quadro:** fina (48px), sticky, alumínio com borda inferior preta de 2px: marca impressa, navegação impressa (desktop `lg+`; menu lateral abaixo), avisos, conta. Conteúdo com `px-3 py-4`, `md:px-5 md:py-5`, largura total.
+- **Barra do quadro:** fina (48px), sticky, alumínio com borda inferior preta de 2px: marca impressa, navegação impressa (desktop `lg+`; menu lateral abaixo), avisos, conta. Conteúdo com `px-3 py-4`, `md:px-5 md:py-5`, largura total: nenhuma página limita a largura do conteúdo (sem `max-w-*` no contêiner da página).
 - **Barra de filtros:** faixa de alumínio acima do quadro com título + contagem, busca sempre visível, "Filtros" em painel (`details`), ação primária empurrada à direita (`ml-auto`). No celular a busca desce para a segunda linha.
 - **Grade da tira (`.strip-grid`):** colunas fixas compartilhadas entre cabeçalho impresso e tiras. Desktop (`≥40rem`): código 44px · nº 64px · título flexível · dono 144px · data 96px · meta 72px · [ação 136px] · ponta 8px, gap 10px. Celular: duas linhas de 44px — título em cima, dono/meta/data embaixo; nº some.
 - **Ritmo:** tiras separadas por 1px (a moldura aparece entre elas); moldura com 4px de respiro.

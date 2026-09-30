@@ -29,7 +29,7 @@ export default async function ChecklistsPage() {
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <Link
         href="/configuracoes"
         className="inline-flex min-h-11 items-center text-sm text-muted-foreground"

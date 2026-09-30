@@ -121,7 +121,7 @@ export default async function EditingPage({
     "inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline";
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <ProductionTabs project={project} active="Edição" canEdit={canEdit} />
       <h1 className="sr-only">{t("tabs.editing")}</h1>
       {canEdit ? (

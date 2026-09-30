@@ -47,7 +47,7 @@ export default async function IdeaPage({
 
   if (!idea) {
     return (
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
+      <div className="flex w-full flex-col gap-3">
         <h1 className="font-condensed text-xl font-semibold tracking-wider uppercase">
           {t("ideas.missingTitle")}
         </h1>
@@ -78,7 +78,7 @@ export default async function IdeaPage({
       : null;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       {/* A ideia aberta é a tira ampliada, na cartolina do status. */}
       <header
         className={cn(

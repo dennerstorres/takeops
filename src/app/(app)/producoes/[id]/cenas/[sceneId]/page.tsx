@@ -114,7 +114,7 @@ export default async function EditScenePage({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <ProductionTabs project={project} active="Cenas" canEdit />
       {/* A cena aberta é a tira ampliada, com o mesmo código e cor do quadro. */}
       <header

@@ -53,7 +53,7 @@ export default async function AssetsPage({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <Link
         href={`/producoes/${project.id}`}
         className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"

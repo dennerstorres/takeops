@@ -24,7 +24,7 @@ export default async function SettingsPage() {
   const { workspace, membership } = access.workspace;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <SectionPage
         title={t("settings.title")}
         description={t("settings.description")}
