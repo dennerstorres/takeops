@@ -4894,3 +4894,21 @@ Workflow validado contra o schema do GitHub Actions (`@action-validator/cli`). N
 
 - Conferir a primeira execução depois do push. Candidatos a falhar: `typecheck`/`build` (nunca rodaram completos no Windows do agente) e o build Docker.
 - Com Postgres real, dá para voltar a testar em paralelo as execuções do cron (HARDEN-009).
+
+## 2026-09-29 — MVP-001 — Fluxo completo E2E
+
+**Status:** DONE
+**Agente:** Claude
+
+- `mvp-flow.integration.test.ts`: ideia → produção (conversão) → roteiro → cena → plano → gravação → checklist por template, todo marcado → takes (RETAKE, OK, preferido) → edição → V1 → comentário → pedido de alteração (produção volta a EDITING) → V2 → aprovação (produção APPROVED) → publicação agendada e registrada → PUBLISHED. Confere Activity Log das etapas e avisos para o editor.
+- Decisão: fluxo pelos serviços, não pelo navegador. O projeto não tem Playwright, o login real (Google ou link por e-mail) não é automatizável sem provider de teste, e o app não sobe nesta máquina (SWC). O teste roda no `npm test` e no CI.
+- Passou de primeira; nenhum defeito encontrado no fluxo.
+
+### Testes
+
+`npm test` em Postgres local: 159 passam. Lint ok; `tsc` só com `LayoutProps` (SWC).
+
+### Observações para MVP-002
+
+- Registrar a publicação como PUBLISHED não move a produção para PUBLISHED; é um passo manual. A spec não exige automático, mas vale decidir.
+- E2E no navegador, se desejado, precisa de tarefa própria (Playwright + login de teste só em desenvolvimento).

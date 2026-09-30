@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 22 — Self-hosted (OSS-003, 004, 006 e 007 feitas)
+Fase 22 — Self-hosted (OSS-003..007 feitas); Fase MVP: MVP-001 feita
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-OSS-007 — CI no GitHub Actions
+MVP-001 — Fluxo completo E2E
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-MVP-001 — Fluxo completo E2E (antes: push e conferir a primeira execução do CI)
+MVP-002 — Revisão contra SPEC (antes: push e conferir a primeira execução do CI)
 ```
 
 ## Estado dos módulos

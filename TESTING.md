@@ -48,6 +48,8 @@ Usar somente em fluxos críticos.
 
 # 2. Fluxo E2E principal
 
+Coberto por `src/server/mvp-flow.integration.test.ts` (MVP-001), pelos serviços e no banco real. Não passa por navegador nem login.
+
 ```text
 Login
 ↓

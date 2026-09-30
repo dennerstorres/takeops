@@ -1909,7 +1909,7 @@ Login, criar workspace, fluxo curto, `/api/health`, migrations aplicadas, redepl
 
 ## MVP-001 — Fluxo completo E2E
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** HARDEN-007, UI-008, OSS-007
 
