@@ -5,12 +5,14 @@ function Field({
   id,
   label,
   error,
+  errorId,
   children,
   className,
 }: {
   id: string;
   label: ReactNode;
   error?: string;
+  errorId?: string;
   children: ReactNode;
   className?: string;
 }) {
@@ -21,7 +23,7 @@ function Field({
       </label>
       {children}
       {error ? (
-        <p className="text-sm text-destructive" role="alert">
+        <p id={errorId} className="text-sm text-destructive" role="alert">
           {error}
         </p>
       ) : null}

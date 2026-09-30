@@ -1721,7 +1721,7 @@ Redesenho mobile-first, uso com uma mão, alto contraste, sem regressão de flux
 
 ## UI-007 — Login, onboarding e convite
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-003, OSS-005
 

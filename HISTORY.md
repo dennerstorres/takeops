@@ -4735,4 +4735,20 @@ Lint. `record-view.test.ts` (5). `tsc --noEmit` continua só com `LayoutProps`, 
 
 - Textos fixos em português ficam na UI-008.
 - Sem inspeção no aparelho (375/390/430).
+
+## 2026-09-29 — UI-007 — Login, onboarding e convite
+
+**Status:** DONE
+**Agente:** Grok
+
+- Entrar, conferir o e-mail, criar workspace e aceitar convite passaram a usar o card do UI-003. Google e e-mail continuam ligados só ao que o env habilita.
+- O e-mail e o nome do workspace usam `Field`. O erro do nome segue associado ao campo. O convite inválido aparece como alerta, e o caminho de sucesso é um botão para o início.
+
+### Testes
+
+Lint. `tsc --noEmit` continua só com `LayoutProps`, porque o SWC nativo não carrega neste Windows. Dev server e navegador não abriram por isso.
+
+### Pendências
+
+- Textos fixos em português ficam na UI-008.
 - Textos fixos em português ficam na UI-008.

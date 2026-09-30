@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 21 — UI/UX (UI-006 feita; seguem UI-007 e UI-008)
+Fase 21 — UI/UX (UI-007 feita; segue UI-008)
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-UI-006 — Modo Gravação
+UI-007 — Login, onboarding e convite
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-UI-007 — Login, onboarding e convite
+UI-008 — QA visual e acessibilidade
 ```
 
 ## Estado dos módulos
