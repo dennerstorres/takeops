@@ -51,7 +51,7 @@ function blank(value: string) {
   return value ? value : null;
 }
 
-async function toWrite(
+export async function toSceneWrite(
   input: unknown,
   workspaceId: string,
   workspaces: WorkspaceRepository,
@@ -155,7 +155,7 @@ export async function createScene(
   const created = await scenes.create(
     project.workspaceId,
     project.id,
-    await toWrite(input, project.workspaceId, workspaces, "PLANNED"),
+    await toSceneWrite(input, project.workspaceId, workspaces, "PLANNED"),
   );
   if (
     !created ||
@@ -189,7 +189,7 @@ export async function duplicateScene(
   const created = await scenes.create(
     workspaceId,
     projectId,
-    await toWrite(
+    await toSceneWrite(
       {
         title: current.title,
         description: current.description ?? "",
@@ -244,7 +244,7 @@ export async function updateScene(
     workspaceId,
     projectId,
     current.id,
-    await toWrite(input, workspaceId, workspaces, status),
+    await toSceneWrite(input, workspaceId, workspaces, status),
   );
   if (
     !updated ||

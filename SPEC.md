@@ -709,6 +709,16 @@ O roteiro sai e entra do app como um arquivo `.md` (ADR-046). O mesmo formato se
 
 Exportar e importar o mesmo arquivo gera as mesmas cenas e planos.
 
+### Importação
+
+- Aba Roteiro → Importar roteiro: colar o texto ou escolher o `.md`. Só membro que edita (não leitor).
+- Prévia antes de gravar: cenas e planos numerados como vão ficar, duração somada (cenas existentes + importadas) contra a duração da produção (ou a do arquivo, se a produção não tem), avisos do parser por linha e campos inválidos por cena/plano. Com campo inválido não importa.
+- Grava numa transação: cenas ao fim da lista, planos na ordem do arquivo, tudo como Planejado e sem quem fala.
+- Produção com cenas: exige confirmar que as novas entram depois. Nada é sobrescrito.
+- Roteiro: gancho, mensagem e chamada só preenchem campo vazio; notas do arquivo e trechos à parte somam às notas existentes (teto de 4000 caracteres vale).
+- Tetos por arquivo: 200 mil caracteres, 200 cenas, 1000 planos.
+- Gera atividade `SCRIPT_IMPORTED` com o número de cenas e planos.
+
 ---
 
 # 19. Cenas

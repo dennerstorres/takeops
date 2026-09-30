@@ -2114,7 +2114,7 @@ Definir o formato markdown que o app lê e escreve, e deixar quem escreve o rote
 
 ## SCRIPT-004 — Importar roteiro
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** SCRIPT-003
 

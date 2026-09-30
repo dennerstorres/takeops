@@ -5154,3 +5154,12 @@ Status: DONE
 Arquivos: `src/server/script-template.ts`, `src/server/script-markdown.test.ts`.
 Resumo: o modelo para baixar e as fixtures ainda seguiam o tema do roteiro de cliente que originou a fase. Trocados por histórias neutras (horta na varanda; oficina de bicicleta), mesma estrutura e mesmos casos cobertos.
 Testes: `script-markdown.test.ts` (6/6), `eslint` limpo.
+
+## 2026-09-30 — SCRIPT-004 — Importar roteiro
+
+Status: DONE
+Arquivos: `src/server/script-import.ts`, `src/server/script-import-{repository,prisma,actions}.ts`, `src/server/script-import{,.integration}.test.ts`, `src/components/script/script-import-form.tsx`, `src/app/(app)/producoes/[id]/roteiro/{page.tsx,importar/page.tsx}`, `src/server/{scene,script,activity-labels}.ts`, `messages/*.json`, `package.json`, `SPEC.md`, `PLAN.md`, `STATUS.md`.
+Resumo: tela Importar roteiro (colar ou arquivo .md) com prévia calculada no servidor: cenas e planos numerados, duração somada contra a meta, avisos por linha e campos inválidos por cena/plano. Importar recalcula a prévia e grava roteiro, cenas e planos numa transação (timeout 30 s), ao fim da lista; produção com cenas exige confirmação. Campos do roteiro já preenchidos não são sobrescritos; notas e trechos à parte somam. Atividade `SCRIPT_IMPORTED`. `toSceneWrite` e `toScriptWrite` passaram a ser exportados para a importação usar a mesma validação dos formulários.
+Decisões: sem ADR nova; regras de junção registradas no SPEC §18.1.
+Testes: `script-import.test.ts` (7, fakes) e `script-import.integration.test.ts` (Postgres 17 em Docker local); `npm test` completo com banco: 184/184. `eslint` limpo. O roteiro real que originou a fase (fora do repositório) foi lido localmente: 11 cenas, 11 planos, sem aviso, notas com 3681 de 4000 caracteres. `tsc` só com o erro de `LayoutProps` do `next typegen` que não roda nesta máquina; build e tela não testados no navegador pelo mesmo motivo.
+Pendências: conferir a tela no app publicado. Roteiro com seções longas pode passar do teto de 4000 das notas; a prévia mostra e bloqueia.

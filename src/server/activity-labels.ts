@@ -13,6 +13,7 @@ export const activityActions = [
   "VERSION_APPROVED",
   "PUBLICATION_SCHEDULED",
   "PUBLICATION_RECORDED",
+  "SCRIPT_IMPORTED",
 ] as const;
 
 export type ActivityAction = (typeof activityActions)[number];
@@ -57,5 +58,7 @@ export function describeActivity(
     hasPlatform: platform ? "yes" : "no",
     platform: platform ?? "",
     status: text(metadata, "status") ?? "other",
+    scenes: text(metadata, "scenes") ?? "0",
+    shots: text(metadata, "shots") ?? "0",
   });
 }

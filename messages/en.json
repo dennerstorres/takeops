@@ -87,6 +87,7 @@
     "VERSION_APPROVED": "{actor} approved the video{hasVersion, select, yes { ({version})} other {}}.",
     "PUBLICATION_SCHEDULED": "{hasPlatform, select, yes {{actor} scheduled the publication on {platform}.} other {{actor} scheduled a publication.}}",
     "PUBLICATION_RECORDED": "{actor} recorded {status, select, PUBLISHED {the publication} FAILED {a failed publication} CANCELED {the cancellation of the publication} other {the publication result}}{hasPlatform, select, yes { on {platform}} other {}}.",
+    "SCRIPT_IMPORTED": "{actor} imported the script ({scenes, plural, one {# scene} other {# scenes}}, {shots, plural, one {# shot} other {# shots}}).",
     "emptyTitle": "No activity",
     "emptyDescription": "Creation, stage changes, versions, approvals, and publications show up here."
   },
@@ -622,6 +623,30 @@
     "editScenes": "Edit scenes",
     "downloadTemplate": "Download script template",
     "exportScript": "Export script"
+  },
+  "scriptImport": {
+    "title": "Import script",
+    "intro": "Paste the script in markdown or pick a .md file. Nothing is saved until you confirm.",
+    "file": ".md file",
+    "text": "Script in markdown",
+    "preview": "Preview",
+    "import": "Import {scenes, plural, one {# scene} other {# scenes}}",
+    "summary": "{scenes, plural, one {# scene} other {# scenes}} · {shots, plural, one {# shot} other {# shots}}",
+    "total": "Total duration {total}",
+    "target": " · target {target}",
+    "overTarget": "Goes over the production duration by {over}.",
+    "problemsTitle": "Fix the file before importing",
+    "whereScript": "Script",
+    "whereScene": "Scene {scene}",
+    "whereShot": "Shot {scene}.{shot}",
+    "warningsTitle": "Warnings",
+    "warning": "Line {line}: {field} \"{value}\" {kind, select, badDuration {is not a duration} badTakes {is not a number of takes} other {was not recognized}}.",
+    "unnamedShot": "Unnamed shot",
+    "scriptFields": "Script fields that will be filled: {fields}.",
+    "sections": "Passages that go to the notes: {titles}.",
+    "untitledSection": "text before the first scene",
+    "confirmAppend": "This production already has {count, plural, one {# scene} other {# scenes}}. Add the new ones after them.",
+    "open": "Import script"
   },
   "shots": {
     "title": "Shots",

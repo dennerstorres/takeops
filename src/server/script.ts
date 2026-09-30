@@ -30,7 +30,10 @@ function merge(value: string | undefined, current: string | null) {
   return value ? value : null;
 }
 
-function toWrite(input: unknown, current: ScriptWrite | null): ScriptWrite {
+export function toScriptWrite(
+  input: unknown,
+  current: ScriptWrite | null,
+): ScriptWrite {
   const data = parseInput(scriptSchema, input);
   return {
     hook: merge(data.hook, current?.hook ?? null),
@@ -82,7 +85,7 @@ export async function saveScript(
   const saved = await scripts.save(
     project.workspaceId,
     project.id,
-    toWrite(input, current),
+    toScriptWrite(input, current),
   );
   if (!saved || saved.videoProjectId !== project.id) throw new NotFoundError();
   return saved;

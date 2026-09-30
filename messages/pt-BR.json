@@ -87,6 +87,7 @@
     "VERSION_APPROVED": "{actor} aprovou o vídeo{hasVersion, select, yes { da {version}} other {}}.",
     "PUBLICATION_SCHEDULED": "{hasPlatform, select, yes {{actor} agendou a publicação em {platform}.} other {{actor} agendou uma publicação.}}",
     "PUBLICATION_RECORDED": "{actor} registrou {status, select, PUBLISHED {a publicação} FAILED {falha na publicação} CANCELED {o cancelamento da publicação} other {o resultado da publicação}}{hasPlatform, select, yes { em {platform}} other {}}.",
+    "SCRIPT_IMPORTED": "{actor} importou o roteiro ({scenes, plural, one {# cena} other {# cenas}}, {shots, plural, one {# plano} other {# planos}}).",
     "emptyTitle": "Nenhuma atividade",
     "emptyDescription": "Criação, mudanças de etapa, versões, aprovações e publicações aparecem aqui."
   },
@@ -622,6 +623,30 @@
     "editScenes": "Editar cenas",
     "downloadTemplate": "Baixar modelo de roteiro",
     "exportScript": "Exportar roteiro"
+  },
+  "scriptImport": {
+    "title": "Importar roteiro",
+    "intro": "Cole o roteiro em markdown ou escolha um arquivo .md. Nada é gravado antes de você confirmar.",
+    "file": "Arquivo .md",
+    "text": "Roteiro em markdown",
+    "preview": "Pré-visualizar",
+    "import": "Importar {scenes, plural, one {# cena} other {# cenas}}",
+    "summary": "{scenes, plural, one {# cena} other {# cenas}} · {shots, plural, one {# plano} other {# planos}}",
+    "total": "Duração somada {total}",
+    "target": " · meta {target}",
+    "overTarget": "Passa da duração da produção em {over}.",
+    "problemsTitle": "Corrija no arquivo antes de importar",
+    "whereScript": "Roteiro",
+    "whereScene": "Cena {scene}",
+    "whereShot": "Plano {scene}.{shot}",
+    "warningsTitle": "Avisos",
+    "warning": "Linha {line}: {field} \"{value}\" {kind, select, badDuration {não é uma duração} badTakes {não é um número de takes} other {não foi reconhecido}}.",
+    "unnamedShot": "Plano sem nome",
+    "scriptFields": "Campos do roteiro que serão preenchidos: {fields}.",
+    "sections": "Trechos que vão para as notas: {titles}.",
+    "untitledSection": "texto antes da primeira cena",
+    "confirmAppend": "A produção já tem {count, plural, one {# cena} other {# cenas}}. Adicionar as novas depois delas.",
+    "open": "Importar roteiro"
   },
   "shots": {
     "title": "Shots",

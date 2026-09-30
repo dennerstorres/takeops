@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SCRIPT-003 — Formato de roteiro e modelo de exemplo
+SCRIPT-004 — Importar roteiro
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-SCRIPT-004 — Importar roteiro (P1)
+CAST-001 — Elenco da produção (P2)
 ```
 
 ## Estado dos módulos
