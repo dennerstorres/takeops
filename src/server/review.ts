@@ -16,6 +16,8 @@ import { requireRole } from "./workspace.ts";
 // Leitor não comenta: a spec condiciona a uma configuração do workspace que
 // ainda não existe (ADR-032).
 const reviewers = ["OWNER", "ADMIN", "MEMBER"] as const;
+// Leitor comenta, mas não resolve nem altera conteúdo (ADR-044).
+const commenters = ["OWNER", "ADMIN", "MEMBER", "VIEWER"] as const;
 
 // Um dia inteiro cobre qualquer vídeo que passe por revisão aqui.
 export const MAX_TIMESTAMP_SECONDS = 24 * 60 * 60 - 1;
@@ -91,7 +93,7 @@ export async function createReviewComment(
   input: unknown,
   deps: ReviewDeps,
 ) {
-  await requireRole(userId, workspaceId, reviewers, deps.workspaces);
+  await requireRole(userId, workspaceId, commenters, deps.workspaces);
   const data = parseInput(commentSchema, input);
   const scope = await reviewScope(userId, workspaceId, target, deps);
   const created = await deps.reviews.create(scope, {

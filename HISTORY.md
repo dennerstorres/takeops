@@ -4997,3 +4997,16 @@ Revisão de leitura; nenhuma alteração de código nesta tarefa.
 ### Testes
 
 Novo caso em `publication.integration.test.ts` (falha não move, publicar move e registra atividade uma vez, arquivada fica). `npm test`: 164 passam. Lint ok; `tsc` só com `LayoutProps`.
+
+## 2026-09-30 — REVIEW-005 — Leitor comenta na revisão
+
+**Status:** DONE
+**Agente:** Claude
+
+- `createReviewComment` aceita VIEWER (`commenters` em `review.ts`); resolver continua com OWNER, ADMIN e MEMBER. Aviso de comentário sai igual para quem acompanha a produção.
+- Tela de revisão mostra o formulário de comentário para todos; resolver, pedir aprovação e decidir continuam escondidos do leitor.
+- SPEC §7.1 (VIEWER) atualizada: "comentar na revisão (ADR-044)".
+
+### Testes
+
+`review.integration.test.ts`: leitor cria comentário e é barrado ao resolver. `npm test`: 164 passam. Lint ok; `tsc` só com `LayoutProps`.

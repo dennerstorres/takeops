@@ -274,9 +274,8 @@ export default async function ReviewPage({
               />
             ) : null}
           </section>
-          {canEdit ? (
-            <ReviewCommentForm projectId={project.id} versionId={current.id} />
-          ) : null}
+          {/* Leitor também comenta (ADR-044). */}
+          <ReviewCommentForm projectId={project.id} versionId={current.id} />
           <section className="space-y-2">
             <h2 className="text-base font-medium">
               {t("review.openComments")}

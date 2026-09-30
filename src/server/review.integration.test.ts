@@ -175,12 +175,22 @@ describe(
             JSON.stringify(input),
           );
         }
+        // Leitor comenta (ADR-044), mas não resolve.
+        const byViewer = await createReviewComment(
+          viewer.id,
+          workspaceId,
+          target,
+          { text: "leitor" },
+          deps,
+        );
+        assert.equal(byViewer.authorId, viewer.id);
         await assert.rejects(
-          createReviewComment(
+          setReviewCommentResolved(
             viewer.id,
             workspaceId,
             target,
-            { text: "leitor" },
+            byViewer.id,
+            { resolved: true },
             deps,
           ),
           ForbiddenError,

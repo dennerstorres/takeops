@@ -1998,7 +1998,7 @@ ADR-044. `recordPublicationOutcome` com PUBLISHED move a produção para PUBLISH
 
 ## REVIEW-005 — Leitor comenta na revisão
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** REVIEW-003
 

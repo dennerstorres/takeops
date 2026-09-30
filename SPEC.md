@@ -251,7 +251,7 @@ Pode:
 - visualizar calendário;
 - visualizar roteiros;
 - visualizar versões;
-- comentar, se permitido pela configuração.
+- comentar na revisão (ADR-044).
 
 Não pode editar conteúdo operacional.
 

@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-PUB-005 — Publicação registrada publica a produção
+REVIEW-005 — Leitor comenta na revisão
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-REVIEW-005 — Leitor comenta na revisão (depois UI-009, MVP-003)
+UI-009 — Textos fixos restantes e ajustes da revisão (depois MVP-003)
 ```
 
 ## Estado dos módulos
