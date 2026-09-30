@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { stripPhase } from "./strip-phase.ts";
+import { scenePhase, sceneTip, stripPhase } from "./strip-phase.ts";
 
 describe("stripPhase", () => {
   it("agrupa as etapas da produção em cinco cartolinas", () => {
@@ -19,5 +19,21 @@ describe("stripPhase", () => {
 
   it("cai na cartolina branca quando a etapa é desconhecida", () => {
     assert.equal(stripPhase("OUTRA"), "plan");
+  });
+});
+
+describe("scenePhase e sceneTip", () => {
+  it("põe a cena no set quando está pronta ou precisa refazer", () => {
+    assert.equal(scenePhase("PLANNED"), "plan");
+    assert.equal(scenePhase("READY"), "set");
+    assert.equal(scenePhase("NEEDS_RETAKE"), "set");
+    assert.equal(scenePhase("RECORDED"), "done");
+    assert.equal(scenePhase("DISCARDED"), "shelf");
+  });
+
+  it("marca refazer como pendência e descartada como parada", () => {
+    assert.equal(sceneTip("NEEDS_RETAKE"), "pending");
+    assert.equal(sceneTip("DISCARDED"), "idle");
+    assert.equal(sceneTip("RECORDED"), "ok");
   });
 });

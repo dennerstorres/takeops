@@ -577,7 +577,8 @@
       "stage": "Stage",
       "searchPlaceholder": "Search by title",
       "moreFilters": "Filters"
-    }
+    },
+    "sheet": "Details"
   },
   "scenes": {
     "emptyTitle": "No scenes",
@@ -594,7 +595,18 @@
     "camera": "Camera",
     "save": "Save scene",
     "add": "Add scene",
-    "deleteTitle": "Delete this scene?"
+    "deleteTitle": "Delete this scene?",
+    "board": {
+      "number": "No.",
+      "code": "S{order}",
+      "shots": "Shots",
+      "shotCount": "{count, plural, =0 {no shots} one {# shot} other {# shots}}",
+      "shotsOf": "Shots of {title}",
+      "moveUp": "Move {title} up",
+      "moveDown": "Move {title} down",
+      "duplicate": "Duplicate {title}",
+      "delete": "Delete {title}"
+    }
   },
   "script": {
     "hook": "Hook",

@@ -8,6 +8,7 @@ import {
   StripBoard,
   StripEmpty,
   StripGroup,
+  stripPhaseClass,
 } from "@/components/ui/strip";
 import { stripPhase, type StripTip } from "@/components/ui/strip-phase";
 import { cn } from "@/lib/utils";
@@ -34,14 +35,6 @@ type ProjectCard = {
   status: string;
   statusCode: string;
 };
-
-const phaseSwatch = {
-  plan: "bg-strip-plan",
-  set: "bg-strip-set",
-  post: "bg-strip-post",
-  done: "bg-strip-done",
-  shelf: "bg-strip-shelf",
-} as const;
 
 // Cor da legenda de cada contador: a mesma cartolina da etapa que ele conta.
 const counterStatus: Record<string, string> = {
@@ -148,7 +141,7 @@ export default async function Home() {
                 aria-hidden="true"
                 className={cn(
                   "size-3 rounded-[2px] ring-1 ring-frame-foreground/40",
-                  phaseSwatch[stripPhase(counterStatus[item.key] ?? "")],
+                  stripPhaseClass[stripPhase(counterStatus[item.key] ?? "")],
                 )}
               />
               <dt>{t(`dashboard.counters.${item.key}`)}</dt>

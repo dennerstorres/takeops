@@ -6,7 +6,7 @@ function ItemList({ className, ...props }: React.ComponentProps<"ul">) {
     <ul
       data-slot="item-list"
       className={cn(
-        "flex flex-col divide-y rounded-xl border bg-card",
+        "flex flex-col divide-y rounded-md border bg-card",
         className,
       )}
       {...props}
@@ -18,7 +18,7 @@ function ItemListRow({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
       data-slot="item-list-row"
-      className={cn("flex min-h-11 items-center gap-3 px-4 py-3", className)}
+      className={cn("flex min-h-11 items-center gap-3 px-3 py-2", className)}
       {...props}
     />
   );

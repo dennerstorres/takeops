@@ -121,14 +121,9 @@ export default async function EditingPage({
     "inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline";
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <ProductionTabs projectId={project.id} active="Edição" />
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">
-          {t("tabs.editing")}
-        </h1>
-        <p className="text-sm text-muted-foreground">{project.title}</p>
-      </header>
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+      <ProductionTabs project={project} active="Edição" canEdit={canEdit} />
+      <h1 className="sr-only">{t("tabs.editing")}</h1>
       {canEdit ? (
         <EditingForm
           people={people.map(({ id: personId, label }) => ({
@@ -211,7 +206,9 @@ export default async function EditingPage({
         </dl>
       )}
       <section id="versoes" className="flex flex-col gap-3 border-t pt-6">
-        <h2 className="text-base font-medium">{t("editing.versions")}</h2>
+        <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+          {t("editing.versions")}
+        </h2>
         {canEdit ? (
           <details className={cn(surfaceClass, "p-3")}>
             <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">

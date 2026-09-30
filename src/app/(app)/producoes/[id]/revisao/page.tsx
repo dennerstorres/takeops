@@ -173,14 +173,9 @@ export default async function ReviewPage({
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <ProductionTabs projectId={project.id} active="Revisão" />
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">
-          {t("tabs.review")}
-        </h1>
-        <p className="text-sm text-muted-foreground">{project.title}</p>
-      </header>
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+      <ProductionTabs project={project} active="Revisão" canEdit={canEdit} />
+      <h1 className="sr-only">{t("tabs.review")}</h1>
       {current === null ? (
         <EmptyState
           title={t("review.emptyTitle")}
@@ -194,7 +189,7 @@ export default async function ReviewPage({
                 ? t("review.currentVersion")
                 : t("review.previousVersion")}
             </p>
-            <h2 className="text-lg font-medium">
+            <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
               {versionLabel(current.versionNumber)}
               {current.title ? ` · ${current.title}` : null}
             </h2>
@@ -225,7 +220,9 @@ export default async function ReviewPage({
             </div>
           </section>
           <section className={cn(surfaceClass, "space-y-2 p-3")}>
-            <h2 className="text-base font-medium">{t("review.approval")}</h2>
+            <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+              {t("review.approval")}
+            </h2>
             <p className="flex flex-wrap items-center gap-2 text-sm">
               {approval ? (
                 <StatusBadge status={approval.status}>
@@ -277,7 +274,7 @@ export default async function ReviewPage({
           {/* Leitor também comenta (ADR-044). */}
           <ReviewCommentForm projectId={project.id} versionId={current.id} />
           <section className="space-y-2">
-            <h2 className="text-base font-medium">
+            <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
               {t("review.openComments")}
               <span className="font-normal text-muted-foreground">
                 {" "}
@@ -305,7 +302,9 @@ export default async function ReviewPage({
             </details>
           ) : null}
           <section className="space-y-2 border-t pt-6">
-            <h2 className="text-base font-medium">{t("review.history")}</h2>
+            <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+              {t("review.history")}
+            </h2>
             <ol className="flex flex-col gap-1">
               {versions.map((version) => (
                 <li key={version.id}>

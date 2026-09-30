@@ -27,3 +27,24 @@ const phaseByStage: Record<string, StripPhase> = {
 export function stripPhase(stage: string): StripPhase {
   return phaseByStage[stage] ?? "plan";
 }
+
+// Cenas e planos (os status do plano são um subconjunto): planejada é branca; pronta, gravando e refazer vão para
+// o set (amarela); gravada fecha; descartada sai de cena.
+const phaseByScene: Record<string, StripPhase> = {
+  PLANNED: "plan",
+  READY: "set",
+  RECORDING: "set",
+  NEEDS_RETAKE: "set",
+  RECORDED: "done",
+  DISCARDED: "shelf",
+};
+
+export function scenePhase(status: string): StripPhase {
+  return phaseByScene[status] ?? "plan";
+}
+
+export function sceneTip(status: string): StripTip {
+  if (status === "NEEDS_RETAKE") return "pending";
+  if (status === "DISCARDED") return "idle";
+  return "ok";
+}

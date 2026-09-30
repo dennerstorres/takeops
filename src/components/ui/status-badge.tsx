@@ -29,7 +29,7 @@ function StatusBadge({
     <span
       data-slot="status-badge"
       className={cn(
-        "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-[2px] px-1.5 py-px font-condensed text-xs font-semibold tracking-wide uppercase",
         toneClass[resolved],
         className,
       )}

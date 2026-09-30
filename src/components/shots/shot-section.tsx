@@ -1,10 +1,15 @@
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { DeleteShotButton } from "@/components/shots/delete-shot-button";
 import { ShotForm } from "@/components/shots/shot-form";
 import { TakeList } from "@/components/takes/take-list";
-import { Button } from "@/components/ui/button";
 import { surfaceClass } from "@/components/ui/card";
-import { StatusBadge } from "@/components/ui/status-badge";
+import {
+  stripIconButton,
+  stripPhaseClass,
+  stripTipClass,
+} from "@/components/ui/strip";
+import { scenePhase, sceneTip } from "@/components/ui/strip-phase";
 import { cn } from "@/lib/utils";
 import { moveShotAction } from "@/server/shot-actions";
 import {
@@ -31,30 +36,94 @@ export async function ShotSection({
   const t = await getTranslations();
   return (
     <section id="shots" className="space-y-3">
-      <h2 className="text-base font-medium">{t("shots.title")}</h2>
+      <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+        {t("shots.title")}
+      </h2>
       {shots.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("shots.empty")}</p>
       ) : (
         <ol className="flex flex-col gap-3">
           {shots.map((shot, index) => (
-            <li key={shot.id} className={cn(surfaceClass, "p-3")}>
-              <div className="min-w-0 space-y-1">
-                <p className="text-sm font-medium">
+            <li
+              key={shot.id}
+              className="overflow-hidden rounded-md border bg-card"
+            >
+              {/* Cabeça do plano como tira: cor e ponta pelo status. */}
+              <div
+                className={cn(
+                  "flex min-h-11 items-center gap-2 border-b border-strip-ink/10 pl-2 text-strip-ink sm:min-h-strip",
+                  stripPhaseClass[scenePhase(shot.status)],
+                )}
+              >
+                <span className="shrink-0 font-condensed text-sm font-semibold tracking-wide uppercase">
                   {shotDisplayName(t, shot.name, index)}
-                </p>
-                <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                  <span>{shotSummary(t, shot)}</span>
-                  <StatusBadge status={shot.status}>
-                    {shotStatusLabel(t, shot.status)}
-                  </StatusBadge>
-                </p>
-                {shot.description ? (
-                  <p className="text-sm whitespace-pre-wrap">
-                    {shot.description}
-                  </p>
+                </span>
+                <span className="min-w-0 flex-1 truncate font-condensed text-xs text-strip-ink-muted">
+                  {shotSummary(t, shot)}
+                </span>
+                <span className="shrink-0 font-condensed text-xs font-semibold tracking-wide uppercase">
+                  {shotStatusLabel(t, shot.status)}
+                </span>
+                {canEdit ? (
+                  <span className="flex shrink-0">
+                    <form action={moveShotAction} className="contents">
+                      <input type="hidden" name="projectId" value={projectId} />
+                      <input type="hidden" name="sceneId" value={sceneId} />
+                      <input type="hidden" name="shotId" value={shot.id} />
+                      <button
+                        type="submit"
+                        name="direction"
+                        value="up"
+                        disabled={index === 0}
+                        aria-label={t("scenes.board.moveUp", {
+                          title: shotDisplayName(t, shot.name, index),
+                        })}
+                        title={t("common.moveUp")}
+                        className={stripIconButton}
+                      >
+                        <ArrowUp aria-hidden="true" />
+                      </button>
+                      <button
+                        type="submit"
+                        name="direction"
+                        value="down"
+                        disabled={index === shots.length - 1}
+                        aria-label={t("scenes.board.moveDown", {
+                          title: shotDisplayName(t, shot.name, index),
+                        })}
+                        title={t("common.moveDown")}
+                        className={stripIconButton}
+                      >
+                        <ArrowDown aria-hidden="true" />
+                      </button>
+                    </form>
+                    <DeleteShotButton
+                      projectId={projectId}
+                      sceneId={sceneId}
+                      shotId={shot.id}
+                      compactLabel={t("scenes.board.delete", {
+                        title: shotDisplayName(t, shot.name, index),
+                      })}
+                    />
+                  </span>
                 ) : null}
+                <span
+                  className={cn(
+                    "mr-1.5 h-4 w-2 shrink-0",
+                    stripTipClass[sceneTip(shot.status)],
+                  )}
+                >
+                  <span className="sr-only">
+                    {t(`strip.tip.${sceneTip(shot.status)}`)}
+                  </span>
+                </span>
               </div>
-              <div className="mt-3 border-t pt-3">
+              {shot.description ? (
+                <p className="px-3 pt-3 text-sm whitespace-pre-wrap">
+                  {shot.description}
+                </p>
+              ) : null}
+              <div className="px-3 py-3">
                 <TakeList
                   projectId={projectId}
                   sceneId={sceneId}
@@ -66,37 +135,7 @@ export async function ShotSection({
                 />
               </div>
               {canEdit ? (
-                <div className="mt-3 space-y-3">
-                  <div className="flex flex-wrap gap-2">
-                    <form action={moveShotAction} className="flex gap-2">
-                      <input type="hidden" name="projectId" value={projectId} />
-                      <input type="hidden" name="sceneId" value={sceneId} />
-                      <input type="hidden" name="shotId" value={shot.id} />
-                      <Button
-                        type="submit"
-                        name="direction"
-                        value="up"
-                        variant="outline"
-                        disabled={index === 0}
-                      >
-                        {t("common.moveUp")}
-                      </Button>
-                      <Button
-                        type="submit"
-                        name="direction"
-                        value="down"
-                        variant="outline"
-                        disabled={index === shots.length - 1}
-                      >
-                        {t("common.moveDown")}
-                      </Button>
-                    </form>
-                    <DeleteShotButton
-                      projectId={projectId}
-                      sceneId={sceneId}
-                      shotId={shot.id}
-                    />
-                  </div>
+                <div className="border-t px-3 py-1">
                   <details>
                     <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm">
                       {t("shots.edit")}

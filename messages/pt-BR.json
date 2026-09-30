@@ -577,7 +577,8 @@
       "stage": "Etapa",
       "searchPlaceholder": "Buscar por título",
       "moreFilters": "Filtros"
-    }
+    },
+    "sheet": "Ficha"
   },
   "scenes": {
     "emptyTitle": "Nenhuma cena",
@@ -594,7 +595,18 @@
     "camera": "Câmera",
     "save": "Salvar cena",
     "add": "Adicionar cena",
-    "deleteTitle": "Excluir esta cena?"
+    "deleteTitle": "Excluir esta cena?",
+    "board": {
+      "number": "Nº",
+      "code": "C{order}",
+      "shots": "Planos",
+      "shotCount": "{count, plural, =0 {sem planos} one {# plano} other {# planos}}",
+      "shotsOf": "Planos de {title}",
+      "moveUp": "Subir {title}",
+      "moveDown": "Descer {title}",
+      "duplicate": "Duplicar {title}",
+      "delete": "Excluir {title}"
+    }
   },
   "script": {
     "hook": "Gancho",

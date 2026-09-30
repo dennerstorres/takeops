@@ -76,14 +76,13 @@ export default async function ActivityPage({
   });
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <ProductionTabs projectId={project.id} active="Atividade" />
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">
-          {t("tabs.activity")}
-        </h1>
-        <p className="text-sm text-muted-foreground">{project.title}</p>
-      </header>
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+      <ProductionTabs
+        project={project}
+        active="Atividade"
+        canEdit={access.workspace.membership.role !== "VIEWER"}
+      />
+      <h1 className="sr-only">{t("tabs.activity")}</h1>
       {rows.length === 0 ? (
         <EmptyState
           title={t("activity.emptyTitle")}

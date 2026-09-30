@@ -1,17 +1,17 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const surfaceClass = "rounded-xl border bg-card text-card-foreground shadow-sm";
+const surfaceClass = "rounded-md border bg-card text-card-foreground";
 
 const surfaceLinkClass =
-  "flex min-h-11 rounded-xl border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none";
+  "flex min-h-11 rounded-md border bg-card text-card-foreground transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring";
 
 function Card({ className, ...props }: React.ComponentProps<"section">) {
   return (
     <section
       data-slot="card"
       className={cn(
-        "rounded-xl border bg-card p-4 text-card-foreground shadow-sm",
+        "rounded-md border bg-card p-3 text-card-foreground sm:p-4",
         className,
       )}
       {...props}
@@ -33,7 +33,10 @@ function CardTitle({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <h2
       data-slot="card-title"
-      className={cn("text-lg font-medium", className)}
+      className={cn(
+        "font-condensed text-sm font-semibold tracking-wider uppercase",
+        className,
+      )}
       {...props}
     />
   );

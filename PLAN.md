@@ -2038,7 +2038,7 @@ Dashboard em tiras: gravações próximas, em andamento, revisão e aprovação,
 
 ## UI-013 — Redesign: página da produção, roteiro e cenas
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-010
 

@@ -155,14 +155,9 @@ export default async function ShootsPage({
   });
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <ProductionTabs projectId={project.id} active="Gravação" />
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">
-          {t("tabs.recording")}
-        </h1>
-        <p className="text-sm text-muted-foreground">{project.title}</p>
-      </header>
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+      <ProductionTabs project={project} active="Gravação" canEdit={canEdit} />
+      <h1 className="sr-only">{t("tabs.recording")}</h1>
       {projectChecklist.length > 0 ? (
         <details className={cn(surfaceClass, "p-3")}>
           <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
@@ -309,7 +304,9 @@ export default async function ShootsPage({
       )}
       {canEdit ? (
         <section className="space-y-3">
-          <h2 className="text-base font-medium">{t("record.schedule")}</h2>
+          <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+            {t("record.schedule")}
+          </h2>
           <ShootForm
             timezone={timezone}
             values={{

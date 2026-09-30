@@ -75,16 +75,12 @@ export default async function PublicationsPage({
   });
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <ProductionTabs projectId={project.id} active="Publicação" />
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">
-          {t("tabs.publication")}
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {t("publication.intro", { title: project.title })}
-        </p>
-      </header>
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+      <ProductionTabs project={project} active="Publicação" canEdit={canEdit} />
+      <h1 className="sr-only">{t("tabs.publication")}</h1>
+      <p className="text-sm text-muted-foreground">
+        {t("publication.intro", { title: project.title })}
+      </p>
       {canEdit ? (
         <details className={cn(surfaceClass, "p-3")}>
           <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">

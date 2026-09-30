@@ -7,10 +7,8 @@ import {
 } from "@/components/projects/participant-form";
 import { ProductionTabs } from "@/components/projects/production-tabs";
 import { buttonVariants } from "@/components/ui/button";
-import { surfaceClass } from "@/components/ui/card";
 import { ItemList, ItemListRow } from "@/components/ui/item-list";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { NotFoundError } from "@/server/errors";
@@ -105,44 +103,39 @@ export default async function ProductionPage({
   ] as const;
 
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-      <header className="flex flex-wrap items-start justify-between gap-3">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-medium tracking-tight">
-            {overview.title}
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            {t("projects.progress", { progress: overview.progress })}
-          </p>
-        </div>
-        {canEdit ? (
-          <Link
-            href={`/producoes/${project.id}/editar`}
-            className={buttonVariants({ variant: "outline" })}
-          >
-            {t("common.edit")}
-          </Link>
-        ) : null}
-      </header>
-      <ProductionTabs projectId={project.id} />
-      <dl className="grid gap-3 sm:grid-cols-2">
-        {facts.map(([id, label, value]) => (
-          <div key={id} className={cn(surfaceClass, "p-3")}>
-            <dt className="text-sm text-muted-foreground">{label}</dt>
-            <dd className="text-sm font-medium">
-              {id === "status" ? (
-                <StatusBadge status={project.status}>
-                  {value ?? t("common.notSet")}
-                </StatusBadge>
-              ) : (
-                (value ?? t("common.notSet"))
-              )}
-            </dd>
-          </div>
-        ))}
-      </dl>
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-4">
+      <ProductionTabs project={project} canEdit={canEdit} />
+      {/* Ficha técnica impressa: fios de 1px entre campos, rótulo estreito. */}
       <section className="flex flex-col gap-2">
-        <h2 className="text-lg font-medium">{t("projects.links")}</h2>
+        <h2 className="flex items-baseline justify-between gap-3 font-condensed text-sm font-semibold tracking-wider uppercase">
+          {t("projects.sheet")}
+          <span className="font-medium tracking-normal normal-case text-muted-foreground">
+            {t("projects.progress", { progress: overview.progress })}
+          </span>
+        </h2>
+        <dl className="grid gap-px overflow-hidden rounded-md border bg-border sm:grid-cols-2 lg:grid-cols-3">
+          {facts.map(([id, label, value]) => (
+            <div key={id} className="flex flex-col gap-0.5 bg-card px-3 py-2">
+              <dt className="font-condensed text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                {label}
+              </dt>
+              <dd className="text-sm font-medium">
+                {id === "status" ? (
+                  <StatusBadge status={project.status}>
+                    {value ?? t("common.notSet")}
+                  </StatusBadge>
+                ) : (
+                  (value ?? t("common.notSet"))
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+      <section className="flex flex-col gap-2">
+        <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+          {t("projects.links")}
+        </h2>
         <Link
           href={`/producoes/${project.id}/arquivos`}
           className={buttonVariants({ variant: "outline" })}
@@ -174,7 +167,9 @@ export default async function ProductionPage({
         )}
       </section>
       <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-medium">{t("projects.participants")}</h2>
+        <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
+          {t("projects.participants")}
+        </h2>
         {overview.participants.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             {t("projects.noParticipants")}

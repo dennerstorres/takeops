@@ -4,7 +4,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import type { StripPhase, StripTip } from "@/components/ui/strip-phase";
 
-const phaseClass: Record<StripPhase, string> = {
+const stripPhaseClass: Record<StripPhase, string> = {
   plan: "bg-strip-plan",
   set: "bg-strip-set",
   post: "bg-strip-post",
@@ -14,12 +14,15 @@ const phaseClass: Record<StripPhase, string> = {
 
 // A ponta muda de traço, não só de cor, para o estado ser legível em tela
 // monocromática e por quem não distingue as cartolinas.
-const tipClass: Record<StripTip, string> = {
+const stripTipClass: Record<StripTip, string> = {
   ok: "bg-strip-ink",
   pending:
     "bg-[repeating-linear-gradient(135deg,var(--strip-ink)_0_2px,transparent_2px_5px)] ring-1 ring-strip-ink ring-inset",
   idle: "ring-2 ring-strip-ink ring-inset",
 };
+
+const stripIconButton =
+  "inline-flex size-11 items-center justify-center rounded-[2px] text-strip-ink transition-colors duration-150 hover:bg-strip-ink/10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-35 sm:size-6 [&_svg]:size-4 sm:[&_svg]:size-3.5";
 
 const cellMeta =
   "min-w-0 truncate font-condensed text-xs text-strip-ink-muted tabular-nums";
@@ -156,7 +159,7 @@ function Strip({
       data-tip={tip}
       className={cn(
         "strip-grid relative rounded-[2px] py-1 pr-1.5 pl-2 sm:py-0",
-        phaseClass[phase],
+        stripPhaseClass[phase],
         href &&
           "transition-[filter] duration-150 hover:brightness-[0.96] dark:hover:brightness-125",
       )}
@@ -194,7 +197,7 @@ function Strip({
       <span
         className={cn(
           "h-4 w-2 justify-self-end [grid-area:tip]",
-          tipClass[tip],
+          stripTipClass[tip],
         )}
       >
         <span className="sr-only">{t(`tip.${tip}`)}</span>
@@ -223,4 +226,12 @@ function StripEmpty({
   );
 }
 
-export { Strip, StripBoard, StripEmpty, StripGroup };
+export {
+  Strip,
+  StripBoard,
+  StripEmpty,
+  StripGroup,
+  stripIconButton,
+  stripPhaseClass,
+  stripTipClass,
+};
