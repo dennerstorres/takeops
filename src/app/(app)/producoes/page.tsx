@@ -10,6 +10,7 @@ import { auth } from "@/server/auth";
 import { ForbiddenError } from "@/server/errors";
 import { prismaParticipantRepository } from "@/server/participant-prisma";
 import { buildProjectBoard } from "@/server/project-board";
+import { loadBoardStats } from "@/server/project-board-prisma";
 import { searchProjects } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import {
@@ -59,10 +60,12 @@ export default async function ProductionsPage({
       ),
       listTeam(session.user.id, workspace.id, prismaWorkspaceRepository),
     ]);
-    const participants = await prismaParticipantRepository.listByProjectIds(
-      projects.map((project) => project.id),
-    );
-    board = buildProjectBoard(projects, participants, team, t);
+    const ids = projects.map((project) => project.id);
+    const [participants, stats] = await Promise.all([
+      prismaParticipantRepository.listByProjectIds(ids),
+      loadBoardStats(workspace.id, ids),
+    ]);
+    board = buildProjectBoard(projects, participants, team, t, stats);
   } catch (error) {
     if (error instanceof ForbiddenError) redirect("/comecar");
     throw error;

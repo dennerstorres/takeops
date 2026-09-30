@@ -572,7 +572,11 @@
     "moveCard": "Move {title} to",
     "productionChecklistCount": "Production checklist · {count} items",
     "templateItemCount": "{name} · {count} items",
-    "checklistFromTemplate": "Copied from the template when the production was created."
+    "checklistFromTemplate": "Copied from the template when the production was created.",
+    "checklistProgress": "Checklist {done}/{total}",
+    "alerts": {
+      "noReadyScenes": "No scenes are ready."
+    }
   },
   "scenes": {
     "emptyTitle": "No scenes",

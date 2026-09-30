@@ -25,7 +25,6 @@ type ProjectCard = {
   shootDate: string | null;
   status: string;
   statusCode: string;
-  nextAction: string;
 };
 
 function Section({
@@ -51,15 +50,6 @@ function Section({
     </section>
   );
 }
-
-const counterKeys = [
-  "dashboard.counters.ideas",
-  "dashboard.counters.preProduction",
-  "dashboard.counters.recording",
-  "dashboard.counters.editing",
-  "dashboard.counters.review",
-  "dashboard.counters.published",
-] as const;
 
 function ProjectList({ cards, t }: { cards: ProjectCard[]; t: Translate }) {
   return (
@@ -156,10 +146,10 @@ export default async function Home() {
       </header>
 
       <dl className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-        {data.counters.map((item, index) => (
-          <div key={item.label} className={cn(surfaceClass, "p-3")}>
+        {data.counters.map((item) => (
+          <div key={item.key} className={cn(surfaceClass, "p-3")}>
             <dt className="text-xs text-muted-foreground">
-              {counterKeys[index] ? t(counterKeys[index]) : item.label}
+              {t(`dashboard.counters.${item.key}`)}
             </dt>
             <dd className="text-2xl font-medium tabular-nums">{item.value}</dd>
           </div>

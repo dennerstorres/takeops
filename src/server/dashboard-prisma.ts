@@ -38,9 +38,7 @@ export const prismaDashboardRepository: DashboardRepository = {
       where: { workspaceId, deletedAt: null },
       _count: { _all: true },
     });
-    return Object.fromEntries(
-      rows.map((row) => [row.status, row._count._all]),
-    );
+    return Object.fromEntries(rows.map((row) => [row.status, row._count._all]));
   },
 
   async openIdeas(workspaceId, limit) {

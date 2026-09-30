@@ -1974,7 +1974,7 @@ Achado da MVP-002 (spec §9 "timezone deve ser configurável", §71). Nome, fuso
 
 ## UI-009 — Textos fixos restantes e ajustes da revisão
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P1  
 **Dependências:** MVP-002
 

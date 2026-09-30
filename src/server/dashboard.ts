@@ -47,30 +47,16 @@ export const openIdeaExcluded: readonly IdeaStatus[] = [
   "DISCARDED",
 ];
 
-// Próximo passo de cada etapa (spec §10, "próxima ação").
-const nextAction: Record<VideoProjectStatus, string> = {
-  IDEA: "Planejar a produção",
-  PRE_PRODUCTION: "Escrever o roteiro",
-  SCRIPTING: "Fechar roteiro e cenas",
-  READY_TO_RECORD: "Marcar a gravação",
-  RECORDING: "Registrar os takes",
-  EDITING: "Enviar versão para revisão",
-  REVIEW: "Revisar a versão",
-  APPROVED: "Agendar a publicação",
-  SCHEDULED: "Publicar",
-  PUBLISHED: "Nada pendente",
-  ARCHIVED: "Nada pendente",
-};
-
+// Contadores do topo; a página traduz pela chave (dashboard.counters.*).
 export const dashboardCounters: {
   status: VideoProjectStatus;
-  label: string;
+  key: string;
 }[] = [
-  { status: "PRE_PRODUCTION", label: "Pré-produção" },
-  { status: "RECORDING", label: "Gravação" },
-  { status: "EDITING", label: "Edição" },
-  { status: "REVIEW", label: "Revisão" },
-  { status: "PUBLISHED", label: "Publicados" },
+  { status: "PRE_PRODUCTION", key: "preProduction" },
+  { status: "RECORDING", key: "recording" },
+  { status: "EDITING", key: "editing" },
+  { status: "REVIEW", key: "review" },
+  { status: "PUBLISHED", key: "published" },
 ];
 
 export const upcomingDays = 14;
@@ -109,14 +95,12 @@ export function buildDashboard(input: {
     ...cards.get(project.id)!,
     status: projectStatusLabel(t, project.status),
     statusCode: project.status,
-    nextAction: nextAction[project.status],
   });
   const recent = (a: ProjectRecord, b: ProjectRecord) =>
     b.updatedAt.getTime() - a.updatedAt.getTime();
 
   const pending = new Set(input.pendingApprovalProjectIds);
-  const count = (status: VideoProjectStatus) =>
-    input.statusCounts[status] ?? 0;
+  const count = (status: VideoProjectStatus) => input.statusCounts[status] ?? 0;
   const openIdeas = input.ideas.filter(
     (idea) => !openIdeaExcluded.includes(idea.status),
   );
@@ -150,9 +134,9 @@ export function buildDashboard(input: {
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, listSize),
     counters: [
-      { label: "Ideias", value: input.openIdeaCount },
+      { key: "ideas", value: input.openIdeaCount },
       ...dashboardCounters.map((item) => ({
-        label: item.label,
+        key: item.key,
         value: count(item.status),
       })),
     ],
@@ -173,19 +157,21 @@ export async function loadDashboard(
 ) {
   await requireMembership(userId, workspaceId, deps.workspaces);
   const to = new Date(range.now.getTime() + upcomingDays * 86_400_000);
-  const [projects, statusCounts, ideas, events, pendingIds] = await Promise.all([
-    deps.dashboard.activeProjects(workspaceId),
-    deps.dashboard.projectStatusCounts(workspaceId),
-    deps.dashboard.openIdeas(workspaceId, listSize),
-    listCalendarEvents(
-      userId,
-      workspaceId,
-      { from: range.now, to, timezone: range.timezone },
-      deps,
-      t,
-    ),
-    deps.dashboard.pendingApprovalProjectIds(workspaceId),
-  ]);
+  const [projects, statusCounts, ideas, events, pendingIds] = await Promise.all(
+    [
+      deps.dashboard.activeProjects(workspaceId),
+      deps.dashboard.projectStatusCounts(workspaceId),
+      deps.dashboard.openIdeas(workspaceId, listSize),
+      listCalendarEvents(
+        userId,
+        workspaceId,
+        { from: range.now, to, timezone: range.timezone },
+        deps,
+        t,
+      ),
+      deps.dashboard.pendingApprovalProjectIds(workspaceId),
+    ],
+  );
   const participants = await deps.participants.listByProjectIds(
     projects.map((project) => project.id),
   );

@@ -39,7 +39,7 @@ describe("quadro de produções", () => {
     assert.deepEqual(
       board.map((column) => column.title),
       [
-        "Ideias",
+        "Ideia",
         "Pré-produção",
         "Roteiro",
         "Pronto para gravar",
@@ -116,6 +116,7 @@ describe("quadro de produções", () => {
         shootDate: "02/10/2026",
         priority: "Alta",
         alerts: [],
+        checklist: null,
       },
     ]);
     assert.deepEqual(
@@ -155,7 +156,10 @@ describe("quadro de produções", () => {
       [],
       [],
       t,
-      { gravar: 1 },
+      {
+        readyScenes: { gravar: 1 },
+        checklists: { gravar: { done: 2, total: 5 } },
+      },
     );
     const idea = buildProjectBoard(
       [project({ id: "ideia", status: "IDEA", title: "Ideia" })],
@@ -172,6 +176,16 @@ describe("quadro de produções", () => {
       ready.find((column) => column.status === "READY_TO_RECORD")?.cards[0]
         ?.alerts,
       [],
+    );
+    assert.deepEqual(
+      ready.find((column) => column.status === "READY_TO_RECORD")?.cards[0]
+        ?.checklist,
+      { done: 2, total: 5 },
+    );
+    assert.equal(
+      missing.find((column) => column.status === "READY_TO_RECORD")?.cards[0]
+        ?.checklist,
+      null,
     );
     assert.deepEqual(
       idea.find((column) => column.status === "IDEA")?.cards[0]?.alerts,

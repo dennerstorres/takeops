@@ -99,7 +99,12 @@ describe("dashboard", () => {
         idea("fora", "DISCARDED", "2026-09-21"),
       ],
       openIdeaCount: 7,
-      statusCounts: { PRE_PRODUCTION: 1, RECORDING: 1, REVIEW: 1, PUBLISHED: 4 },
+      statusCounts: {
+        PRE_PRODUCTION: 1,
+        RECORDING: 1,
+        REVIEW: 1,
+        PUBLISHED: 4,
+      },
       shoots: [
         shoot("s1", "rec"),
         shoot("s2", "rec", true),
@@ -122,7 +127,6 @@ describe("dashboard", () => {
       data.inProgress.map((card) => card.id),
       ["rec", "rev", "pre"],
     );
-    assert.equal(data.inProgress[0].nextAction, "Registrar os takes");
     assert.equal(data.inProgress[0].status, "Gravação");
     assert.deepEqual(data.inProgress[0].people, ["Dono", "Câmera"]);
     assert.deepEqual(
@@ -143,14 +147,14 @@ describe("dashboard", () => {
       ["nova", "velha"],
     );
     assert.deepEqual(
-      Object.fromEntries(data.counters.map((item) => [item.label, item.value])),
+      Object.fromEntries(data.counters.map((item) => [item.key, item.value])),
       {
-        Ideias: 7,
-        "Pré-produção": 1,
-        Gravação: 1,
-        Edição: 0,
-        Revisão: 1,
-        Publicados: 4,
+        ideas: 7,
+        preProduction: 1,
+        recording: 1,
+        editing: 0,
+        review: 1,
+        published: 4,
       },
     );
   });

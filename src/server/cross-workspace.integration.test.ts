@@ -377,6 +377,11 @@ describe(
           await prismaDashboardRepository.pendingApprovalProjectIds(f),
           [project.id],
         );
+        const { loadBoardStats } = await import("./project-board-prisma.ts");
+        assert.deepEqual(await loadBoardStats(ctx.homeId, [project.id]), {
+          readyScenes: {},
+          checklists: {},
+        });
         const homeActive = await prismaDashboardRepository.activeProjects(
           ctx.homeId,
         );
@@ -393,8 +398,9 @@ describe(
         assert.ok(
           homeIdeas.recent.every((row) => row.workspaceId === ctx.homeId),
         );
-        const homeCounts =
-          await prismaDashboardRepository.projectStatusCounts(ctx.homeId);
+        const homeCounts = await prismaDashboardRepository.projectStatusCounts(
+          ctx.homeId,
+        );
         const homeTotal = await ctx.prisma.videoProject.count({
           where: { workspaceId: ctx.homeId, deletedAt: null },
         });
@@ -402,7 +408,7 @@ describe(
           Object.values(homeCounts).reduce((sum, n) => sum + (n ?? 0), 0),
           homeTotal,
         );
-        const member =await ctx.prisma.workspaceMember.findFirst({
+        const member = await ctx.prisma.workspaceMember.findFirst({
           where: { workspaceId: f, userId: ctx.victimMember.id },
         });
         assert.equal(member?.role, "MEMBER");

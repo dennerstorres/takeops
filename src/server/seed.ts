@@ -63,6 +63,61 @@ export async function seedDemoWorkspace(
   return { workspaceId, userIds: users.map((user) => user.id) };
 }
 
+// Produções de exemplo da spec §59, em etapas diferentes, para o kanban e o
+// dashboard não abrirem vazios. Identificadas pelo slug: não duplicam.
+const exampleProjects = [
+  {
+    slug: "novo-modulo-de-estoque",
+    title: "Novo módulo de estoque",
+    product: "Estoque",
+    format: "FEATURE",
+    status: "SCRIPTING",
+    priority: "HIGH",
+  },
+  {
+    slug: "integracao-com-whatsapp",
+    title: "Integração com WhatsApp",
+    product: "Atendimento",
+    format: "TUTORIAL",
+    status: "PRE_PRODUCTION",
+    priority: "NORMAL",
+  },
+  {
+    slug: "dashboard-financeiro",
+    title: "Dashboard financeiro",
+    product: "Financeiro",
+    format: "DEMO",
+    status: "IDEA",
+    priority: "LOW",
+  },
+] as const;
+
+export async function seedExampleProjects(
+  workspaceId: string,
+  userIds: string[],
+) {
+  const [supervisor, dev1] = userIds;
+  const existing = await prisma.videoProject.findMany({
+    where: {
+      workspaceId,
+      slug: { in: exampleProjects.map((item) => item.slug) },
+    },
+    select: { slug: true },
+  });
+  const have = new Set(existing.map((row) => row.slug));
+  for (const item of exampleProjects) {
+    if (have.has(item.slug)) continue;
+    await prisma.videoProject.create({
+      data: {
+        ...item,
+        workspaceId,
+        createdById: supervisor,
+        ownerId: dev1 ?? supervisor,
+      },
+    });
+  }
+}
+
 const demoSlug = "dashboard-de-pedidos";
 
 const demoScenes = [

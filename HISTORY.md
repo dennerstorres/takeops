@@ -5010,3 +5010,18 @@ Novo caso em `publication.integration.test.ts` (falha não move, publicar move e
 ### Testes
 
 `review.integration.test.ts`: leitor cria comentário e é barrado ao resolver. `npm test`: 164 passam. Lint ok; `tsc` só com `LayoutProps`.
+
+## 2026-09-30 — UI-009 — Textos fixos restantes e ajustes da revisão
+
+**Status:** DONE
+**Agente:** Claude
+
+- Kanban: títulos das colunas pelo rótulo da etapa (`enums.projectStatus`; a primeira coluna passa de "Ideias" para "Ideia"), alerta e "Sem nome" pelo catálogo. `projectAlerts` recebe `t`.
+- **Bug corrigido:** `/producoes` nunca passava a contagem de cenas prontas, então todo card em "Pronto para gravar" mostrava "Não há cenas prontas". `loadBoardStats` (`project-board-prisma.ts`) busca em lote, filtrado pelo workspace, as cenas READY e o checklist das gravações em aberto (PLANNED/READY/IN_PROGRESS).
+- Card mostra "Checklist feito/total" quando há gravação com checklist (spec §14).
+- Dashboard: saiu o mapa `nextAction` em pt-BR que não era usado (a página já traduzia pela etapa); contadores trazem `key` e a página traduz por ela, em vez de casar pela posição.
+- Seed: `seedExampleProjects` cria as três produções da spec §59 (estoque, WhatsApp, dashboard financeiro) em etapas diferentes, sem duplicar; `npm run db:seed` chama.
+
+### Testes
+
+`project-board.test.ts` (colunas, alerta, checklist), `dashboard.test.ts` (contadores por chave), `mvp-flow` (números do card no banco), `cross-workspace` (números não vazam), `seed.integration.test.ts` (exemplos idempotentes). `npm test`: 164 passam. Lint ok; `tsc` só com `LayoutProps`.

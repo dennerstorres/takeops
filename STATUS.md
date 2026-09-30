@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-REVIEW-005 — Leitor comenta na revisão
+UI-009 — Textos fixos restantes e ajustes da revisão
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-UI-009 — Textos fixos restantes e ajustes da revisão (depois MVP-003)
+MVP-003 — Limpeza final
 ```
 
 ## Estado dos módulos

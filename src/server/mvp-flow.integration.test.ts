@@ -192,6 +192,21 @@ describe(
           0,
         );
 
+        // Card do kanban: cena pronta e checklist da gravação em aberto.
+        const { loadBoardStats } = await import("./project-board-prisma.ts");
+        assert.deepEqual(
+          (await loadBoardStats(ws, [project.id])).readyScenes,
+          {},
+        );
+        await prisma.scene.update({
+          where: { id: scene.id },
+          data: { status: "READY" },
+        });
+        assert.deepEqual(await loadBoardStats(ws, [project.id]), {
+          readyScenes: { [project.id]: 1 },
+          checklists: { [project.id]: { done: 2, total: 2 } },
+        });
+
         // Modo Gravação: takes
         await stage(project.id, "RECORDING");
         const target = {

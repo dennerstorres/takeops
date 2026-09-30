@@ -20,6 +20,7 @@ type BoardCard = {
   shootDate: string | null;
   priority: string;
   alerts: string[];
+  checklist: { done: number; total: number } | null;
 };
 
 type BoardColumn = {
@@ -123,6 +124,11 @@ export function ProductionBoard({
                       {card.priority}
                       {card.shootDate ? ` · ${card.shootDate}` : ""}
                     </span>
+                    {card.checklist ? (
+                      <span className="text-sm text-muted-foreground">
+                        {t("projects.checklistProgress", card.checklist)}
+                      </span>
+                    ) : null}
                     {card.alerts.length > 0 ? (
                       <ul>
                         {card.alerts.map((alert) => (

@@ -1,38 +1,50 @@
 import type { Translate } from "../i18n/translate.ts";
 import type { ParticipantRecord } from "./participant-repository.ts";
 import { calendarDate } from "./project-overview.ts";
-import { priorityLabel, type VideoProjectStatus } from "./project-labels.ts";
+import {
+  priorityLabel,
+  projectStatusLabel,
+  type VideoProjectStatus,
+} from "./project-labels.ts";
 import type { ProjectRecord } from "./project-repository.ts";
 
-export const boardColumns: { status: VideoProjectStatus; title: string }[] = [
-  { status: "IDEA", title: "Ideias" },
-  { status: "PRE_PRODUCTION", title: "Pré-produção" },
-  { status: "SCRIPTING", title: "Roteiro" },
-  { status: "READY_TO_RECORD", title: "Pronto para gravar" },
-  { status: "RECORDING", title: "Gravação" },
-  { status: "EDITING", title: "Edição" },
-  { status: "REVIEW", title: "Revisão" },
-  { status: "APPROVED", title: "Aprovado" },
-  { status: "SCHEDULED", title: "Agendado" },
-  { status: "PUBLISHED", title: "Publicado" },
-  { status: "ARCHIVED", title: "Arquivado" },
+// Ordem das colunas (spec §14); o arquivado fica no fim.
+export const boardColumns: { status: VideoProjectStatus }[] = [
+  { status: "IDEA" },
+  { status: "PRE_PRODUCTION" },
+  { status: "SCRIPTING" },
+  { status: "READY_TO_RECORD" },
+  { status: "RECORDING" },
+  { status: "EDITING" },
+  { status: "REVIEW" },
+  { status: "APPROVED" },
+  { status: "SCHEDULED" },
+  { status: "PUBLISHED" },
+  { status: "ARCHIVED" },
 ];
 
+// Números por produção que o card mostra; a página busca em lote.
+export type BoardStats = {
+  readyScenes?: Readonly<Record<string, number>>;
+  checklists?: Readonly<Record<string, { done: number; total: number }>>;
+};
+
 export function projectAlerts(
+  t: Translate,
   status: VideoProjectStatus,
   readySceneCount: number,
 ) {
   if (status === "READY_TO_RECORD" && readySceneCount < 1) {
-    return ["Não há cenas prontas."];
+    return [t("projects.alerts.noReadyScenes")];
   }
   return [];
 }
 
 function personLabel(
+  t: Translate,
   person: { name: string | null; email: string | null } | undefined,
 ) {
-  if (!person) return "Sem nome";
-  return person.name || person.email || "Sem nome";
+  return person?.name || person?.email || t("common.noName");
 }
 
 export function buildProjectBoard(
@@ -46,9 +58,8 @@ export function buildProjectBoard(
     name: string | null;
     email: string | null;
   }[],
-  // Cena ainda não é um módulo. Sem contagem, não há cena pronta.
   t: Translate,
-  readySceneCounts: Readonly<Record<string, number>> = {},
+  stats: BoardStats = {},
 ) {
   const directory = new Map(people.map((person) => [person.userId, person]));
   for (const participant of participants) {
@@ -64,7 +75,7 @@ export function buildProjectBoard(
 
   return boardColumns.map((column) => ({
     status: column.status,
-    title: column.title,
+    title: projectStatusLabel(t, column.status),
     cards: projects
       .filter((project) => project.status === column.status)
       .map((project) => {
@@ -73,7 +84,7 @@ export function buildProjectBoard(
         const add = (userId: string | null) => {
           if (!userId || seen.has(userId)) return;
           seen.add(userId);
-          names.push(personLabel(directory.get(userId)));
+          names.push(personLabel(t, directory.get(userId)));
         };
         add(project.ownerId);
         for (const participant of byProject.get(project.id) ?? []) {
@@ -87,9 +98,11 @@ export function buildProjectBoard(
           shootDate: calendarDate(project.plannedShootDate),
           priority: priorityLabel(t, project.priority),
           alerts: projectAlerts(
+            t,
             project.status,
-            readySceneCounts[project.id] ?? 0,
+            stats.readyScenes?.[project.id] ?? 0,
           ),
+          checklist: stats.checklists?.[project.id] ?? null,
         };
       }),
   }));

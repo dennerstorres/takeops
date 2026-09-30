@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { describe, it } from "node:test";
-import { seedDemoProject, seedDemoWorkspace } from "./seed.ts";
+import {
+  seedDemoProject,
+  seedDemoWorkspace,
+  seedExampleProjects,
+} from "./seed.ts";
 
 const databaseReady = (process.env.DATABASE_URL ?? "").startsWith("postgres");
 
@@ -76,6 +80,19 @@ describe(
           project.publications.map((row) => row.status),
           ["PENDING"],
         );
+
+        await seedExampleProjects(workspaceId, userIds);
+        await seedExampleProjects(workspaceId, userIds);
+        const examples = await prisma.videoProject.findMany({
+          where: { workspaceId, id: { not: projectId } },
+          select: { title: true, status: true },
+          orderBy: { title: "asc" },
+        });
+        assert.deepEqual(examples, [
+          { title: "Dashboard financeiro", status: "IDEA" },
+          { title: "Integração com WhatsApp", status: "PRE_PRODUCTION" },
+          { title: "Novo módulo de estoque", status: "SCRIPTING" },
+        ]);
       } finally {
         if (workspaceId) {
           await prisma.workspace.deleteMany({ where: { id: workspaceId } });
