@@ -4663,3 +4663,22 @@ Typecheck, lint, build, `i18n.test.ts`. No navegador (dev): 500px (menor janela 
 ### Pendências
 
 - Não conferido em 375/390/430 reais (janela mínima do Chrome é 500px) nem por print; conferir num celular.
+
+## 2026-09-29 — UI-003 — Componentes base
+
+**Status:** DONE
+**Agente:** Grok
+
+- Campos visíveis (`input`, `textarea`, `select`, checkbox) passaram a usar `Input`, `Textarea`, `Select` e `Checkbox`. Hidden continua `<input type="hidden">`.
+- `Field`, `Card`, `StatusBadge` (`statusTone`, texto + cor), `ItemList`, `Table`, `TabNav`/`TabLink`. Botão padrão com 44px. Abas da produção usam `TabNav`. Lista de ideias usa badge e lista.
+- Erro e carregando leem o catálogo (`common.loadFailed`, `tryAgain`, `loading`). Fechar do diálogo também.
+- Tom `primary` do badge usa `accent`, porque não há `primary-muted` e o par já passa AA. Cancelado fica neutro.
+
+### Testes
+
+Lint. `status-tone.test.ts` e `i18n.test.ts`. `tsc --noEmit` só acusa `LayoutProps` (o `next typegen` não rodou: binding nativo do SWC falha neste Windows). Build e navegador não rodaram por isso.
+
+### Pendências
+
+- Telas ainda não foram redesenhadas com `Card`/`Table`; isso é UI-004..007.
+- Cores cruas do calendário e do Modo Gravação ficam para UI-004 e UI-006.

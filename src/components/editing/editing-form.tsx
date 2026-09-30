@@ -12,9 +12,7 @@ import {
   aspectRatios,
   type AspectRatio,
 } from "@/server/project-labels";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Checkbox, Input, Select, Textarea } from "@/components/ui/input";
 
 export type EditingFormValues = {
   projectId: string;
@@ -56,83 +54,71 @@ export function EditingForm({
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
           Editor
-          <select
-            name="editorId"
-            defaultValue={values.editorId}
-            className={`${fieldClass} h-11`}
-          >
+          <Select name="editorId" defaultValue={values.editorId}>
             <option value="">Ninguém definido</option>
             {people.map((person) => (
               <option key={person.id} value={person.id}>
                 {person.label}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Software
-          <input
+          <Input
             name="software"
             maxLength={80}
             defaultValue={values.software}
             placeholder="Premiere Pro, DaVinci Resolve"
-            className={`${fieldClass} h-11`}
           />
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
         Link do projeto de edição
-        <input
+        <Input
           name="projectFileUrl"
           type="url"
           inputMode="url"
           maxLength={2048}
           defaultValue={values.projectFileUrl}
           placeholder="https://..."
-          className={`${fieldClass} h-11`}
         />
       </label>
       <div className="grid gap-3 sm:grid-cols-3">
         <label className="flex flex-col gap-1 text-sm">
           Resolução
-          <input
+          <Input
             name="targetResolution"
             maxLength={40}
             defaultValue={values.targetResolution}
             placeholder="1080x1920"
-            className={`${fieldClass} h-11`}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           FPS
-          <input
+          <Input
             name="targetFps"
             inputMode="decimal"
             maxLength={8}
             defaultValue={values.targetFps}
             placeholder="30"
-            className={`${fieldClass} h-11`}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Proporção
-          <select
-            name="aspectRatio"
-            defaultValue={values.aspectRatio}
-            className={`${fieldClass} h-11`}
-          >
+          <Select name="aspectRatio" defaultValue={values.aspectRatio}>
             <option value="">Não definida</option>
             {aspectRatios.map((ratio) => (
               <option key={ratio} value={ratio}>
                 {aspectLabel(t, ratio)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
       </div>
       <div className="flex flex-wrap gap-x-6">
         <label className="flex min-h-11 items-center gap-2 text-sm">
-          <input
+          <Checkbox
             type="checkbox"
             name="captionsRequired"
             defaultChecked={values.captionsRequired}
@@ -141,7 +127,7 @@ export function EditingForm({
           Precisa de legenda
         </label>
         <label className="flex min-h-11 items-center gap-2 text-sm">
-          <input
+          <Checkbox
             type="checkbox"
             name="musicRequired"
             defaultChecked={values.musicRequired}
@@ -152,12 +138,12 @@ export function EditingForm({
       </div>
       <label className="flex flex-col gap-1 text-sm">
         Notas para a edição
-        <textarea
+        <Textarea
           name="notes"
           maxLength={4000}
           rows={4}
           defaultValue={values.notes}
-          className={`${fieldClass} py-2`}
+          className="py-2"
         />
       </label>
       <div className="flex items-center gap-3">

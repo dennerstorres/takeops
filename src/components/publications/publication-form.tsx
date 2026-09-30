@@ -12,9 +12,7 @@ import {
   platforms,
   type Platform,
 } from "@/server/publication-labels";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Select, Textarea } from "@/components/ui/input";
 
 export type PublicationFormValues = {
   projectId: string;
@@ -50,36 +48,27 @@ export function PublicationForm({ values }: { values: PublicationFormValues }) {
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
         Plataforma
-        <select
-          name="platform"
-          defaultValue={values.platform}
-          className={`${fieldClass} h-11`}
-        >
+        <Select name="platform" defaultValue={values.platform}>
           {platforms.map((platform) => (
             <option key={platform} value={platform}>
               {platformLabel(t, platform)}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Legenda (opcional)
-        <textarea
+        <Textarea
           name="caption"
           maxLength={5000}
           rows={3}
           defaultValue={values.caption}
-          className={`${fieldClass} py-2`}
+          className="py-2"
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Notas (opcional)
-        <input
-          name="notes"
-          maxLength={2000}
-          defaultValue={values.notes}
-          className={`${fieldClass} h-11`}
-        />
+        <Input name="notes" maxLength={2000} defaultValue={values.notes} />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
         {values.publicationId ? "Salvar destino" : "Adicionar destino"}

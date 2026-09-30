@@ -13,9 +13,7 @@ import {
   equipmentCategoryLabel,
   type EquipmentCategory,
 } from "@/server/equipment-labels";
-
-const fieldClass =
-  "h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Checkbox, Input, Select } from "@/components/ui/input";
 
 export type EquipmentFormValues = {
   itemId?: string;
@@ -47,40 +45,30 @@ export function EquipmentForm({ values }: { values: EquipmentFormValues }) {
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
         Nome
-        <input
+        <Input
           name="name"
           required
           maxLength={120}
           defaultValue={values.name}
-          className={fieldClass}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Categoria
-        <select
-          name="category"
-          defaultValue={values.category}
-          className={fieldClass}
-        >
+        <Select name="category" defaultValue={values.category}>
           {equipmentCategories.map((category) => (
             <option key={category} value={category}>
               {equipmentCategoryLabel(t, category)}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
         Notas
-        <input
-          name="notes"
-          maxLength={1000}
-          defaultValue={values.notes}
-          className={fieldClass}
-        />
+        <Input name="notes" maxLength={1000} defaultValue={values.notes} />
       </label>
       {editing ? (
         <label className="flex min-h-11 items-center gap-2 text-sm sm:col-span-2">
-          <input
+          <Checkbox
             type="checkbox"
             name="active"
             defaultChecked={values.active}

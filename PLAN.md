@@ -1681,7 +1681,7 @@ Sidebar, header mobile, troca de tema, avisos, usuário. Mobile-first, 44px de t
 
 ## UI-003 — Componentes base
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-001, OSS-008
 

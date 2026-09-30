@@ -7,7 +7,10 @@
     "account": "Conta",
     "someone": "Alguém",
     "formerMember": "Ex-membro",
-    "close": "Fechar"
+    "close": "Fechar",
+    "loadFailed": "Não foi possível carregar.",
+    "tryAgain": "Tente novamente.",
+    "loading": "Carregando…"
   },
   "shell": {
     "skipToContent": "Ir para o conteúdo",

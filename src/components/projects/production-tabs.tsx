@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { TabLink, TabNav } from "@/components/ui/tabs";
 import { productionTabs } from "@/server/project-overview";
 
 const links: Record<string, (projectId: string) => string> = {
@@ -20,21 +20,16 @@ export function ProductionTabs({
   active?: (typeof productionTabs)[number];
 }) {
   return (
-    <nav aria-label="Seções da produção" className="flex gap-1 overflow-x-auto">
+    <TabNav label="Seções da produção">
       {productionTabs.map((label) =>
         links[label] ? (
-          <Link
+          <TabLink
             key={label}
             href={links[label](projectId)}
-            aria-current={label === active ? "page" : undefined}
-            className={`inline-flex min-h-11 shrink-0 items-center rounded-lg px-3 text-sm ${
-              label === active
-                ? "bg-muted font-medium"
-                : "text-muted-foreground"
-            }`}
+            current={label === active}
           >
             {label}
-          </Link>
+          </TabLink>
         ) : (
           <span
             key={label}
@@ -44,6 +39,6 @@ export function ProductionTabs({
           </span>
         ),
       )}
-    </nav>
+    </TabNav>
   );
 }

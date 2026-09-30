@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { ConvertIdeaButton } from "@/components/ideas/convert-idea-button";
 import { DeleteIdeaButton } from "@/components/ideas/delete-idea-button";
 import { IdeaForm } from "@/components/ideas/idea-form";
@@ -76,8 +77,11 @@ export default async function IdeaPage({
       <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
           <h1 className="text-2xl font-medium tracking-tight">{idea.title}</h1>
-          <p className="text-sm text-muted-foreground">
-            {statusLabel(t, idea.status)} · {idea.authorName ?? "Sem nome"}
+          <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+            <StatusBadge status={idea.status}>
+              {statusLabel(t, idea.status)}
+            </StatusBadge>
+            {idea.authorName ?? "Sem nome"}
           </p>
           {canEdit && idea.status !== "CONVERTED" ? (
             <IdeaStatusForm ideaId={idea.id} status={idea.status} />

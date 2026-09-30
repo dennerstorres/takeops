@@ -6,9 +6,7 @@ import {
   createReviewCommentAction,
   type ReviewCommentFormState,
 } from "@/server/review-actions";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Textarea } from "@/components/ui/input";
 
 export function ReviewCommentForm({
   projectId,
@@ -36,13 +34,12 @@ export function ReviewCommentForm({
       <div className="grid gap-3 sm:grid-cols-[8rem_1fr]">
         <label className="flex flex-col gap-1 text-sm">
           Tempo
-          <input
+          <Input
             name="timestamp"
             inputMode="numeric"
             maxLength={10}
             placeholder="00:18"
             aria-describedby="tempo-ajuda"
-            className={`${fieldClass} h-11`}
           />
           <span id="tempo-ajuda" className="text-xs text-muted-foreground">
             Vazio para comentário geral
@@ -50,13 +47,13 @@ export function ReviewCommentForm({
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Comentário
-          <textarea
+          <Textarea
             name="text"
             required
             maxLength={2000}
             rows={2}
             placeholder="cortar essa pausa"
-            className={`${fieldClass} py-2`}
+            className="py-2"
           />
         </label>
       </div>

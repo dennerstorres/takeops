@@ -6,9 +6,7 @@ import {
 } from "@/components/feedback/form-autosave";
 import { Button } from "@/components/ui/button";
 import { autosaveScriptAction } from "@/server/script-actions";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Textarea } from "@/components/ui/input";
 
 const fields = [
   { name: "hook", label: "Gancho", max: 2000, rows: 2 },
@@ -43,12 +41,12 @@ export function ScriptForm({
       {fields.map((field) => (
         <label key={field.name} className="flex flex-col gap-1 text-sm">
           {field.label}
-          <textarea
+          <Textarea
             name={field.name}
             rows={field.rows}
             maxLength={field.max}
             defaultValue={values[field.name]}
-            className={`${fieldClass} min-h-16`}
+            className="min-h-16"
           />
         </label>
       ))}

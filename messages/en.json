@@ -7,7 +7,10 @@
     "account": "Account",
     "someone": "Someone",
     "formerMember": "Former member",
-    "close": "Close"
+    "close": "Close",
+    "loadFailed": "Couldn't load.",
+    "tryAgain": "Try again.",
+    "loading": "Loading…"
   },
   "shell": {
     "skipToContent": "Skip to content",

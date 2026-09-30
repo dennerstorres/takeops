@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
+import { Field } from "@/components/ui/field";
 import { formatLabel, ideaFormats } from "@/server/idea-labels";
 import {
   createProjectAction,
@@ -15,10 +16,9 @@ import {
   priorityLabel,
   projectPriorities,
 } from "@/server/project-labels";
+import { Input, Select, Textarea } from "@/components/ui/input";
 
 const initialState: ProjectFormState = null;
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50";
 
 export type ProjectOption = { id: string; label: string };
 
@@ -40,28 +40,6 @@ export type ProjectFormValues = {
   plannedPublishDate: string;
   sourceIdeaId: string;
 };
-
-function Field({
-  id,
-  label,
-  error,
-  children,
-}: {
-  id: string;
-  label: string;
-  error?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-sm font-medium">
-        {label}
-      </label>
-      {children}
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
-    </div>
-  );
-}
 
 export function ProjectForm({
   values,
@@ -91,81 +69,76 @@ export function ProjectForm({
         <input type="hidden" name="templateId" value={templateId} />
       ) : null}
       <Field id="project-title" label="Título" error={state?.fields?.title}>
-        <input
+        <Input
           id="project-title"
           name="title"
           required
           maxLength={120}
           defaultValue={values.title}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         />
       </Field>
       <Field id="project-format" label="Formato" error={state?.fields?.format}>
-        <select
+        <Select
           id="project-format"
           name="format"
           defaultValue={values.format}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         >
           {ideaFormats.map((format) => (
             <option key={format} value={format}>
               {formatLabel(t, format)}
             </option>
           ))}
-        </select>
+        </Select>
       </Field>
       <Field
         id="project-aspect"
         label="Proporção"
         error={state?.fields?.aspectRatio}
       >
-        <select
+        <Select
           id="project-aspect"
           name="aspectRatio"
           defaultValue={values.aspectRatio}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         >
           {aspectRatios.map((ratio) => (
             <option key={ratio} value={ratio}>
               {aspectLabel(t, ratio)}
             </option>
           ))}
-        </select>
+        </Select>
       </Field>
       <Field
         id="project-priority"
         label="Prioridade"
         error={state?.fields?.priority}
       >
-        <select
+        <Select
           id="project-priority"
           name="priority"
           defaultValue={values.priority}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         >
           {projectPriorities.map((priority) => (
             <option key={priority} value={priority}>
               {priorityLabel(t, priority)}
             </option>
           ))}
-        </select>
+        </Select>
       </Field>
       <Field
         id="project-slug"
         label="Identificador"
         error={state?.fields?.slug}
       >
-        <input
+        <Input
           id="project-slug"
           name="slug"
           maxLength={60}
           defaultValue={values.slug}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         />
       </Field>
       <Field
@@ -173,14 +146,14 @@ export function ProjectForm({
         label="Descrição"
         error={state?.fields?.description}
       >
-        <textarea
+        <Textarea
           id="project-description"
           name="description"
           rows={4}
           maxLength={4000}
           defaultValue={values.description}
           disabled={disabled}
-          className={`${fieldClass} min-h-24 py-2`}
+          className="min-h-24 py-2"
         />
       </Field>
       <Field
@@ -188,13 +161,12 @@ export function ProjectForm({
         label="Objetivo"
         error={state?.fields?.objective}
       >
-        <input
+        <Input
           id="project-objective"
           name="objective"
           maxLength={200}
           defaultValue={values.objective}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         />
       </Field>
       <Field
@@ -202,13 +174,12 @@ export function ProjectForm({
         label="Público"
         error={state?.fields?.audience}
       >
-        <input
+        <Input
           id="project-audience"
           name="audience"
           maxLength={200}
           defaultValue={values.audience}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         />
       </Field>
       <Field
@@ -216,13 +187,12 @@ export function ProjectForm({
         label="Produto"
         error={state?.fields?.product}
       >
-        <input
+        <Input
           id="project-product"
           name="product"
           maxLength={200}
           defaultValue={values.product}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         />
       </Field>
       <Field
@@ -230,13 +200,12 @@ export function ProjectForm({
         label="Duração em segundos"
         error={state?.fields?.estimatedDurationSeconds}
       >
-        <input
+        <Input
           id="project-duration"
           name="estimatedDurationSeconds"
           inputMode="numeric"
           defaultValue={values.estimatedDurationSeconds}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         />
       </Field>
       <Field
@@ -244,14 +213,13 @@ export function ProjectForm({
         label="Thumbnail"
         error={state?.fields?.thumbnailUrl}
       >
-        <input
+        <Input
           id="project-thumb"
           name="thumbnailUrl"
           type="url"
           maxLength={500}
           defaultValue={values.thumbnailUrl}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         />
       </Field>
       <Field
@@ -259,12 +227,11 @@ export function ProjectForm({
         label="Responsável"
         error={state?.fields?.ownerId}
       >
-        <select
+        <Select
           id="project-owner"
           name="ownerId"
           defaultValue={values.ownerId}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         >
           <option value="">Sem responsável</option>
           {people.map((person) => (
@@ -272,20 +239,19 @@ export function ProjectForm({
               {person.label}
             </option>
           ))}
-        </select>
+        </Select>
       </Field>
       <Field
         id="project-shoot"
         label="Gravação"
         error={state?.fields?.plannedShootDate}
       >
-        <input
+        <Input
           id="project-shoot"
           name="plannedShootDate"
           type="date"
           defaultValue={values.plannedShootDate}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         />
       </Field>
       <Field
@@ -293,13 +259,12 @@ export function ProjectForm({
         label="Publicação"
         error={state?.fields?.plannedPublishDate}
       >
-        <input
+        <Input
           id="project-publish"
           name="plannedPublishDate"
           type="date"
           defaultValue={values.plannedPublishDate}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         />
       </Field>
       <Field
@@ -307,12 +272,11 @@ export function ProjectForm({
         label="Ideia de origem"
         error={state?.fields?.sourceIdeaId}
       >
-        <select
+        <Select
           id="project-idea"
           name="sourceIdeaId"
           defaultValue={values.sourceIdeaId}
           disabled={disabled}
-          className={`${fieldClass} h-11`}
         >
           <option value="">Nenhuma</option>
           {ideas.map((idea) => (
@@ -320,7 +284,7 @@ export function ProjectForm({
               {idea.label}
             </option>
           ))}
-        </select>
+        </Select>
       </Field>
       {state && !state.fields ? (
         <p

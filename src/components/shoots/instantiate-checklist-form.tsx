@@ -6,9 +6,7 @@ import {
   instantiateShootChecklistAction,
   type ShootFormState,
 } from "@/server/shoot-actions";
-
-const fieldClass =
-  "h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Select } from "@/components/ui/input";
 
 export function InstantiateChecklistForm({
   projectId,
@@ -38,17 +36,13 @@ export function InstantiateChecklistForm({
       <label className="sr-only" htmlFor={`checklist-${shootId}`}>
         Modelo de checklist
       </label>
-      <select
-        id={`checklist-${shootId}`}
-        name="templateId"
-        className={fieldClass}
-      >
+      <Select id={`checklist-${shootId}`} name="templateId">
         {templates.map((template) => (
           <option key={template.id} value={template.id}>
             {template.label}
           </option>
         ))}
-      </select>
+      </Select>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
         Usar checklist
       </Button>

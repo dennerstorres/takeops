@@ -17,9 +17,7 @@ import {
   type ShotStatus,
   type ShotType,
 } from "@/server/shot-labels";
-
-const fieldClass =
-  "h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Select, Textarea } from "@/components/ui/input";
 
 export type ShotFormValues = {
   projectId: string;
@@ -70,36 +68,30 @@ export function ShotForm({ values }: { values: ShotFormValues }) {
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
         Nome
-        <input
+        <Input
           name="name"
           maxLength={120}
           defaultValue={values.name}
           placeholder="Shot A"
-          className={fieldClass}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Tipo
-        <select
-          name="shotType"
-          defaultValue={values.shotType}
-          className={fieldClass}
-        >
+        <Select name="shotType" defaultValue={values.shotType}>
           {shotTypes.map((type) => (
             <option key={type} value={type}>
               {shotTypeLabel(t, type)}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Enquadramento
-        <input
+        <Input
           name="framing"
           maxLength={80}
           list={framingList}
           defaultValue={values.framing}
-          className={fieldClass}
         />
         <datalist id={framingList}>
           {framingPresets.map((preset) => (
@@ -109,61 +101,51 @@ export function ShotForm({ values }: { values: ShotFormValues }) {
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Takes necessários
-        <input
+        <Input
           name="requiredTakes"
           type="number"
           inputMode="numeric"
           min={1}
           max={99}
           defaultValue={values.requiredTakes}
-          className={fieldClass}
         />
       </label>
       {textFields.map(([name, label, max]) => (
         <label key={name} className="flex flex-col gap-1 text-sm">
           {label}
-          <input
-            name={name}
-            maxLength={max}
-            defaultValue={values[name]}
-            className={fieldClass}
-          />
+          <Input name={name} maxLength={max} defaultValue={values[name]} />
         </label>
       ))}
       {editing ? (
         <label className="flex flex-col gap-1 text-sm">
           Status
-          <select
-            name="status"
-            defaultValue={values.status}
-            className={fieldClass}
-          >
+          <Select name="status" defaultValue={values.status}>
             {shotStatuses.map((status) => (
               <option key={status} value={status}>
                 {shotStatusLabel(t, status)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
       ) : null}
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
         Descrição
-        <textarea
+        <Textarea
           name="description"
           rows={2}
           maxLength={2000}
           defaultValue={values.description}
-          className={`${fieldClass} h-auto min-h-16 py-2`}
+          className="h-auto min-h-16 py-2"
         />
       </label>
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
         Notas
-        <textarea
+        <Textarea
           name="notes"
           rows={2}
           maxLength={2000}
           defaultValue={values.notes}
-          className={`${fieldClass} h-auto min-h-16 py-2`}
+          className="h-auto min-h-16 py-2"
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">

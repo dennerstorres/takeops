@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { captureIdeaAction, type IdeaFormState } from "@/server/idea-actions";
+import { Input } from "@/components/ui/input";
 
 const initialState: IdeaFormState = null;
 
@@ -18,7 +19,7 @@ export function CaptureIdeaForm() {
         <label htmlFor="captura-titulo" className="sr-only">
           Título
         </label>
-        <input
+        <Input
           id="captura-titulo"
           name="title"
           required
@@ -26,7 +27,7 @@ export function CaptureIdeaForm() {
           placeholder="Anotar uma ideia"
           disabled={pending}
           aria-invalid={state?.fields?.title ? true : undefined}
-          className="h-11 min-w-0 flex-1 rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
+          className="min-w-0 flex-1"
         />
         <Button type="submit" className="min-h-11" disabled={pending}>
           {pending ? "Salvando…" : "Anotar"}

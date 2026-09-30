@@ -7,9 +7,7 @@ import {
   updateContinuityAction,
   type ContinuityFormState,
 } from "@/server/continuity-actions";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Textarea } from "@/components/ui/input";
 
 export type ContinuityFormValues = {
   projectId: string;
@@ -49,24 +47,22 @@ export function ContinuityForm({
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
           Título
-          <input
+          <Input
             name="title"
             required
             maxLength={120}
             defaultValue={values.title}
             placeholder="João, Mesa, Câmera A"
-            className={`${fieldClass} h-11`}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Categoria (opcional)
-          <input
+          <Input
             name="category"
             maxLength={60}
             list={listId}
             defaultValue={values.category}
             placeholder="Pessoas, Cenário, Câmera"
-            className={`${fieldClass} h-11`}
           />
           <datalist id={listId}>
             {categories.map((category) => (
@@ -77,14 +73,14 @@ export function ContinuityForm({
       </div>
       <label className="flex flex-col gap-1 text-sm">
         Como deve estar
-        <textarea
+        <Textarea
           name="description"
           required
           maxLength={2000}
           rows={3}
           defaultValue={values.description}
           placeholder={"camiseta preta\ncadeira esquerda"}
-          className={`${fieldClass} py-2`}
+          className="py-2"
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">

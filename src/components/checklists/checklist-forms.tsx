@@ -9,9 +9,7 @@ import {
   updateChecklistTemplateAction,
   type ChecklistFormState,
 } from "@/server/checklist-actions";
-
-const fieldClass =
-  "h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Select } from "@/components/ui/input";
 
 const typeLabels = { SHOOT: "Gravação", OTHER: "Outro" } as const;
 
@@ -44,23 +42,22 @@ export function TemplateForm({
       <Alert state={state} />
       <label className="flex flex-col gap-1 text-sm">
         Nome
-        <input
+        <Input
           name="name"
           required
           maxLength={120}
           defaultValue={values.name}
-          className={fieldClass}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Tipo
-        <select name="type" defaultValue={values.type} className={fieldClass}>
+        <Select name="type" defaultValue={values.type}>
           {Object.entries(typeLabels).map(([value, label]) => (
             <option key={value} value={value}>
               {label}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
       <Button
         type="submit"
@@ -94,14 +91,13 @@ export function ItemForm({
       <label className="sr-only" htmlFor={`item-${itemId ?? "novo"}`}>
         Item
       </label>
-      <input
+      <Input
         id={`item-${itemId ?? "novo"}`}
         name="text"
         required
         maxLength={200}
         defaultValue={text}
         placeholder={itemId ? undefined : "Novo item"}
-        className={fieldClass}
       />
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
         {itemId ? "Salvar" : "Adicionar"}

@@ -8,6 +8,7 @@ import {
 } from "@/server/invite-actions";
 import { roleLabel } from "@/server/team";
 import type { WorkspaceRole } from "@/server/workspace-repository";
+import { Input, Select } from "@/components/ui/input";
 
 const initialState: CreateInviteState | null = null;
 
@@ -26,7 +27,7 @@ export function InviteForm({ roles }: { roles: WorkspaceRole[] }) {
         <label htmlFor="invite-email" className="text-sm font-medium">
           E-mail
         </label>
-        <input
+        <Input
           id="invite-email"
           name="email"
           type="email"
@@ -35,7 +36,6 @@ export function InviteForm({ roles }: { roles: WorkspaceRole[] }) {
           autoComplete="off"
           disabled={pending}
           aria-invalid={state?.fields?.email ? true : undefined}
-          className="h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
         />
         {state?.fields?.email ? (
           <p className="text-sm text-destructive">{state.fields.email}</p>
@@ -45,19 +45,18 @@ export function InviteForm({ roles }: { roles: WorkspaceRole[] }) {
         <label htmlFor="invite-role" className="text-sm font-medium">
           Papel
         </label>
-        <select
+        <Select
           id="invite-role"
           name="role"
           defaultValue="MEMBER"
           disabled={pending}
-          className="h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
         >
           {roles.map((role) => (
             <option key={role} value={role}>
               {roleLabel(role)}
             </option>
           ))}
-        </select>
+        </Select>
         {state?.fields?.role ? (
           <p className="text-sm text-destructive">{state.fields.role}</p>
         ) : null}
@@ -79,12 +78,12 @@ export function InviteForm({ roles }: { roles: WorkspaceRole[] }) {
           <p className="text-sm">
             Copie o link agora. Ele não fica salvo para mostrar de novo.
           </p>
-          <input
+          <Input
             readOnly
             suppressHydrationWarning
             value={link ?? ""}
             aria-label="Link do convite"
-            className="h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm"
+
             onFocus={(event) => event.currentTarget.select()}
           />
         </div>

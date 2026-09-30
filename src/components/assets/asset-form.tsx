@@ -13,9 +13,7 @@ import {
   assetTypes,
   type AssetType,
 } from "@/server/asset-labels";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Select } from "@/components/ui/input";
 
 export type AssetFormValues = {
   projectId: string;
@@ -50,32 +48,27 @@ export function AssetForm({ values }: { values: AssetFormValues }) {
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
           Título
-          <input
+          <Input
             name="title"
             required
             maxLength={120}
             defaultValue={values.title}
-            className={`${fieldClass} h-11`}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Tipo
-          <select
-            name="type"
-            defaultValue={values.type}
-            className={`${fieldClass} h-11`}
-          >
+          <Select name="type" defaultValue={values.type}>
             {assetTypes.map((type) => (
               <option key={type} value={type}>
                 {assetTypeLabel(t, type)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
         Link
-        <input
+        <Input
           name="url"
           type="url"
           inputMode="url"
@@ -83,16 +76,14 @@ export function AssetForm({ values }: { values: AssetFormValues }) {
           maxLength={2048}
           defaultValue={values.url}
           placeholder="https://drive.google.com/..."
-          className={`${fieldClass} h-11`}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Descrição (opcional)
-        <input
+        <Input
           name="description"
           maxLength={1000}
           defaultValue={values.description}
-          className={`${fieldClass} h-11`}
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">

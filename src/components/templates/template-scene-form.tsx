@@ -8,9 +8,7 @@ import {
   type ProductionTemplateFormState,
 } from "@/server/production-template-actions";
 import { sceneTypeLabel, sceneTypes } from "@/server/scene-labels";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Select } from "@/components/ui/input";
 
 export function TemplateSceneForm({ templateId }: { templateId: string }) {
   const t = useTranslations();
@@ -32,36 +30,22 @@ export function TemplateSceneForm({ templateId }: { templateId: string }) {
       <div className="grid gap-3 sm:grid-cols-[1fr_12rem]">
         <label className="flex flex-col gap-1 text-sm">
           Título da cena
-          <input
-            name="title"
-            required
-            maxLength={120}
-            placeholder="Hook"
-            className={`${fieldClass} h-11`}
-          />
+          <Input name="title" required maxLength={120} placeholder="Hook" />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Tipo
-          <select
-            name="type"
-            defaultValue="OTHER"
-            className={`${fieldClass} h-11`}
-          >
+          <Select name="type" defaultValue="OTHER">
             {sceneTypes.map((type) => (
               <option key={type} value={type}>
                 {sceneTypeLabel(t, type)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm">
         Orientação (opcional)
-        <input
-          name="description"
-          maxLength={2000}
-          className={`${fieldClass} h-11`}
-        />
+        <Input name="description" maxLength={2000} />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
         Adicionar cena

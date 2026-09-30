@@ -19,9 +19,7 @@ import {
 import { hasProjectSearch, parseProjectSearch } from "@/server/project-search";
 import { listTeam } from "@/server/team";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Select } from "@/components/ui/input";
 
 function personLabel(member: { name: string | null; email: string | null }) {
   return member.name || member.email || "Sem nome";
@@ -92,116 +90,75 @@ export default async function ProductionsPage({
       >
         <label className="flex flex-col gap-1 text-sm sm:col-span-2">
           Busca
-          <input
-            name="q"
-            defaultValue={query.text}
-            placeholder="Título"
-            className={`${fieldClass} h-11`}
-          />
+          <Input name="q" defaultValue={query.text} placeholder="Título" />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Status
-          <select
-            name="status"
-            defaultValue={query.status}
-            className={`${fieldClass} h-11`}
-          >
+          <Select name="status" defaultValue={query.status}>
             <option value="">Todos</option>
             {videoProjectStatuses.map((status) => (
               <option key={status} value={status}>
                 {projectStatusLabel(t, status)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Prioridade
-          <select
-            name="priority"
-            defaultValue={query.priority}
-            className={`${fieldClass} h-11`}
-          >
+          <Select name="priority" defaultValue={query.priority}>
             <option value="">Todas</option>
             {projectPriorities.map((priority) => (
               <option key={priority} value={priority}>
                 {priorityLabel(t, priority)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Responsável
-          <select
-            name="ownerId"
-            defaultValue={query.ownerId}
-            className={`${fieldClass} h-11`}
-          >
+          <Select name="ownerId" defaultValue={query.ownerId}>
             <option value="">Todos</option>
             {team.map((member) => (
               <option key={member.userId} value={member.userId}>
                 {personLabel(member)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Participante
-          <select
-            name="participantId"
-            defaultValue={query.participantId}
-            className={`${fieldClass} h-11`}
-          >
+          <Select name="participantId" defaultValue={query.participantId}>
             <option value="">Todos</option>
             {team.map((member) => (
               <option key={member.userId} value={member.userId}>
                 {personLabel(member)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <label className="flex flex-col gap-1 text-sm sm:col-span-2">
           Produto
-          <input
-            name="product"
-            defaultValue={query.product}
-            className={`${fieldClass} h-11`}
-          />
+          <Input name="product" defaultValue={query.product} />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Gravação de
-          <input
-            type="date"
-            name="shootFrom"
-            defaultValue={query.shootFrom}
-            className={`${fieldClass} h-11`}
-          />
+          <Input type="date" name="shootFrom" defaultValue={query.shootFrom} />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Gravação até
-          <input
-            type="date"
-            name="shootTo"
-            defaultValue={query.shootTo}
-            className={`${fieldClass} h-11`}
-          />
+          <Input type="date" name="shootTo" defaultValue={query.shootTo} />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Publicação de
-          <input
+          <Input
             type="date"
             name="publishFrom"
             defaultValue={query.publishFrom}
-            className={`${fieldClass} h-11`}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Publicação até
-          <input
-            type="date"
-            name="publishTo"
-            defaultValue={query.publishTo}
-            className={`${fieldClass} h-11`}
-          />
+          <Input type="date" name="publishTo" defaultValue={query.publishTo} />
         </label>
         <div className="flex flex-wrap gap-2 sm:col-span-2">
           <button

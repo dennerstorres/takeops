@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { changeTeamRole } from "@/server/team-actions";
 import { roleLabel } from "@/server/team";
 import type { WorkspaceRole } from "@/server/workspace-repository";
+import { Select } from "@/components/ui/input";
 
 export function MemberRoleForm({
   userId,
@@ -18,18 +19,13 @@ export function MemberRoleForm({
       <label className="sr-only" htmlFor={`papel-${userId}`}>
         Papel
       </label>
-      <select
-        id={`papel-${userId}`}
-        name="role"
-        defaultValue={role}
-        className="h-11 rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-      >
+      <Select id={`papel-${userId}`} name="role" defaultValue={role}>
         {roles.map((item) => (
           <option key={item} value={item}>
             {roleLabel(item)}
           </option>
         ))}
-      </select>
+      </Select>
       <Button type="submit" variant="outline" className="min-h-11">
         Salvar
       </Button>

@@ -6,6 +6,7 @@ import {
   schedulePublicationAction,
   type PublicationFormState,
 } from "@/server/publication-actions";
+import { Input } from "@/components/ui/input";
 
 export function SchedulePublicationForm({
   projectId,
@@ -35,11 +36,11 @@ export function SchedulePublicationForm({
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
         Data e hora da publicação
-        <input
+        <Input
           type="datetime-local"
           name="scheduledAt"
           defaultValue={scheduledLocal}
-          className="h-11 w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:w-64"
+          className="sm:w-64"
         />
       </label>
       <div className="flex flex-wrap gap-2">

@@ -7,9 +7,7 @@ import {
   requestApprovalAction,
   type ApprovalFormState,
 } from "@/server/approval-actions";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 py-2 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Textarea } from "@/components/ui/input";
 
 export function RequestApprovalForm({
   projectId,
@@ -69,12 +67,7 @@ export function DecideApprovalForm({
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
         Notas (obrigatórias para pedir alterações)
-        <textarea
-          name="notes"
-          maxLength={4000}
-          rows={3}
-          className={fieldClass}
-        />
+        <Textarea name="notes" maxLength={4000} rows={3} />
       </label>
       <div className="flex flex-wrap gap-2">
         <Button

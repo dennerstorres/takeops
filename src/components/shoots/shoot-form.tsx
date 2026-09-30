@@ -13,9 +13,7 @@ import {
   shootStatusLabel,
   type ShootStatus,
 } from "@/server/shoot-labels";
-
-const fieldClass =
-  "h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Select, Textarea } from "@/components/ui/input";
 
 export type ShootFormValues = {
   projectId: string;
@@ -58,69 +56,53 @@ export function ShootForm({
       ) : null}
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
         Título
-        <input
+        <Input
           name="title"
           maxLength={120}
           defaultValue={values.title}
           placeholder="Sessão no estúdio"
-          className={fieldClass}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Início
-        <input
+        <Input
           name="scheduledAt"
           type="datetime-local"
           required
           defaultValue={values.scheduledAt}
-          className={fieldClass}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Fim
-        <input
-          name="endAt"
-          type="datetime-local"
-          defaultValue={values.endAt}
-          className={fieldClass}
-        />
+        <Input name="endAt" type="datetime-local" defaultValue={values.endAt} />
       </label>
       <p className="text-xs text-muted-foreground sm:col-span-2">
         Horário de {timezone}.
       </p>
       <label className="flex flex-col gap-1 text-sm">
         Local
-        <input
-          name="location"
-          maxLength={200}
-          defaultValue={values.location}
-          className={fieldClass}
-        />
+        <Input name="location" maxLength={200} defaultValue={values.location} />
       </label>
       {editing ? (
         <label className="flex flex-col gap-1 text-sm">
           Status
-          <select
-            name="status"
-            defaultValue={values.status}
-            className={fieldClass}
-          >
+          <Select name="status" defaultValue={values.status}>
             {shootStatuses.map((status) => (
               <option key={status} value={status}>
                 {shootStatusLabel(t, status)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
       ) : null}
       <label className="flex flex-col gap-1 text-sm sm:col-span-2">
         Notas
-        <textarea
+        <Textarea
           name="notes"
           rows={2}
           maxLength={4000}
           defaultValue={values.notes}
-          className={`${fieldClass} h-auto min-h-16 py-2`}
+          className="h-auto min-h-16 py-2"
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">

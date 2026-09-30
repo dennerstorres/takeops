@@ -6,9 +6,7 @@ import {
   addShootEquipmentAction,
   type ShootFormState,
 } from "@/server/shoot-actions";
-
-const fieldClass =
-  "h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Checkbox, Select } from "@/components/ui/input";
 
 export function AddShootEquipmentForm({
   projectId,
@@ -38,19 +36,15 @@ export function AddShootEquipmentForm({
       <label className="sr-only" htmlFor={`kit-${shootId}`}>
         Equipamento
       </label>
-      <select
-        id={`kit-${shootId}`}
-        name="equipmentItemId"
-        className={fieldClass}
-      >
+      <Select id={`kit-${shootId}`} name="equipmentItemId">
         {options.map((option) => (
           <option key={option.id} value={option.id}>
             {option.label}
           </option>
         ))}
-      </select>
+      </Select>
       <label className="flex min-h-11 items-center gap-2 text-sm">
-        <input
+        <Checkbox
           type="checkbox"
           name="required"
           defaultChecked

@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { ItemList, ItemListRow } from "@/components/ui/item-list";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { CaptureIdeaForm } from "@/components/ideas/capture-idea-form";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
@@ -63,23 +65,26 @@ export default async function IdeasPage() {
           description="As ideias da equipe aparecem aqui."
         />
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ItemList>
           {ideas.map((idea) => (
-            <li key={idea.id}>
+            <ItemListRow key={idea.id} className="p-0">
               <Link
                 href={`/ideias/${idea.id}`}
-                className="flex min-h-11 flex-col gap-1 rounded-xl border p-3 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                className="flex min-h-11 w-full flex-col gap-1 px-4 py-3 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
               >
                 <span className="truncate text-sm font-medium">
                   {idea.title}
                 </span>
-                <span className="text-sm text-muted-foreground">
-                  {statusLabel(t, idea.status)} · {when.format(idea.createdAt)}
+                <span className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                  <StatusBadge status={idea.status}>
+                    {statusLabel(t, idea.status)}
+                  </StatusBadge>
+                  {when.format(idea.createdAt)}
                 </span>
               </Link>
-            </li>
+            </ItemListRow>
           ))}
-        </ul>
+        </ItemList>
       )}
     </div>
   );

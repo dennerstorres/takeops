@@ -6,9 +6,7 @@ import {
   recordOutcomeAction,
   type PublicationFormState,
 } from "@/server/publication-actions";
-
-const fieldClass =
-  "h-11 w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input } from "@/components/ui/input";
 
 export function PublicationOutcomeForm({
   projectId,
@@ -40,23 +38,21 @@ export function PublicationOutcomeForm({
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
           Link da publicação
-          <input
+          <Input
             name="url"
             type="url"
             inputMode="url"
             maxLength={2048}
             defaultValue={url}
             placeholder="https://..."
-            className={fieldClass}
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Publicada em (vazio = agora)
-          <input
+          <Input
             type="datetime-local"
             name="publishedAt"
             defaultValue={publishedLocal}
-            className={fieldClass}
           />
         </label>
       </div>

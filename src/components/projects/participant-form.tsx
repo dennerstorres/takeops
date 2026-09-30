@@ -9,6 +9,7 @@ import {
   projectRoles,
   type ProjectRole,
 } from "@/server/participant-labels";
+import { Select } from "@/components/ui/input";
 
 export function ParticipantForm({
   projectId,
@@ -29,27 +30,22 @@ export function ParticipantForm({
       <label className="sr-only" htmlFor={`pessoa-${projectId}`}>
         Pessoa
       </label>
-      <select
+      <Select
         id={`pessoa-${projectId}`}
         name="userId"
         required
-        className="h-11 min-w-40 flex-1 rounded-lg border border-input bg-transparent px-3 text-sm"
+        className="min-w-40 flex-1"
       >
         {people.map((person) => (
           <option key={person.id} value={person.id}>
             {person.label}
           </option>
         ))}
-      </select>
+      </Select>
       <label className="sr-only" htmlFor={`funcao-${projectId}`}>
         Função
       </label>
-      <select
-        id={`funcao-${projectId}`}
-        name="role"
-        defaultValue="PRODUCER"
-        className="h-11 rounded-lg border border-input bg-transparent px-3 text-sm"
-      >
+      <Select id={`funcao-${projectId}`} name="role" defaultValue="PRODUCER">
         {projectRoles
           .filter((role) => canManageApprovers || role !== "APPROVER")
           .map((role) => (
@@ -57,7 +53,7 @@ export function ParticipantForm({
               {projectRoleLabel(t, role)}
             </option>
           ))}
-      </select>
+      </Select>
       <Button type="submit" className="min-h-11">
         Adicionar
       </Button>

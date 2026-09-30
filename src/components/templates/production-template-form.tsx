@@ -8,9 +8,7 @@ import {
   saveProductionTemplateAction,
   type ProductionTemplateFormState,
 } from "@/server/production-template-actions";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Textarea } from "@/components/ui/input";
 
 export function ProductionTemplateForm({
   values,
@@ -36,23 +34,22 @@ export function ProductionTemplateForm({
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
         Nome
-        <input
+        <Input
           name="name"
           required
           maxLength={120}
           defaultValue={values.name}
           placeholder="Demonstração de Feature"
-          className={`${fieldClass} h-11`}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Descrição (opcional)
-        <textarea
+        <Textarea
           name="description"
           maxLength={2000}
           rows={2}
           defaultValue={values.description}
-          className={`${fieldClass} py-2`}
+          className="py-2"
         />
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">

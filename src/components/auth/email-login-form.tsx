@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { loginWithEmail, type EmailLoginState } from "@/server/auth-actions";
+import { Input } from "@/components/ui/input";
 
 export function EmailLoginForm({ callbackUrl }: { callbackUrl?: string }) {
   const [state, action, pending] = useActionState(
@@ -17,7 +18,7 @@ export function EmailLoginForm({ callbackUrl }: { callbackUrl?: string }) {
       <label htmlFor="login-email" className="text-sm font-medium">
         E-mail
       </label>
-      <input
+      <Input
         id="login-email"
         name="email"
         type="email"
@@ -25,7 +26,6 @@ export function EmailLoginForm({ callbackUrl }: { callbackUrl?: string }) {
         autoComplete="email"
         inputMode="email"
         placeholder="voce@empresa.com"
-        className="h-11 rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
       />
       {state?.message ? (
         <p role="alert" className="text-sm text-destructive">

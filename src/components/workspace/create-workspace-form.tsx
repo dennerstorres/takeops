@@ -7,6 +7,7 @@ import {
   createFirstWorkspace,
   type CreateWorkspaceState,
 } from "@/server/workspace-actions";
+import { Input } from "@/components/ui/input";
 
 const initialState: CreateWorkspaceState = null;
 
@@ -33,7 +34,7 @@ export function CreateWorkspaceForm({ email }: { email: string | null }) {
           <label htmlFor="workspace-name" className="text-sm font-medium">
             Nome
           </label>
-          <input
+          <Input
             id="workspace-name"
             name="name"
             required
@@ -48,7 +49,6 @@ export function CreateWorkspaceForm({ email }: { email: string | null }) {
                 ? "workspace-name-error"
                 : undefined
             }
-            className="h-11 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50"
           />
           {state?.fields?.name || state?.fields?.slug ? (
             <p id="workspace-name-error" className="text-sm text-destructive">

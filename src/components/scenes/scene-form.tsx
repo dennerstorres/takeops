@@ -21,9 +21,7 @@ import {
   type SceneStatus,
   type SceneType,
 } from "@/server/scene-labels";
-
-const fieldClass =
-  "w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50";
+import { Input, Select, Textarea } from "@/components/ui/input";
 
 export type SceneFormValues = {
   projectId: string;
@@ -77,122 +75,100 @@ export function SceneForm({
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
         Título
-        <input
+        <Input
           name="title"
           required
           maxLength={120}
           defaultValue={values.title}
-          className={`${fieldClass} h-11`}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Tipo
-        <select
-          name="type"
-          defaultValue={values.type}
-          className={`${fieldClass} h-11`}
-        >
+        <Select name="type" defaultValue={values.type}>
           {sceneTypes.map((type) => (
             <option key={type} value={type}>
               {sceneTypeLabel(t, type)}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
       {editing ? (
         <label className="flex flex-col gap-1 text-sm">
           Status
-          <select
-            name="status"
-            defaultValue={values.status}
-            className={`${fieldClass} h-11`}
-          >
+          <Select name="status" defaultValue={values.status}>
             {sceneStatuses.map((status) => (
               <option key={status} value={status}>
                 {sceneStatusLabel(t, status)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
         Quem fala
-        <select
-          name="speakerId"
-          defaultValue={values.speakerId}
-          className={`${fieldClass} h-11`}
-        >
+        <Select name="speakerId" defaultValue={values.speakerId}>
           <option value="">Ninguém</option>
           {people.map((person) => (
             <option key={person.id} value={person.id}>
               {person.label}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Fala
-        <textarea
+        <Textarea
           name="dialogue"
           rows={3}
           maxLength={4000}
           defaultValue={values.dialogue}
-          className={`${fieldClass} min-h-20 py-2`}
+          className="min-h-20 py-2"
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Descrição
-        <textarea
+        <Textarea
           name="description"
           rows={2}
           maxLength={4000}
           defaultValue={values.description}
-          className={`${fieldClass} min-h-16 py-2`}
+          className="min-h-16 py-2"
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Ação
-        <input
-          name="action"
-          maxLength={2000}
-          defaultValue={values.action}
-          className={`${fieldClass} h-11`}
-        />
+        <Input name="action" maxLength={2000} defaultValue={values.action} />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Duração em segundos
-        <input
+        <Input
           name="estimatedDurationSeconds"
           inputMode="numeric"
           defaultValue={values.estimatedDurationSeconds}
-          className={`${fieldClass} h-11`}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Câmera
-        <input
+        <Input
           name="cameraInstructions"
           maxLength={2000}
           defaultValue={values.cameraInstructions}
-          className={`${fieldClass} h-11`}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Edição
-        <input
+        <Input
           name="editingInstructions"
           maxLength={2000}
           defaultValue={values.editingInstructions}
-          className={`${fieldClass} h-11`}
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
         Continuidade
-        <input
+        <Input
           name="continuityNotes"
           maxLength={2000}
           defaultValue={values.continuityNotes}
-          className={`${fieldClass} h-11`}
         />
       </label>
       <div className="flex flex-wrap items-center gap-3">

@@ -4,6 +4,7 @@ import {
   updateTakeAction,
 } from "@/server/take-actions";
 import type { TakeRecord, TakeStatus } from "@/server/take-repository";
+import { Input } from "@/components/ui/input";
 
 const buttonClass =
   "inline-flex min-h-11 items-center rounded-lg border px-3 text-sm";
@@ -122,11 +123,7 @@ export function TakeList({
             <span className="text-muted-foreground">
               Observação do próximo take (opcional)
             </span>
-            <input
-              name="notes"
-              maxLength={1000}
-              className="block min-h-11 w-full rounded-lg border bg-background px-3 text-base"
-            />
+            <Input name="notes" maxLength={1000} />
           </label>
           <button
             type="submit"

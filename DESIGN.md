@@ -102,6 +102,10 @@ Pesos só `font-normal` e `font-medium`; `font-semibold` para destaque raro.
 | Erro | texto em `destructive` + faixa `destructive-muted`; mensagem humana (AGENTS §18) |
 | Salvando (autosave) | `idle/saving/saved/error` em `text-xs text-muted-foreground` |
 
+## Componentes
+
+Em `src/components/ui`: `Button` (altura 44px no tamanho padrão), `Input`, `Textarea`, `Select`, `Checkbox`, `Field`, `Card`, `StatusBadge` (tom por `statusTone`), `ItemList`, `Table`, `TabNav`/`TabLink`, `Dialog`. Vazio, erro e carregando ficam em `src/components/feedback`. Toast é o Sonner do layout.
+
 ## Movimento
 
 Transições curtas (150–200ms) de cor e opacidade. Respeitar `prefers-reduced-motion`.

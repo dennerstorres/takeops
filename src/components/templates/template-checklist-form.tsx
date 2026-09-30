@@ -6,6 +6,7 @@ import {
   setTemplateChecklistAction,
   type ProductionTemplateFormState,
 } from "@/server/production-template-actions";
+import { Select } from "@/components/ui/input";
 
 export function TemplateChecklistForm({
   templateId,
@@ -33,10 +34,10 @@ export function TemplateChecklistForm({
       ) : null}
       <label className="flex flex-col gap-1 text-sm">
         Checklist de gravação
-        <select
+        <Select
           name="checklistTemplateId"
           defaultValue={current}
-          className="h-11 w-full rounded-lg border border-input bg-transparent px-3 text-base outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 sm:w-80"
+          className="sm:w-80"
         >
           <option value="">Nenhum</option>
           {options.map((option) => (
@@ -44,7 +45,7 @@ export function TemplateChecklistForm({
               {option.label}
             </option>
           ))}
-        </select>
+        </Select>
       </label>
       <Button type="submit" disabled={pending} className="min-h-11 w-fit">
         Salvar checklist

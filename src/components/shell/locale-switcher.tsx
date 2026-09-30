@@ -6,6 +6,7 @@ import { useId, useTransition } from "react";
 import { toast } from "sonner";
 import { locales } from "@/i18n/locale";
 import { setLocaleAction } from "@/server/locale-actions";
+import { Select } from "@/components/ui/input";
 
 export function LocaleSwitcher() {
   const t = useTranslations();
@@ -19,11 +20,11 @@ export function LocaleSwitcher() {
       <label htmlFor={id} className="text-xs text-muted-foreground">
         {t("shell.language")}
       </label>
-      <select
+      <Select
         id={id}
         value={locale}
         disabled={pending}
-        className="min-h-11 rounded-lg border bg-background px-2 text-sm"
+
         onChange={(event) => {
           const next = event.target.value;
           startTransition(async () => {
@@ -41,7 +42,7 @@ export function LocaleSwitcher() {
             {t(`locale.${value}`)}
           </option>
         ))}
-      </select>
+      </Select>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   moveProjectStatusAction,
   type ProjectFormState,
 } from "@/server/project-actions";
+import { Input, Select } from "@/components/ui/input";
 
 type BoardCard = {
   id: string;
@@ -63,8 +64,8 @@ export function ProductionBoard({
         </p>
       ) : null}
       <form ref={formRef} action={action} className="hidden">
-        <input ref={projectIdRef} name="projectId" defaultValue="" />
-        <input ref={statusRef} name="status" defaultValue="" />
+        <Input ref={projectIdRef} name="projectId" defaultValue="" />
+        <Input ref={statusRef} name="status" defaultValue="" />
       </form>
       <div className="flex gap-3 overflow-x-auto pb-2">
         {columns.map((column) => (
@@ -129,12 +130,12 @@ export function ProductionBoard({
                   </Link>
                   {canEdit ? (
                     // Arrastar não funciona por teclado nem no toque.
-                    <select
+                    <Select
                       aria-label={`Mover ${card.title} para`}
                       value={column.status}
                       disabled={pending}
                       onChange={(event) => move(card.id, event.target.value)}
-                      className="mt-1 min-h-11 w-full rounded-lg border bg-background px-2 text-sm"
+                      className="mt-1"
                     >
                       {columns.map((option) => (
                         <option
@@ -149,7 +150,7 @@ export function ProductionBoard({
                           {option.title}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                   ) : null}
                 </li>
               ))}
