@@ -4842,3 +4842,19 @@ Lint. `i18n.test.ts`, `dashboard.test.ts`, `status-tone.test.ts`. `check:contras
 ### Pendências
 
 - Subir `docker compose up -d --build` numa máquina com Docker e abrir o login (fica para OSS-004 validar junto do guia).
+
+## 2026-09-29 — OSS-004 — Documentação de instalação
+
+**Status:** DONE (prints em OSS-009)
+**Agente:** Claude
+
+- `README.md` público em inglês e `README.pt-BR.md`: o que é, requisitos, Docker Compose, Coolify (com Scheduled Task do cron via `node -e fetch`, já que a imagem não tem curl), tabela de variáveis, Google OAuth (origem e redirect URI), SMTP com nota de DANE/DNSSEC para servidor de e-mail em Docker, backup (`pg_dump`/`pg_restore`), atualização, desenvolvimento e licença.
+- Guia do harness saiu do README para `HARNESS.md` (`git mv`, histórico preservado). `AGENTS.md` §23.1 aponta para a tabela de variáveis dos dois READMEs.
+
+### Testes
+
+Conferido contra o código: variáveis de `env.ts`/`.env.example`, serviços do `docker-compose.yml`, `/api/health`, scripts do `package.json`, stack. Sem teste de ponta a ponta.
+
+### Pendências
+
+- OSS-009: prints e subir o compose seguindo o guia. O app não roda nesta máquina (SWC) e o Docker está desligado.

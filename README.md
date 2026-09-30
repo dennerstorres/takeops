@@ -1,127 +1,147 @@
-# Video Production Manager — Development Harness
+# TakeOps
 
-Este diretório contém o harness de desenvolvimento e, desde o BOOT-001, o código da aplicação.
+[Português](README.pt-BR.md)
+
+TakeOps is a self-hosted web app for small teams that produce short videos (Reels, TikTok, YouTube Shorts). It covers the whole workflow, from idea to publication:
+
+- ideas inbox and production pipeline (list and kanban);
+- script, scenes and shots;
+- shoot planning with equipment and checklists;
+- **recording mode**, mobile-first, to log takes on set;
+- continuity notes and external asset links;
+- editing, versions, review comments and approval;
+- publication tracking and a shared calendar;
+- in-app notifications and activity log per production.
+
+TakeOps manages the process. It doesn't store media or edit video, and it doesn't post to social networks: assets and edit versions are links to wherever your files already live, and publications are recorded, not executed.
+
+The interface is available in English and Brazilian Portuguese.
+
+## Requirements
+
+- Docker with Compose (recommended), **or** Node.js 22+ and PostgreSQL 15+;
+- a domain with HTTPS for production (OAuth and email links need a public URL);
+- at least one login method: a Google OAuth client, or an SMTP server for email sign-in links.
+
+## Quick start with Docker Compose
+
+```bash
+git clone https://github.com/dennerstorres/takeops.git
+cd takeops
+cp .env.example .env
+```
+
+Edit `.env` and set at least:
+
+- `AUTH_SECRET`: 32+ characters (`openssl rand -base64 32`);
+- `POSTGRES_PASSWORD`: letters and digits only, because it goes into the database URL (`openssl rand -hex 24`);
+- `AUTH_URL`: the public URL, e.g. `https://takeops.example.com`;
+- one login method (see [Google OAuth](#google-oauth) and [Email sign-in](#email-sign-in-smtp)).
+
+Then:
+
+```bash
+docker compose up -d --build
+```
+
+Compose starts three services:
+
+- `db`: PostgreSQL 17, with data kept in the `db-data` volume;
+- `app`: TakeOps on port `3000` (change it with `APP_PORT`). It applies database migrations on every start;
+- `cron`: calls the upcoming-shoot reminder route once an hour. It does nothing until `CRON_SECRET` is set.
+
+Put a reverse proxy with HTTPS (Caddy, Traefik, nginx) in front of port 3000. The first person to sign in creates the first workspace and invites the rest of the team.
+
+## Deploying with Coolify
+
+1. Create a PostgreSQL resource and copy its internal connection URL.
+2. Create an application from this Git repository with the **Dockerfile** build pack and port `3000`.
+3. Set the environment variables (see the [table below](#environment-variables)), including `DATABASE_URL` from step 1.
+4. Set the domain. The container healthcheck uses `/api/health`.
+5. Optional: to send upcoming-shoot reminders, set `CRON_SECRET` and add a Scheduled Task on the app that runs every hour (`0 * * * *`):
+
+   ```bash
+   node -e "fetch('http://127.0.0.1:3000/api/cron/upcoming-shoots',{method:'POST',headers:{authorization:'Bearer '+process.env.CRON_SECRET}}).then(r=>process.exit(r.ok?0:1))"
+   ```
+
+Migrations run when the container starts. Set `MIGRATE_ON_START=false` if you prefer to run them yourself.
+
+## Environment variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | yes (ignored by Compose) | PostgreSQL URL, `postgresql://…` |
+| `AUTH_SECRET` | yes in production | Session secret, 32+ characters |
+| `AUTH_URL` | recommended | Public URL of the app |
+| `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | one login method | Google OAuth client |
+| `EMAIL_SERVER` / `EMAIL_FROM` | one login method | SMTP URL and sender for sign-in links |
+| `CRON_SECRET` | no | Enables `POST /api/cron/upcoming-shoots` (32+ characters) |
+| `MIGRATE_ON_START` | no | `false` skips `prisma migrate deploy` on start (default `true`) |
+| `POSTGRES_PASSWORD` | Compose only | Password of the bundled PostgreSQL |
+| `APP_PORT` | Compose only | Host port (default `3000`) |
+
+The app validates these values on start and refuses to boot with an invalid configuration. The error names the variable, never its value. Each login method is enabled only when both of its variables are set.
+
+## Google OAuth
+
+In Google Cloud Console → APIs & Services → Credentials, create an **OAuth client ID** of type *Web application*:
+
+- Authorized JavaScript origin: `https://takeops.example.com`
+- Authorized redirect URI: `https://takeops.example.com/api/auth/callback/google`
+
+Copy the client ID and secret to `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
+
+## Email sign-in (SMTP)
+
+```env
+EMAIL_SERVER="smtps://user:password@smtp.example.com:465"
+EMAIL_FROM="TakeOps <takeops@example.com>"
+```
+
+Use `smtps://` for port 465 (implicit TLS) or `smtp://` for 587 (STARTTLS). URL-encode special characters in the password.
+
+**Running your own mail server in Docker?** If sign-in emails get stuck in the queue with an error like *DANE validation failed*, the mail server is probably resolving DNS through Docker's resolver, which doesn't validate DNSSEC. Point the mail server to a DNSSEC-validating resolver (for example `1.1.1.1` or `9.9.9.9`) instead of weakening its TLS policy.
+
+## Backup
+
+With Compose, dump the database:
+
+```bash
+docker compose exec -T db pg_dump -U takeops -Fc takeops > takeops-$(date +%F).dump
+```
+
+Restore into an empty database:
+
+```bash
+docker compose exec -T db pg_restore -U takeops -d takeops --clean --if-exists < takeops-2026-01-01.dump
+```
+
+On Coolify, enable scheduled backups on the PostgreSQL resource, ideally to S3-compatible storage. TakeOps stores no media, so the database is all you need to back up.
+
+## Updating
+
+```bash
+git pull
+docker compose up -d --build
+```
+
+Pending migrations are applied when the app starts. Take a backup before updating. On Coolify, redeploy the application.
+
+## Development
 
 ```bash
 npm install
+cp .env.example .env        # point DATABASE_URL to a local PostgreSQL
+npx prisma migrate deploy
 npm run dev
 ```
 
-Banco local: copie `.env.example` para `.env` e aponte `DATABASE_URL` para o PostgreSQL. `npx prisma dev --name takeops` sobe um Postgres local e imprime a URL.
+`npx prisma dev --name takeops` starts a local PostgreSQL and prints its URL. `npm run verify` runs lint, contrast check, typecheck, tests and build.
 
-```bash
-npm run db:migrate
-npm run db:check
-```
+Contributors (people and coding agents) should read [`HARNESS.md`](HARNESS.md) and [`AGENTS.md`](AGENTS.md) first. Project docs (spec, plan, decisions) are in Portuguese.
 
-A ideia é que qualquer agente — Codex, Claude Code ou outro assistente — consiga entrar no repositório, entender o produto, descobrir o estado atual da implementação e executar uma tarefa sem depender do histórico de conversas externas.
+Stack: Next.js, React, Prisma, PostgreSQL, Auth.js, next-intl, Tailwind CSS.
 
-## Ordem de leitura
+## License
 
-Antes de alterar código:
-
-1. `AGENTS.md`
-2. `STATUS.md`
-3. `SPEC.md`
-4. `PLAN.md`
-5. `DECISIONS.md`
-6. `HISTORY.md` somente quando contexto histórico for necessário
-7. `TESTING.md` antes de alterar ou criar testes
-
-## Fonte de verdade
-
-- Produto e requisitos: `SPEC.md`
-- Regras para agentes: `AGENTS.md`
-- Trabalho planejado: `PLAN.md`
-- Estado atual: `STATUS.md`
-- Decisões arquiteturais: `DECISIONS.md`
-- Implementações realizadas: `HISTORY.md`
-- Estratégia de testes: `TESTING.md`
-
-Quando houver conflito:
-
-1. decisões explícitas mais recentes em `DECISIONS.md`;
-2. `SPEC.md`;
-3. `AGENTS.md`;
-4. `PLAN.md`;
-5. documentação auxiliar.
-
-Se uma decisão mudar um requisito funcional do produto, atualizar também `SPEC.md`.
-
-## Regra principal
-
-Nunca implementar uma grande quantidade de tarefas do `PLAN.md` em silêncio.
-
-A unidade preferencial de trabalho é **uma tarefa por vez**, incluindo:
-
-- implementação;
-- testes;
-- validação;
-- atualização do `PLAN.md`;
-- atualização do `STATUS.md`;
-- entrada no `HISTORY.md`;
-- decisão em `DECISIONS.md`, quando aplicável.
-
-## Estrutura
-
-```text
-.
-├── AGENTS.md
-├── CLAUDE.md
-├── SPEC.md
-├── PLAN.md
-├── STATUS.md
-├── HISTORY.md
-├── DECISIONS.md
-├── TESTING.md
-├── TASK_TEMPLATE.md
-└── README.md
-```
-
-## Fluxo recomendado
-
-```text
-Escolher próxima tarefa READY
-↓
-Ler requisitos relacionados
-↓
-Inspecionar código existente
-↓
-Planejar alteração mínima
-↓
-Implementar
-↓
-Testar
-↓
-Revisar diff
-↓
-Atualizar documentação do harness
-↓
-Marcar tarefa DONE
-```
-
-## Status de tarefas
-
-O `PLAN.md` usa:
-
-- `TODO` — ainda não pronta para execução;
-- `READY` — pode ser iniciada;
-- `IN_PROGRESS` — tarefa atualmente em execução;
-- `BLOCKED` — depende de decisão ou tarefa externa;
-- `DONE` — implementada e validada;
-- `CANCELED` — removida conscientemente do escopo.
-
-Idealmente deve existir apenas uma tarefa `IN_PROGRESS` por agente/branch.
-
-## Commits
-
-Formato sugerido:
-
-```text
-feat(auth): implement Google login
-fix(projects): enforce workspace isolation
-test(shoots): cover recording-mode take flow
-docs(harness): document architecture decision ADR-004
-```
-
-Commits pequenos e semanticamente coerentes são preferíveis.
+[AGPL-3.0](LICENSE). You can use and host TakeOps freely. If you offer a modified version as a network service, you must publish its source code.

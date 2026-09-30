@@ -1796,11 +1796,24 @@ Decisões: ADR-037 (Docker/Coolify), ADR-039 (AGPL-3.0), ADR-040 (login por e-ma
 
 ## OSS-004 — Documentação de instalação
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** OSS-003, OSS-005
 
 README público em inglês com `README.pt-BR.md` (incluir nota sobre SMTP próprio em Docker e DANE/DNSSEC): o que é, prints, requisitos, docker-compose, Coolify, variáveis, OAuth Google (URIs), SMTP, backup, atualização. Separar notas internas do harness do README.
+
+---
+
+## OSS-009 — Prints e teste do compose
+
+**Status:** TODO  
+**Prioridade:** P1  
+**Dependências:** OSS-004
+
+Pendência da OSS-004, que não pôde subir o app (SWC nativo falha no Windows do agente, Docker desligado).
+
+- `docker compose up -d --build` numa máquina limpa seguindo o README; corrigir o que o guia errar;
+- prints (dashboard, produção, Modo Gravação no celular) em `docs/screenshots/`, sem dados reais, referenciados nos dois READMEs.
 
 ---
 

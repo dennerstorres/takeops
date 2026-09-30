@@ -531,7 +531,7 @@ Não:
 O repositório é público e self-hosted (ADR-037, ADR-039). Por isso:
 
 - nada específico da instância do mantenedor no código (domínio, IDs, contas); isso fica em env ou em docs de deploy;
-- toda variável nova entra no `.env.example` comentada, na validação de `src/server/env.ts` e no README;
+- toda variável nova entra no `.env.example` comentada, na validação de `src/server/env.ts` e na tabela de variáveis do `README.md` e do `README.pt-BR.md`;
 - nenhum dado pessoal, e-mail real ou nome de cliente em seed, teste ou doc;
 - dependência nova precisa de licença compatível com AGPL-3.0;
 - nenhum código ou asset de terceiro sem licença que permita (PanelUI é só referência visual, ADR-038);

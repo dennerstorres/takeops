@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 22 — Self-hosted (OSS-003 feita)
+Fase 22 — Self-hosted (OSS-003 e 004 feitas)
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-OSS-003 — docker-compose para self-host
+OSS-004 — Documentação de instalação
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-OSS-004 — Documentação de instalação
+OSS-006 — Arquivos de comunidade
 ```
 
 ## Estado dos módulos
