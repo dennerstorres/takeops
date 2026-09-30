@@ -4,6 +4,8 @@ import { EditVersionForm } from "@/components/editing/edit-version-form";
 import { EditingForm } from "@/components/editing/editing-form";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
+import { surfaceClass } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { listEditVersions, versionLabel } from "@/server/edit-version";
@@ -108,7 +110,7 @@ export default async function EditingPage({
     minute: "2-digit",
   });
   const linkClass =
-    "inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4";
+    "inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline";
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
@@ -150,7 +152,7 @@ export default async function EditingPage({
             ["Legenda", info ? (info.captionsRequired ? "Sim" : "Não") : null],
             ["Música", info ? (info.musicRequired ? "Sim" : "Não") : null],
           ].map(([label, value]) => (
-            <div key={label} className="space-y-1">
+            <div key={label} className={cn(surfaceClass, "space-y-1 p-3")}>
               <dt className="text-sm text-muted-foreground">{label}</dt>
               <dd className="text-sm font-medium">
                 {value ?? "Não informado"}
@@ -158,14 +160,14 @@ export default async function EditingPage({
             </div>
           ))}
           {info?.projectFileUrl ? (
-            <div className="space-y-1 sm:col-span-2">
+            <div className={cn(surfaceClass, "space-y-1 p-3 sm:col-span-2")}>
               <dt className="text-sm text-muted-foreground">Projeto</dt>
               <dd>
                 <a
                   href={info.projectFileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center text-sm font-medium break-all underline underline-offset-4"
+                  className="inline-flex min-h-11 items-center text-sm font-medium break-all text-primary underline-offset-4 hover:underline"
                 >
                   Abrir projeto de edição
                 </a>
@@ -173,7 +175,7 @@ export default async function EditingPage({
             </div>
           ) : null}
           {info?.notes ? (
-            <div className="space-y-1 sm:col-span-2">
+            <div className={cn(surfaceClass, "space-y-1 p-3 sm:col-span-2")}>
               <dt className="text-sm text-muted-foreground">Notas</dt>
               <dd className="text-sm whitespace-pre-wrap">{info.notes}</dd>
             </div>
@@ -183,7 +185,7 @@ export default async function EditingPage({
       <section id="versoes" className="flex flex-col gap-3 border-t pt-6">
         <h2 className="text-base font-medium">Versões</h2>
         {canEdit ? (
-          <details className="rounded-xl border p-3">
+          <details className={cn(surfaceClass, "p-3")}>
             <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
               Nova versão
             </summary>
@@ -203,7 +205,7 @@ export default async function EditingPage({
         ) : (
           <ol className="flex flex-col gap-3">
             {versions.map((version) => (
-              <li key={version.id} className="rounded-xl border p-3">
+              <li key={version.id} className={cn(surfaceClass, "p-3")}>
                 <p className="text-sm font-medium">
                   {versionLabel(version.versionNumber)}
                   {version.title ? ` · ${version.title}` : null}

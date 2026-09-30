@@ -2,6 +2,10 @@ import { useTranslations } from "next-intl";
 import { DeleteShotButton } from "@/components/shots/delete-shot-button";
 import { ShotForm } from "@/components/shots/shot-form";
 import { TakeList } from "@/components/takes/take-list";
+import { Button } from "@/components/ui/button";
+import { surfaceClass } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { cn } from "@/lib/utils";
 import { moveShotAction } from "@/server/shot-actions";
 import {
   shotDisplayName,
@@ -10,9 +14,6 @@ import {
 } from "@/server/shot-labels";
 import type { ShotRecord } from "@/server/shot-repository";
 import type { TakeRecord } from "@/server/take-repository";
-
-const buttonClass =
-  "inline-flex min-h-11 items-center rounded-lg border px-3 text-sm disabled:opacity-40";
 
 export function ShotSection({
   projectId,
@@ -36,13 +37,16 @@ export function ShotSection({
       ) : (
         <ol className="flex flex-col gap-3">
           {shots.map((shot, index) => (
-            <li key={shot.id} className="rounded-xl border p-3">
+            <li key={shot.id} className={cn(surfaceClass, "p-3")}>
               <div className="min-w-0 space-y-1">
                 <p className="text-sm font-medium">
                   {shotDisplayName(t, shot.name, index)}
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  {shotSummary(t, shot)} · {shotStatusLabel(t, shot.status)}
+                <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                  <span>{shotSummary(t, shot)}</span>
+                  <StatusBadge status={shot.status}>
+                    {shotStatusLabel(t, shot.status)}
+                  </StatusBadge>
                 </p>
                 {shot.description ? (
                   <p className="text-sm whitespace-pre-wrap">
@@ -68,24 +72,24 @@ export function ShotSection({
                       <input type="hidden" name="projectId" value={projectId} />
                       <input type="hidden" name="sceneId" value={sceneId} />
                       <input type="hidden" name="shotId" value={shot.id} />
-                      <button
+                      <Button
                         type="submit"
                         name="direction"
                         value="up"
+                        variant="outline"
                         disabled={index === 0}
-                        className={buttonClass}
                       >
                         Subir
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="submit"
                         name="direction"
                         value="down"
+                        variant="outline"
                         disabled={index === shots.length - 1}
-                        className={buttonClass}
                       >
                         Descer
-                      </button>
+                      </Button>
                     </form>
                     <DeleteShotButton
                       projectId={projectId}
@@ -125,7 +129,7 @@ export function ShotSection({
         </ol>
       )}
       {canEdit ? (
-        <details className="rounded-xl border p-3">
+        <details className={cn(surfaceClass, "p-3")}>
           <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
             Novo shot
           </summary>

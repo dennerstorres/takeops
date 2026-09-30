@@ -7,7 +7,11 @@ import { DeleteShootButton } from "@/components/shoots/delete-shoot-button";
 import { InstantiateChecklistForm } from "@/components/shoots/instantiate-checklist-form";
 import { ShootEquipment } from "@/components/shoots/shoot-equipment";
 import { ShootForm } from "@/components/shoots/shoot-form";
+import { buttonVariants } from "@/components/ui/button";
+import { surfaceClass } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { utcToZonedLocal } from "@/lib/zoned-time";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { listChecklistTemplates } from "@/server/checklist";
@@ -153,7 +157,7 @@ export default async function ShootsPage({
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
       {projectChecklist.length > 0 ? (
-        <details className="rounded-xl border p-3">
+        <details className={cn(surfaceClass, "p-3")}>
           <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
             Checklist da produção · {projectChecklist.length} itens
           </summary>
@@ -169,7 +173,7 @@ export default async function ShootsPage({
       ) : null}
       <Link
         href={`/producoes/${project.id}/continuidade`}
-        className="inline-flex min-h-11 w-fit items-center rounded-lg border px-3 text-sm"
+        className={cn(buttonVariants({ variant: "outline" }), "w-fit")}
       >
         Continuidade
       </Link>
@@ -181,7 +185,7 @@ export default async function ShootsPage({
       ) : (
         <ol className="flex flex-col gap-3">
           {shoots.map((shoot, index) => (
-            <li key={shoot.id} className="rounded-xl border p-3">
+            <li key={shoot.id} className={cn(surfaceClass, "p-3")}>
               <div className="min-w-0 space-y-1">
                 <p className="text-sm font-medium">
                   {shoot.title || "Sessão de gravação"}
@@ -199,9 +203,11 @@ export default async function ShootsPage({
                     </>
                   ) : null}
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  {shootStatusLabel(t, shoot.status)}
-                  {shoot.location ? ` · ${shoot.location}` : null}
+                <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                  <StatusBadge status={shoot.status}>
+                    {shootStatusLabel(t, shoot.status)}
+                  </StatusBadge>
+                  {shoot.location ? <span>{shoot.location}</span> : null}
                 </p>
                 {shoot.notes ? (
                   <p className="text-sm whitespace-pre-wrap">{shoot.notes}</p>
@@ -209,7 +215,7 @@ export default async function ShootsPage({
               </div>
               <Link
                 href={`/producoes/${project.id}/gravacao/${shoot.id}/modo`}
-                className="mt-3 inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground"
+                className={cn(buttonVariants(), "mt-3 w-full")}
               >
                 Abrir Modo Gravação
               </Link>
@@ -244,7 +250,7 @@ export default async function ShootsPage({
                 ) : (
                   <Link
                     href={`/producoes/${project.id}/gravacao/${shoot.id}/checklist`}
-                    className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
+                    className={buttonVariants({ variant: "outline" })}
                   >
                     Abrir checklist
                   </Link>

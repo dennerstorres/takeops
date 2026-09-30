@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { ContinuityForm } from "@/components/continuity/continuity-form";
 import { DeleteContinuityButton } from "@/components/continuity/delete-continuity-button";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { surfaceClass } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { groupContinuityNotes, listContinuityNotes } from "@/server/continuity";
@@ -60,7 +62,7 @@ export default async function ContinuityPage({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <Link
         href={`/producoes/${project.id}/gravacao`}
-        className="inline-flex min-h-11 items-center text-sm text-muted-foreground"
+        className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
         Voltar à gravação
       </Link>
@@ -69,7 +71,7 @@ export default async function ContinuityPage({
         <p className="text-sm text-muted-foreground">{project.title}</p>
       </header>
       {canEdit ? (
-        <section className="space-y-3 rounded-xl border p-3">
+        <section className={cn(surfaceClass, "space-y-3 p-3")}>
           <h2 className="text-sm font-medium">Nova nota</h2>
           <ContinuityForm
             categories={categories}
@@ -95,7 +97,7 @@ export default async function ContinuityPage({
             </h2>
             <ul className="flex flex-col gap-3">
               {group.items.map((note) => (
-                <li key={note.id} className="rounded-xl border p-3">
+                <li key={note.id} className={cn(surfaceClass, "p-3")}>
                   <p className="text-sm font-medium">{note.title}</p>
                   <p className="text-sm whitespace-pre-wrap">
                     {note.description}

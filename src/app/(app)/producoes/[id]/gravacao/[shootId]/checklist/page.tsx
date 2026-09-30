@@ -52,7 +52,7 @@ export default async function ShootChecklistPage({
     <div className="mx-auto flex w-full max-w-xl flex-col gap-4">
       <Link
         href={`/producoes/${id}/gravacao`}
-        className="inline-flex min-h-11 items-center text-sm text-muted-foreground"
+        className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
         Voltar à gravação
       </Link>

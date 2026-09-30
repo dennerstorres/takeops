@@ -5,6 +5,10 @@ import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
 import { DeleteSceneButton } from "@/components/scenes/delete-scene-button";
 import { SceneForm } from "@/components/scenes/scene-form";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { surfaceClass } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
@@ -93,15 +97,17 @@ export default async function ScenesPage({
       ) : (
         <ul className="flex flex-col gap-3">
           {scenes.map((scene, index) => (
-            <li key={scene.id} className="rounded-xl border p-3">
+            <li key={scene.id} className={cn(surfaceClass, "p-3")}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0 space-y-1">
                   <p className="truncate text-sm font-medium">
                     {scene.order}. {scene.title}
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    {sceneTypeLabel(t, scene.type)} ·{" "}
-                    {sceneStatusLabel(t, scene.status)}
+                  <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                    <span>{sceneTypeLabel(t, scene.type)}</span>
+                    <StatusBadge status={scene.status}>
+                      {sceneStatusLabel(t, scene.status)}
+                    </StatusBadge>
                   </p>
                 </div>
                 {canEdit ? (
@@ -113,24 +119,24 @@ export default async function ScenesPage({
                         value={project.id}
                       />
                       <input type="hidden" name="sceneId" value={scene.id} />
-                      <button
+                      <Button
                         type="submit"
                         name="direction"
                         value="up"
+                        variant="outline"
                         disabled={index === 0}
-                        className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm disabled:opacity-40"
                       >
                         Subir
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="submit"
                         name="direction"
                         value="down"
+                        variant="outline"
                         disabled={index === scenes.length - 1}
-                        className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm disabled:opacity-40"
                       >
                         Descer
-                      </button>
+                      </Button>
                     </form>
                     <form action={duplicateSceneAction}>
                       <input
@@ -139,16 +145,13 @@ export default async function ScenesPage({
                         value={project.id}
                       />
                       <input type="hidden" name="sceneId" value={scene.id} />
-                      <button
-                        type="submit"
-                        className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
-                      >
+                      <Button type="submit" variant="outline">
                         Duplicar
-                      </button>
+                      </Button>
                     </form>
                     <Link
                       href={`/producoes/${project.id}/cenas/${scene.id}`}
-                      className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
+                      className={buttonVariants({ variant: "outline" })}
                     >
                       Editar e shots
                     </Link>
@@ -178,7 +181,7 @@ export default async function ScenesPage({
         </ul>
       )}
       {canEdit ? (
-        <section className="space-y-3">
+        <section className={cn(surfaceClass, "space-y-3 p-3")}>
           <h2 className="text-base font-medium">Nova cena</h2>
           <SceneForm
             editing={false}

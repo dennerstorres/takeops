@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
+import { ItemList, ItemListRow } from "@/components/ui/item-list";
 import { openWorkspace } from "@/server/access";
 import { listProjectActivity } from "@/server/activity";
 import { describeActivity } from "@/server/activity-labels";
@@ -81,9 +82,12 @@ export default async function ActivityPage({
           description="Criação, mudanças de etapa, versões, aprovações e publicações aparecem aqui."
         />
       ) : (
-        <ol className="flex flex-col gap-2">
+        <ItemList>
           {rows.map((row) => (
-            <li key={row.id} className="rounded-xl border p-3">
+            <ItemListRow
+              key={row.id}
+              className="flex-col items-start justify-center gap-1"
+            >
               <p className="text-sm">
                 {describeActivity(
                   t,
@@ -99,9 +103,9 @@ export default async function ActivityPage({
                   {dateTime.format(row.createdAt)}
                 </time>
               </p>
-            </li>
+            </ItemListRow>
           ))}
-        </ol>
+        </ItemList>
       )}
     </div>
   );

@@ -6,9 +6,7 @@ import {
 } from "@/server/shoot-actions";
 import { equipmentCategoryLabel } from "@/server/equipment-labels";
 import type { ShootEquipmentRecord } from "@/server/shoot-equipment-repository";
-
-const buttonClass =
-  "inline-flex min-h-11 items-center rounded-lg border px-3 text-sm";
+import { Button } from "@/components/ui/button";
 
 export function ShootEquipment({
   projectId,
@@ -72,21 +70,21 @@ export function ShootEquipment({
                       <input type="hidden" name="checked" value="on" />
                     )}
                     <input type="hidden" name="notes" value={row.notes ?? ""} />
-                    <button
+                    <Button
                       type="submit"
+                      variant="outline"
                       aria-pressed={row.checked}
-                      className={buttonClass}
                     >
                       {row.checked ? "Desmarcar" : "Conferir"}
-                    </button>
+                    </Button>
                   </form>
                   <form action={removeShootEquipmentAction}>
                     <input type="hidden" name="projectId" value={projectId} />
                     <input type="hidden" name="shootId" value={shootId} />
                     <input type="hidden" name="rowId" value={row.id} />
-                    <button type="submit" className={buttonClass}>
+                    <Button type="submit" variant="outline">
                       Tirar
-                    </button>
+                    </Button>
                   </form>
                 </div>
               ) : (

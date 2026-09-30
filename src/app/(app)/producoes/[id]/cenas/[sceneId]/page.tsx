@@ -107,7 +107,7 @@ export default async function EditScenePage({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <Link
         href={`/producoes/${project.id}/cenas`}
-        className="inline-flex min-h-11 items-center text-sm text-muted-foreground"
+        className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
         Voltar às cenas
       </Link>

@@ -1701,7 +1701,7 @@ Dashboard, Produções (filtros + kanban), Ideias, Calendário, Templates, Equip
 
 ## UI-005 — Produção e abas
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-004
 

@@ -4700,3 +4700,21 @@ Lint. `dashboard.test.ts` e `status-tone.test.ts`. `tsc --noEmit` continua só c
 
 - Modo Gravação ainda usa âmbar cru; fica na UI-006.
 - `Table` segue sem tela: estas listas são de cartão, não de grade.
+
+## 2026-09-29 — UI-005 — Produção e abas
+
+**Status:** DONE
+**Agente:** Grok
+
+- Visão geral, roteiro, cenas, shots, gravação, checklist, continuidade, arquivos, edição, revisão, publicação e atividade passaram a usar card, badge e botão do UI-003.
+- Status de cena, shot, take, gravação, aprovação e publicação fica com texto e cor. Papel e tipo de arquivo usam badge neutro.
+- A lista de atividade virou `ItemList`. O Modo Gravação em si não foi redesenhado.
+
+### Testes
+
+Lint. `tsc --noEmit` continua só com `LayoutProps`, porque o SWC nativo não carrega neste Windows. Dev server e navegador não abriram por isso.
+
+### Pendências
+
+- Modo Gravação (âmbar, uma mão) fica na UI-006.
+- Textos fixos em português ficam na UI-008.

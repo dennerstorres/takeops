@@ -4,6 +4,10 @@ import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
 import { ScriptForm } from "@/components/script/script-form";
+import { buttonVariants } from "@/components/ui/button";
+import { surfaceClass } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
@@ -104,7 +108,7 @@ export default async function ScriptPage({
       ) : (
         <dl className="grid gap-3">
           {scriptLabels.map(([key, label]) => (
-            <div key={key} className="space-y-1">
+            <div key={key} className={cn(surfaceClass, "space-y-1 p-3")}>
               <dt className="text-sm text-muted-foreground">{label}</dt>
               <dd className="text-sm whitespace-pre-wrap">
                 {values[key] || "—"}
@@ -132,14 +136,16 @@ export default async function ScriptPage({
         ) : (
           <ol className="flex flex-col gap-4">
             {view.rows.map((row) => (
-              <li key={row.id} className="space-y-1 border-l-2 pl-3">
+              <li key={row.id} className={cn(surfaceClass, "space-y-1 p-3")}>
                 <p className="text-sm font-medium">
                   {row.order}. {row.title}
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  {sceneTypeLabel(t, row.type)} ·{" "}
-                  {sceneStatusLabel(t, row.status)}
-                  {row.duration ? ` · ${row.duration}` : null}
+                <p className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <span>{sceneTypeLabel(t, row.type)}</span>
+                  <StatusBadge status={row.status}>
+                    {sceneStatusLabel(t, row.status)}
+                  </StatusBadge>
+                  {row.duration ? <span>{row.duration}</span> : null}
                 </p>
                 {row.dialogue ? (
                   <p className="text-sm whitespace-pre-wrap">
@@ -161,7 +167,7 @@ export default async function ScriptPage({
         {canEdit ? (
           <Link
             href={`/producoes/${project.id}/cenas`}
-            className="inline-flex min-h-11 w-fit items-center rounded-lg border px-3 text-sm"
+            className={cn(buttonVariants({ variant: "outline" }), "w-fit")}
           >
             Editar cenas
           </Link>

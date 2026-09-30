@@ -4,10 +4,9 @@ import {
   updateTakeAction,
 } from "@/server/take-actions";
 import type { TakeRecord, TakeStatus } from "@/server/take-repository";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-const buttonClass =
-  "inline-flex min-h-11 items-center rounded-lg border px-3 text-sm";
+import { StatusBadge } from "@/components/ui/status-badge";
 
 export const takeStatusLabel: Record<TakeStatus, string> = {
   OK: "OK",
@@ -72,7 +71,9 @@ export function TakeList({
               <span>
                 <span className="font-medium">Take {take.number}</span>
                 {" · "}
-                {takeStatusLabel[take.status]}
+                <StatusBadge status={take.status}>
+                  {takeStatusLabel[take.status]}
+                </StatusBadge>
                 {take.favorite ? " · ★ Preferido" : ""}
                 {take.notes ? (
                   <span className="text-muted-foreground"> · {take.notes}</span>
@@ -86,13 +87,13 @@ export function TakeList({
                       {take.favorite ? null : (
                         <input type="hidden" name="takeId" value={take.id} />
                       )}
-                      <button
+                      <Button
                         type="submit"
+                        variant="outline"
                         aria-pressed={take.favorite}
-                        className={buttonClass}
                       >
                         {take.favorite ? "Tirar preferido" : "Preferido"}
-                      </button>
+                      </Button>
                     </form>
                   ) : null}
                   {take.status !== "DISCARDED" ? (
@@ -105,9 +106,9 @@ export function TakeList({
                         value={take.notes ?? ""}
                       />
                       <input type="hidden" name="status" value="DISCARDED" />
-                      <button type="submit" className={buttonClass}>
+                      <Button type="submit" variant="outline">
                         Descartar
-                      </button>
+                      </Button>
                     </form>
                   ) : null}
                 </div>
@@ -125,22 +126,12 @@ export function TakeList({
             </span>
             <Input name="notes" maxLength={1000} />
           </label>
-          <button
-            type="submit"
-            name="status"
-            value="OK"
-            className={buttonClass}
-          >
+          <Button type="submit" name="status" value="OK" variant="outline">
             Take OK
-          </button>
-          <button
-            type="submit"
-            name="status"
-            value="RETAKE"
-            className={buttonClass}
-          >
+          </Button>
+          <Button type="submit" name="status" value="RETAKE" variant="outline">
             Take para refazer
-          </button>
+          </Button>
         </form>
       ) : null}
     </div>

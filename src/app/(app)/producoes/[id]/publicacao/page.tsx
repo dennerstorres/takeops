@@ -6,7 +6,10 @@ import { DeletePublicationButton } from "@/components/publications/delete-public
 import { PublicationForm } from "@/components/publications/publication-form";
 import { PublicationOutcomeForm } from "@/components/publications/publication-outcome-form";
 import { SchedulePublicationForm } from "@/components/publications/schedule-publication-form";
+import { surfaceClass } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { utcToZonedLocal } from "@/lib/zoned-time";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
@@ -82,7 +85,7 @@ export default async function PublicationsPage({
         </p>
       </header>
       {canEdit ? (
-        <details className="rounded-xl border p-3">
+        <details className={cn(surfaceClass, "p-3")}>
           <summary className="inline-flex min-h-11 cursor-pointer items-center text-sm font-medium">
             Novo destino
           </summary>
@@ -106,13 +109,12 @@ export default async function PublicationsPage({
       ) : (
         <ul className="flex flex-col gap-3">
           {publications.map((publication) => (
-            <li key={publication.id} className="rounded-xl border p-3">
-              <p className="text-sm font-medium">
-                {platformLabel(t, publication.platform)}
-                <span className="font-normal text-muted-foreground">
-                  {" · "}
+            <li key={publication.id} className={cn(surfaceClass, "p-3")}>
+              <p className="flex flex-wrap items-center gap-2 text-sm font-medium">
+                <span>{platformLabel(t, publication.platform)}</span>
+                <StatusBadge status={publication.status}>
                   {publicationStatusLabel(t, publication.status)}
-                </span>
+                </StatusBadge>
               </p>
               {publication.scheduledAt ? (
                 <p className="text-sm text-muted-foreground">
@@ -135,7 +137,7 @@ export default async function PublicationsPage({
                   href={publication.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4"
+                  className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
                 >
                   Ver publicação
                 </a>

@@ -2,6 +2,8 @@
 
 import { Check } from "lucide-react";
 import { useOptimistic, useState, useTransition } from "react";
+import { surfaceClass } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { toggleShootChecklistItemAction } from "@/server/shoot-actions";
 
 type Item = {
@@ -79,7 +81,7 @@ export function ShootChecklist({
           {error}
         </p>
       ) : null}
-      <ul className="flex flex-col divide-y rounded-xl border">
+      <ul className={cn(surfaceClass, "flex flex-col divide-y")}>
         {optimistic.map((item) => (
           <li key={item.id}>
             <button

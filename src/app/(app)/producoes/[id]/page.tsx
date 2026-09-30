@@ -6,6 +6,11 @@ import {
   RemoveParticipantButton,
 } from "@/components/projects/participant-form";
 import { ProductionTabs } from "@/components/projects/production-tabs";
+import { buttonVariants } from "@/components/ui/button";
+import { surfaceClass } from "@/components/ui/card";
+import { ItemList, ItemListRow } from "@/components/ui/item-list";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { NotFoundError } from "@/server/errors";
@@ -54,7 +59,7 @@ export default async function ProductionPage({
         </p>
         <Link
           href="/producoes"
-          className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
+          className={buttonVariants({ variant: "outline" })}
         >
           Voltar para a lista
         </Link>
@@ -113,7 +118,7 @@ export default async function ProductionPage({
         {canEdit ? (
           <Link
             href={`/producoes/${project.id}/editar`}
-            className="inline-flex min-h-11 items-center rounded-lg border border-border px-3 text-sm font-medium"
+            className={buttonVariants({ variant: "outline" })}
           >
             Editar
           </Link>
@@ -122,17 +127,25 @@ export default async function ProductionPage({
       <ProductionTabs projectId={project.id} />
       <dl className="grid gap-3 sm:grid-cols-2">
         {facts.map(([label, value]) => (
-          <div key={label} className="rounded-xl border p-3">
+          <div key={label} className={cn(surfaceClass, "p-3")}>
             <dt className="text-sm text-muted-foreground">{label}</dt>
-            <dd className="text-sm font-medium">{value ?? "Não informado"}</dd>
+            <dd className="text-sm font-medium">
+              {label === "Status" ? (
+                <StatusBadge status={project.status}>
+                  {value ?? "Não informado"}
+                </StatusBadge>
+              ) : (
+                (value ?? "Não informado")
+              )}
+            </dd>
           </div>
         ))}
       </dl>
       <section className="flex flex-col gap-2">
-        <h2 className="text-base font-medium">Links</h2>
+        <h2 className="text-lg font-medium">Links</h2>
         <Link
           href={`/producoes/${project.id}/arquivos`}
-          className="inline-flex min-h-11 w-fit items-center rounded-lg border px-3 text-sm"
+          className={buttonVariants({ variant: "outline" })}
         >
           Arquivos e referências
         </Link>
@@ -143,14 +156,14 @@ export default async function ProductionPage({
                 {link.href.startsWith("/") ? (
                   <Link
                     href={link.href}
-                    className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
+                    className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
                   >
                     {link.label}
                   </Link>
                 ) : (
                   <a
                     href={link.href}
-                    className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
+                    className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
                   >
                     {link.label}
                   </a>
@@ -161,24 +174,23 @@ export default async function ProductionPage({
         )}
       </section>
       <section className="flex flex-col gap-3">
-        <h2 className="text-base font-medium">Participantes</h2>
+        <h2 className="text-lg font-medium">Participantes</h2>
         {overview.participants.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             Ninguém foi adicionado ainda.
           </p>
         ) : (
-          <ul className="flex flex-col gap-2">
+          <ItemList>
             {participants.map((person) => (
-              <li
-                key={person.id}
-                className="flex flex-wrap items-center gap-3 rounded-xl border p-3"
-              >
+              <ItemListRow key={person.id} className="flex-wrap">
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium">
                     {person.name ?? person.email ?? "Sem nome"}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {projectRoleLabel(t, person.role)}
+                    <StatusBadge tone="muted">
+                      {projectRoleLabel(t, person.role)}
+                    </StatusBadge>
                   </p>
                 </div>
                 {canEdit &&
@@ -189,9 +201,9 @@ export default async function ProductionPage({
                     role={person.role}
                   />
                 ) : null}
-              </li>
+              </ItemListRow>
             ))}
-          </ul>
+          </ItemList>
         )}
         {canEdit ? (
           <ParticipantForm
@@ -206,7 +218,7 @@ export default async function ProductionPage({
       </section>
       <Link
         href="/producoes"
-        className="inline-flex min-h-11 items-center text-sm font-medium underline-offset-4 hover:underline"
+        className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
         Voltar para a lista
       </Link>

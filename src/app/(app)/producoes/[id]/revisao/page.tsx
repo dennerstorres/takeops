@@ -8,7 +8,11 @@ import {
   RequestApprovalForm,
 } from "@/components/review/approval-panel";
 import { ReviewCommentForm } from "@/components/review/review-comment-form";
+import { Button } from "@/components/ui/button";
+import { surfaceClass } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { formatTimestamp } from "@/lib/timestamp";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { canDecideApproval, listApprovals } from "@/server/approval";
 import { approvalStatusLabel } from "@/server/approval-labels";
@@ -119,7 +123,7 @@ export default async function ReviewPage({
   // Função de render, não componente: evita remontar a cada render.
   function renderComment(comment: (typeof comments)[number]) {
     return (
-      <li key={comment.id} className="rounded-xl border p-3">
+      <li key={comment.id} className={cn(surfaceClass, "p-3")}>
         <p className="text-sm">
           {comment.timestampSeconds !== null ? (
             <span className="font-medium tabular-nums">
@@ -150,12 +154,9 @@ export default async function ReviewPage({
               name="resolved"
               value={comment.resolved ? "false" : "true"}
             />
-            <button
-              type="submit"
-              className="inline-flex min-h-11 items-center rounded-lg border px-3 text-sm"
-            >
+            <Button type="submit" variant="outline">
               {comment.resolved ? "Reabrir" : "Resolver"}
-            </button>
+            </Button>
           </form>
         ) : null}
       </li>
@@ -176,7 +177,7 @@ export default async function ReviewPage({
         />
       ) : (
         <>
-          <section className="space-y-2 rounded-xl border p-3">
+          <section className={cn(surfaceClass, "space-y-2 p-3")}>
             <p className="text-sm text-muted-foreground">
               {current.id === versions[0].id
                 ? "Versão atual"
@@ -195,7 +196,7 @@ export default async function ReviewPage({
                   href={current.previewUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4"
+                  className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
                 >
                   Assistir vídeo
                 </a>
@@ -205,19 +206,23 @@ export default async function ReviewPage({
                   href={current.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 items-center text-sm font-medium underline underline-offset-4"
+                  className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
                 >
                   Abrir arquivo
                 </a>
               ) : null}
             </div>
           </section>
-          <section className="space-y-2 rounded-xl border p-3">
+          <section className={cn(surfaceClass, "space-y-2 p-3")}>
             <h2 className="text-base font-medium">Aprovação</h2>
-            <p className="text-sm">
-              {approval
-                ? approvalStatusLabel(t, approval.status)
-                : "Aprovação ainda não pedida."}
+            <p className="flex flex-wrap items-center gap-2 text-sm">
+              {approval ? (
+                <StatusBadge status={approval.status}>
+                  {approvalStatusLabel(t, approval.status)}
+                </StatusBadge>
+              ) : (
+                "Aprovação ainda não pedida."
+              )}
               {approval?.reviewedAt ? (
                 <span className="text-muted-foreground">
                   {" · "}
@@ -299,7 +304,7 @@ export default async function ReviewPage({
                     }
                     className={`inline-flex min-h-11 items-center gap-2 text-sm ${
                       version.id === current.id
-                        ? "font-medium"
+                        ? "font-medium text-primary"
                         : "text-muted-foreground"
                     }`}
                   >

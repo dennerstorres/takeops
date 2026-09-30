@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import { AssetForm } from "@/components/assets/asset-form";
 import { DeleteAssetButton } from "@/components/assets/delete-asset-button";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { surfaceClass } from "@/components/ui/card";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { listAssets } from "@/server/asset";
 import { assetTypeLabel } from "@/server/asset-labels";
@@ -53,7 +56,7 @@ export default async function AssetsPage({
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
       <Link
         href={`/producoes/${project.id}`}
-        className="inline-flex min-h-11 items-center text-sm text-muted-foreground"
+        className="inline-flex min-h-11 items-center text-sm font-medium text-primary underline-offset-4 hover:underline"
       >
         Voltar à produção
       </Link>
@@ -67,7 +70,7 @@ export default async function AssetsPage({
         </p>
       </header>
       {canEdit ? (
-        <section className="space-y-3 rounded-xl border p-3">
+        <section className={cn(surfaceClass, "space-y-3 p-3")}>
           <h2 className="text-sm font-medium">Novo link</h2>
           <AssetForm
             values={{
@@ -88,15 +91,17 @@ export default async function AssetsPage({
       ) : (
         <ul className="flex flex-col gap-3">
           {assets.map((asset) => (
-            <li key={asset.id} className="rounded-xl border p-3">
-              <p className="text-sm text-muted-foreground">
-                {assetTypeLabel(t, asset.type)}
+            <li key={asset.id} className={cn(surfaceClass, "p-3")}>
+              <p>
+                <StatusBadge tone="muted">
+                  {assetTypeLabel(t, asset.type)}
+                </StatusBadge>
               </p>
               <a
                 href={asset.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center text-sm font-medium break-all underline underline-offset-4"
+                className="inline-flex min-h-11 items-center text-sm font-medium break-all text-primary underline-offset-4 hover:underline"
               >
                 {asset.title}
               </a>
