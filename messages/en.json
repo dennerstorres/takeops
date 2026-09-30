@@ -285,7 +285,6 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "subtitle": "How production is going for {workspace}.",
     "counters": {
       "ideas": "Ideas",
       "preProduction": "Pre-production",
@@ -295,21 +294,17 @@
       "published": "Published"
     },
     "shoots": "Upcoming shoots",
-    "shootsEmptyTitle": "No shoots scheduled",
     "shootsEmpty": "{days, plural, one {Shoots in the next # day show up here.} other {Shoots in the next # days show up here.}}",
     "approval": "Waiting for approval",
     "approvalEmpty": "No open approval requests.",
     "review": "Waiting for review",
     "reviewEmpty": "No productions in review.",
     "inProgress": "Productions in progress",
-    "inProgressEmptyTitle": "No productions in progress",
     "inProgressEmpty": "Productions from pre-production through scheduling show up here.",
     "viewProductions": "View productions",
     "recentIdeas": "Recent ideas",
-    "ideasEmptyTitle": "No open ideas",
     "ideasEmpty": "New ideas from the team show up here.",
     "addIdea": "Add an idea",
-    "shootOn": "shoot {date}",
     "next": "Next: {action}",
     "nextAction": {
       "IDEA": "Plan the production",

@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-UI-011 — Redesign: produções (quadro e lista)
+UI-012 — Redesign: dashboard
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-UI-012 — Redesign: dashboard (tiras com `StripBoard`/`StripGroup`/`Strip`)
+UI-013 — Redesign: página da produção, roteiro e cenas
 ```
 
 ## Estado dos módulos

@@ -285,7 +285,6 @@
   },
   "dashboard": {
     "title": "Dashboard",
-    "subtitle": "Como anda a produção de {workspace}.",
     "counters": {
       "ideas": "Ideias",
       "preProduction": "Pré-produção",
@@ -295,21 +294,17 @@
       "published": "Publicados"
     },
     "shoots": "Próximas gravações",
-    "shootsEmptyTitle": "Nenhuma gravação marcada",
     "shootsEmpty": "{days, plural, one {As gravações do próximo # dia aparecem aqui.} other {As gravações dos próximos # dias aparecem aqui.}}",
     "approval": "Aguardando aprovação",
     "approvalEmpty": "Nenhum pedido de aprovação aberto.",
     "review": "Aguardando revisão",
     "reviewEmpty": "Nenhuma produção em revisão.",
     "inProgress": "Produções em andamento",
-    "inProgressEmptyTitle": "Nenhuma produção em andamento",
     "inProgressEmpty": "Produções entre a pré-produção e o agendamento aparecem aqui.",
     "viewProductions": "Ver produções",
     "recentIdeas": "Ideias recentes",
-    "ideasEmptyTitle": "Nenhuma ideia aberta",
     "ideasEmpty": "As ideias novas da equipe aparecem aqui.",
     "addIdea": "Anotar ideia",
-    "shootOn": "gravação {date}",
     "next": "Próximo: {action}",
     "nextAction": {
       "IDEA": "Planejar a produção",

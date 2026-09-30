@@ -1,17 +1,24 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { EmptyState } from "@/components/feedback/empty-state";
 import type { Translate } from "@/i18n/translate";
 import { buttonVariants } from "@/components/ui/button";
-import { surfaceClass, surfaceLinkClass } from "@/components/ui/card";
-import { ItemList, ItemListRow } from "@/components/ui/item-list";
-import { StatusBadge } from "@/components/ui/status-badge";
+import {
+  Strip,
+  StripBoard,
+  StripEmpty,
+  StripGroup,
+} from "@/components/ui/strip";
+import { stripPhase, type StripTip } from "@/components/ui/strip-phase";
 import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { prismaCalendarRepository } from "@/server/calendar-prisma";
-import { loadDashboard, upcomingDays } from "@/server/dashboard";
+import {
+  dashboardCounters,
+  loadDashboard,
+  upcomingDays,
+} from "@/server/dashboard";
 import { prismaDashboardRepository } from "@/server/dashboard-prisma";
 import { prismaParticipantRepository } from "@/server/participant-prisma";
 import { listTeam } from "@/server/team";
@@ -20,81 +27,65 @@ import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 type ProjectCard = {
   id: string;
   title: string;
-  thumbnailUrl: string | null;
   people: string[];
   shootDate: string | null;
+  priority: string;
+  tip: StripTip;
   status: string;
   statusCode: string;
 };
 
-function Section({
-  title,
-  count,
-  children,
-}: {
-  title: string;
-  count?: number;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="flex flex-col gap-3">
-      <h2 className="text-lg font-medium">
-        {title}
-        {count !== undefined ? (
-          <span className="ml-2 text-muted-foreground tabular-nums">
-            {count}
-          </span>
-        ) : null}
-      </h2>
-      {children}
-    </section>
-  );
+const phaseSwatch = {
+  plan: "bg-strip-plan",
+  set: "bg-strip-set",
+  post: "bg-strip-post",
+  done: "bg-strip-done",
+  shelf: "bg-strip-shelf",
+} as const;
+
+// Cor da legenda de cada contador: a mesma cartolina da etapa que ele conta.
+const counterStatus: Record<string, string> = {
+  ideas: "IDEA",
+  ...Object.fromEntries(
+    dashboardCounters.map((item) => [item.key, item.status]),
+  ),
+};
+
+const emptyAction = cn(
+  buttonVariants({ variant: "outline" }),
+  "h-11 bg-card sm:h-7",
+);
+
+// "Aaaa-mm-dd" de data planejada (dia inteiro) para dd/mm, sem fuso.
+function shortDay(day: string | null) {
+  if (!day) return null;
+  const [, month, date] = day.split("-");
+  return `${date}/${month}`;
 }
 
-function ProjectList({ cards, t }: { cards: ProjectCard[]; t: Translate }) {
-  return (
-    <ul className="grid gap-2 sm:grid-cols-2">
-      {cards.map((card) => (
-        <li key={card.id}>
-          <Link
-            href={`/producoes/${card.id}`}
-            className={cn(surfaceLinkClass, "gap-3 p-3")}
-          >
-            {card.thumbnailUrl ? (
-              // URL externa da produção; o app não define remotePatterns.
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={card.thumbnailUrl}
-                alt=""
-                className="size-14 shrink-0 rounded-lg object-cover"
-              />
-            ) : null}
-            <span className="flex min-w-0 flex-col gap-1">
-              <span className="truncate text-sm font-medium">{card.title}</span>
-              <span className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                <StatusBadge status={card.statusCode}>
-                  {card.status}
-                </StatusBadge>
-                {card.shootDate
-                  ? t("dashboard.shootOn", { date: card.shootDate })
-                  : null}
-              </span>
-              {card.people.length > 0 ? (
-                <span className="truncate text-sm text-muted-foreground">
-                  {card.people.join(", ")}
-                </span>
-              ) : null}
-              <span className="text-sm">
-                {t("dashboard.next", {
-                  action: t(`dashboard.nextAction.${card.statusCode}`),
-                })}
-              </span>
-            </span>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
+function ProjectStrips({ cards, t }: { cards: ProjectCard[]; t: Translate }) {
+  return cards.map((card) => (
+    <Strip
+      key={card.id}
+      phase={stripPhase(card.statusCode)}
+      stageLabel={card.status}
+      number={card.priority}
+      title={card.title}
+      flag={
+        <span className="hidden font-condensed text-xs text-strip-ink-muted sm:inline">
+          {t("dashboard.next", {
+            action: t(`dashboard.nextAction.${card.statusCode}`),
+          })}
+        </span>
+      }
+      owner={
+        <span title={card.people.join(", ")}>{card.people.join(", ")}</span>
+      }
+      date={card.shootDate ?? "—"}
+      tip={card.tip}
+      href={`/producoes/${card.id}`}
+    />
+  ));
 }
 
 export default async function Home() {
@@ -125,151 +116,156 @@ export default async function Home() {
     t,
   );
 
-  const when = new Intl.DateTimeFormat(locale, {
-    timeZone: workspace.timezone,
+  const zone = { timeZone: workspace.timezone };
+  const weekday = new Intl.DateTimeFormat(locale, {
+    ...zone,
     weekday: "short",
+  });
+  const when = new Intl.DateTimeFormat(locale, {
+    ...zone,
     day: "2-digit",
-    month: "short",
+    month: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
   });
+  const ideaDay = new Intl.DateTimeFormat(locale, {
+    ...zone,
+    day: "2-digit",
+    month: "2-digit",
+  });
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-medium tracking-tight">
+    <div className="flex w-full flex-col gap-3">
+      <header className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-md bg-frame px-3 py-2 text-frame-foreground">
+        <h1 className="font-condensed text-lg font-semibold tracking-wider uppercase">
           {t("dashboard.title")}
         </h1>
-        <p className="text-sm text-muted-foreground">
-          {t("dashboard.subtitle", { workspace: workspace.name })}
-        </p>
+        {/* Contadores como legenda impressa do quadro: cor da etapa + nome. */}
+        <dl className="flex flex-wrap items-center gap-x-4 gap-y-1 font-condensed text-xs font-medium tracking-wide uppercase">
+          {data.counters.map((item) => (
+            <div key={item.key} className="flex items-center gap-1.5">
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "size-3 rounded-[2px] ring-1 ring-frame-foreground/40",
+                  phaseSwatch[stripPhase(counterStatus[item.key] ?? "")],
+                )}
+              />
+              <dt>{t(`dashboard.counters.${item.key}`)}</dt>
+              <dd className="text-sm font-semibold tabular-nums">
+                {item.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </header>
 
-      <dl className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-        {data.counters.map((item) => (
-          <div key={item.key} className={cn(surfaceClass, "p-3")}>
-            <dt className="text-xs text-muted-foreground">
-              {t(`dashboard.counters.${item.key}`)}
-            </dt>
-            <dd className="text-2xl font-medium tabular-nums">{item.value}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <Section title={t("dashboard.shoots")}>
-        {data.shoots.length === 0 ? (
-          <EmptyState
-            title={t("dashboard.shootsEmptyTitle")}
-            description={t("dashboard.shootsEmpty", { days: upcomingDays })}
-          />
-        ) : (
-          <ul className="flex flex-col gap-2">
-            {data.shoots.map((shoot) => (
-              <li key={shoot.key}>
-                <Link
-                  href={shoot.href}
-                  className={cn(surfaceLinkClass, "flex-col gap-1 p-3")}
-                >
-                  <span className="text-sm font-medium first-letter:uppercase">
-                    {shoot.at ? when.format(shoot.at) : shoot.day}
-                    {" · "}
+      <StripBoard label={t("dashboard.title")}>
+        <StripGroup label={t("dashboard.shoots")} count={data.shoots.length}>
+          {data.shoots.length === 0 ? (
+            <StripEmpty>
+              {t("dashboard.shootsEmpty", { days: upcomingDays })}
+            </StripEmpty>
+          ) : (
+            data.shoots.map((shoot) => (
+              <Strip
+                key={shoot.key}
+                phase={stripPhase(shoot.statusCode ?? "")}
+                stageLabel={shoot.status ?? shoot.label}
+                number={
+                  shoot.at ? (
+                    <span className="uppercase">
+                      {weekday.format(shoot.at)}
+                    </span>
+                  ) : null
+                }
+                title={shoot.projectTitle}
+                flag={
+                  <span className="hidden font-condensed text-xs text-strip-ink-muted sm:inline">
                     {shoot.label}
                   </span>
-                  <span className="flex flex-wrap items-center gap-2 truncate text-sm text-muted-foreground">
-                    {shoot.projectTitle}
-                    {shoot.status && shoot.statusCode ? (
-                      <StatusBadge status={shoot.statusCode}>
-                        {shoot.status}
-                      </StatusBadge>
-                    ) : null}
+                }
+                owner={
+                  <span title={shoot.people.join(", ")}>
+                    {shoot.people.join(", ")}
                   </span>
-                  {shoot.people.length > 0 ? (
-                    <span className="truncate text-sm text-muted-foreground">
-                      {shoot.people.join(", ")}
-                    </span>
-                  ) : null}
+                }
+                date={shoot.at ? when.format(shoot.at) : shortDay(shoot.day)}
+                tip="ok"
+                href={shoot.href}
+              />
+            ))
+          )}
+        </StripGroup>
+
+        <StripGroup
+          label={t("dashboard.approval")}
+          count={data.approval.length}
+        >
+          {data.approval.length === 0 ? (
+            <StripEmpty>{t("dashboard.approvalEmpty")}</StripEmpty>
+          ) : (
+            <ProjectStrips cards={data.approval} t={t} />
+          )}
+        </StripGroup>
+
+        <StripGroup label={t("dashboard.review")} count={data.review.length}>
+          {data.review.length === 0 ? (
+            <StripEmpty>{t("dashboard.reviewEmpty")}</StripEmpty>
+          ) : (
+            <ProjectStrips cards={data.review} t={t} />
+          )}
+        </StripGroup>
+
+        <StripGroup
+          label={t("dashboard.inProgress")}
+          count={data.inProgress.length}
+        >
+          {data.inProgress.length === 0 ? (
+            <StripEmpty
+              action={
+                <Link href="/producoes" className={emptyAction}>
+                  {t("dashboard.viewProductions")}
                 </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </Section>
+              }
+            >
+              {t("dashboard.inProgressEmpty")}
+            </StripEmpty>
+          ) : (
+            <ProjectStrips cards={data.inProgress} t={t} />
+          )}
+        </StripGroup>
 
-      <Section title={t("dashboard.approval")} count={data.approval.length}>
-        {data.approval.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            {t("dashboard.approvalEmpty")}
-          </p>
-        ) : (
-          <ProjectList cards={data.approval} t={t} />
-        )}
-      </Section>
-
-      <Section title={t("dashboard.review")} count={data.review.length}>
-        {data.review.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            {t("dashboard.reviewEmpty")}
-          </p>
-        ) : (
-          <ProjectList cards={data.review} t={t} />
-        )}
-      </Section>
-
-      <Section title={t("dashboard.inProgress")}>
-        {data.inProgress.length === 0 ? (
-          <EmptyState
-            title={t("dashboard.inProgressEmptyTitle")}
-            description={t("dashboard.inProgressEmpty")}
-            action={
-              <Link
-                href="/producoes"
-                className={buttonVariants({ variant: "outline" })}
-              >
-                {t("dashboard.viewProductions")}
-              </Link>
-            }
-          />
-        ) : (
-          <ProjectList cards={data.inProgress} t={t} />
-        )}
-      </Section>
-
-      <Section title={t("dashboard.recentIdeas")}>
-        {data.ideas.length === 0 ? (
-          <EmptyState
-            title={t("dashboard.ideasEmptyTitle")}
-            description={t("dashboard.ideasEmpty")}
-            action={
-              <Link
-                href="/ideias"
-                className={buttonVariants({ variant: "outline" })}
-              >
-                {t("dashboard.addIdea")}
-              </Link>
-            }
-          />
-        ) : (
-          <ItemList>
-            {data.ideas.map((idea) => (
-              <ItemListRow key={idea.id} className="p-0">
-                <Link
-                  href={`/ideias/${idea.id}`}
-                  className="flex min-h-11 w-full flex-col justify-center px-4 py-3 hover:bg-accent focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-                >
-                  <span className="truncate text-sm font-medium">
-                    {idea.title}
-                  </span>
-                  {idea.authorName ? (
-                    <span className="text-sm text-muted-foreground">
-                      {idea.authorName}
-                    </span>
-                  ) : null}
+        <StripGroup
+          label={t("dashboard.recentIdeas")}
+          count={data.ideas.length}
+        >
+          {data.ideas.length === 0 ? (
+            <StripEmpty
+              action={
+                <Link href="/ideias" className={emptyAction}>
+                  {t("dashboard.addIdea")}
                 </Link>
-              </ItemListRow>
-            ))}
-          </ItemList>
-        )}
-      </Section>
+              }
+            >
+              {t("dashboard.ideasEmpty")}
+            </StripEmpty>
+          ) : (
+            data.ideas.map((idea) => (
+              <Strip
+                key={idea.id}
+                phase="plan"
+                stageLabel={t("dashboard.counters.ideas")}
+                title={idea.title}
+                owner={idea.authorName}
+                date={ideaDay.format(idea.createdAt)}
+                tip="ok"
+                href={`/ideias/${idea.id}`}
+              />
+            ))
+          )}
+        </StripGroup>
+      </StripBoard>
     </div>
   );
 }

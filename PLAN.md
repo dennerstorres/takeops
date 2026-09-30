@@ -2028,7 +2028,7 @@ Novos tokens em `globals.css` (cores das tiras por etapa, moldura, divisória, t
 
 ## UI-012 — Redesign: dashboard
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** UI-010
 

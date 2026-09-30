@@ -203,4 +203,24 @@ function Strip({
   );
 }
 
-export { Strip, StripBoard, StripGroup };
+// Vaga vazia no grupo: tracejada, na altura de uma tira, com a próxima
+// ação quando houver.
+function StripEmpty({
+  children,
+  action,
+}: {
+  children: ReactNode;
+  action?: ReactNode;
+}) {
+  return (
+    <li
+      data-slot="strip-empty"
+      className="flex min-h-11 flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-[2px] border border-dashed border-frame-foreground/40 px-2 py-1 text-sm text-frame-foreground sm:min-h-strip"
+    >
+      <span>{children}</span>
+      {action}
+    </li>
+  );
+}
+
+export { Strip, StripBoard, StripEmpty, StripGroup };

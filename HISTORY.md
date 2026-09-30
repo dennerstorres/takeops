@@ -5079,3 +5079,12 @@ Decisões: `Strip` ganhou `action` (controle acima do link esticado, sem aninhar
 Testes: `project-board` (novo caso de `projectTip`), lint, `check:contrast`, detector do impeccable sem achados; `npm test` 119/120 sem banco local (só `seed.integration`). Prévia estática (render do servidor com dados falsos) em claro, escuro e 375px.
 Pendências: miniatura da produção saiu do quadro (continua na página da produção).
 
+## 2026-09-30 — UI-012 — Redesign: dashboard
+
+Status: DONE
+Arquivos: `src/app/(app)/page.tsx`, `src/components/ui/strip.tsx`, `messages/*.json`.
+Resumo: dashboard virou um quadro de tiras com cinco grupos (próximas gravações, aguardando aprovação, aguardando revisão, em andamento, ideias recentes), cada um com contagem na divisória. Contadores saíram dos cards e viraram a legenda impressa da barra do quadro: amostra da cartolina da etapa + nome + número. Gravações mostram dia da semana, data/hora no fuso do workspace e o rótulo da gravação; produções mostram prioridade, equipe, data e "Próximo: …" (só do `sm` para cima, para não cortar o título no celular). Grupo vazio vira `StripEmpty` (vaga tracejada com a próxima ação).
+Decisões: `StripEmpty` novo em `strip.tsx`. Chaves sem uso removidas: `dashboard.subtitle`, `shootOn`, `shootsEmptyTitle`, `inProgressEmptyTitle`, `ideasEmptyTitle`. Miniatura saiu do dashboard.
+Testes: lint, `tsc` (só o `LayoutProps` conhecido), `check:contrast`, detector sem achados; `npm test` 119/120 sem banco local (só `seed.integration`). Prévia estática com dados falsos, cheio e vazio, claro/escuro, 375px.
+Pendências: nenhuma.
+
