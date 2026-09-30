@@ -1,16 +1,20 @@
 import { getTranslations } from "next-intl/server";
 import { ArrowDown, ArrowUp, Copy } from "lucide-react";
 import { Fragment } from "react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
 import { DeleteSceneButton } from "@/components/scenes/delete-scene-button";
 import { QuickSceneForm } from "@/components/scenes/quick-scene-form";
+import { buttonVariants } from "@/components/ui/button";
 import { StripActions } from "@/components/ui/strip-actions";
 import { Strip, StripBoard, stripIconButton } from "@/components/ui/strip";
 import { scenePhase, sceneTip } from "@/components/ui/strip-phase";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
+import { listCharacters, listSceneCharacters } from "@/server/character";
+import { prismaCharacterRepository } from "@/server/character-prisma";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
@@ -25,8 +29,10 @@ import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
 export default async function ScenesPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ personagem?: string }>;
 }) {
   const t = await getTranslations();
   const session = await auth();
@@ -34,12 +40,15 @@ export default async function ScenesPage({
   const access = await openWorkspace(session.user.id);
   if (access.kind === "setup") redirect("/comecar");
   const { id } = await params;
+  const { personagem } = await searchParams;
   const workspaceId = access.workspace.workspace.id;
   const canEdit = access.workspace.membership.role !== "VIEWER";
 
   let project;
   let scenes;
   let shotsByScene;
+  let cast;
+  let sceneCast;
   try {
     project = await getProject(
       session.user.id,
@@ -48,7 +57,13 @@ export default async function ScenesPage({
       prismaWorkspaceRepository,
       prismaProjectRepository,
     );
-    [scenes, shotsByScene] = await Promise.all([
+    const characterDeps = {
+      workspaces: prismaWorkspaceRepository,
+      projects: prismaProjectRepository,
+      scenes: prismaSceneRepository,
+      characters: prismaCharacterRepository,
+    };
+    [scenes, shotsByScene, cast, sceneCast] = await Promise.all([
       listScenes(
         session.user.id,
         workspaceId,
@@ -63,6 +78,13 @@ export default async function ScenesPage({
         scenes: prismaSceneRepository,
         shots: prismaShotRepository,
       }),
+      listCharacters(session.user.id, workspaceId, project.id, characterDeps),
+      listSceneCharacters(
+        session.user.id,
+        workspaceId,
+        project.id,
+        characterDeps,
+      ),
     ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect("/producoes");
@@ -70,10 +92,48 @@ export default async function ScenesPage({
     throw error;
   }
 
+  // Filtro por personagem para montar a ordem de gravação por ator. A
+  // posição para subir/descer continua a da lista inteira.
+  const selected = cast.find((row) => row.id === personagem) ?? null;
+  const visible = selected
+    ? scenes.filter((scene) => sceneCast.get(scene.id)?.includes(selected.id))
+    : scenes;
+  const scenesHref = `/producoes/${project.id}/cenas`;
+
   return (
     <div className="flex w-full flex-col gap-4">
       <ProductionTabs project={project} active="Cenas" canEdit={canEdit} />
       <h1 className="sr-only">{t("tabs.scenes")}</h1>
+      {cast.length ? (
+        <nav
+          aria-label={t("cast.filter")}
+          className="flex flex-wrap items-center gap-2"
+        >
+          <Link
+            href={scenesHref}
+            aria-current={selected ? undefined : "page"}
+            className={buttonVariants({
+              variant: selected ? "outline" : "default",
+              size: "sm",
+            })}
+          >
+            {t("cast.allScenes")}
+          </Link>
+          {cast.map((row) => (
+            <Link
+              key={row.id}
+              href={`${scenesHref}?personagem=${row.id}`}
+              aria-current={selected?.id === row.id ? "page" : undefined}
+              className={buttonVariants({
+                variant: selected?.id === row.id ? "default" : "outline",
+                size: "sm",
+              })}
+            >
+              {row.name}
+            </Link>
+          ))}
+        </nav>
+      ) : null}
       {scenes.length === 0 ? (
         <EmptyState
           title={t("scenes.emptyTitle")}
@@ -91,7 +151,8 @@ export default async function ScenesPage({
             action: canEdit ? "" : undefined,
           }}
         >
-          {scenes.map((scene, index) => {
+          {visible.map((scene) => {
+            const index = scenes.indexOf(scene);
             const shots = shotsByScene.get(scene.id) ?? [];
             const status = sceneStatusLabel(t, scene.status);
             return (

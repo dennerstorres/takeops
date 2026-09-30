@@ -40,6 +40,7 @@ model User {
   notifications      Notification[] @relation("NotificationRecipient")
   notificationsSent  Notification[] @relation("NotificationActor")
   productionTemplates ProductionTemplate[]
+  charactersPlayed   ProjectCharacter[] @relation("CharacterUser")
 }
 
 enum WorkspaceRole {
@@ -197,6 +198,7 @@ model VideoProject {
   members                   ProjectMember[]
   script                    Script?
   scenes                    Scene[]
+  characters                ProjectCharacter[]
   shoots                    Shoot[]
   continuityNotes           ContinuityNote[]
   assets                    Asset[]
@@ -279,9 +281,37 @@ model Scene {
   videoProject              VideoProject @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
   speaker                   User?        @relation("SceneSpeaker", fields: [speakerId], references: [id], onDelete: SetNull)
   shots                     Shot[]
+  characters                SceneCharacter[]
 
   @@unique([videoProjectId, order])
   @@index([videoProjectId, status])
+}
+
+// Personagem da produção (ADR-047). Ator e pessoa do workspace são
+// opcionais: quem atua pode não ter conta. Nome único por produção.
+model ProjectCharacter {
+  id             String           @id @default(uuid())
+  videoProjectId String
+  name           String
+  actorName      String?
+  userId         String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  videoProject   VideoProject     @relation(fields: [videoProjectId], references: [id], onDelete: Cascade)
+  user           User?            @relation("CharacterUser", fields: [userId], references: [id], onDelete: SetNull)
+  scenes         SceneCharacter[]
+
+  @@unique([videoProjectId, name])
+}
+
+model SceneCharacter {
+  sceneId     String
+  characterId String
+  scene       Scene            @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  character   ProjectCharacter @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@id([sceneId, characterId])
+  @@index([characterId])
 }
 
 model ProjectMember {

@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
+import { setSceneCharacters } from "@/server/character";
+import { prismaCharacterRepository } from "@/server/character-prisma";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import {
   createScene,
@@ -73,6 +75,42 @@ export async function createSceneAction(
   redirect(`/producoes/${projectId}/cenas`);
 }
 
+// Personagens só mudam quando o formulário trouxe a lista (a edição da
+// cena); o autosave de outras telas não mexe neles.
+async function updateWithCharacters(
+  current: { userId: string; workspaceId: string },
+  projectId: string,
+  sceneId: string,
+  formData: FormData,
+) {
+  const scene = await updateScene(
+    current.userId,
+    current.workspaceId,
+    projectId,
+    sceneId,
+    sceneInput(formData),
+    prismaWorkspaceRepository,
+    prismaProjectRepository,
+    prismaSceneRepository,
+  );
+  if (formData.get("characterField")) {
+    await setSceneCharacters(
+      current.userId,
+      current.workspaceId,
+      projectId,
+      sceneId,
+      formData.getAll("characterIds").map(String),
+      {
+        workspaces: prismaWorkspaceRepository,
+        projects: prismaProjectRepository,
+        scenes: prismaSceneRepository,
+        characters: prismaCharacterRepository,
+      },
+    );
+  }
+  return scene;
+}
+
 export async function updateSceneAction(
   _state: SceneFormState,
   formData: FormData,
@@ -83,17 +121,7 @@ export async function updateSceneAction(
   const result = await runAction(
     { userId: current.userId, workspaceId: current.workspaceId },
     { operation: "update", entity: "Scene" },
-    () =>
-      updateScene(
-        current.userId,
-        current.workspaceId,
-        projectId,
-        sceneId,
-        sceneInput(formData),
-        prismaWorkspaceRepository,
-        prismaProjectRepository,
-        prismaSceneRepository,
-      ),
+    () => updateWithCharacters(current, projectId, sceneId, formData),
   );
   if (!result.ok) return { message: result.message, fields: result.fields };
   revalidatePath(`/producoes/${projectId}/cenas`);
@@ -115,17 +143,7 @@ export async function autosaveSceneAction(
   const result = await runAction(
     { userId: current.userId, workspaceId: current.workspaceId },
     { operation: "autosave", entity: "Scene" },
-    () =>
-      updateScene(
-        current.userId,
-        current.workspaceId,
-        projectId,
-        sceneId,
-        sceneInput(formData),
-        prismaWorkspaceRepository,
-        prismaProjectRepository,
-        prismaSceneRepository,
-      ),
+    () => updateWithCharacters(current, projectId, sceneId, formData),
   );
   if (!result.ok) {
     return { ok: false, message: result.message, fields: result.fields };

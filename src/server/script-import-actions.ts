@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { openWorkspace } from "@/server/access";
 import { prismaActivityRepository } from "@/server/activity-prisma";
 import { auth } from "@/server/auth";
+import { prismaCharacterRepository } from "@/server/character-prisma";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { prismaSceneRepository } from "@/server/scene-prisma";
 import {
@@ -32,6 +33,7 @@ const deps: ScriptImportDeps = {
   scripts: prismaScriptRepository,
   imports: prismaScriptImportRepository,
   activities: prismaActivityRepository,
+  characters: prismaCharacterRepository,
 };
 
 // Um formulário, dois passos: "preview" só lê; "import" recalcula a prévia

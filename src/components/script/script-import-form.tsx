@@ -215,6 +215,13 @@ function PreviewPanel({
           })}
         </p>
       ) : null}
+      {preview.newCharacters.length ? (
+        <p className="text-sm text-muted-foreground">
+          {t("scriptImport.newCharacters", {
+            names: preview.newCharacters.join(", "),
+          })}
+        </p>
+      ) : null}
       {preview.sectionTitles.length ? (
         <p className="text-sm text-muted-foreground">
           {t("scriptImport.sections", {

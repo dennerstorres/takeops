@@ -964,3 +964,27 @@ Roteiros chegam escritos fora do app, em markdown livre (cenas em `#`, planos em
 
 - Linha em branco dentro de um campo não sobrevive à ida e volta (vira quebra simples).
 - Quem fala na cena não viaja no arquivo até existir elenco (CAST-001).
+
+---
+
+# ADR-047 — Elenco como personagens da produção
+
+**Status:** Accepted  
+**Data:** 2026-09-30
+
+## Contexto
+
+Roteiros de esquete têm atores que não são usuários do app. O único vínculo de pessoa na cena era `speakerId` (usuário do workspace), então falas de personagens ficavam como texto e não dava para montar a ordem de gravação por ator.
+
+## Decisão
+
+- Tabelas `ProjectCharacter` (nome único por produção, ator e usuário opcionais) e `SceneCharacter` (ligação muitos-para-muitos). Sem `workspaceId`: o isolamento vem da produção, como em cena e plano.
+- Exclusão física do personagem, com cascata nas ligações. Não há histórico a preservar e a fala da cena é texto.
+- Comparação de nome sem acento e caixa no serviço; a constraint do banco é no nome exato e cobre a corrida.
+- `speakerId` continua: é quem apresenta, não o personagem.
+- A importação cria personagens a partir das falas e do campo Personagens; o arquivo exporta o campo Personagens por cena.
+
+## Consequências
+
+- Ator sem conta não recebe aviso nem aparece na equipe; é só um nome.
+- Seções livres de personagens do roteiro não viram elenco automaticamente.

@@ -5,6 +5,10 @@ import type {
   ActivityWrite,
 } from "./activity-repository.ts";
 import { ForbiddenError, NotFoundError, ValidationError } from "./errors.ts";
+import type {
+  CharacterRecord,
+  CharacterRepository,
+} from "./character-repository.ts";
 import type { ProjectRecord, ProjectRepository } from "./project-repository.ts";
 import type { SceneRecord, SceneRepository } from "./scene-repository.ts";
 import {
@@ -31,6 +35,7 @@ const file = [
   "Apresentadora.",
   "# Cena 1 — Vasos",
   "**Tipo:** Gancho",
+  "**Personagens:** apresentadora, Jardineiro",
   "**Duração:** 15",
   "## Plano 1.1 — Mudas",
   "**Tipo:** Inserto",
@@ -115,6 +120,13 @@ function harness(options: { role?: WorkspaceRole; scenes?: number } = {}) {
         };
       },
     } satisfies ScriptImportRepository,
+    characters: {
+      async list() {
+        return [
+          { id: "c1", videoProjectId: "p-a", name: "Apresentadora" },
+        ] as CharacterRecord[];
+      },
+    } as unknown as CharacterRepository,
     activities: {
       async record(input: ActivityWrite) {
         activities.push(input);
@@ -146,6 +158,7 @@ describe("importação de roteiro", () => {
     assert.deepEqual(preview.filledScriptFields, ["notes"]);
     assert.deepEqual(preview.sectionTitles, ["Personagens"]);
     assert.deepEqual(preview.problems, []);
+    assert.deepEqual(preview.newCharacters, ["Jardineiro"]);
   });
 
   it("usa a duração do arquivo quando a produção não tem", async () => {
@@ -167,6 +180,12 @@ describe("importação de roteiro", () => {
 
     assert.equal(writes.length, 1);
     const [write] = writes;
+    // "apresentadora" já existe com outra grafia: liga ao existente.
+    assert.deepEqual(write.characters, ["Jardineiro"]);
+    assert.deepEqual(write.scenes[0].characterNames, [
+      "Apresentadora",
+      "Jardineiro",
+    ]);
     assert.equal(write.script.hook, "Gancho já escrito");
     assert.equal(
       write.script.notes,

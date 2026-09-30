@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ProductionTabs } from "@/components/projects/production-tabs";
+import { CastSection } from "@/components/script/cast-section";
 import { ScriptForm } from "@/components/script/script-form";
 import { buttonVariants } from "@/components/ui/button";
 import { surfaceClass } from "@/components/ui/card";
@@ -10,6 +11,8 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { cn } from "@/lib/utils";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
+import { listCharacters, listSceneCharacters } from "@/server/character";
+import { prismaCharacterRepository } from "@/server/character-prisma";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
 import { getProject } from "@/server/project";
 import { prismaProjectRepository } from "@/server/project-prisma";
@@ -54,6 +57,8 @@ export default async function ScriptPage({
   let script;
   let scenes;
   let team;
+  let cast;
+  let sceneCast;
   try {
     project = await getProject(
       session.user.id,
@@ -62,7 +67,13 @@ export default async function ScriptPage({
       prismaWorkspaceRepository,
       prismaProjectRepository,
     );
-    [script, scenes, team] = await Promise.all([
+    const characterDeps = {
+      workspaces: prismaWorkspaceRepository,
+      projects: prismaProjectRepository,
+      scenes: prismaSceneRepository,
+      characters: prismaCharacterRepository,
+    };
+    [script, scenes, team, cast, sceneCast] = await Promise.all([
       getScript(
         session.user.id,
         workspaceId,
@@ -80,6 +91,13 @@ export default async function ScriptPage({
         prismaSceneRepository,
       ),
       listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
+      listCharacters(session.user.id, workspaceId, project.id, characterDeps),
+      listSceneCharacters(
+        session.user.id,
+        workspaceId,
+        project.id,
+        characterDeps,
+      ),
     ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect("/producoes");
@@ -87,13 +105,20 @@ export default async function ScriptPage({
     throw error;
   }
 
-  const view = buildScriptView(
-    scenes,
-    team.map((member) => ({
-      id: member.userId,
-      label: personLabel(member, t("common.noName")),
-    })),
-  );
+  const people = team.map((member) => ({
+    id: member.userId,
+    label: personLabel(member, t("common.noName")),
+  }));
+  const view = buildScriptView(scenes, people);
+  const castNames = new Map(cast.map((row) => [row.id, row.name]));
+  const castRows = cast.map((row) => ({
+    id: row.id,
+    name: row.name,
+    actorName: row.actorName,
+    userId: row.userId,
+    sceneCount: [...sceneCast.values()].filter((ids) => ids.includes(row.id))
+      .length,
+  }));
   const values = {
     hook: script?.hook ?? "",
     mainMessage: script?.mainMessage ?? "",
@@ -146,6 +171,13 @@ export default async function ScriptPage({
         </dl>
       )}
 
+      <CastSection
+        projectId={project.id}
+        cast={castRows}
+        people={people}
+        canEdit={canEdit}
+      />
+
       <section className="space-y-3">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h2 className="font-condensed text-sm font-semibold tracking-wider uppercase">
@@ -183,6 +215,15 @@ export default async function ScriptPage({
                       <span className="font-medium">{row.speaker}: </span>
                     ) : null}
                     {row.dialogue}
+                  </p>
+                ) : null}
+                {sceneCast.get(row.id)?.length ? (
+                  <p className="text-xs text-muted-foreground">
+                    {t("cast.inScene", {
+                      names: (sceneCast.get(row.id) ?? [])
+                        .flatMap((id) => castNames.get(id) ?? [])
+                        .join(", "),
+                    })}
                   </p>
                 ) : null}
                 {row.action ? (

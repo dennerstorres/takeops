@@ -646,7 +646,23 @@
     "sections": "Passages that go to the notes: {titles}.",
     "untitledSection": "text before the first scene",
     "confirmAppend": "This production already has {count, plural, one {# scene} other {# scenes}}. Add the new ones after them.",
-    "open": "Import script"
+    "open": "Import script",
+    "newCharacters": "New characters: {names}."
+  },
+  "cast": {
+    "title": "Cast",
+    "empty": "No characters yet. They are also created when you import a script with dialogue.",
+    "name": "Character",
+    "actor": "Actor",
+    "person": "Workspace member",
+    "add": "Add character",
+    "scenes": "{count, plural, =0 {in no scenes} one {in # scene} other {in # scenes}}",
+    "deleteTitle": "Delete {name}?",
+    "deleteDescription": "The character leaves its scenes. Dialogue and scenes stay as they are.",
+    "inScene": "Characters: {names}",
+    "sceneCharacters": "Characters in the scene",
+    "filter": "Filter scenes by character",
+    "allScenes": "All"
   },
   "shots": {
     "title": "Shots",

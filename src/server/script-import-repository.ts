@@ -4,7 +4,10 @@ import type { ShotWrite } from "./shot-repository.ts";
 
 export type ScriptImportWrite = {
   script: ScriptWrite;
-  scenes: (SceneWrite & { shots: ShotWrite[] })[];
+  // Personagens que ainda não existem na produção.
+  characters: string[];
+  // characterNames usa o nome exato já existente ou um dos novos.
+  scenes: (SceneWrite & { shots: ShotWrite[]; characterNames: string[] })[];
 };
 
 export type ScriptImportRepository = {

@@ -33,6 +33,8 @@ describe(
     it("acrescenta cenas e planos numa transação, isolada por workspace", async () => {
       const { prisma } = await import("./db.ts");
       const { prismaActivityRepository } = await import("./activity-prisma.ts");
+      const { prismaCharacterRepository } =
+        await import("./character-prisma.ts");
       const { prismaIdeaRepository } = await import("./idea-prisma.ts");
       const { prismaProjectRepository } = await import("./project-prisma.ts");
       const { prismaSceneRepository } = await import("./scene-prisma.ts");
@@ -48,6 +50,7 @@ describe(
         scripts: prismaScriptRepository,
         imports: prismaScriptImportRepository,
         activities: prismaActivityRepository,
+        characters: prismaCharacterRepository,
       };
       const suffix = randomUUID();
       const author = await prisma.user.create({
@@ -139,6 +142,14 @@ describe(
           where: { videoProjectId: project.id },
         });
         assert.equal(script?.notes, "Luz natural.\n\nDireção\nSem pressa.");
+        const cast = await prisma.projectCharacter.findMany({
+          where: { videoProjectId: project.id },
+          include: { scenes: true },
+        });
+        assert.deepEqual(
+          cast.map((row) => [row.name, row.scenes.map((link) => link.sceneId)]),
+          [["APRESENTADORA", [scenes[1].id]]],
+        );
         const activity = await prisma.activityLog.findFirst({
           where: { videoProjectId: project.id, action: "SCRIPT_IMPORTED" },
         });

@@ -2127,7 +2127,7 @@ Definir o formato markdown que o app lê e escreve, e deixar quem escreve o rote
 
 ## CAST-001 — Elenco da produção
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P2  
 **Dependências:** nenhuma (SCRIPT-004 passa a usar quando existir)
 
@@ -2136,7 +2136,7 @@ Hoje o apresentador da cena é um usuário do workspace; ator e personagem não 
 - Modelo de personagem por produção (nome do personagem, ator opcional, usuário opcional) — decidir em ADR.
 - Cena com um ou mais personagens; falas continuam em texto.
 - Filtro de cenas por personagem na lista de cenas e no Modo Gravação, para montar a ordem de gravação por ator.
-- Importação (SCRIPT-004) cria os personagens a partir de `**PERSONAGEM:**` e da seção de personagens do roteiro.
+- Importação (SCRIPT-004) cria os personagens a partir de `**PERSONAGEM:**` e do campo Personagens da cena. A seção livre de personagens do roteiro (ex.: "ATOR 3 — CARA DA SOLUÇÃO") não vira elenco: o nome ali não bate com o das falas; ela segue para as notas.
 
 ---
 

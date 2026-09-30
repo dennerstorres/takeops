@@ -37,16 +37,20 @@ export type SceneFormValues = {
   editingInstructions: string;
   continuityNotes: string;
   status: SceneStatus;
+  characterIds?: string[];
 };
 
 export function SceneForm({
   values,
   people,
   editing,
+  characters = [],
 }: {
   values: SceneFormValues;
   people: { id: string; label: string }[];
   editing: boolean;
+  // Só na edição: a cena nova ainda não tem com quem ligar.
+  characters?: { id: string; name: string }[];
 }) {
   const t = useTranslations();
   const [state, action, pending] = useActionState(
@@ -115,6 +119,26 @@ export function SceneForm({
           ))}
         </Select>
       </label>
+      {editing && characters.length ? (
+        <fieldset className="flex flex-col gap-1 text-sm">
+          <legend className="mb-1">{t("cast.sceneCharacters")}</legend>
+          {/* Marca que a lista veio no envio; sem marcas, todos saem. */}
+          <input type="hidden" name="characterField" value="1" />
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {characters.map((character) => (
+              <label key={character.id} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name="characterIds"
+                  value={character.id}
+                  defaultChecked={values.characterIds?.includes(character.id)}
+                />
+                {character.name}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ) : null}
       <label className="flex flex-col gap-1 text-sm">
         {t("scenes.dialogue")}
         <Textarea

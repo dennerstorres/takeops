@@ -5163,3 +5163,12 @@ Resumo: tela Importar roteiro (colar ou arquivo .md) com prévia calculada no se
 Decisões: sem ADR nova; regras de junção registradas no SPEC §18.1.
 Testes: `script-import.test.ts` (7, fakes) e `script-import.integration.test.ts` (Postgres 17 em Docker local); `npm test` completo com banco: 184/184. `eslint` limpo. O roteiro real que originou a fase (fora do repositório) foi lido localmente: 11 cenas, 11 planos, sem aviso, notas com 3681 de 4000 caracteres. `tsc` só com o erro de `LayoutProps` do `next typegen` que não roda nesta máquina; build e tela não testados no navegador pelo mesmo motivo.
 Pendências: conferir a tela no app publicado. Roteiro com seções longas pode passar do teto de 4000 das notas; a prévia mostra e bloqueia.
+
+## 2026-09-30 — CAST-001 — Elenco da produção
+
+Status: DONE
+Arquivos: `prisma/schema.prisma`, `prisma/migrations/20260929130000_project_character`, `src/server/character{,-repository,-prisma,-actions}.ts`, `src/server/character.integration.test.ts`, `src/components/script/cast-section.tsx`, `src/components/scenes/scene-form.tsx`, `src/server/scene-actions.ts`, `src/server/script-{markdown,import,import-prisma,import-repository,import-actions,file}.ts`, telas de roteiro, cenas, cena e Modo Gravação, `messages/*.json`, `package.json`, `SPEC.md`, `DECISIONS.md`, `PLAN.md`, `STATUS.md`.
+Resumo: personagens por produção (ADR-047) com ator e pessoa opcionais, mantidos na seção Elenco da aba Roteiro; a cena marca seus personagens na edição (update e autosave); lista de cenas e Modo Gravação filtram por personagem (`?personagem=`), com a navegação do Modo Gravação preservando o filtro. O arquivo de roteiro ganhou o campo Personagens; falas `**NOME:**` viram personagens (sem o complemento "— OFF"/"(VOZ)"); a importação liga ao personagem existente pelo nome sem acento/caixa e cria os novos na mesma transação; a exportação escreve os personagens de cada cena.
+Decisões: ADR-047. Seção livre de personagens do roteiro não vira elenco (nome não bate com as falas); segue para as notas.
+Testes: `character.integration.test.ts` (duplicado por caixa, pessoa de fora, leitor, personagem de outra produção, cascata ao excluir), testes do parser e da importação atualizados; `npm test` com Postgres 17 em Docker: 187/187. Migration gerada por `migrate diff` e revisada. `eslint` limpo; `tsc` só com o erro conhecido de `LayoutProps` (typegen não roda nesta máquina). Telas não abertas no navegador pelo mesmo motivo.
+Pendências: conferir elenco, filtro e Modo Gravação no app publicado; a migration roda no deploy.

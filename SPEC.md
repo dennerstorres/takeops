@@ -696,10 +696,10 @@ O roteiro sai e entra do app como um arquivo `.md` (ADR-046). O mesmo formato se
 - `# Título` na primeira linha: título da produção.
 - Campos: linha `**Campo:** valor`. Valor longo continua nas linhas de baixo até uma linha em branco; dentro do valor, linha em branco vira quebra simples.
 - Antes da primeira cena: Formato, Proporção, Duração, Objetivo, Público, Produto, Descrição (produção) e Gancho, Mensagem principal, Chamada para ação, Notas (Script).
-- `# Cena N — título`: cena. Campos: Tipo, Duração (ou Tempo), Propósito, Ação, Câmera, Edição, Continuidade, Descrição, Fala.
+- `# Cena N — título`: cena. Campos: Tipo, Duração (ou Tempo), Personagens (lista separada por vírgula), Propósito, Ação, Câmera, Edição, Continuidade, Descrição, Fala.
 - `## Plano N.N — nome` (ou `## Shot`): plano da cena. Campos: Tipo, Enquadramento, Ângulo, Assunto (ou Subject), Movimento, Câmera, Takes, Propósito, Descrição, Notas.
 - Rótulos de campo e de tipo são aceitos em português e em inglês, sem diferença de acento ou caixa. A exportação escreve no idioma de quem baixa.
-- `**NOME:**` que não é campo (sozinho na linha ou em maiúsculas) é fala: vai para Fala da cena como `NOME: texto`.
+- `**NOME:**` que não é campo (sozinho na linha ou em maiúsculas) é fala: vai para Fala da cena como `NOME: texto` e NOME entra nos personagens da cena. Complemento depois de travessão ou entre parênteses (`— OFF`, `(VOZ)`) não faz parte do nome.
 - Texto solto vira descrição do plano, ou da cena antes do primeiro plano.
 - Propósito não tem campo: vai para a descrição como `Propósito: valor`.
 - Tipo livre (`dialogue`, `reaction`, `off`) vira o tipo mais próximo e o valor original fica na descrição; tipo desconhecido vira Outro com aviso.
@@ -716,8 +716,30 @@ Exportar e importar o mesmo arquivo gera as mesmas cenas e planos.
 - Grava numa transação: cenas ao fim da lista, planos na ordem do arquivo, tudo como Planejado e sem quem fala.
 - Produção com cenas: exige confirmar que as novas entram depois. Nada é sobrescrito.
 - Roteiro: gancho, mensagem e chamada só preenchem campo vazio; notas do arquivo e trechos à parte somam às notas existentes (teto de 4000 caracteres vale).
+- Personagens do arquivo ligam ao personagem da produção com o mesmo nome (sem diferença de acento ou caixa); os que não existem são criados.
 - Tetos por arquivo: 200 mil caracteres, 200 cenas, 1000 planos.
 - Gera atividade `SCRIPT_IMPORTED` com o número de cenas e planos.
+
+## 18.2 Elenco
+
+Personagens da produção (ADR-047), mantidos na aba Roteiro.
+
+```ts
+ProjectCharacter {
+  id
+  videoProjectId
+  name        // único na produção, sem diferença de acento ou caixa
+  actorName?  // quem atua, com ou sem conta
+  userId?     // pessoa do workspace, opcional
+}
+
+SceneCharacter { sceneId, characterId }
+```
+
+- Leitor vê o elenco; quem edita cria, renomeia e exclui. Excluir tira o personagem das cenas e não mexe em falas.
+- A cena escolhe seus personagens na edição.
+- Lista de cenas e Modo Gravação filtram por personagem, na ordem das cenas, para gravar por ator.
+- Quem fala (`speakerId`) continua existindo: é a pessoa do workspace que apresenta a cena, não o personagem.
 
 ---
 

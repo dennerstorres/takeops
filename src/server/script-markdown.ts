@@ -33,6 +33,8 @@ export type ScriptFileScene = {
   cameraInstructions: string | null;
   editingInstructions: string | null;
   continuityNotes: string | null;
+  // Nomes como escritos no arquivo, sem repetição (CAST-001).
+  characters: string[];
   shots: ScriptFileShot[];
 };
 
@@ -94,7 +96,8 @@ type SceneField =
   | "editingInstructions"
   | "continuityNotes"
   | "description"
-  | "dialogue";
+  | "dialogue"
+  | "characters";
 
 type ShotField =
   | "shotType"
@@ -137,6 +140,7 @@ const labels: Record<Locale, Labels> = {
       continuityNotes: "Continuidade",
       description: "Descrição",
       dialogue: "Fala",
+      characters: "Personagens",
     },
     shotFields: {
       shotType: "Tipo",
@@ -179,6 +183,7 @@ const labels: Record<Locale, Labels> = {
       continuityNotes: "Continuity",
       description: "Description",
       dialogue: "Dialogue",
+      characters: "Characters",
     },
     shotFields: {
       shotType: "Type",
@@ -237,6 +242,8 @@ const sceneKeys = aliasMap(
     falas: "dialogue",
     "instrucoes de camera": "cameraInstructions",
     "instrucoes de edicao": "editingInstructions",
+    elenco: "characters",
+    cast: "characters",
   },
 );
 const shotKeys = aliasMap(
@@ -333,12 +340,31 @@ function emptyScene(title: string): ScriptFileScene {
     cameraInstructions: null,
     editingInstructions: null,
     continuityNotes: null,
+    characters: [],
     shots: [],
   };
 }
 
 function append(current: string | null, line: string) {
   return current ? `${current}\n${line}` : line;
+}
+
+// "ATOR 3 — VOZ SOBREPOSTA" e "NARRADOR (OFF)" são falas de "ATOR 3" e
+// "NARRADOR": o complemento diz como a fala entra, não quem é.
+export function speakerName(label: string) {
+  return label
+    .split(/\s+[—–-]\s+/)[0]
+    .replace(/\s*\([^)]*\)\s*$/, "")
+    .trim();
+}
+
+function addCharacter(scene: ScriptFileScene, name: string) {
+  const clean = name.trim();
+  if (!clean) return;
+  if (scene.characters.some((item) => normalize(item) === normalize(clean))) {
+    return;
+  }
+  scene.characters.push(clean);
 }
 
 export function parseScriptMarkdown(text: string): ParsedScriptFile {
@@ -395,6 +421,7 @@ export function parseScriptMarkdown(text: string): ParsedScriptFile {
   const addDialogue = (speaker: string, line: string) => {
     if (!scene) return freeText(`${speaker}: ${line}`);
     scene.dialogue = append(scene.dialogue, `${speaker}: ${line}`);
+    addCharacter(scene, speakerName(speaker));
   };
 
   const lines = text.replace(/\r\n?/g, "\n").split("\n");
@@ -582,6 +609,12 @@ export function parseScriptMarkdown(text: string): ParsedScriptFile {
       target.estimatedDurationSeconds = seconds;
       return () => {};
     }
+    if (key === "characters") {
+      for (const name of value.split(/[,;]/)) addCharacter(target, name);
+      return (next) => {
+        for (const name of next.split(/[,;]/)) addCharacter(target, name);
+      };
+    }
     // Cena não tem campo de propósito; ele fica legível na descrição.
     if (key === "purpose") {
       target.description = append(target.description, `${label}: ${value}`);
@@ -697,6 +730,7 @@ export function formatScriptMarkdown(file: ScriptFile, locale: Locale) {
       ...block([
         ...field(f.type, m.enums.sceneType[scene.type]),
         ...field(f.duration, scene.estimatedDurationSeconds),
+        ...field(f.characters, scene.characters.join(", ")),
         ...field(f.action, scene.action),
         ...field(f.cameraInstructions, scene.cameraInstructions),
         ...field(f.editingInstructions, scene.editingInstructions),

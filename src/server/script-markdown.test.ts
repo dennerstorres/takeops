@@ -74,6 +74,7 @@ describe("roteiro em markdown", () => {
     assert.equal(first.estimatedDurationSeconds, 12);
     assert.equal(first.description, "Purpose: problem");
     assert.equal(first.dialogue, "MECÂNICO: Só um minutinho.");
+    assert.deepEqual(first.characters, ["MECÂNICO"]);
 
     assert.equal(first.shots.length, 2);
     assert.deepEqual(
@@ -97,6 +98,8 @@ describe("roteiro em markdown", () => {
 
     assert.equal(second.dialogue, "ATOR 3 — OFF: Está na gaveta.");
     assert.equal(second.description, "Ator 3 aponta a gaveta.");
+    // O complemento da fala ("— OFF") não vira outro personagem.
+    assert.deepEqual(second.characters, ["ATOR 3"]);
 
     assert.deepEqual(file.sections, [
       { title: "", body: "Plataformas: Reels e Shorts" },
@@ -163,6 +166,7 @@ describe("roteiro em markdown", () => {
           cameraInstructions: "Plano médio",
           editingInstructions: null,
           continuityNotes: "Mesmo avental",
+          characters: ["Apresentadora", "Narradora"],
           shots: [
             {
               name: "Apresentadora na varanda",
@@ -200,6 +204,7 @@ describe("roteiro em markdown", () => {
           cameraInstructions: null,
           editingInstructions: "Logo no fim",
           continuityNotes: null,
+          characters: [],
           shots: [],
         },
       ],
@@ -268,5 +273,23 @@ describe("arquivo do roteiro da produção", () => {
       "horta-tres-vasos-na-varanda.md",
     );
     assert.equal(scriptFileName({ slug: "", title: "!!!" }), "roteiro.md");
+  });
+});
+
+describe("personagens no roteiro", () => {
+  it("junta falas e o campo Personagens sem repetir nome", () => {
+    const file = parseScriptMarkdown(
+      [
+        "# Cena 1 — Encontro",
+        "**Personagens:** Marcelo; Ana",
+        "**MARCELO:**",
+        "Oi.",
+        "**Ana (OFF):**",
+        "Oi!",
+        "**NARRADOR — VOZ SOBREPOSTA:**",
+        "E assim começa.",
+      ].join("\n"),
+    );
+    assert.deepEqual(file.scenes[0].characters, ["Marcelo", "Ana", "NARRADOR"]);
   });
 });

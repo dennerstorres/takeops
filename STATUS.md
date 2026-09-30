@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 25 — Roteiro de fora para dentro
+Fase 25 — Roteiro de fora para dentro (concluída)
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-SCRIPT-004 — Importar roteiro
+CAST-001 — Elenco da produção
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-CAST-001 — Elenco da produção (P2)
+PERF-001 — Paginação de produções e ideias (P2, quando um workspace passar de algumas centenas de produções)
 ```
 
 ## Estado dos módulos

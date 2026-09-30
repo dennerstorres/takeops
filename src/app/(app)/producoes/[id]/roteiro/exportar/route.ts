@@ -2,6 +2,7 @@ import { getLocale } from "next-intl/server";
 import { openWorkspace } from "@/server/access";
 import { auth } from "@/server/auth";
 import { ForbiddenError, NotFoundError } from "@/server/errors";
+import { prismaCharacterRepository } from "@/server/character-prisma";
 import { prismaProjectRepository } from "@/server/project-prisma";
 import { prismaSceneRepository } from "@/server/scene-prisma";
 import { exportScriptFile, scriptFileName } from "@/server/script-file";
@@ -36,6 +37,7 @@ export async function GET(
         scenes: prismaSceneRepository,
         shots: prismaShotRepository,
         scripts: prismaScriptRepository,
+        characters: prismaCharacterRepository,
       },
     );
     const locale = await getLocale();

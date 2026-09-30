@@ -1,3 +1,5 @@
+import { listCharacters, listSceneCharacters } from "./character.ts";
+import type { CharacterRepository } from "./character-repository.ts";
 import type { ProjectRecord } from "./project-repository.ts";
 import { getProject } from "./project.ts";
 import type { SceneRecord } from "./scene-repository.ts";
@@ -20,6 +22,7 @@ export function toScriptFile(
   script: ScriptText | null,
   scenes: readonly SceneRecord[],
   shotsByScene: ReadonlyMap<string, readonly ShotRecord[]>,
+  charactersByScene: ReadonlyMap<string, readonly string[]> = new Map(),
 ): ScriptFile {
   return {
     project: {
@@ -38,8 +41,8 @@ export function toScriptFile(
       cta: script?.cta ?? null,
       notes: script?.notes ?? null,
     },
-    // Quem fala é um usuário do workspace e não viaja no arquivo; a fala,
-    // sim (CAST-001 traz personagens).
+    // Quem fala é um usuário do workspace e não viaja no arquivo; os
+    // personagens, sim, pelo nome.
     scenes: [...scenes]
       .sort((left, right) => left.order - right.order)
       .map((scene) => ({
@@ -52,6 +55,7 @@ export function toScriptFile(
         cameraInstructions: scene.cameraInstructions,
         editingInstructions: scene.editingInstructions,
         continuityNotes: scene.continuityNotes,
+        characters: [...(charactersByScene.get(scene.id) ?? [])],
         shots: (shotsByScene.get(scene.id) ?? []).map((shot) => ({
           name: shot.name,
           cameraLabel: shot.cameraLabel,
@@ -72,7 +76,10 @@ export async function exportScriptFile(
   userId: string,
   workspaceId: string,
   projectId: string,
-  deps: ShotDeps & { scripts: ScriptRepository },
+  deps: ShotDeps & {
+    scripts: ScriptRepository;
+    characters: CharacterRepository;
+  },
 ) {
   const project = await getProject(
     userId,
@@ -81,7 +88,7 @@ export async function exportScriptFile(
     deps.workspaces,
     deps.projects,
   );
-  const [script, scenes, shots] = await Promise.all([
+  const [script, scenes, shots, cast, links] = await Promise.all([
     getScript(
       userId,
       workspaceId,
@@ -99,8 +106,20 @@ export async function exportScriptFile(
       deps.scenes,
     ),
     listShotsByScene(userId, workspaceId, project.id, deps),
+    listCharacters(userId, workspaceId, project.id, deps),
+    listSceneCharacters(userId, workspaceId, project.id, deps),
   ]);
-  return { project, file: toScriptFile(project, script, scenes, shots) };
+  const names = new Map(cast.map((row) => [row.id, row.name]));
+  const charactersByScene = new Map(
+    [...links].map(([sceneId, ids]) => [
+      sceneId,
+      ids.flatMap((id) => names.get(id) ?? []).sort(),
+    ]),
+  );
+  return {
+    project,
+    file: toScriptFile(project, script, scenes, shots, charactersByScene),
+  };
 }
 
 // Nome do arquivo baixado: só letras simples, para qualquer sistema abrir.

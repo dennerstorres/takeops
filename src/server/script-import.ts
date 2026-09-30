@@ -1,4 +1,6 @@
 import { recordActivity } from "./activity-record.ts";
+import { characterKey } from "./character.ts";
+import type { CharacterRepository } from "./character-repository.ts";
 import type { ActivityRepository } from "./activity-repository.ts";
 import { NotFoundError, ValidationError } from "./errors.ts";
 import type { ProjectRepository } from "./project-repository.ts";
@@ -37,6 +39,7 @@ export type ScriptImportDeps = {
   scenes: SceneRepository;
   scripts: ScriptRepository;
   imports: ScriptImportRepository;
+  characters: CharacterRepository;
   activities?: ActivityRepository;
 };
 
@@ -63,6 +66,7 @@ export type ScriptImportPreview = {
   scenesWithoutDuration: number;
   filledScriptFields: (keyof ScriptWrite)[];
   sectionTitles: string[];
+  newCharacters: string[];
   warnings: ScriptFileWarning[];
   problems: ScriptImportProblem[];
 };
@@ -111,7 +115,7 @@ async function plan(
     deps.workspaces,
     deps.projects,
   );
-  const [current, existing] = await Promise.all([
+  const [current, existing, cast] = await Promise.all([
     getScript(
       userId,
       workspaceId,
@@ -128,6 +132,7 @@ async function plan(
       deps.projects,
       deps.scenes,
     ),
+    deps.characters.list(project.workspaceId, project.id),
   ]);
 
   if (text.length > importLimits.characters) {
@@ -163,6 +168,23 @@ async function plan(
     problems.push({ scene: null, shot: null, fields: fieldsOf(error) });
   }
 
+  // Mesmo personagem escrito de jeitos diferentes vira um só; o nome que
+  // já existe na produção prevalece.
+  const knownNames = new Map(
+    cast
+      .filter((row) => row.videoProjectId === project.id)
+      .map((row) => [characterKey(row.name), row.name]),
+  );
+  const newCharacters: string[] = [];
+  const canonical = (name: string) => {
+    const key = characterKey(name);
+    const known = knownNames.get(key);
+    if (known) return known;
+    knownNames.set(key, name);
+    newCharacters.push(name);
+    return name;
+  };
+
   const scenes: ScriptImportWrite["scenes"] = [];
   for (const [sceneIndex, scene] of parsed.scenes.entries()) {
     let sceneWrite: SceneWrite | null = null;
@@ -193,7 +215,18 @@ async function plan(
         });
       }
     }
-    if (sceneWrite) scenes.push({ ...sceneWrite, shots });
+    const tooLong = scene.characters.find((name) => name.length > 80);
+    if (tooLong) {
+      problems.push({
+        scene: sceneIndex + 1,
+        shot: null,
+        fields: {
+          characters: `O personagem "${tooLong.slice(0, 20)}…" passou de 80 caracteres.`,
+        },
+      });
+    }
+    const characterNames = tooLong ? [] : scene.characters.map(canonical);
+    if (sceneWrite) scenes.push({ ...sceneWrite, shots, characterNames });
   }
 
   const sum = (list: { estimatedDurationSeconds: number | null }[]) =>
@@ -221,10 +254,15 @@ async function plan(
       ["hook", "mainMessage", "cta", "notes"] as const
     ).filter((key) => Boolean(input[key])),
     sectionTitles: parsed.sections.map((section) => section.title),
+    newCharacters,
     warnings: parsed.warnings,
     problems,
   };
-  return { project, preview, write: script ? { script, scenes } : null };
+  return {
+    project,
+    preview,
+    write: script ? { script, characters: newCharacters, scenes } : null,
+  };
 }
 
 export async function previewScriptImport(

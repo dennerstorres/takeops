@@ -20,6 +20,8 @@ import { prismaShotRepository } from "@/server/shot-prisma";
 import { listTakes } from "@/server/take";
 import { prismaTakeRepository } from "@/server/take-prisma";
 import { listTeam } from "@/server/team";
+import { listCharacters, listSceneCharacters } from "@/server/character";
+import { prismaCharacterRepository } from "@/server/character-prisma";
 import { prismaWorkspaceRepository } from "@/server/workspace-prisma";
 
 function personLabel(
@@ -49,6 +51,8 @@ export default async function EditScenePage({
   let project;
   let scene;
   let team;
+  let cast;
+  let sceneCast;
   let shots;
   let takes;
   try {
@@ -59,7 +63,13 @@ export default async function EditScenePage({
       prismaWorkspaceRepository,
       prismaProjectRepository,
     );
-    [scene, team] = await Promise.all([
+    const characterDeps = {
+      workspaces: prismaWorkspaceRepository,
+      projects: prismaProjectRepository,
+      scenes: prismaSceneRepository,
+      characters: prismaCharacterRepository,
+    };
+    [scene, team, cast, sceneCast] = await Promise.all([
       getScene(
         session.user.id,
         workspaceId,
@@ -70,6 +80,13 @@ export default async function EditScenePage({
         prismaSceneRepository,
       ),
       listTeam(session.user.id, workspaceId, prismaWorkspaceRepository),
+      listCharacters(session.user.id, workspaceId, project.id, characterDeps),
+      listSceneCharacters(
+        session.user.id,
+        workspaceId,
+        project.id,
+        characterDeps,
+      ),
     ]);
     const deps = {
       workspaces: prismaWorkspaceRepository,
@@ -138,6 +155,7 @@ export default async function EditScenePage({
       </header>
       <SceneForm
         editing
+        characters={cast.map((row) => ({ id: row.id, name: row.name }))}
         people={team.map((member) => ({
           id: member.userId,
           label: personLabel(member, t("common.noName")),
@@ -157,6 +175,7 @@ export default async function EditScenePage({
           editingInstructions: scene.editingInstructions ?? "",
           continuityNotes: scene.continuityNotes ?? "",
           status: scene.status,
+          characterIds: sceneCast.get(scene.id) ?? [],
         }}
       />
       <ShotSection

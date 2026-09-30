@@ -646,7 +646,23 @@
     "sections": "Trechos que vão para as notas: {titles}.",
     "untitledSection": "texto antes da primeira cena",
     "confirmAppend": "A produção já tem {count, plural, one {# cena} other {# cenas}}. Adicionar as novas depois delas.",
-    "open": "Importar roteiro"
+    "open": "Importar roteiro",
+    "newCharacters": "Personagens novos: {names}."
+  },
+  "cast": {
+    "title": "Elenco",
+    "empty": "Nenhum personagem ainda. Eles também são criados ao importar um roteiro com falas.",
+    "name": "Personagem",
+    "actor": "Ator ou atriz",
+    "person": "Pessoa do workspace",
+    "add": "Adicionar personagem",
+    "scenes": "{count, plural, =0 {em nenhuma cena} one {em # cena} other {em # cenas}}",
+    "deleteTitle": "Excluir {name}?",
+    "deleteDescription": "O personagem sai das cenas. Falas e cenas continuam como estão.",
+    "inScene": "Personagens: {names}",
+    "sceneCharacters": "Personagens na cena",
+    "filter": "Filtrar cenas por personagem",
+    "allScenes": "Todas"
   },
   "shots": {
     "title": "Shots",

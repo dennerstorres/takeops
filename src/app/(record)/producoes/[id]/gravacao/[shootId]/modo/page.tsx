@@ -20,6 +20,8 @@ import { recordSceneStatusAction } from "@/server/scene-actions";
 import { getShoot } from "@/server/shoot";
 import { prismaShootRepository } from "@/server/shoot-prisma";
 import { listShotsByScene } from "@/server/shot";
+import { listCharacters, listSceneCharacters } from "@/server/character";
+import { prismaCharacterRepository } from "@/server/character-prisma";
 import { shotDisplayName, shotSummary } from "@/server/shot-labels";
 import { prismaShotRepository } from "@/server/shot-prisma";
 import { listTakes } from "@/server/take";
@@ -39,7 +41,10 @@ export default async function RecordModePage({
   searchParams,
 }: {
   params: Promise<{ id: string; shootId: string }>;
-  searchParams: Promise<{ cena?: string | string[] }>;
+  searchParams: Promise<{
+    cena?: string | string[];
+    personagem?: string | string[];
+  }>;
 }) {
   const t = await getTranslations();
   const session = await auth();
@@ -62,9 +67,12 @@ export default async function RecordModePage({
   let scenes;
   let shotsByScene;
   let team;
+  let cast;
+  let sceneCast;
   try {
     shoot = await getShoot(session.user.id, workspaceId, id, shootId, deps);
-    [scenes, shotsByScene, team] = await Promise.all([
+    const characterDeps = { ...deps, characters: prismaCharacterRepository };
+    [scenes, shotsByScene, team, cast, sceneCast] = await Promise.all([
       listScenes(
         session.user.id,
         workspaceId,
@@ -75,6 +83,8 @@ export default async function RecordModePage({
       ),
       listShotsByScene(session.user.id, workspaceId, id, deps),
       listTeam(session.user.id, workspaceId, deps.workspaces),
+      listCharacters(session.user.id, workspaceId, id, characterDeps),
+      listSceneCharacters(session.user.id, workspaceId, id, characterDeps),
     ]);
   } catch (error) {
     if (error instanceof NotFoundError) redirect(`/producoes/${id}/gravacao`);
@@ -82,17 +92,26 @@ export default async function RecordModePage({
     throw error;
   }
 
+  // Gravar por ator: só as cenas do personagem escolhido, na mesma ordem.
+  const query = await searchParams;
+  const selected =
+    cast.find((row) => row.id === String(query.personagem ?? "")) ?? null;
+  const recordScenes = selected
+    ? scenes.filter((scene) => sceneCast.get(scene.id)?.includes(selected.id))
+    : scenes;
   const view = buildRecordView(
-    scenes,
+    recordScenes,
     shotsByScene,
     team.map((member) => ({
       id: member.userId,
       label: personLabel(member, t("common.noName")),
     })),
-    clampPosition((await searchParams).cena, scenes.length),
+    clampPosition(query.cena, recordScenes.length),
   );
   const exit = `/producoes/${id}/gravacao`;
   const here = `/producoes/${id}/gravacao/${shoot.id}/modo`;
+  const filter = selected ? `&personagem=${selected.id}` : "";
+  const sceneHref = (position: number) => `${here}?cena=${position}${filter}`;
 
   let takes = new Map<string, Awaited<ReturnType<typeof listTakes>>>();
   if (view !== null) {
@@ -146,6 +165,36 @@ export default async function RecordModePage({
           {t("record.exit")}
         </Link>
       </header>
+      {cast.length ? (
+        <nav
+          aria-label={t("cast.filter")}
+          className="flex flex-wrap items-center gap-2 border-b border-divider px-4 py-2"
+        >
+          <Link
+            href={here}
+            aria-current={selected ? undefined : "page"}
+            className={buttonVariants({
+              variant: selected ? "outline" : "default",
+              size: "sm",
+            })}
+          >
+            {t("cast.allScenes")}
+          </Link>
+          {cast.map((row) => (
+            <Link
+              key={row.id}
+              href={`${here}?personagem=${row.id}`}
+              aria-current={selected?.id === row.id ? "page" : undefined}
+              className={buttonVariants({
+                variant: selected?.id === row.id ? "default" : "outline",
+                size: "sm",
+              })}
+            >
+              {row.name}
+            </Link>
+          ))}
+        </nav>
+      ) : null}
       {view === null ? (
         <div className="p-4">
           <EmptyState
@@ -264,7 +313,7 @@ export default async function RecordModePage({
                         takes={takes.get(shot.id) ?? []}
                         requiredTakes={shot.requiredTakes}
                         canEdit={canEdit}
-                        returnTo={`${here}?cena=${view.position}`}
+                        returnTo={sceneHref(view.position)}
                         record
                       />
                     </div>
@@ -330,12 +379,12 @@ export default async function RecordModePage({
                 <input
                   type="hidden"
                   name="returnTo"
-                  value={`${here}?cena=${view.position}`}
+                  value={sceneHref(view.position)}
                 />
                 <input
                   type="hidden"
                   name="nextTo"
-                  value={view.next !== null ? `${here}?cena=${view.next}` : ""}
+                  value={view.next !== null ? sceneHref(view.next) : ""}
                 />
                 <Button
                   type="submit"
@@ -367,7 +416,7 @@ export default async function RecordModePage({
               >
                 {view.previous !== null ? (
                   <Link
-                    href={`${here}?cena=${view.previous}`}
+                    href={sceneHref(view.previous)}
                     className={buttonVariants({ variant: "outline" })}
                   >
                     {t("record.previous")}
@@ -377,7 +426,7 @@ export default async function RecordModePage({
                 )}
                 {view.next !== null ? (
                   <Link
-                    href={`${here}?cena=${view.next}`}
+                    href={sceneHref(view.next)}
                     className={buttonVariants({ variant: "outline" })}
                   >
                     {t("record.next")}
