@@ -5131,3 +5131,10 @@ Arquivos: nenhum código; tag `v0.1.0` e release no GitHub.
 Resumo: histórico varrido antes da abertura (sem padrões de chave/token; só o e-mail noreply do GitHub nos commits). Tag anotada `v0.1.0` em `268f0d6` (CI verde) e release "TakeOps v0.1.0" publicado com notas em inglês e link para o guia em português.
 Pendências: tornar o repositório público e ligar *Private vulnerability reporting* ficaram com o dono (a ação de tornar público foi bloqueada para o agente). Depois disso, marcar a MVP-004 como DONE.
 
+## 2026-09-30 — MVP-004 — Release MVP
+
+Status: DONE
+Arquivos: nenhum código.
+Resumo: o dono tornou o repositório público; conferido pela API do GitHub: visibilidade `PUBLIC`, *Private vulnerability reporting* ligado e release `v0.1.0` publicado (não rascunho). Fecha a entrada parcial anterior.
+Pendências: destino S3 do backup e contato público no perfil do GitHub (com o dono). Próxima tarefa técnica: PERF-001 (P2).
+

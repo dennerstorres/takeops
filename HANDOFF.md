@@ -22,7 +22,7 @@ HARDEN-006, 008, 009; OSS-003, 004, 006, 007; MVP-001, 002, 003; TEAM-004; WORKS
 
 ## Atualização (sessão 4)
 
-Redesign completo (UI-010 a UI-015, ver HISTORY.md), revisão final com veredito `ship` e DESIGN.md novo. OSS-009 feita (compose testado do zero, prints nos READMEs). Próxima: MVP-004 (release), depois das pendências do dono abaixo. Contrato de direção está no `src/app/layout.tsx`.
+Redesign completo (UI-010 a UI-015, ver HISTORY.md), revisão final com veredito `ship` e DESIGN.md novo. OSS-009 e MVP-004 feitas: v0.1.0 publicada e repositório público. Próxima técnica: PERF-001 (P2). Contrato de direção está no `src/app/layout.tsx`.
 
 ## Próximos passos exatos
 
@@ -33,4 +33,4 @@ Redesign completo (UI-010 a UI-015, ver HISTORY.md), revisão final com veredito
 ## Pendências do dono
 
 - Destino S3 para o backup do banco.
-- Antes do release: contato público no perfil do GitHub; ligar *Private vulnerability reporting* assim que o repositório ficar público (hoje é privado e o GitHub só oferece o recurso em repositório público).
+- Contato público no perfil do GitHub (o canal privado de vulnerabilidades já está ligado).

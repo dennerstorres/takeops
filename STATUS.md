@@ -10,25 +10,25 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 24 — MVP Acceptance (MVP-001..003, DEPLOY-003 e redesign UI-010..015 feitos); falta o release
+Fase 24 — MVP entregue: v0.1.0 publicada, repositório público
 ```
 
 ## Tarefa ativa
 
 ```text
-MVP-004 — Release MVP (tag e release feitos; falta o dono abrir o repositório)
+Nenhuma
 ```
 
 ## Última tarefa concluída
 
 ```text
-OSS-009 — Prints e teste do compose
+MVP-004 — Release MVP
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-MVP-004 — Release MVP
+PERF-001 — Paginação de produções e ideias (P2, quando um workspace passar de algumas centenas de produções)
 ```
 
 ## Estado dos módulos
