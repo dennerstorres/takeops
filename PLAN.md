@@ -1786,7 +1786,7 @@ Decisões: ADR-037 (Docker/Coolify), ADR-039 (AGPL-3.0), ADR-040 (login por e-ma
 
 ## OSS-003 — docker-compose para self-host
 
-**Status:** TODO  
+**Status:** DONE  
 **Prioridade:** P0  
 **Dependências:** OSS-002
 

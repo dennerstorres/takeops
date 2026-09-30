@@ -10,7 +10,7 @@ Video Production Manager
 ## Fase atual
 
 ```text
-Fase 20 — Hardening (HARDEN-006, 008 e 009 feitas)
+Fase 22 — Self-hosted (OSS-003 feita)
 ```
 
 ## Tarefa ativa
@@ -22,13 +22,13 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-HARDEN-009 — Aviso de gravação próxima
+OSS-003 — docker-compose para self-host
 ```
 
 ## Próxima tarefa recomendada
 
 ```text
-OSS-003 — docker-compose para self-host
+OSS-004 — Documentação de instalação
 ```
 
 ## Estado dos módulos

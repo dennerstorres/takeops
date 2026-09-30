@@ -4824,3 +4824,21 @@ Lint. `i18n.test.ts`, `dashboard.test.ts`, `status-tone.test.ts`. `check:contras
 - Dono: definir `CRON_SECRET` no Coolify e criar a Scheduled Task de hora em hora com o `curl` do `.env.example`.
 - Execuções simultâneas não foram testadas: o `prisma dev` (PGlite) quebra com queries parametrizadas em paralelo fora de transação. Fica para o CI com Postgres real (OSS-007).
 - Guia de self-host (OSS-004) deve citar o cron.
+
+## 2026-09-29 — OSS-003 — docker-compose para self-host
+
+**Status:** DONE
+**Agente:** Claude
+
+- `docker-compose.yml`: `db` (postgres:17-alpine, volume `db-data`, healthcheck), `app` (build do `Dockerfile`, `env_file: .env`, sobe depois do banco saudável, migrations no start) e `cron` (curl de hora em hora na rota da HARDEN-009; sem `CRON_SECRET` não faz nada).
+- O compose monta `DATABASE_URL` com `POSTGRES_PASSWORD`, sobrepondo a do `.env` (que é a de desenvolvimento). Sem senha, `docker compose` recusa subir.
+- `.env.example` com bloco "só docker-compose" (`POSTGRES_PASSWORD`, `APP_PORT`). Senha só com letras e números porque entra na URL.
+- Coolify não muda: continua construindo pelo `Dockerfile` com Postgres próprio.
+
+### Testes
+
+`docker compose config` com e sem `POSTGRES_PASSWORD`. Não subi os contêineres: Docker Desktop desligado nesta máquina.
+
+### Pendências
+
+- Subir `docker compose up -d --build` numa máquina com Docker e abrir o login (fica para OSS-004 validar junto do guia).

@@ -1,0 +1,59 @@
+# Self-host do TakeOps: app + Postgres (ADR-037).
+#   cp .env.example .env   # preencha AUTH_SECRET, POSTGRES_PASSWORD e um login
+#   docker compose up -d --build
+# O app aplica as migrations ao subir. Dados do banco ficam no volume `db-data`.
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: takeops
+      POSTGRES_USER: takeops
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U takeops -d takeops"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    image: takeops:local
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Sobrepõe o DATABASE_URL do .env, que aponta para o banco de desenvolvimento.
+      DATABASE_URL: postgresql://takeops:${POSTGRES_PASSWORD}@db:5432/takeops?schema=public
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Aviso de gravação próxima (HARDEN-009): chama a rota de hora em hora.
+  # Sem CRON_SECRET no .env, não faz nada.
+  cron:
+    image: curlimages/curl:8.11.1
+    restart: unless-stopped
+    environment:
+      CRON_SECRET: ${CRON_SECRET:-}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          sleep 3600
+          if [ -n "$$CRON_SECRET" ]; then
+            curl -fsS -X POST -H "Authorization: Bearer $$CRON_SECRET" \
+              http://app:3000/api/cron/upcoming-shoots || true
+            echo
+          fi
+        done
+    depends_on:
+      - app
+
+volumes:
+  db-data:
