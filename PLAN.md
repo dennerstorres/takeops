@@ -2138,6 +2138,18 @@ Hoje o apresentador da cena é um usuário do workspace; ator e personagem não 
 - Filtro de cenas por personagem na lista de cenas e no Modo Gravação, para montar a ordem de gravação por ator.
 - Importação (SCRIPT-004) cria os personagens a partir de `**PERSONAGEM:**` e do campo Personagens da cena. A seção livre de personagens do roteiro (ex.: "ATOR 3 — CARA DA SOLUÇÃO") não vira elenco: o nome ali não bate com o das falas; ela segue para as notas.
 
+## LEGAL-001 — Política de privacidade e termos de serviço
+
+**Status:** DONE  
+**Prioridade:** P1  
+**Dependências:** nenhuma
+
+O Google exige links públicos de privacidade e termos para publicar a tela de consentimento OAuth em produção.
+
+- Páginas públicas `/privacidade` e `/termos`, sem login, em pt-BR e en.
+- Links no rodapé do login.
+- Contato opcional por `LEGAL_CONTACT_EMAIL`; sem ele, o texto manda falar com quem administra a instância.
+
 ---
 
 # Backlog pós-MVP

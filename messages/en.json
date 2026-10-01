@@ -256,6 +256,138 @@
     "description": "We sent a link to sign in. It is valid for 24 hours and can only be used once. If it does not arrive in a few minutes, check your spam.",
     "back": "Back to sign in"
   },
+  "legal": {
+    "back": "Back to sign in",
+    "contactTitle": "Contact",
+    "contactEmail": "Questions, data access or deletion requests:",
+    "contactFallback": "Questions, data access or deletion requests: contact whoever administers this TakeOps instance.",
+    "privacy": {
+      "title": "Privacy Policy",
+      "updated": "Last updated: October 1, 2026",
+      "intro": "This policy explains what data this TakeOps instance collects, how it is used and what your rights are. TakeOps is open-source, self-hosted software; whoever administers this instance is responsible for the data processed in it.",
+      "sections": {
+        "collect": {
+          "title": "Data we collect",
+          "body": [
+            "Account data: name, email address and profile picture, received from Google when you sign in with your Google account, or only your email address when you sign in with an emailed link.",
+            "Content you and your team add: ideas, productions, scripts, scenes, shoots, takes, comments, file links and other work records.",
+            "Technical data: a session cookie to keep you signed in, your language preference and the history of actions within each production."
+          ]
+        },
+        "google": {
+          "title": "Data received from Google",
+          "body": [
+            "Google sign-in requests only the basic openid, email and profile scopes. We use this data solely to identify you, create your account and show your name and picture to your team.",
+            "We do not access Gmail, Google Drive, Calendar, contacts or any other data in your Google account. We do not sell it, use it for advertising or transfer it to third parties.",
+            "Use and transfer of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements."
+          ]
+        },
+        "use": {
+          "title": "How we use data",
+          "body": [
+            "To authenticate you, grant access to the workspaces you belong to, show who is responsible for each stage, deliver in-app notifications and, where applicable, email you a sign-in link.",
+            "We do not use your data for advertising, profiling or training artificial intelligence models."
+          ]
+        },
+        "share": {
+          "title": "Sharing",
+          "body": [
+            "Your name, email, picture and the content you add are visible to members of the workspaces you belong to. Each workspace is isolated from the others.",
+            "Data is stored on this instance's server and database. It may pass through infrastructure providers (hosting and email delivery) only to run the service, or be disclosed when required by law."
+          ]
+        },
+        "cookies": {
+          "title": "Cookies",
+          "body": [
+            "We only use essential session and sign-in security cookies. We do not use analytics or advertising cookies."
+          ]
+        },
+        "retention": {
+          "title": "Retention and deletion",
+          "body": [
+            "Data is kept while your account exists. Sessions expire on their own. When you request account deletion, we remove your account data and Google tokens; work content in a workspace may remain with the team that owns it.",
+            "You can revoke TakeOps' access to your Google account at any time at myaccount.google.com/permissions."
+          ]
+        },
+        "rights": {
+          "title": "Your rights",
+          "body": [
+            "Under applicable data protection law, such as Brazil's LGPD or the GDPR, you may request confirmation, access, correction, portability and deletion of your data, as well as information about sharing. Use the contact below."
+          ]
+        },
+        "security": {
+          "title": "Security",
+          "body": [
+            "Access is over HTTPS, no passwords are stored, and each workspace only sees its own data. No system is fully immune to failures; if an incident affects your data, we will let you know."
+          ]
+        },
+        "changes": {
+          "title": "Changes",
+          "body": [
+            "We may update this policy. The date at the top shows the latest version; relevant changes will be announced in the app."
+          ]
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "updated": "Last updated: October 1, 2026",
+      "intro": "These terms govern the use of this TakeOps instance. By signing in to the app, you agree to them and to the Privacy Policy.",
+      "sections": {
+        "service": {
+          "title": "The service",
+          "body": [
+            "TakeOps organizes short-form video production, from idea to publication. It manages the process: it does not store media, edit video or post to social networks. Files and versions are links to wherever your files already live."
+          ]
+        },
+        "account": {
+          "title": "Account",
+          "body": [
+            "You sign in with your Google account or with a link sent to your email. You are responsible for keeping access to that account secure and for everything done with it.",
+            "Access to a workspace requires an invitation or creating it yourself. Workspace owners and admins are responsible for the members they invite and the roles they assign."
+          ]
+        },
+        "content": {
+          "title": "Your content",
+          "body": [
+            "The content you add remains yours or your team's. You only authorize us to store it and show it to workspace members, as needed for the service to work.",
+            "You are responsible for the content and links you add, and for holding the necessary rights to them."
+          ]
+        },
+        "use": {
+          "title": "Acceptable use",
+          "body": [
+            "Do not use the service for illegal activities, to infringe third-party rights, to try to access other workspaces' data, or to overload, break into or interfere with the system."
+          ]
+        },
+        "availability": {
+          "title": "Availability and warranties",
+          "body": [
+            "The service is provided as is, with no guarantee of uninterrupted availability or freedom from errors. We may change, suspend or discontinue features.",
+            "TakeOps' source code is open under the AGPL-3.0 license and may be self-hosted by anyone under that license."
+          ]
+        },
+        "liability": {
+          "title": "Limitation of liability",
+          "body": [
+            "To the extent permitted by law, we are not liable for indirect losses, lost profits or data loss arising from the use of, or inability to use, the service. Keep a copy of anything important."
+          ]
+        },
+        "termination": {
+          "title": "Termination",
+          "body": [
+            "You may stop using the service and request account deletion at any time. We may suspend access for anyone who violates these terms."
+          ]
+        },
+        "changes": {
+          "title": "Changes",
+          "body": [
+            "We may update these terms. The date at the top shows the latest version; continuing to use the service after a change means you accept it."
+          ]
+        }
+      }
+    }
+  },
   "invite": {
     "acceptFailed": "Could not accept the invite. Please try again.",
     "title": "Invite",

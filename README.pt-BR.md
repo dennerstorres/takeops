@@ -89,6 +89,7 @@ As migrations rodam quando o contêiner sobe. Use `MIGRATE_ON_START=false` se pr
 | `AUTH_URL` | recomendada | URL pública do app |
 | `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | um método de login | Cliente OAuth do Google |
 | `EMAIL_SERVER` / `EMAIL_FROM` | um método de login | URL SMTP e remetente do link de login |
+| `LEGAL_CONTACT_EMAIL` | não | Contato exibido em `/privacidade` e `/termos` |
 | `CRON_SECRET` | não | Liga `POST /api/cron/upcoming-shoots` (32+ caracteres) |
 | `MIGRATE_ON_START` | não | `false` pula o `prisma migrate deploy` na subida (padrão `true`) |
 | `POSTGRES_PASSWORD` | só no compose | Senha do PostgreSQL do compose |
@@ -104,6 +105,8 @@ No Google Cloud Console → APIs e serviços → Credenciais, crie um **ID do cl
 - URI de redirecionamento autorizado: `https://takeops.exemplo.com/api/auth/callback/google`
 
 Copie o ID e a chave secreta do cliente para `AUTH_GOOGLE_ID` e `AUTH_GOOGLE_SECRET`.
+
+Para publicar a tela de consentimento em produção, use as páginas públicas do app: política de privacidade em `https://takeops.exemplo.com/privacidade` e termos de serviço em `https://takeops.exemplo.com/termos`. Defina `LEGAL_CONTACT_EMAIL` para elas mostrarem um contato.
 
 ## Login por e-mail (SMTP)
 

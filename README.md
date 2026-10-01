@@ -89,6 +89,7 @@ Migrations run when the container starts. Set `MIGRATE_ON_START=false` if you pr
 | `AUTH_URL` | recommended | Public URL of the app |
 | `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | one login method | Google OAuth client |
 | `EMAIL_SERVER` / `EMAIL_FROM` | one login method | SMTP URL and sender for sign-in links |
+| `LEGAL_CONTACT_EMAIL` | no | Contact shown on `/privacidade` and `/termos` |
 | `CRON_SECRET` | no | Enables `POST /api/cron/upcoming-shoots` (32+ characters) |
 | `MIGRATE_ON_START` | no | `false` skips `prisma migrate deploy` on start (default `true`) |
 | `POSTGRES_PASSWORD` | Compose only | Password of the bundled PostgreSQL |
@@ -104,6 +105,8 @@ In Google Cloud Console → APIs & Services → Credentials, create an **OAuth c
 - Authorized redirect URI: `https://takeops.example.com/api/auth/callback/google`
 
 Copy the client ID and secret to `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
+
+To publish the consent screen to production, use the app's public pages: privacy policy at `https://takeops.example.com/privacidade` and terms of service at `https://takeops.example.com/termos`. Set `LEGAL_CONTACT_EMAIL` so they show a contact.
 
 ## Email sign-in (SMTP)
 

@@ -7,6 +7,9 @@ export function isPublicPath(pathname: string) {
   return (
     pathname === "/login" ||
     pathname === "/login/verificar" ||
+    // Privacidade e termos: o Google exige acesso sem login (LEGAL-001).
+    pathname === "/privacidade" ||
+    pathname === "/termos" ||
     // Healthcheck do contêiner (Docker/Coolify), sem sessão.
     pathname === "/api/health" ||
     // Cron sem sessão; a própria rota exige CRON_SECRET (HARDEN-009).

@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { EmailLoginForm } from "@/components/auth/email-login-form";
+import { LegalLinks } from "@/components/legal/legal-page";
 import { loginWithGoogle } from "@/server/auth-actions";
 import { safeNextPath } from "@/server/auth-routes";
 import { auth } from "@/server/auth";
@@ -60,6 +61,7 @@ export default async function LoginPage({
           <p className="text-sm text-muted-foreground">{t("login.none")}</p>
         ) : null}
       </section>
+      <LegalLinks className="mt-4" />
     </main>
   );
 }

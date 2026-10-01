@@ -256,6 +256,138 @@
     "description": "Enviamos um link para entrar. Ele vale por 24 horas e só pode ser usado uma vez. Se não chegar em alguns minutos, olhe o spam.",
     "back": "Voltar para o login"
   },
+  "legal": {
+    "back": "Voltar para o login",
+    "contactTitle": "Contato",
+    "contactEmail": "Dúvidas, pedidos de acesso ou exclusão de dados:",
+    "contactFallback": "Dúvidas, pedidos de acesso ou exclusão de dados: fale com quem administra esta instância do TakeOps.",
+    "privacy": {
+      "title": "Política de Privacidade",
+      "updated": "Última atualização: 1º de outubro de 2026",
+      "intro": "Esta política explica quais dados esta instância do TakeOps coleta, como usa e quais são os seus direitos. O TakeOps é um software de código aberto e auto-hospedado; quem administra esta instância é o responsável pelos dados tratados nela.",
+      "sections": {
+        "collect": {
+          "title": "Dados que coletamos",
+          "body": [
+            "Dados de conta: nome, e-mail e foto de perfil, recebidos do Google quando você entra com a sua conta Google, ou só o e-mail quando entra por link enviado por e-mail.",
+            "Conteúdo que você e a sua equipe cadastram: ideias, produções, roteiros, cenas, gravações, takes, comentários, links de arquivos e demais registros do trabalho.",
+            "Dados técnicos: cookie de sessão para manter você conectado, preferência de idioma e o histórico de ações dentro de cada produção."
+          ]
+        },
+        "google": {
+          "title": "Dados recebidos do Google",
+          "body": [
+            "O login com Google pede apenas os escopos básicos openid, email e profile. Usamos esses dados somente para identificar você, criar a sua conta e mostrar seu nome e foto para a sua equipe.",
+            "Não acessamos Gmail, Google Drive, Agenda, contatos nem qualquer outro dado da sua conta Google. Não vendemos, não usamos para publicidade e não repassamos esses dados a terceiros.",
+            "O uso e a transferência de informações recebidas das APIs do Google seguem a Política de Dados do Usuário dos Serviços de API do Google, incluindo os requisitos de Uso Limitado."
+          ]
+        },
+        "use": {
+          "title": "Como usamos os dados",
+          "body": [
+            "Para autenticar você, liberar o acesso aos workspaces de que participa, mostrar quem é responsável por cada etapa, enviar avisos dentro do aplicativo e, quando for o caso, mandar o link de login por e-mail.",
+            "Não usamos seus dados para publicidade, criação de perfis ou treinamento de modelos de inteligência artificial."
+          ]
+        },
+        "share": {
+          "title": "Compartilhamento",
+          "body": [
+            "Seu nome, e-mail, foto e o conteúdo que você cadastra ficam visíveis para os membros dos workspaces de que você participa. Cada workspace é isolado dos demais.",
+            "Os dados ficam no servidor e no banco de dados desta instância. Podem passar por prestadores de infraestrutura (hospedagem e envio de e-mail) apenas para o funcionamento do serviço, ou ser fornecidos quando exigido por lei."
+          ]
+        },
+        "cookies": {
+          "title": "Cookies",
+          "body": [
+            "Usamos apenas cookies essenciais de sessão e de segurança do login. Não usamos cookies de análise nem de publicidade."
+          ]
+        },
+        "retention": {
+          "title": "Retenção e exclusão",
+          "body": [
+            "Os dados são mantidos enquanto a sua conta existir. Sessões expiram sozinhas. Ao pedir a exclusão da conta, removemos seus dados de conta e os tokens do Google; conteúdo de trabalho de um workspace pode continuar com a equipe dona dele.",
+            "Você pode revogar a qualquer momento o acesso do TakeOps à sua conta Google em myaccount.google.com/permissions."
+          ]
+        },
+        "rights": {
+          "title": "Seus direitos",
+          "body": [
+            "Nos termos da legislação de proteção de dados aplicável, como a LGPD no Brasil, você pode pedir confirmação, acesso, correção, portabilidade e exclusão dos seus dados, além de informações sobre o compartilhamento. Use o contato abaixo."
+          ]
+        },
+        "security": {
+          "title": "Segurança",
+          "body": [
+            "O acesso é feito por HTTPS, sem senha armazenada, e cada workspace só enxerga os próprios dados. Nenhum sistema é totalmente imune a falhas; se houver incidente que afete seus dados, avisaremos."
+          ]
+        },
+        "changes": {
+          "title": "Alterações",
+          "body": [
+            "Podemos atualizar esta política. A data no topo indica a última versão; mudanças relevantes serão avisadas no aplicativo."
+          ]
+        }
+      }
+    },
+    "terms": {
+      "title": "Termos de Serviço",
+      "updated": "Última atualização: 1º de outubro de 2026",
+      "intro": "Estes termos regem o uso desta instância do TakeOps. Ao entrar no aplicativo, você concorda com eles e com a Política de Privacidade.",
+      "sections": {
+        "service": {
+          "title": "O serviço",
+          "body": [
+            "O TakeOps organiza a produção de vídeos curtos, da ideia à publicação. Ele gerencia o processo: não armazena mídia, não edita vídeo e não publica em redes sociais. Arquivos e versões são links para onde seus arquivos já estão."
+          ]
+        },
+        "account": {
+          "title": "Conta",
+          "body": [
+            "Você entra com a sua conta Google ou por link enviado ao seu e-mail. É responsável por manter o acesso a essa conta seguro e por tudo o que for feito com ela.",
+            "O acesso a um workspace depende de convite ou de você criá-lo. Quem é dono ou administrador de um workspace responde pelos membros que convida e pelos papéis que atribui."
+          ]
+        },
+        "content": {
+          "title": "Seu conteúdo",
+          "body": [
+            "O conteúdo que você cadastra continua sendo seu ou da sua equipe. Você nos autoriza apenas a armazená-lo e exibi-lo para os membros do workspace, na medida necessária para o serviço funcionar.",
+            "Você é responsável pelo conteúdo e pelos links que cadastra, e por ter os direitos necessários sobre eles."
+          ]
+        },
+        "use": {
+          "title": "Uso aceitável",
+          "body": [
+            "Não use o serviço para atividades ilegais, para violar direitos de terceiros, para tentar acessar dados de outros workspaces ou para sobrecarregar, invadir ou interferir no funcionamento do sistema."
+          ]
+        },
+        "availability": {
+          "title": "Disponibilidade e garantias",
+          "body": [
+            "O serviço é oferecido no estado em que se encontra, sem garantia de disponibilidade contínua ou de ausência de erros. Podemos alterar, suspender ou encerrar funcionalidades.",
+            "O código do TakeOps é aberto, sob a licença AGPL-3.0, e pode ser auto-hospedado por qualquer pessoa nos termos dessa licença."
+          ]
+        },
+        "liability": {
+          "title": "Limitação de responsabilidade",
+          "body": [
+            "Na extensão permitida pela lei, não respondemos por perdas indiretas, lucros cessantes ou perda de dados decorrentes do uso ou da impossibilidade de uso do serviço. Mantenha cópia do que for importante."
+          ]
+        },
+        "termination": {
+          "title": "Encerramento",
+          "body": [
+            "Você pode deixar de usar o serviço e pedir a exclusão da conta a qualquer momento. Podemos suspender o acesso de quem violar estes termos."
+          ]
+        },
+        "changes": {
+          "title": "Alterações",
+          "body": [
+            "Podemos atualizar estes termos. A data no topo indica a última versão; continuar usando o serviço depois de uma mudança significa aceitá-la."
+          ]
+        }
+      }
+    }
+  },
   "invite": {
     "acceptFailed": "Não foi possível aceitar o convite. Tente novamente.",
     "title": "Convite",

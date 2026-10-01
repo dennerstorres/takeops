@@ -12,6 +12,9 @@ describe("rotas públicas", () => {
     assert.equal(isPublicPath("/api/cron/upcoming-shoots"), true);
     assert.equal(isPublicPath("/api/cron/outra"), false);
     assert.equal(isPublicPath("/convite/abc"), false);
+    assert.equal(isPublicPath("/privacidade"), true);
+    assert.equal(isPublicPath("/termos"), true);
+    assert.equal(isPublicPath("/termos/x"), false);
   });
 });
 

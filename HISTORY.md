@@ -5179,3 +5179,31 @@ Status: DONE
 Arquivos: nenhum código.
 Resumo: clone limpo do GitHub (`5697ab1`), `.env` só com o que o "Início rápido" pede (`AUTH_SECRET`, `POSTGRES_PASSWORD`, `AUTH_URL`, login por e-mail com Mailpit local) e `docker compose up -d --build`: imagem compilou, todas as migrations aplicadas na subida (inclusive `project_character`), `/api/health` 200, login por link de e-mail, criação de workspace e produção. Fase 25 conferida no navegador pela primeira vez: modelo baixado (`text/markdown`), prévia da importação (2 cenas, 3 planos, aviso de 5 s acima da meta, personagens novos), importação, filtro por personagem na lista de cenas, seção Elenco no Roteiro e exportação com o campo Personagens. Ambiente de teste removido.
 Pendências: nenhuma do guia.
+
+## 2026-10-01 — LEGAL-001 — Política de privacidade e termos de serviço
+
+**Status:** DONE
+**Agente:** Claude
+
+### Resumo
+
+Páginas públicas `/privacidade` e `/termos` para cadastrar na tela de consentimento OAuth do Google e publicar o app em produção.
+
+### Implementação
+
+- `LegalPage` monta a página a partir de `legal.privacy` / `legal.terms` do catálogo (`t.raw`), nos dois idiomas.
+- Rotas liberadas em `isPublicPath`; links no rodapé do login.
+- Contato opcional `LEGAL_CONTACT_EMAIL` (`src/server/legal.ts`); sem ele, texto genérico apontando o administrador da instância.
+- Política cita só os escopos `openid email profile` e a declaração de Uso Limitado do Google.
+
+### Arquivos principais
+
+- `src/components/legal/legal-page.tsx`
+- `src/app/privacidade/page.tsx`, `src/app/termos/page.tsx`
+- `src/server/auth-routes.ts`, `src/app/login/page.tsx`
+- `messages/pt-BR.json`, `messages/en.json`
+
+### Validação
+
+- `npm run lint`, `tsc --noEmit` (exceto `LayoutProps`, que depende do `next typegen`) e testes de i18n e rotas públicas passam.
+- `next build`/`next typegen` não rodaram nesta máquina: o SWC recusa o cache `C:\Users\Administrador\AppData\Local\swc` por permissão (DACL). Problema do ambiente, anterior à tarefa; conferir as páginas no deploy.

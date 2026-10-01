@@ -22,7 +22,7 @@ Nenhuma
 ## Última tarefa concluída
 
 ```text
-CAST-001 — Elenco da produção
+LEGAL-001 — Política de privacidade e termos de serviço
 ```
 
 ## Próxima tarefa recomendada
