@@ -5172,3 +5172,10 @@ Resumo: personagens por produção (ADR-047) com ator e pessoa opcionais, mantid
 Decisões: ADR-047. Seção livre de personagens do roteiro não vira elenco (nome não bate com as falas); segue para as notas.
 Testes: `character.integration.test.ts` (duplicado por caixa, pessoa de fora, leitor, personagem de outra produção, cascata ao excluir), testes do parser e da importação atualizados; `npm test` com Postgres 17 em Docker: 187/187. Migration gerada por `migrate diff` e revisada. `eslint` limpo; `tsc` só com o erro conhecido de `LayoutProps` (typegen não roda nesta máquina). Telas não abertas no navegador pelo mesmo motivo.
 Pendências: conferir elenco, filtro e Modo Gravação no app publicado; a migration roda no deploy.
+
+## 2026-10-01 — Verificação — Self-host do zero após a Fase 25
+
+Status: DONE
+Arquivos: nenhum código.
+Resumo: clone limpo do GitHub (`5697ab1`), `.env` só com o que o "Início rápido" pede (`AUTH_SECRET`, `POSTGRES_PASSWORD`, `AUTH_URL`, login por e-mail com Mailpit local) e `docker compose up -d --build`: imagem compilou, todas as migrations aplicadas na subida (inclusive `project_character`), `/api/health` 200, login por link de e-mail, criação de workspace e produção. Fase 25 conferida no navegador pela primeira vez: modelo baixado (`text/markdown`), prévia da importação (2 cenas, 3 planos, aviso de 5 s acima da meta, personagens novos), importação, filtro por personagem na lista de cenas, seção Elenco no Roteiro e exportação com o campo Personagens. Ambiente de teste removido.
+Pendências: nenhuma do guia.
